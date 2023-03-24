@@ -40,7 +40,8 @@ export default function Home() {
     )
   }else{
     //redirect('http://localhost:3000/login')
-    <>
+    return(
+      <>
       <Head>
         <title>Homepage</title>
       </Head>
@@ -52,7 +53,8 @@ export default function Home() {
           <Link className='mt-5 px-10 py-1 rounded-sm bg-indigo-500 text-gray-50' href={'/login'}>Sign In</Link>
         </div>
       </main>
-    </>
+      </>
+    )
   }
 }
 
