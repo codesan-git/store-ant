@@ -16,6 +16,7 @@ async function handleGoogleSignOut() {
 export default function Home() {
   const{data:session} = useSession()
   if(session){
+    //console.log(session.user)
     return (
       <>
         <Head>
@@ -33,7 +34,13 @@ export default function Home() {
             <button onClick={handleGoogleSignOut} className='mt-5 px-10 py-1 rounded-sm bg-gray-50'>Sign Out</button>
           </div>
           <div className='flex justify-center'>
-            <Link className='mt-5 px-10 py-1 rounded-sm bg-indigo-500 text-gray-50' href={'/profile'}>profile</Link>
+            <Link className='mt-5 px-10 py-1 rounded-sm bg-indigo-500 text-gray-50' href={'/profile'}>Profile</Link>
+          </div>
+          <div className='flex justify-center'>
+            <Link className='mt-5 px-10 py-1 rounded-sm bg-indigo-500 text-gray-50' href={'/shop/register'}>Start as a Seller</Link>
+          </div>
+          <div className='flex justify-center'>
+            <Link className='mt-5 px-10 py-1 rounded-sm bg-indigo-500 text-gray-50' href={'/product/create'}>Add Product</Link>
           </div>
         </main>
       </>
