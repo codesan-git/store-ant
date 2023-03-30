@@ -3,8 +3,10 @@ import styles from '../styles/Form.module.css'
 import Image from 'next/image'
 import { useState } from 'react';
 import { HiAtSymbol, HiKey } from 'react-icons/hi'
-import Link from 'next/link'
-//import bcrypt from "bcrypt";
+import { useRouter } from 'next/router'
+import { GetServerSideProps } from 'next'
+import { useSession } from 'next-auth/react'
+import { prisma } from "../lib/prisma"
 
 interface FormData{
     username: string,
@@ -13,19 +15,29 @@ interface FormData{
     address: string
 }
 
-export default function CreateShop() {
-  const [form, setForm] = useState<FormData>({username: '', phonenumber: '', password: '', address: ''});
+interface Profile {
+    profile:{
+        id: Number,
+        username: string,
+        phoneNumber: string,
+    }
+}
+
+export default function Profile({profile} : Profile) {
+  const [form, setForm] = useState<FormData>({username: profile?.username, phonenumber: profile?.phoneNumber, password: '', address: ''});
   const [show, setShow] = useState<boolean>();
+  const router = useRouter()
+  const{data:session} = useSession()
 
   async function create(data:FormData) {
     try{
-        fetch('http://localhost:3000/api/profile/create', {
+        fetch('http://localhost:3000/api/profile/setting', {
             body: JSON.stringify(data),
             headers: {
                 'Content-Type' : 'application/json'
             },
             method: 'POST'
-        }).then(()=> setForm({username:'', password:'', phonenumber:'', address:''}))
+        }).then(()=> { setForm({username:'', password:'', phonenumber:'', address:''}); router.push('/') })
     }catch(error){
         console.log(error)
     }
@@ -40,7 +52,18 @@ export default function CreateShop() {
   }
 
   return (
-    <div>
+    <div >
+        <div className='mx-auto text-center justify-center mt-10'>
+            <div className="avatar">
+                <div className="w-24 rounded-full">
+                    <img src={session?.user?.image!} width="300" height="300" />
+                </div>
+            </div>
+            <div className='details'>
+                <h5>{session?.user?.name}</h5>
+                <h5>{session?.user?.email}</h5>
+            </div>
+        </div>
         <section className="w-3/4 mx-auto flex flex-col gap-10">
             <div className="title">
                 <h1 className="text-gray-800 text-4xl font-bold py-4">Profile</h1>
@@ -80,4 +103,22 @@ export default function CreateShop() {
         </section>
     </div>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    const user = await prisma.user.findUnique({
+        where: { email: String(context.query.email) },
+        select:{
+            id: true
+        }
+    })
+    const profile = await prisma.profile.findUnique({
+        where: { userId: user?.id },
+        select:{
+            id: true,
+            username: true,
+            phoneNumber: true
+        }
+    })
+    return { props: {profile} }
 }

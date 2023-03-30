@@ -1,13 +1,6 @@
 import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import styles from '@/styles/Home.module.css'
 import Link from 'next/link'
-import {useState} from 'react';
-import { useSession, signOut, getSession } from 'next-auth/react'
-import { DefaultSession } from "next-auth"
-import { GetServerSideProps } from 'next'
-import { redirect } from 'next/navigation';
+import { useSession, signOut } from 'next-auth/react'
 
 async function handleGoogleSignOut() {
   signOut({callbackUrl: "http://localhost:3000/login"})
@@ -34,13 +27,13 @@ export default function Home() {
             <button onClick={handleGoogleSignOut} className='mt-5 px-10 py-1 rounded-sm bg-gray-50'>Sign Out</button>
           </div>
           <div className='flex justify-center'>
-            <Link className='mt-5 px-10 py-1 rounded-sm bg-indigo-500 text-gray-50' href={'/profile'}>Profile</Link>
+            <Link className='mt-5 px-10 py-1 rounded-sm bg-indigo-500 text-gray-50' href={{pathname:'/profile', query: { email: session.user?.email }}}>Profile</Link>
           </div>
           <div className='flex justify-center'>
             <Link className='mt-5 px-10 py-1 rounded-sm bg-indigo-500 text-gray-50' href={'/shop/register'}>Start as a Seller</Link>
           </div>
           <div className='flex justify-center'>
-            <Link className='mt-5 px-10 py-1 rounded-sm bg-indigo-500 text-gray-50' href={'/product/create'}>Add Product</Link>
+            <Link className='mt-5 px-10 py-1 rounded-sm bg-indigo-500 text-gray-50' href={'/product'}>Products</Link>
           </div>
         </main>
       </>

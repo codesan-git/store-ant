@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
 import { prisma } from "../../../lib/prisma"
+import bcrypt from "bcrypt"
 
 type Data = {
   message: string
@@ -19,12 +20,19 @@ export default async function handler(
   })
 
   try {
-    // // // CREATE
-    await prisma.profile.create({
-      data: {
+    const hashedPassword = await bcrypt.hash(password, 12)
+    await prisma.profile.upsert({
+      where: {userId: user?.id},
+      create: {
         userId: user?.id!,
         username: username,
-        password: password,
+        password: hashedPassword,
+        phoneNumber: phonenumber,
+        addresses: {}
+      },
+      update: {
+        username: username,
+        password: hashedPassword,
         phoneNumber: phonenumber,
         addresses: {}
       }

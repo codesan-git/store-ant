@@ -1,6 +1,7 @@
 import React from 'react'
 import styles from '../../styles/Form.module.css'
 import { useState } from 'react';
+import { useRouter } from 'next/router'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -10,17 +11,18 @@ interface FormData{
 }
 
 export default function CreateShop() {
-  const [form, setForm] = useState<FormData>({shopname: '', address: ''});
+  const [form, setForm] = useState<FormData>({shopname: '', address: ''})
+  const router = useRouter()
   
   async function create(data:FormData) {
     try{
-        fetch('http://localhost:3000/api/shop/create', {
+        fetch('http://localhost:3000/api/shop/setting', {
             body: JSON.stringify(data),
             headers: {
                 'Content-Type' : 'application/json'
             },
             method: 'POST'
-        }).then(()=> setForm({shopname: '', address: ''}))
+        }).then(()=> { setForm({shopname: '', address: ''}); router.push('/') })
     }catch(error){
         console.log(error)
     }

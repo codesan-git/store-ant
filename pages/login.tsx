@@ -7,14 +7,33 @@ import Image from 'next/image'
 import { HiAtSymbol, HiKey } from 'react-icons/hi'
 import { useState } from 'react';
 import { signIn } from 'next-auth/react'
+import { useRouter } from 'next/router'
+
+interface FormData{
+    email: string,
+    password: string,
+}
 
 export default function Login() {
-
   const [show, setShow] = useState<boolean>();
+  const [form, setForm] = useState<FormData>({email: '', password: ''});
+  const router = useRouter()
 
   async function handleGoogleSignIn() {
     signIn('google', {callbackUrl: "http://localhost:3000"})
   }
+
+  async function loginUser(data: FormData){
+    console.log("login")
+    const res = await signIn("credentials", {
+      redirect: false,
+      email: data.email,
+      password: data.password,
+      callbackUrl: `${window.location.origin}`,
+    });
+
+    res?.error ? console.log("ERROR ", res?.error) : router.push('/');
+  };
 
   return (
     <Layout>
@@ -27,15 +46,15 @@ export default function Login() {
                 <p className="w-3/4 mx-auto text-gray-400">lorem ipsum dolor sit amet</p>
             </div>
 
-            <form className="flex flex-col gap-5">
+            <form onSubmit={e => {e.preventDefault(); loginUser(form)}} className="flex flex-col gap-5">
                 <div className={styles.input_group}>
-                    <input type="email" name="email" placeholder="Email" className={styles.input_text}/>
+                    <input type="email" name="email" placeholder="Email" className={styles.input_text} value={form?.email} onChange={e => setForm({...form, email: e.target.value})}/>
                     <span className="icon flex items-center px-4">
                         <HiAtSymbol size={25}/>
                     </span>
                 </div>
                 <div className={styles.input_group}>
-                    <input type={`${show?"text": "password"}`} name="password" placeholder="Password" className={styles.input_text}/>
+                    <input type={`${show?"text": "password"}`} name="password" placeholder="Password" className={styles.input_text} value={form?.password} onChange={e => setForm({...form, password: e.target.value})}/>
                     <span className="icon flex items-center px-4" onClick={()=>setShow(!show)}>
                         <HiKey size={25}/>
                     </span>

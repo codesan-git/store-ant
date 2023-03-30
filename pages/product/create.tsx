@@ -1,17 +1,20 @@
 import React from 'react'
 import styles from '../../styles/Form.module.css'
 import { useState } from 'react';
+import { useRouter } from 'next/router'
 import Image from 'next/image'
 import Link from 'next/link'
 
 interface FormData{
     name: string,
-    price: string
+    price: string,
+    stock: string
 }
 
-export default function CreateShop() {
-  const [form, setForm] = useState<FormData>({name: '', price: ''});
-  
+export default function CreateProduct() {
+  const [form, setForm] = useState<FormData>({name: '', price: '', stock:''});
+  const router = useRouter()
+
   async function create(data:FormData) {
     try{
         fetch('http://localhost:3000/api/product/create', {
@@ -20,7 +23,7 @@ export default function CreateShop() {
                 'Content-Type' : 'application/json'
             },
             method: 'POST'
-        }).then(()=> setForm({name: '', price: ''}))
+        }).then(() => { setForm({name: '', price: '', stock:''}); router.push('/product') })
     }catch(error){
         console.log(error)
     }
@@ -54,8 +57,13 @@ export default function CreateShop() {
                     {/* <span className="icon flex items-center px-4" onClick={()=>setShow(!show)}>
                         <HiKey size={25}/>
                     </span> */}
+                </div>                
+                <div className={styles.input_group}>
+                    <input type="number" name="stock" placeholder="Qty" className={styles.input_text} value={form?.stock} onChange={e => setForm({...form, stock: e.target.value})}/>
+                    {/* <span className="icon flex items-center px-4" onClick={()=>setShow(!show)}>
+                        <HiKey size={25}/>
+                    </span> */}
                 </div>
-
                 <div className={styles.input_group}>
                     <button type="submit" className={styles.button}>Add</button>
                 </div>

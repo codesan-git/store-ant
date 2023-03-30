@@ -20,9 +20,13 @@ export default async function handler(
 
   try {
     // // // CREATE
-    await prisma.shop.create({
-      data: {
+    await prisma.shop.upsert({
+      where: {userId: user?.id},
+      create: {
         userId: user?.id!,
+        shopName: shopname
+      },
+      update: {
         shopName: shopname
       }
     })
