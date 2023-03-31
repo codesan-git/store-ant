@@ -23,7 +23,7 @@ export default function CreateProduct() {
                 'Content-Type' : 'application/json'
             },
             method: 'POST'
-        }).then(() => { setForm({name: '', price: '', stock:''}); router.push('/product') })
+        }).then(() => { setForm({name: '', price: '', stock:''}); router.back() })
     }catch(error){
         console.log(error)
     }

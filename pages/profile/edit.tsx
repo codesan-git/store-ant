@@ -1,12 +1,12 @@
 import React from 'react'
-import styles from '../styles/Form.module.css'
+import styles from '../../styles/Form.module.css'
 import Image from 'next/image'
 import { useState } from 'react';
 import { HiAtSymbol, HiKey } from 'react-icons/hi'
 import { useRouter } from 'next/router'
 import { GetServerSideProps } from 'next'
 import { useSession } from 'next-auth/react'
-import { prisma } from "../lib/prisma"
+import { prisma } from "../../lib/prisma"
 
 interface FormData{
     username: string,
@@ -23,7 +23,7 @@ interface Profile {
     }
 }
 
-export default function Profile({profile} : Profile) {
+export default function EditProfile({profile} : Profile) {
   const [form, setForm] = useState<FormData>({username: profile?.username, phonenumber: profile?.phoneNumber, password: '', address: ''});
   const [show, setShow] = useState<boolean>();
   const router = useRouter()
@@ -37,7 +37,7 @@ export default function Profile({profile} : Profile) {
                 'Content-Type' : 'application/json'
             },
             method: 'POST'
-        }).then(()=> { setForm({username:'', password:'', phonenumber:'', address:''}); router.push('/') })
+        }).then(()=> { setForm({username:'', password:'', phonenumber:'', address:''}); router.back() })
     }catch(error){
         console.log(error)
     }
@@ -53,17 +53,6 @@ export default function Profile({profile} : Profile) {
 
   return (
     <div >
-        <div className='mx-auto text-center justify-center mt-10'>
-            <div className="avatar">
-                <div className="w-24 rounded-full">
-                    <img src={session?.user?.image!} width="300" height="300" />
-                </div>
-            </div>
-            <div className='details'>
-                <h5>{session?.user?.name}</h5>
-                <h5>{session?.user?.email}</h5>
-            </div>
-        </div>
         <section className="w-3/4 mx-auto flex flex-col gap-10">
             <div className="title">
                 <h1 className="text-gray-800 text-4xl font-bold py-4">Profile</h1>

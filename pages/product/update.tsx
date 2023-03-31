@@ -39,7 +39,7 @@ export default function CreateShop({product} : FetchData) {
             setName('')
             setPrice('') 
             setStock('')  
-            router.push('/product') 
+            router.back() 
         })
     }catch(error){
         console.log(error)

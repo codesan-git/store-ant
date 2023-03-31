@@ -22,7 +22,7 @@ export default function CreateShop() {
                 'Content-Type' : 'application/json'
             },
             method: 'POST'
-        }).then(()=> { setForm({shopname: '', address: ''}); router.push('/') })
+        }).then(()=> { setForm({shopname: '', address: ''}); router.back() })
     }catch(error){
         console.log(error)
     }

@@ -54,7 +54,11 @@ model Shop {
 model Address {
   id            Int     @id @default(autoincrement())
   profileId     Int     @map("profile_id")
-  address       String
+  address       String  
+  region        String
+  city          String
+  province      String
+  postcode      String
   isMainAddress Boolean @default(false)
   isShopAddress Boolean @default(false)
 

@@ -13,7 +13,7 @@ interface Products {
   }[]
 }
 
-export default function Index({products} : Products) {
+export default function ShopProduct({products} : Products) {
   const router = useRouter()
   const refreshData = () => {
     router.replace(router.asPath)

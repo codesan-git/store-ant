@@ -11,7 +11,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const {username, password, phonenumber, address} = req.body
+  const {username, password, phonenumber} = req.body
   const session = await getSession({req})
   const user = await prisma.user.findUnique({
     where: {
@@ -33,8 +33,7 @@ export default async function handler(
       update: {
         username: username,
         password: hashedPassword,
-        phoneNumber: phonenumber,
-        addresses: {}
+        phoneNumber: phonenumber
       }
     })
     res.status(200).json({ message: 'Profile created' })
