@@ -124,23 +124,26 @@ export default function Profile({profile, address} : Props) {
                     </div>
                     <button className={styles.button_square} onClick={()=> router.push('/address')}>+</button>
                 </div>
-                <div>
-                    {address.map(address=>(
-                        <div className="card w-full bg-base-100 shadow-xl text-sm" key={String(address.id)}>
-                            <div className="py-5 px-10 flex w-full">
-                                <div className='w-5/6'>
-                                    <h2 className="card-title">{address.address}</h2>
-                                    <p>{address.region}, {address.city}, {address.province}</p>
-                                    <p>{address.postcode}</p>
-                                </div>
-                                <div className="card-actions justify-end flex w-fit my-auto ml-5">
-                                    <button className="btn btn-primary bg-gradient-to-r from-blue-500 to-indigo-500">Edit</button>
-                                    <button className="btn btn-primary bg-red-500">Delete</button>
+                {address? 
+                    <div>
+                        {address.map(address=>(
+                            <div className="card w-full bg-base-100 shadow-xl text-sm" key={String(address.id)}>
+                                <div className="py-5 px-10 flex w-full">
+                                    <div className='w-5/6'>
+                                        <h2 className="card-title">{address.address}</h2>
+                                        <p>{address.region}, {address.city}, {address.province}</p>
+                                        <p>{address.postcode}</p>
+                                    </div>
+                                    <div className="card-actions justify-end flex w-fit my-auto ml-5">
+                                        <button className="btn btn-primary bg-gradient-to-r from-blue-500 to-indigo-500">Edit</button>
+                                        <button className="btn btn-primary bg-red-500">Delete</button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div> : 
+                    <p>address not added yet</p>
+                }
             </section>
         </div>
     </div>
@@ -162,17 +165,19 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             phoneNumber: true
         }
     })
-    const address = await prisma.address.findMany({
-        where: { profileId: profile?.id },
-        select:{
-            id: true,
-            address: true,
-            region: true,
-            city: true,
-            province: true,
-            postcode: true
-        }
-    })
-    console.log(address)
+    let address = null
+    if(profile){
+        address = await prisma.address.findMany({
+            where: { profileId: profile?.id },
+            select:{
+                id: true,
+                address: true,
+                region: true,
+                city: true,
+                province: true,
+                postcode: true
+            }
+        })
+    }
     return { props: {profile, address} }
 }
