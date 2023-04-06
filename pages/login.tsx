@@ -20,7 +20,7 @@ export default function Login() {
   const router = useRouter()
 
   async function handleGoogleSignIn() {
-    signIn('google', {callbackUrl: "http://localhost:3000"})
+    signIn('google', {callbackUrl: `${window.location.origin}`})
   }
 
   async function loginUser(data: FormData){

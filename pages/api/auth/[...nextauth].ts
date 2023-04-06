@@ -12,8 +12,8 @@ export default authHandler;
 const authOptions : NextAuthOptions = {
     providers: [
         GoogleProvider({
-          clientId: "327099314916-uk7nkoa3ngqsrpgbii4m5pj057rqab2t.apps.googleusercontent.com",
-          clientSecret: "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"
+          clientId: process.env.GOOGLE_CLIENT_ID!,
+          clientSecret: process.env.GOOGLE_CLIENT_SECRET!
         }),
         CredentialsProvider({
           id: "credentials",
@@ -36,16 +36,16 @@ const authOptions : NextAuthOptions = {
               }
             });
 
-            const profile = await prisma.profile.findUnique({
-              where:{
-                userId: user?.id
-              }
-            });
-    
             // Email Not found
             if (!user) {
               throw new Error("Email is not registered");
             }
+
+            const profile = await prisma.profile.findUnique({
+              where:{
+                userId: user?.id
+              }
+            });    
     
             // Check hased password with DB hashed password
             const isPasswordCorrect = await compare(
@@ -64,24 +64,26 @@ const authOptions : NextAuthOptions = {
     ],
     adapter: PrismaAdapter(prisma),
     secret: process.env.SECRET,
-    session: {strategy: "jwt"},
+    session: {strategy: "jwt", maxAge: 3 * 60 * 60},
     jwt:{
-      secret: "Fpue0ZC+/K89P0CegNE6PCTcpG1dIG8i8z2A67C4Kzc="
+      secret: process.env.JWT_SECRET,
+      maxAge: 3 * 60 * 60
     },
-    // secret: process.env.NEXTAUTH_SECRET
-
     callbacks: {
-      session: async ({ session, token } : any) => {
-        if (session?.user) {
-          session.user.id = token.uid;
+      async jwt({ token, account, user }) {
+        // Persist the OAuth access_token and or the user id to the token right after signin
+        if (account) {
+          token.accessToken = account.access_token
+          token.id = user?.id
         }
-        return session;
+        return token
       },
-      jwt: async ({ user, token } : any) => {
-        if (user) {
-          token.uid = user.id;
-        }
-        return token;
+      async session({ session, token, user }) {
+        // Send properties to the client, like an access_token and user id from a provider.
+        session.user.accessToken = token.accessToken as string
+        session.user.id = token.id as string
+        
+        return session
       }
-    }
+    },
 };

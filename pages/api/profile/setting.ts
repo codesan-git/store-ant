@@ -13,18 +13,13 @@ export default async function handler(
 ) {
   const {username, password, phonenumber} = req.body
   const session = await getSession({req})
-  const user = await prisma.user.findUnique({
-    where: {
-      email: session?.user?.email!,
-    },
-  })
 
   try {
     const hashedPassword = await bcrypt.hash(password, 12)
     await prisma.profile.upsert({
-      where: {userId: user?.id},
+      where: {userId: session?.user?.id},
       create: {
-        userId: user?.id!,
+        userId: session?.user?.id!,
         username: username,
         password: hashedPassword,
         phoneNumber: phonenumber,

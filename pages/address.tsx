@@ -10,11 +10,12 @@ interface FormData{
     region: string,
     city: string,
     province: string,
-    postcode: string
+    postcode: string,
+    contact: string
 }
 
 export default function Address() {
-  const [form, setForm] = useState<FormData>({address: '', region: '', city: '', province: '', postcode: ''})
+  const [form, setForm] = useState<FormData>({address: '', region: '', city: '', province: '', postcode: '', contact: ''})
   const router = useRouter()
   
   async function create(data:FormData) {
@@ -25,7 +26,7 @@ export default function Address() {
                 'Content-Type' : 'application/json'
             },
             method: 'POST'
-        }).then(()=> { setForm({address: '', region: '', city: '', province: '', postcode: ''}); router.back() })
+        }).then(()=> { setForm({address: '', region: '', city: '', province: '', postcode: '', contact: ''}); router.back() })
     }catch(error){
         console.log(error)
     }
@@ -62,6 +63,9 @@ export default function Address() {
                 </div>
                 <div className={styles.input_group}>
                     <input type="text" name="postcode" placeholder="Postcode" className={styles.input_text} value={form?.postcode} onChange={e => setForm({...form, postcode: e.target.value})}/>
+                </div>
+                <div className={styles.input_group}>
+                    <input type="number" name="contact" placeholder="Contact Number" className={styles.input_text} value={form?.contact} onChange={e => setForm({...form, contact: e.target.value})}/>
                 </div>
 
                 <div className={styles.input_group}>

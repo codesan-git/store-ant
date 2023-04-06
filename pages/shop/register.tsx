@@ -52,13 +52,6 @@ export default function CreateShop() {
                     </span> */}
                 </div>
                 <div className={styles.input_group}>
-                    <input type="text" name="address" placeholder="Address" className={styles.input_text} value={form?.address} onChange={e => setForm({...form, address: e.target.value})}/>
-                    {/* <span className="icon flex items-center px-4" onClick={()=>setShow(!show)}>
-                        <HiKey size={25}/>
-                    </span> */}
-                </div>
-
-                <div className={styles.input_group}>
                     <button type="submit" className={styles.button}>Register</button>
                 </div>
             </form>

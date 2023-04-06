@@ -9,16 +9,10 @@ export default async function handler(
   const {name, price, stock } = req.body
   const session = await getSession({req})
   const id = req.query.id
-
-  const user = await prisma.user.findUnique({
-    where: {
-      email: session?.user?.email!,
-    },
-  })
-
+  
   const shop = await prisma.shop.findUnique({
     where: {
-      userId: user?.id
+      userId: session?.user?.id
     },
   })
 

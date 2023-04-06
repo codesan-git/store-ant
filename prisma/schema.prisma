@@ -59,6 +59,7 @@ model Address {
   city          String
   province      String
   postcode      String
+  contact       String
   isMainAddress Boolean @default(false)
   isShopAddress Boolean @default(false)
 

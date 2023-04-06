@@ -21,9 +21,6 @@ interface Products {
 export default function Home({products} : Products) {
   const{data:session} = useSession()
   const router = useRouter()
-  const refreshData = () => {
-    router.replace(router.asPath)
-  }
 
   return (
     <>
