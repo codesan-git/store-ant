@@ -10,7 +10,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const {address, region, city, province, postcode } = req.body
+  const {address, region, city, province, postcode, contact } = req.body
   const session = await getSession({req})
   const user = await prisma.user.findUnique({
     where: {
@@ -32,7 +32,8 @@ export default async function handler(
         region: region,
         city: city,
         province: province,
-        postcode: postcode
+        postcode: postcode,
+        contact: contact
       }
     })
     res.status(200).json({ message: 'address created' })
