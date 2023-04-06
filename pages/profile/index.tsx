@@ -187,7 +187,6 @@ export default function Profile({ profile, address }: Props) {
                   <a href="#my-modal-2" className="text-primary">
                     ubah
                   </a>
-                  {/* <p>{/<em> Put this part before </body> tag </em>/}</p> */}
                   <div className="modal z-50" id="my-modal-2">
                     <div className="modal-box">
                       <a href="#">
