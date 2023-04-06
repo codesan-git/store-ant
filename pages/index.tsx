@@ -1,120 +1,166 @@
-import Head from 'next/head'
-import Link from 'next/link'
-import { useSession, signOut } from 'next-auth/react'
-import { useRouter } from 'next/router'
-import { GetServerSideProps } from 'next'
-import { prisma } from "../lib/prisma"
+import Head from "next/head";
+import Link from "next/link";
+import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/router";
+import { GetServerSideProps } from "next";
+import { prisma } from "../lib/prisma";
+import { HiShoppingCart } from "react-icons/hi";
+import { RxDotFilled } from 'react-icons/rx';
+import Navbar from "./navbar";
+import Footer from "./footer";
 
 async function handleGoogleSignOut() {
-  signOut({callbackUrl: "http://localhost:3000/login"})
+  signOut({ callbackUrl: "http://localhost:3000/login" });
 }
 
 interface Products {
-  products:{
-    id: string,
-    name: string,
-    price: number,
-    stock: number
-  }[]
+  products: {
+    id: string;
+    name: string;
+    price: number;
+    stock: number;
+  }[];
 }
 
-export default function Home({products} : Products) {
-  const{data:session} = useSession()
-  const router = useRouter()
-  const refreshData = () => {
-    router.replace(router.asPath)
-  }
+export default function Home({ products }: Products) {
+  const { data: session } = useSession();
 
   return (
     <>
-        <Head>
-          <title>Homepage</title>
-        </Head>
-        <div className="bg-gradient-to-r from-blue-500 to-indigo-500 navbar">
-          <div className="flex-1">
-            <a className="btn btn-ghost normal-case text-xl text-gray-100">Store.ant</a>
-            <input type="text" placeholder="Shop now" className="input input-bordered input-secondary w-full mx-5 h-10" />
+      <Head>
+        <title>Homepage</title>
+      </Head>
+      <Navbar />
+
+      {/* Content */}
+      <div className="w-3/4 mx-auto">
+        {/* Test Carousel */}
+
+        
+
+        {/* End Test Carousel */}
+        {/* Carousel */}
+
+        <div className="carousel w-full h-96 my-8 rounded-lg">
+          <div id="slide1" className="carousel-item relative w-full">
+            <img
+              src="https://images.unsplash.com/photo-1661956603025-8310b2e3036d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
+              className="w-full object-cover"
+            />
+            <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+              <a
+                href="#slide4"
+                className="btn btn-circle"
+              >
+                ❮
+              </a>
+              <a href="#slide2" className="btn btn-circle">
+                ❯
+              </a>
+            </div>
           </div>
-          {session ? (
-            <div className="flex-none">
-              <div className="dropdown dropdown-end">
-                <label tabIndex={0} className="btn btn-ghost btn-circle mr-5">
-                  <div className="indicator">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="white"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-                    <span className="badge badge-sm indicator-item">8</span>
-                  </div>
-                </label>
-                <div tabIndex={0} className="mt-3 card card-compact dropdown-content w-52 bg-base-100 shadow">
-                  <div className="card-body">
-                    <span className="font-bold text-lg">8 Items</span>
-                    <span className="text-info">Subtotal: $999</span>
-                    <div className="card-actions">
-                      <button className="btn btn-primary btn-block">View cart</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="dropdown dropdown-end">
-                <label tabIndex={0} className="btn btn-ghost btn-circle avatar mr-3">
-                  <div className="w-10 rounded-full">
-                    <img src={session?.user?.image!}/>
-                  </div>
-                </label>
-                <ul tabIndex={0} className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
-                  <li>
-                    <Link className="justify-between" href={{pathname:'/profile', query: { email: session.user?.email }}}>
-                      Profile
-                      {/* <span className="badge">New</span> */}
-                    </Link>
-                  </li>
-                  <li><Link href={{pathname:'/shop', query: { email: session.user?.email }}}>Store</Link></li>
-                  <li><button onClick={handleGoogleSignOut}>Logout</button></li>
-                </ul>
+          <div id="slide2" className="carousel-item relative w-full">
+            <img
+              src="https://images.unsplash.com/photo-1680500055774-7185391be33d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80"
+              className="w-full object-cover"
+            />
+            <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+              <a href="#slide1" className="btn btn-circle">
+                ❮
+              </a>
+              <a href="#slide3" className="btn btn-circle">
+                ❯
+              </a>
+            </div>
+          </div>
+          <div id="slide3" className="carousel-item relative w-full">
+            <img
+              src="https://images.unsplash.com/photo-1680371371611-9168e2d7bfcd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2146&q=80"
+              className="w-full object-cover"
+            />
+            <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+              <a href="#slide2" className="btn btn-circle">
+                ❮
+              </a>
+              <a href="#slide4" className="btn btn-circle">
+                ❯
+              </a>
+            </div>
+          </div>
+          <div id="slide4" className="carousel-item relative w-full">
+            <img
+              src="https://images.unsplash.com/photo-1679678691010-894374986c54?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1198&q=80"
+              className="w-full object-cover"
+            />
+            <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+              <a href="#slide3" className="btn btn-circle">
+                ❮
+              </a>
+              <a href="#slide1" className="btn btn-circle">
+                ❯
+              </a>
+            </div>
+          </div>
+          <div className="absolute bottom-1/2 left-3/4">
+            <div className="flex justify-center w-full gap-2 z-auto">
+              <a href="#slide1" className="text-2xl cursor-pointer text-slate-200 hover:bg-slate-50 hover:rounded-full hover:text-slate-700 active:text-slate-700 ease-in-out"><RxDotFilled /></a>
+              <a href="#slide2" className="text-2xl cursor-pointer text-slate-200 hover:bg-slate-50 hover:rounded-full hover:text-slate-700 active:text-slate-700"><RxDotFilled /></a>
+              <a href="#slide3" className="text-2xl cursor-pointer text-slate-200 hover:bg-slate-50 hover:rounded-full hover:text-slate-700 active:text-slate-700"><RxDotFilled /></a>
+              <a href="#slide4" className="text-2xl cursor-pointer text-slate-200 hover:bg-slate-50 hover:rounded-full hover:text-slate-700 active:text-slate-700"><RxDotFilled /></a>
+            </div>
+          </div>
+        </div>
+        {/* End Carousel */}
+        <div className="px-8 my-8 flex-col grid lg:grid-cols-4 gap-10">
+          {products.map((product) => (
+            <div
+              data-theme="garden"
+              className="card w-auto glass"
+              key={product.id}
+            >
+              <figure>
+                <img
+                  src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
+                  alt="image!"
+                />
+              </figure>
+              <div className="card-body py-5 h-1/4">
+                <h2 className="card-title">{product.name}</h2>
+                <p className="text-md">Rp. {product.price}</p>
+                <p className="text-md">Qty. {product.stock}</p>
               </div>
             </div>
-          ) : (
-            <a className="btn btn-ghost normal-case text-md text-gray-100" href='/login'>Login</a>
-          )}
+          ))}
         </div>
-        <div>
-          <div className='w-auto px-8 my-8 flex-col grid lg:grid-cols-4 gap-10'>
-              {products.map(product =>(
-                <div data-theme="garden" className="card w-auto glass" key={product.id}>
-                  <figure><img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg" alt="image!"/></figure>
-                  <div className="card-body py-5 h-1/4">
-                    <h2 className="card-title">{product.name}</h2>
-                    <p className='text-md'>Rp. {product.price}</p>                
-                    <p className='text-md'>Qty. {product.stock}</p>
-                  </div>
-                </div>
-              ) )}
-          </div>
-        </div>
+      </div>
+      {/* End Content */}
+      <Footer />
     </>
-  )
+  );
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const products = await prisma.product.findMany({
-    select:{
+    select: {
       id: true,
       name: true,
       price: true,
-      stock: true
+      stock: true,
     },
     orderBy: [
       {
-        id: 'asc',
-      }
+        id: "asc",
+      },
     ],
-  })
-  return{
-    props:{
-      products
-    }
-  }
-}
+  });
+  return {
+    props: {
+      products,
+    },
+  };
+};
 
+// update Apr 3 -2
 
 // type Data = { }
 
