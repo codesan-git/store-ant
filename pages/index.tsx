@@ -19,9 +19,8 @@ interface Products {
   }[];
 }
 
-export default function Home({products} : Products) {
-  const{data:session} = useSession()
-  const router = useRouter()
+export default function Home({ products }: Products) {
+  const { data: session } = useSession();
 
   return (
     <>
