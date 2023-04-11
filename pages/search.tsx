@@ -3,9 +3,9 @@ import Head from 'next/head';
 import Navbar from './navbar';
 import Footer from './footer';
 import { useSearchParams } from 'next/navigation';
-import useSWR from 'swr';
 import { useRouter } from 'next/router';
 import { Product } from '@prisma/client';
+import useSWR from 'swr';
 
 const fetchProducts = async(url: string) => {
     const response = await fetch(url);
@@ -27,7 +27,6 @@ export default function Search() {
     `/api/product/search?q=${encodedSearchQuery}`,
     fetchProducts
   )
-  console.log(data);
 
   if(!data?.products){
     return null;
