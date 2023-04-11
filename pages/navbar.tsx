@@ -3,6 +3,7 @@ import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { HiShoppingCart } from "react-icons/hi";
+import { useState } from 'react';
 
 async function handleGoogleSignOut() {
     signOut({ callbackUrl: "http://localhost:3000/login" });
@@ -10,11 +11,20 @@ async function handleGoogleSignOut() {
 
 // export default function 
 const Navbar = () => {
-    const { data: session } = useSession();
-    const router = useRouter();
-    const refreshData = () => {
-      router.replace(router.asPath);
-    };
+  const { data: session } = useSession();
+  const router = useRouter();
+  const refreshData = () => {
+    router.replace(router.asPath);
+  };
+    
+  const [query, setQuery] = useState('');
+  const onSearch = (event : React.FormEvent) => {
+    event.preventDefault();
+    const encodedSearchQuery = encodeURI(query);
+    router.push(`/search?q=${encodedSearchQuery}`);
+    //console.log(encodedSearchQuery);
+  }
+
   return (
     <>
       {/* New Navbar */}
@@ -50,11 +60,15 @@ const Navbar = () => {
           </div>
         </div>
         <div className="navbar-center hidden lg:flex">
-          <input
-            type="text"
-            placeholder="Shop now"
-            className="input input-bordered input-primary input-sm w-full placeholder-primary-focus"
-          />
+          <form onSubmit={onSearch}>
+            <input
+              type="text"
+              placeholder="Shop now"
+              className="input input-bordered input-primary input-sm w-full placeholder-primary-focus"
+              value={query}
+              onChange={e => {setQuery(e.target.value); }}
+            />
+          </form>
         </div>
         <div className="navbar-end">
           {/* Session Login */}
