@@ -4,16 +4,38 @@ import { useState } from 'react';
 import { useRouter } from 'next/router'
 import Image from 'next/image'
 import Link from 'next/link'
+import useSWR from 'swr';
+import { Category } from '@prisma/client';
+
+const fetchProducts = async(url: string) => {
+    const response = await fetch(url);
+
+    if(!response.ok){
+        throw new Error("failed");
+    }
+    
+    return response.json();
+}
 
 interface FormData{
     name: string,
     price: string,
-    stock: string
+    stock: string,
+    categoryId: string
 }
 
 export default function CreateProduct() {
-  const [form, setForm] = useState<FormData>({name: '', price: '', stock:''});
+  const [form, setForm] = useState<FormData>({name: '', price: '', stock:'', categoryId: '1'});
   const router = useRouter()
+
+  const {data, isLoading} = useSWR<{categories : Array<Category>}>(
+    `/api/product/category/`,
+    fetchProducts
+  )
+
+  if(!data?.categories){
+    return null;
+  }
 
   async function create(data:FormData) {
     try{
@@ -23,7 +45,7 @@ export default function CreateProduct() {
                 'Content-Type' : 'application/json'
             },
             method: 'POST'
-        }).then(() => { setForm({name: '', price: '', stock:''}); router.back() })
+        }).then(() => { setForm({name: '', price: '', stock:'', categoryId: '1'}); router.back() })
     }catch(error){
         console.log(error)
     }
@@ -44,8 +66,12 @@ export default function CreateProduct() {
                 <h1 className="text-gray-800 text-4xl font-bold py-4">Add Product</h1>
                 <p className="mx-auto text-gray-400">Add product</p>
             </div>
-
             <form onSubmit={e=>{e.preventDefault(); handleSubmit(form)}} className="flex flex-col gap-5">
+                <select onChange={e => {e.preventDefault(); setForm({...form, categoryId: e.target.value})}} name="categoryOption" id="categoryOption">
+                    {data.categories.map(category =>(
+                        <option value={category.id}>{category.category}</option>
+                    ))}
+                </select>
                 <div className={styles.input_group}>
                     <input type="text" name="name" placeholder="Name" className={styles.input_text} value={form?.name} onChange={e => setForm({...form, name: e.target.value})}/>
                     {/* <span className="icon flex items-center px-4">

@@ -24,10 +24,12 @@ export default async function handler(
             id: true,
             name: true,
             price: true,
-            stock: true
+            stock: true,
+            category: true
         }
       })
-    res.status(200).json(product)
+    res.status(200).json({product})
+    console.log(res)
     } catch (error) {
       console.log(error)
     }

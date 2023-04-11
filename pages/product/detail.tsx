@@ -12,8 +12,14 @@ interface FetchData{
         id: Number,
         name: string,
         price: Number,
-        stock: Number
+        stock: Number,
+        category: Category
     }
+}
+
+interface Category{
+  id: Number,
+  category: string
 }
 
 export default function CreateShop({product} : FetchData) {    
@@ -37,6 +43,7 @@ export default function CreateShop({product} : FetchData) {
                         />
                     </figure>
                     <p>{product.name}</p>
+                    <p>{product.category.category}</p>
                     <p>{String(product.price)}</p>
                     <p>{String(product.stock)}</p>
                 </div>
@@ -47,7 +54,7 @@ export default function CreateShop({product} : FetchData) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const session = await getSession(context)
+    const session = await getSession(context);
     const shop = await prisma.shop.findUnique({
         where: {
           userId: session?.user?.id
@@ -59,7 +66,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             id: true,
             name: true,
             price: true,
-            stock: true
+            stock: true,
+            category: true
         }
     })
     return{

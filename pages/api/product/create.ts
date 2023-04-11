@@ -10,7 +10,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const {name, price, stock } = req.body
+  const {name, price, stock, categoryId } = req.body
   const session = await getSession({req})
   const shop = await prisma.shop.findUnique({
     where: {
@@ -23,6 +23,7 @@ export default async function handler(
     await prisma.product.create({
       data: {
         shopId: shop?.id!,
+        categoryId: Number(categoryId),
         name: name,
         price: parseInt(price),
         stock: parseInt(stock)
