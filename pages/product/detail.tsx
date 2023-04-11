@@ -55,13 +55,8 @@ export default function CreateShop({product} : FetchData) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const session = await getSession(context);
-    const shop = await prisma.shop.findUnique({
-        where: {
-          userId: session?.user?.id
-        },
-    })
     const product = await prisma.product.findFirst({
-        where: { id: Number(context.query.id), shopId: shop?.id},
+        where: { id: Number(context.query.id)},
         select:{
             id: true,
             name: true,
