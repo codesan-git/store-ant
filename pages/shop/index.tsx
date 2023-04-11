@@ -1,7 +1,7 @@
 import React from 'react'
 import { useRouter } from 'next/router'
 import { GetServerSideProps } from 'next'
-import { useSession } from 'next-auth/react'
+import { getSession, useSession } from 'next-auth/react'
 import { prisma } from "../../lib/prisma"
 import Link from 'next/link'
 
@@ -14,8 +14,14 @@ interface Props{
       id: string,
       name: string,
       price: number,
-      stock: number
+      stock: number,
+      category: Category
     }[]
+}
+
+interface Category{
+  id: Number,
+  category: string
 }
 
 export default function Profile({shop, products} : Props) {
@@ -82,6 +88,7 @@ export default function Profile({shop, products} : Props) {
                         <figure><img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg" alt="image!"/></figure>
                         <div className="card-body py-3">
                             <h2 className="card-title">{product.name}</h2>
+                            <p className='text-md'>{product.category.category}</p>    
                             <p className='text-md'>Rp. {product.price}</p>                
                             <p className='text-md'>Qty. {product.stock}</p>
                             <div className="card-actions justify-end my-2">
@@ -99,14 +106,9 @@ export default function Profile({shop, products} : Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const user = await prisma.user.findUnique({
-        where: { email: String(context.query.email) },
-        select:{
-            id: true
-        }
-    })
+    const session = await getSession(context);
     const shop = await prisma.shop.findUnique({
-        where: { userId: user?.id },
+        where: { userId: session?.user?.id },
         select:{
             id: true,
             shopName: true
@@ -118,7 +120,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
           id: true,
           name: true,
           price: true,
-          stock: true
+          stock: true,
+          category: true
         },
         orderBy: [
           {
