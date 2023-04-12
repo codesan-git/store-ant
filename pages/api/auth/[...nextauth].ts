@@ -82,7 +82,10 @@ const authOptions : NextAuthOptions = {
         // Send properties to the client, like an access_token and user id from a provider.
         session.user.accessToken = token.accessToken as string
         session.user.id = token.id as string
-        
+        const userData = await prisma.user.findUnique({
+          where: {id: session.user.id}
+        })
+        session.user.image = userData?.image
         return session
       }
     },

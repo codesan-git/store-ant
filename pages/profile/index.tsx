@@ -9,6 +9,7 @@ import { useSession } from "next-auth/react";
 import { prisma } from "../../lib/prisma";
 import Navbar from "../navbar";
 import Footer from "../footer";
+import axios from "axios"
 import {
   Tabs,
   TabsHeader,
@@ -27,9 +28,6 @@ interface FormData {
   phonenumber?: string;
   password?: string;
 }
-// interface ChangePhoto {
-//   photo?: string;
-// }
 
 interface Props {
   profile: {
@@ -57,6 +55,8 @@ export default function Profile({ profile, address }: Props) {
   const [show, setShow] = useState<boolean>();
   const router = useRouter();
   const { data: session } = useSession();
+  const [selectedImage, setSelectedImage] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File>();
 
   // const [photo, setPhoto] = useState<ChangePhoto>({
   //   photo: session?.user?.image!
@@ -113,9 +113,14 @@ export default function Profile({ profile, address }: Props) {
 
   const changePhoto = async () => {
     try {
-      fetch("http://localhost:3000/api/");
-    } catch (error) {}
-  };
+        if(!selectedFile) return;
+        const formData = new FormData();
+        formData.append("image", selectedFile);
+        await axios.post('http://localhost:3000/api/profile/photo', formData).then(()=> router.reload())
+    } catch (error: any) {
+        console.log(error);
+    }
+  }
 
   const handleSubmit = async (data: FormData) => {
     try {
@@ -139,16 +144,40 @@ export default function Profile({ profile, address }: Props) {
             <div className="columns">
               <div className="card card-compact w-96 bg-base-100 shadow-xl">
                 <figure className="p-4">
-                  <img
-                    src={session?.user?.image!}
-                    alt="img-profile"
-                    className="rounded-md w-96 h-96 object-cover"
-                  />
+                <label>
+                      <input 
+                        type='file' 
+                        hidden 
+                        onChange={({target}) => {
+                            if(target.files){
+                                const file = target.files[0];
+                                setSelectedImage(URL.createObjectURL(file));
+                                setSelectedFile(file);
+                            }
+                        }}
+                      />
+                      <div className='aspect-video rounded flex items-center justify-center border-2 border-dashed cursor-pointer'>
+                          {selectedImage? (
+                            <img
+                              src={selectedImage}
+                              alt="img-profile"
+                              className="rounded-md w-96 h-96 object-cover"
+                            />
+                          ) : (
+                            <img
+                            src={session?.user?.image!}
+                            alt="img-profile"
+                            className="rounded-md w-96 h-96 object-cover"
+                          />
+                          )}
+                      </div>
+                  </label>
                 </figure>
                 <div className="card-body">
                   <div className="card-actions justify-end">
-                    <button className="btn btn-primary btn-outline rounded-md w-full">
-                      Pilih Foto
+                    <p className="text-center">Ketuk gambar untuk mengubah foto</p>                    
+                    <button onClick={changePhoto} className="btn btn-primary btn-outline rounded-md w-full">
+                      Simpan Foto
                     </button>
                   </div>
                   <p>
