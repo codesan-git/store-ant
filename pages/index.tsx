@@ -20,7 +20,14 @@ interface Products {
     name: string;
     price: number;
     stock: number;
+    category: Category,
+    image: string
   }[];
+}
+
+interface Category{
+  id: Number,
+  category: string
 }
 
 export default function Home({ products }: Products) {
@@ -137,6 +144,8 @@ export const getServerSideProps: GetServerSideProps = async () => {
       name: true,
       price: true,
       stock: true,
+      category: true,
+      image: true,
     },
     orderBy: [
       {
@@ -150,50 +159,3 @@ export const getServerSideProps: GetServerSideProps = async () => {
     },
   };
 };
-
-// update Apr 3 -2
-
-// type Data = { }
-
-// export const getServerSideProps: GetServerSideProps<{ data: Data }> = async (context) => {
-//   const session = await getSession({context?.req})
-
-//   return {
-//     props: {
-//       data,
-//     },
-//   }
-// }
-
-// function Guest(){
-//   return(
-//     <main className='container mx-auto text-center py-20'>
-//       <h3 className='text-4xl font-bold'>
-//         Guest Homepage
-//       </h3>
-//       <div className='flex justify-center'>
-//         <Link className='mt-5 px-10 py-1 rounded-sm bg-indigo-500 text-gray-50' href={'/login'}>Sign In</Link>
-//       </div>
-//     </main>
-//   )
-// }
-
-// function User({user}: {user : DefaultSession["user"]}){
-//   return(
-//     <main className='container mx-auto text-center py-20'>
-//       <h3 className='text-4xl font-bold'>
-//         User Homepage
-//       </h3>
-//       <div className='details'>
-//         <h5>{user?.name}</h5>
-//         <h5>{user?.email}</h5>
-//       </div>
-//       <div className="flex justify-center">
-//         <button className='mt-5 px-10 py-1 rounded-sm bg-indigo-500 bg-gray-50'>Sign Out</button>
-//       </div>
-//       <div className='flex justify-center'>
-//         <Link className='mt-5 px-10 py-1 rounded-sm bg-indigo-500 text-gray-50' href={'/profile'}>profile</Link>
-//       </div>
-//     </main>
-//   )
-// }
