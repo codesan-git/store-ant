@@ -25,6 +25,7 @@ interface Products {
 
 export default function Home({ products }: Products) {
   const { data: session } = useSession();
+  const router = useRouter();
 
   return (
     <>
@@ -35,9 +36,7 @@ export default function Home({ products }: Products) {
 
       {/* Content */}
       <div className="w-3/4 mx-auto">
-        {/* Test Carousel */}
-
-        
+        {/* Test Carousel */}       
 
         {/* End Test Carousel */}
         {/* Carousel */}
@@ -118,6 +117,7 @@ export default function Home({ products }: Products) {
               data-theme="garden"
               className="card w-auto glass"
               key={product.id}
+              onClick={() => router.push({pathname: '/product/detail/', query: { id: String(product.id) }})}
             >
               <ProductCard {...product} />
             </div>

@@ -10,6 +10,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Gender {
+  MAN
+  WOMAN
+}
+
 model Account {
   id                 String     @id @default(cuid())
   userId             String     @map("user_id")
@@ -37,6 +42,8 @@ model Profile {
   username    String
   password    String
   phoneNumber String?
+  birthDate   String?
+  gender      Gender?
   addresses   Address[]
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -90,12 +97,20 @@ model User {
 model Product {
   id            Int @id @default(autoincrement())
   shopId        Int @map("shop_id")
+  categoryId    Int @map("category_id")
   name          String
   image         String?
   price         Int
   stock         Int
 
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   shop Shop @relation(fields: [shopId], references: [id], onDelete: Cascade)
+}
+
+model Category {
+  id            Int @id @default(autoincrement())
+  category      String
+  product       Product[]
 }
 
 model VerificationToken {

@@ -1,4 +1,4 @@
-
+/* 
 .input_group{
     @apply flex border rounded-xl;
     position: relative;
@@ -44,4 +44,4 @@
 .input_text:not([type=email]) ~ span:hover *{
     color: #6366f1;
     cursor: pointer;
-}
+} */
