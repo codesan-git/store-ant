@@ -15,7 +15,8 @@ interface Props{
       name: string,
       price: number,
       stock: number,
-      category: Category
+      category: Category,
+      image: string
     }[]
 }
 
@@ -85,7 +86,13 @@ export default function Profile({shop, products} : Props) {
                 <div className='w-4/5 py-5 mx-auto flex-col grid lg:grid-cols-3 gap-10'>
                     {products.map(product =>(
                         <div data-theme="garden" className="card w-auto glass" key={product.id}>
-                        <figure><img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg" alt="image!"/></figure>
+                        <figure>
+                          {product.image? (
+                            <img src={product.image}/>
+                          ) : (
+                            <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"/>
+                          )}
+                        </figure>
                         <div className="card-body py-3">
                             <h2 className="card-title">{product.name}</h2>
                             <p className='text-md'>{product.category.category}</p>    
@@ -121,7 +128,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
           name: true,
           price: true,
           stock: true,
-          category: true
+          category: true,
+          image: true
         },
         orderBy: [
           {
