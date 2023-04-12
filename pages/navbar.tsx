@@ -42,6 +42,12 @@ const Navbar = () => {
     router.push(`/search?q=${encodedSearchQuery}`);
     //console.log(encodedSearchQuery);
   }
+
+  function onFilter(categoryId: string){
+    const encodedSearchQuery = encodeURI(categoryId);
+    router.push(`/filter?q=${encodedSearchQuery}`);
+    //console.log(encodedSearchQuery);
+  }
   
   console.log(categoryData);
 
@@ -76,7 +82,7 @@ const Navbar = () => {
                 {categoryData.categories.map(
                   category => (
                     <li key={category.id}>
-                      <a>{category.category}</a>
+                      <a onClick={()=> onFilter(String(category.id))}>{category.category}</a>
                     </li>
                   )
                 )}
