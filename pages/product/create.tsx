@@ -63,17 +63,9 @@ export default function CreateProduct() {
         formData.append("price", form.price);
         formData.append("stock", form.stock);
         formData.append("categoryId", form.categoryId);
-        await axios.post('http://localhost:3000/api/product/image/upload', formData).then(() => { setForm({name: '', price: '', stock:'', categoryId: '1'}); router.back() });
+        await axios.post('http://localhost:3000/api/product/create', formData).then(() => { setForm({name: '', price: '', stock:'', categoryId: '1'}); router.back() });
     } catch (error: any) {
         console.log(error);
-    }
-  }
-
-  const handleSubmit = async(data: FormData) => {
-    try{
-        create(data)
-    }catch(error){
-        console.log(error)
     }
   }
 
@@ -96,7 +88,8 @@ export default function CreateProduct() {
                                     setSelectedImage(URL.createObjectURL(file));
                                     setSelectedFile(file);
                                 }
-                            }}/>
+                            }}
+                        />
                         <div className='w-40 aspect-video rounded flex items-center justify-center border-2 border-dashed cursor-pointer'>
                             {selectedImage? (
                                 <img src={selectedImage} alt=""/>

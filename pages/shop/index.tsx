@@ -99,8 +99,8 @@ export default function Profile({shop, products} : Props) {
                             <p className='text-md'>Rp. {product.price}</p>                
                             <p className='text-md'>Qty. {product.stock}</p>
                             <div className="card-actions justify-end my-2">
-                            <button onClick={() => router.push({pathname: '/product/update', query: { id: product.id }})} className="w-16 btn btn-primary">Edit</button>
-                            <button onClick={() => deleteProduct(product.id)} className="w-16 btn bg-red-500">Delete</button>
+                              <button onClick={() => router.push({pathname: '/product/update', query: { id: product.id }})} className="w-16 btn btn-primary">Edit</button>
+                              <button onClick={() => deleteProduct(product.id)} className="w-16 btn bg-red-500">Delete</button>
                             </div>
                         </div>
                         </div>
