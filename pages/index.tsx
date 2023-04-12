@@ -8,6 +8,7 @@ import { HiShoppingCart } from "react-icons/hi";
 import { RxDotFilled } from 'react-icons/rx';
 import Navbar from "./navbar";
 import Footer from "./footer";
+import ProductCard from "@/components/product_card";
 
 async function handleGoogleSignOut() {
   signOut({ callbackUrl: "http://localhost:3000/login" });
@@ -118,17 +119,7 @@ export default function Home({ products }: Products) {
               key={product.id}
               onClick={() => router.push({pathname: '/product/detail/', query: { id: String(product.id) }})}
             >
-              <figure>
-                <img
-                  src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
-                  alt="image!"
-                />
-              </figure>
-              <div className="card-body py-5 h-1/4">
-                <h2 className="card-title">{product.name}</h2>
-                <p className="text-md">Rp. {product.price}</p>
-                <p className="text-md">Qty. {product.stock}</p>
-              </div>
+              <ProductCard {...product} />
             </div>
           ))}
         </div>

@@ -4,25 +4,50 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { HiShoppingCart } from "react-icons/hi";
 import { useState } from 'react';
+import { Category } from "@prisma/client";
+import useSWR from 'swr';
 
 async function handleGoogleSignOut() {
     signOut({ callbackUrl: "http://localhost:3000/login" });
-  }
+}
+
+const fetchCategories = async (url: string) => {
+
+  const response = await fetch(url);
+
+  if(!response.ok) throw new Error("Failed to fetch Categories for Navbar");
+
+  return response.json();
+}
 
 // export default function 
 const Navbar = () => {
+
+  const {data: categoryData, isLoading} = useSWR<{categories : Array<Category>}>(
+    `/api/product/category/`,
+    fetchCategories
+  )
+
   const { data: session } = useSession();
   const router = useRouter();
   const refreshData = () => {
     router.replace(router.asPath);
   };
-    
+
+  
   const [query, setQuery] = useState('');
   const onSearch = (event : React.FormEvent) => {
     event.preventDefault();
     const encodedSearchQuery = encodeURI(query);
     router.push(`/search?q=${encodedSearchQuery}`);
     //console.log(encodedSearchQuery);
+  }
+  
+  console.log(categoryData);
+
+  if(!categoryData?.categories){
+    
+    return null
   }
 
   return (
@@ -31,11 +56,11 @@ const Navbar = () => {
       <div className="navbar bg-base-100 px-32 shadow">
         <div className="navbar-start">
           <div className="flex-1 lg:mx-16">
-            <a className="btn btn-ghost normal-case text-xl text-primary-focus" href="/">
+            <Link className="btn btn-ghost normal-case text-xl text-primary-focus" href="/">
               Store{" "}
               <span className="text-indigo-700 to-secondary-focus">.</span>
               <span className="text-secondary-focus">ant</span>
-            </a>
+            </Link>
             {/* Dropdown */}
             <div className="dropdown dropdown-hover mr-4">
               <label
@@ -48,12 +73,13 @@ const Navbar = () => {
                 tabIndex={0}
                 className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
               >
-                <li>
-                  <a>Item 1</a>
-                </li>
-                <li>
-                  <a>Item 2</a>
-                </li>
+                {categoryData.categories.map(
+                  category => (
+                    <li key={category.id}>
+                      <a>{category.category}</a>
+                    </li>
+                  )
+                )}
               </ul>
             </div>
             {/* End Dropdown */}
@@ -175,18 +201,18 @@ const Navbar = () => {
               </div>
               {/* End Dropdown Chart */}
               <p className="text-primary-focus mx-5">|</p>
-              <a
+              <Link
                 className="btn btn-outline btn-primary text-md btn-sm text-gray-100 lg:mx-4"
                 href="/login"
               >
                 Daftar
-              </a>
-              <a
+              </Link>
+              <Link
                 className="btn btn-primary btn-sm text-md text-gray-100 lg:mx-4"
                 href="/login"
               >
                 Masuk
-              </a>
+              </Link>
             </>
           )}
           {/* End Session Login */}
