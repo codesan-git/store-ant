@@ -1,16 +1,16 @@
 interface Product {
-    id: string,
+    id: string | number,
     name: string
     price: number,
     stock: number,
-    category: Category,
-    image: string
+    category?: Category,
+    image: string | null
 }
 
 interface Category{
     id: Number,
     category: string
-  }
+}
 
 const ProductCard = ({id, name, price, stock, category, image}: Product) => {
     return (
@@ -24,7 +24,7 @@ const ProductCard = ({id, name, price, stock, category, image}: Product) => {
             </figure>
             <div className="card-body py-5 h-1/4">
                 <h2 className="card-title">{name}</h2>
-                <p className='text-md'>{category.category}</p>   
+                <p className='text-md'>{category?.category}</p>   
                 <p className="text-md">Rp. {price}</p>
                 <p className="text-md">Qty. {stock}</p>
             </div>
