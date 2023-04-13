@@ -5,7 +5,7 @@ import { useState } from "react";
 import { HiAtSymbol, HiKey, HiUser } from "react-icons/hi";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
-import { useSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import { prisma } from "../../lib/prisma";
 import Navbar from "../navbar";
 import Footer from "../footer";
@@ -574,14 +574,9 @@ export default function Profile({ profile, address }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const user = await prisma.user.findUnique({
-    where: { email: String(context.query.email) },
-    select: {
-      id: true,
-    },
-  });
+  const session = await getSession(context);
   const profile = await prisma.profile.findUnique({
-    where: { userId: user?.id },
+    where: { userId: session?.user?.id },
     select: {
       id: true,
       username: true,

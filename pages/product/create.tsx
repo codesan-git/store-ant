@@ -32,26 +32,12 @@ export default function CreateProduct() {
   const [selectedFile, setSelectedFile] = useState<File>();
 
   const {data, isLoading} = useSWR<{categories : Array<Category>}>(
-    `/api/product/category/`,
+    `/api/category/`,
     fetchProducts
   )
 
   if(!data?.categories){
     return null;
-  }
-
-  async function create(data:FormData) {
-    try{
-        fetch('http://localhost:3000/api/product/image/upload', {
-            body: JSON.stringify(data),
-            headers: {
-                'Content-Type' : 'application/json'
-            },
-            method: 'POST'
-        }).then(() => { setForm({name: '', price: '', stock:'', categoryId: '1'}); router.back() });
-    }catch(error){
-        console.log(error);
-    }
   }
   
   const handleUpload = async () => {

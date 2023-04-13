@@ -24,7 +24,7 @@ const fetchCategories = async (url: string) => {
 const Navbar = () => {
 
   const {data: categoryData, isLoading} = useSWR<{categories : Array<Category>}>(
-    `/api/product/category/`,
+    `/api/category/`,
     fetchCategories
   )
 
@@ -49,7 +49,7 @@ const Navbar = () => {
     //console.log(encodedSearchQuery);
   }
   
-  console.log(categoryData);
+  console.log("category ", categoryData);
 
   if(!categoryData?.categories){
     
@@ -159,7 +159,6 @@ const Navbar = () => {
                       className="justify-between"
                       href={{
                         pathname: "/profile",
-                        query: { email: session.user?.email },
                       }}
                     >
                       Profile
@@ -170,7 +169,6 @@ const Navbar = () => {
                     <Link
                       href={{
                         pathname: "/shop",
-                        query: { email: session.user?.email },
                       }}
                     >
                       Store
