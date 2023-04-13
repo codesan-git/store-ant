@@ -24,7 +24,7 @@ interface Category{
 
 export default function CreateShop({product} : FetchData) {    
   const router = useRouter();
-  const {id} = router.query;
+//   const {id} = router.query;
 
   return (
     <div>
