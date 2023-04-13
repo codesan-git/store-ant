@@ -4,6 +4,7 @@ import { GetServerSideProps } from 'next'
 import { getSession, useSession } from 'next-auth/react'
 import { prisma } from "../../lib/prisma"
 import Link from 'next/link'
+import ProductCard from '@/components/product_card'
 
 interface Props{
     shop:{
@@ -44,6 +45,9 @@ export default function Profile({shop, products} : Props) {
         console.log(error)
     }
   }
+
+  const editProduct = (id: string) => router.push({pathname: '/product/update', query: { id: id }});
+
   
   if(!shop){
     router.push('/shop/register')
@@ -86,23 +90,7 @@ export default function Profile({shop, products} : Props) {
                 <div className='w-4/5 py-5 mx-auto flex-col grid lg:grid-cols-3 gap-10'>
                     {products.map(product =>(
                         <div data-theme="garden" className="card w-auto glass" key={product.id}>
-                        <figure>
-                          {product.image? (
-                            <img src={product.image}/>
-                          ) : (
-                            <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"/>
-                          )}
-                        </figure>
-                        <div className="card-body py-3">
-                            <h2 className="card-title">{product.name}</h2>
-                            <p className='text-md'>{product.category.category}</p>    
-                            <p className='text-md'>Rp. {product.price}</p>                
-                            <p className='text-md'>Qty. {product.stock}</p>
-                            <div className="card-actions justify-end my-2">
-                              <button onClick={() => router.push({pathname: '/product/update', query: { id: product.id }})} className="w-16 btn btn-primary">Edit</button>
-                              <button onClick={() => deleteProduct(product.id)} className="w-16 btn bg-red-500">Delete</button>
-                            </div>
-                        </div>
+                          <ProductCard product={product} onEdit={editProduct} onDelete={deleteProduct}/>                        
                         </div>
                     ) )}
                 </div>

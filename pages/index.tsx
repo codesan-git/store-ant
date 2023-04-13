@@ -126,7 +126,7 @@ export default function Home({ products }: Products) {
               key={product.id}
               onClick={() => router.push({pathname: '/product/detail/', query: { id: String(product.id) }})}
             >
-              <ProductCard {...product} />
+              <ProductCard product={product} />
             </div>
           ))}
         </div>
