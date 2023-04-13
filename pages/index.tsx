@@ -163,7 +163,7 @@ export default function Home({ products }: Products) {
                 })
               }
             >
-              <ProductCard {...product} />
+              <ProductCard product={product} />
             </div>
           ))}
         </div>

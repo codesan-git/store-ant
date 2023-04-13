@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { Product } from '@prisma/client';
 import useSWR from 'swr';
+import ProductCard from '@/components/product_card';
 
 const fetchProducts = async(url: string) => {
     const response = await fetch(url);
@@ -49,17 +50,7 @@ export default function Search() {
               key={product.id}
               onClick={() => router.push({pathname: '/product/detail/', query: { id: String(product.id) }})}
             >
-              <figure>
-                <img
-                  src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
-                  alt="image!"
-                />
-              </figure>
-              <div className="card-body py-5 h-1/4">
-                <h2 className="card-title">{product.name}</h2>
-                <p className="text-md">Rp. {product.price}</p>
-                <p className="text-md">Qty. {product.stock}</p>
-              </div>
+              <ProductCard product={product} />
             </div>
           ))}
         </div>
