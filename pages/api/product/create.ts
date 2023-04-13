@@ -55,14 +55,14 @@ export default async function handler(
     try {
         // // // CREATE
         const product = await prisma.product.create({
-        data: {
-            shopId: shop?.id!,
-            categoryId: Number(categoryId),
-            name: name as string,
-            price: Number(price),
-            stock: Number(stock),
-            image: imageUrl
-        }
+            data: {
+                shopId: shop?.id!,
+                categoryId: Number(categoryId),
+                name: name as string,
+                price: Number(price),
+                stock: Number(stock),
+                image: imageUrl
+            }
         })
         res.status(200).json({ message: 'product created', data: product });
     } catch (error) {

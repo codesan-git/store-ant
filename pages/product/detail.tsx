@@ -13,7 +13,8 @@ interface FetchData{
         name: string,
         price: Number,
         stock: Number,
-        category: Category
+        category: Category,
+        image: string
     }
 }
 
@@ -37,10 +38,11 @@ export default function CreateShop({product} : FetchData) {
 
                 <div>
                     <figure>
-                        <img
-                        src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
-                        alt="image!"
-                        />
+                        {product.image? (
+                            <img src={product.image}/>
+                        ) : (
+                            <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"/>
+                        )}
                     </figure>
                     <p>{product.name}</p>
                     <p>{product.category.category}</p>
@@ -62,7 +64,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             name: true,
             price: true,
             stock: true,
-            category: true
+            category: true,
+            image: true
         }
     })
     return{

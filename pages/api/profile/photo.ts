@@ -46,8 +46,10 @@ export default async function handler(
     imageUrl = imageUrl.substring(imageUrl.indexOf("images"));
 
     try {
+        fs.unlink(path.join(process.cwd(), `public\\${session?.user.image!}`));
+
         // // // CREATE
-        const product = await prisma.user.update({
+        const user = await prisma.user.update({
           where:{ id: session?.user.id},
           data:{
             image: imageUrl
