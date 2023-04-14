@@ -49,7 +49,7 @@ const Navbar = () => {
     //console.log(encodedSearchQuery);
   }
   
-  console.log("category ", categoryData);
+  console.log("profile ", session?.user.image);
 
   if(!categoryData?.categories){
     

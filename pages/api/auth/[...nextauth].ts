@@ -85,7 +85,10 @@ const authOptions : NextAuthOptions = {
         const userData = await prisma.user.findUnique({
           where: {id: session.user.id}
         })
-        session.user.image = userData?.image
+        if(userData?.image?.includes("images\\profiles")){
+          userData.image = `http:\\\\localhost:3000\\${userData.image}`;
+        }
+        session.user.image = userData?.image;
         return session
       }
     },

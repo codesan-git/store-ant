@@ -39,7 +39,7 @@ export default function CreateShop({product} : FetchData) {
                 <div>
                     <figure>
                         {product.image? (
-                            <img src={product.image}/>
+                            <img src={`http://localhost:3000/${product.image}`}/>
                         ) : (
                             <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"/>
                         )}
