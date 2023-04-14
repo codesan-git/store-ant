@@ -86,9 +86,10 @@ const authOptions : NextAuthOptions = {
           where: {id: session.user.id}
         })
         if(userData?.image?.includes("images\\profiles")){
-          userData.image = `http:\\\\localhost:3000\\${userData.image}`;
+          session.user.image = `http:\\\\localhost:3000\\${userData.image}`;
+        }else{
+          session.user.image = userData?.image;
         }
-        session.user.image = userData?.image;
         return session
       }
     },

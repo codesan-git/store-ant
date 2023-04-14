@@ -10,10 +10,10 @@ import Navbar from "./navbar";
 import Footer from "./footer";
 import ProductCard from "@/components/product_card";
 import GetProduct from './getProduct';
-import 'primereact/resources/themes/lara-light-indigo/theme.css';   
-import 'primereact/resources/primereact.css';                       
-import 'primeicons/primeicons.css';                                 
-import 'primeflex/primeflex.css'; 
+// import 'primereact/resources/themes/lara-light-indigo/theme.css';   
+// import 'primereact/resources/primereact.css';                       
+// import 'primeicons/primeicons.css';                                 
+// import 'primeflex/primeflex.css'; 
 
 async function handleGoogleSignOut() {
   signOut({ callbackUrl: "http://localhost:3000/login" });
@@ -178,6 +178,7 @@ export default function Home({ products }: Products) {
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const products = await prisma.product.findMany({
+    where:{stock: { not: 0}},
     select: {
       id: true,
       name: true,
