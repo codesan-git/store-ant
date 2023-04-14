@@ -33,8 +33,7 @@ export default function CreateShop({product} : FetchData) {
                 <h1>Product Detail</h1>
             </div>
             <div id='content' className="flex flex-row ">
-                <section className='w-3/4 p-4 bg-yellow-600'>
-                    <h1>product details</h1>
+                <section className='w-2/3 p-4 bg-yellow-600'>
                     <div id='product-details' className="flex flex-row space-x-10">
                         <div id='product-image-container' className="bg-deep-orange-400 w-72 h-72 py-14">
                             <img className='object-fill'
@@ -43,10 +42,12 @@ export default function CreateShop({product} : FetchData) {
                             />
                         </div>
                         <div id='product-name-and-price' className='mt-4'>
-                            <h1>Name: {product.name}</h1>
-                            <h1>Category: {product.category.category}</h1>
+                            <h1 className='text-4xl'>{product.name}</h1>
+                            <div className='flex flex-row space-x-4'>
+                                <h1>Category: {product.category.category}</h1>
+                                <h1>Qty: {product.stock.toString()}</h1>
+                            </div>
                             <h1>Price: Rp.{product.price.toString()}</h1>
-                            <h1>Qty: {product.stock.toString()}</h1>
                         </div>
                     </div>
                     <div className='my-4 w-100'>
@@ -76,7 +77,7 @@ export default function CreateShop({product} : FetchData) {
                         </button>
                     </div>
                 </section>
-                <section className='w-2/4 p-4 bg-blue-gray-600'>
+                <section className='w-1/3 p-4 bg-blue-gray-600'>
                     <h1>store details</h1>
                 </section>
             </div>
