@@ -9,6 +9,10 @@ import { RxDotFilled } from "react-icons/rx";
 import Navbar from "./navbar";
 import Footer from "./footer";
 import ProductCard from "@/components/product_card";
+import { useState, Dispatch, useEffect } from "react";
+import useSWR from "swr";
+import { useSearchParams } from "next/navigation";
+import axios from "axios";
 
 async function handleGoogleSignOut() {
   signOut({ callbackUrl: "http://localhost:3000/login" });
@@ -20,21 +24,154 @@ interface Products {
     name: string;
     price: number;
     stock: number;
-    category: Category,
-    image: string
+    category: Category;
+    image: string;
   }[];
 }
 
-interface Category{
-  id: Number,
-  category: string
+interface Category {
+  id: Number;
+  category: string;
 }
 
-export default function Home({ products }: Products) {
+interface Sort {
+  _sort: string;
+}
+interface Order {
+  name: string;
+}
+
+export default function Home() {
   const { data: session } = useSession();
+  const [sortSort, setSortSort] = useState<Sort>({ _sort: "id" });
+  // const [sortOrder, setSortOrder] = useState<Order>({ _order: "desc" });
+  const [sortDir, setSortDir] = useState("desc");
+  const [sortBy, setSortBy] = useState("id");
+  const [products, setProducts] = useState([]);
+
+  const search = useSearchParams();
+  const searchQuery = search.get("_sort");
+  const encodedSearchQuery = encodeURI(searchQuery!);
   const router = useRouter();
 
-  
+  const { data, isLoading } = useSWR<{ products: Array<Products> }>(
+    `/api/product/search?name=${encodedSearchQuery}`
+  );
+
+  const buttonSortHandler = (e: any) => {
+    setSortBy(e.target.value.split(' ')[0])
+    setSortDir(e.target.value.split(' ')[1]);
+  };
+
+  const fetchProduct = async() => {
+    try {
+      const response = await axios.get('http://localhost:3000/api/product',{
+        params: {
+          _sortBy: sortBy,
+          _sortDir: sortDir
+        }
+      })
+      setProducts(response.data)
+      console.log('dari fetchProduct',response.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  // console.log('items gan',items)
+  const renderProduct = () => {
+    return products.map((product) => {
+      return (
+        <div
+          data-theme="garden"
+          className="card w-auto glass"
+          key={product.id}
+          onClick={() =>
+            router.push({
+              pathname: "/product/detail/",
+              query: { id: String(product.id) },
+            })
+          }
+        >
+          <ProductCard product={product} />
+          {/* <>
+            <figure>
+              {value.image ? (
+                <img src={value.image} />
+              ) : (
+                <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg" />
+              )}
+            </figure>
+            <div className="card-body py-5 h-1/4">
+              <h2 className="card-title">{value.name}</h2>
+              <p className="text-md">{value.category?.category}</p>
+              <p className="text-md">Rp. {value.price}</p>
+              <p className="text-md">Qty. {value.stock}</p>
+            </div>
+            {onEdit && onDelete ? (
+              <div className="card-actions justify-end my-2">
+                <button
+                  onClick={() => onEdit(value.id.toString())}
+                  className="w-16 btn btn-primary"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => onDelete(value.id.toString())}
+                  className="w-16 btn bg-red-500"
+                >
+                  Delete
+                </button>
+              </div>
+            ) : null}
+          </> */}
+        </div>
+      );
+    });
+  };
+
+  useEffect(() => {
+    fetchProduct();
+  }, [sortDir, sortBy]);
+
+  // const sort_by = (name, reverse, primer) => {
+
+  //   const key = primer ?
+  //     function(x) {
+  //       return primer(x[field])
+  //     } :
+  //     function(x) {
+  //       return x[field]
+  //     };
+
+  //   reverse = !reverse ? 1 : -1;
+
+  //   return function(a, b) {
+  //     return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
+  //   }
+  // }
+
+  // const sort_by = (field, reverse, primer) => {
+
+  //   const key = primer ?
+  //     function(x) {
+  //       return primer(x[field])
+  //     } :
+  //     function(x) {
+  //       return x[field]
+  //     };
+
+  //   reverse = !reverse ? 1 : -1;
+
+  //   return function(a, b) {
+  //     return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
+  //   }
+  // }
+
+  // if (products) {
+  //   console.log("objectnya", JSON.parse(JSON.stringify(products)));
+  // }
+  console.log("sortDirHandler", sortDir);
+  console.log("sortByHandler", sortBy);
 
   return (
     <>
@@ -137,16 +274,20 @@ export default function Home({ products }: Products) {
           </div>
         </div>
         {/* End Carousel */}
-        {/* <DataView
-          value={products}
-          itemTemplate={itemTemplate}
-          header={header()}
-          sortField={sortField}
-          sortOrder={sortOrder}
-        /> */}
-        {/* <Button label="click"></Button> */}
+        <select
+          className="select select-bordered w-full max-w-xs"
+          onClick={buttonSortHandler}
+        >
+          <option disabled selected>
+            Sort Items
+          </option>
+          <option value="name asc">A-Z</option>
+          <option value="name desc">Z-A</option>
+          <option value="price asc">Harga Terendah</option>
+          <option value="price desc">Harga Tertinggi</option>
+        </select>
         <div className="px-8 my-8 flex-col grid lg:grid-cols-4 gap-10 cursor-pointer">
-          {products.map((product) => (
+          {/* {products.map((product) => (
             <div
               data-theme="garden"
               className="card w-auto glass"
@@ -160,8 +301,11 @@ export default function Home({ products }: Products) {
             >
               <ProductCard product={product} />
             </div>
-          ))}
+          ))} */}
+          {renderProduct()}
         </div>
+        <p>test content</p>
+        {/* {getProduct()} */}
       </div>
       {/* End Content */}
       <Footer />
@@ -169,22 +313,48 @@ export default function Home({ products }: Products) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const req = context.req;
+  const res = context.res;
+  // const products = await prisma.product.findMany({
+  //   select: {
+  //     id: true,
+  //     name: true,
+  //     price: true,
+  //     stock: true,
+  //     category: true,
+  //     image: true,
+  //   },
+  //   orderBy: [
+  //     {
+  //       id: "asc",
+  //     },
+  //   ],
+  // });
+  // return {
+  //   props: {
+  //     products,
+  //   },
+  // };
+
+  const { _page, _limit, _sort, _order } = context.query;
+  const sort = (_sort ?? "id").toString();
+  const order = _order ?? "desc";
+
+  const orderBy = { [sort]: order };
+
   const products = await prisma.product.findMany({
     select: {
       id: true,
       name: true,
       price: true,
       stock: true,
-      category: true,
-      image: true,
     },
-    orderBy: [
-      {
-        id: "asc",
-      },
-    ],
+    orderBy: {
+      name: "asc",
+    },
   });
+
   return {
     props: {
       products,
