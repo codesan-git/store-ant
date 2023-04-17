@@ -52,56 +52,60 @@ export default function CreateShop({ product }: FetchData) {
 
   return (
     <div>
-      <Navbar />
-      <div>
-        <section className="w-3/4 mx-auto flex flex-col gap-10">
-          <div className="title">
-            <h1 className="text-gray-800 text-4xl font-bold py-4">
-              Product Detail
-            </h1>
-          </div>
-
-          <div>
-            <figure>
-              {product.image ? (
-                <img src={`http://localhost:3000/${product.image}`} />
-              ) : (
-                <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg" />
-              )}
-            </figure>
-            <p>{product.name}</p>
-            <p>{product.category.category}</p>
-            <p>{String(product.price)}</p>
-            <p>{String(product.stock)}</p>
-          </div>
-          <div className="custom-number-input h-10 w-32 -mt-10">
-            <label className="custom-input-number w-full text-gray-700 text-sm font-semibold">
-              Counter Input
-            </label>
-            <div className="flex flex-row h-10 w-full rounded-lg relative bg-transparent">
-              <button
-                onClick={()=>setCount(count - 1)}
-                disabled={count == 0? true : false}
-                className=" bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none"
-              >
-                <span className="m-auto text-2xl font-thin">−</span>
-              </button>
-              <input
-                type="text"
-                inputMode="numeric"
-                className="mx-auto outline-none focus:outline-none text-center w-full bg-gray-300 font-semibold text-md pointer-events-none md:text-basecursor-default flex items-center text-gray-700 "
-                name="custom-input-number"
-                value={String(count)}
-              ></input>
-              <button
-                onClick={()=>setCount(count + 1)}              
-                disabled={count == product.stock? true : false}
-                className="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-r cursor-pointer"
-              >
-                <span className="m-auto text-2xl font-thin">+</span>
-              </button>
+        <Navbar/>
+        <div className="my-5 mx-2">
+            <div>
+                <h1>Product Detail</h1>
             </div>
-            <button onClick={()=> create()} disabled={count === 0? true : false} className="w-32 btn btn-primary mt-5">Add to Cart</button>
+            <div id='content' className="flex flex-row ">
+                <section className='w-2/3 p-4 bg-yellow-600'>
+                    <div id='product-details' className="flex flex-row space-x-10">
+                        <div id='product-image-container' className="bg-deep-orange-400 w-72 h-72 py-14">
+                            <img className='object-fill'
+                                src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg" 
+                                alt=''
+                            />
+                        </div>
+                        <div id='product-name-and-price' className='mt-4'>
+                            <h1 className='text-4xl'>{product.name}</h1>
+                            <div className='flex flex-row space-x-4'>
+                                <h1>Category: {product.category.category}</h1>
+                                <h1>Qty: {product.stock.toString()}</h1>
+                            </div>
+                            <h1>Price: Rp.{product.price.toString()}</h1>
+                        </div>
+                    </div>
+                    <div className='my-4 w-100'>
+                        <h1 className='text'>Description</h1>
+                        <p>
+                            Lorem ipsum dolor, sit amet consectetur adipisicing elit. 
+                            Fugiat quia doloribus est atque consequuntur in aut, cupiditate, iste velit, corrupti excepturi? Aspernatur maiores doloribus obcaecati possimus 
+                            sapiente, eos mollitia doloremque.
+                        </p>
+                        <p>
+                            Lorem ipsum dolor, sit amet consectetur adipisicing elit. 
+                            Fugiat quia doloribus est atque consequuntur in aut, cupiditate, iste velit, corrupti excepturi? Aspernatur maiores doloribus obcaecati possimus 
+                            sapiente, eos mollitia doloremque.
+                        </p>
+                        <p>
+                            Lorem ipsum dolor, sit amet consectetur adipisicing elit. 
+                            Fugiat quia doloribus est atque consequuntur in aut, cupiditate, iste velit, corrupti excepturi? Aspernatur maiores doloribus obcaecati possimus 
+                            sapiente, eos mollitia doloremque.
+                        </p>
+                    </div>
+                    <div id='button-group' className='mt-4 w-auto space-x-4'>
+                        <button className='w-24 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
+                            Beli
+                        </button>
+                        <button className='w-36 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
+                            Add to Cart
+                        </button>
+                    </div>
+                </section>
+                <section className='w-1/3 p-4 bg-blue-gray-600'>
+                    <h1>store details</h1>
+                </section>
+            </div>
         </div>
         </section>
       </div>
