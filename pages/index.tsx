@@ -9,7 +9,7 @@ import { RxDotFilled } from "react-icons/rx";
 import Navbar from "./navbar";
 import Footer from "./footer";
 import ProductCard from "@/components/product_card";
-import GetProduct from './getProduct';
+
 // import 'primereact/resources/themes/lara-light-indigo/theme.css';   
 // import 'primereact/resources/primereact.css';                       
 // import 'primeicons/primeicons.css';                                 
@@ -52,7 +52,7 @@ export default function Home() {
   // const [sortOrder, setSortOrder] = useState<Order>({ _order: "desc" });
   const [sortDir, setSortDir] = useState("desc");
   const [sortBy, setSortBy] = useState("id");
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<any[]>([]);
 
   const search = useSearchParams();
   const searchQuery = search.get("_sort");

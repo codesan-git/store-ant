@@ -98,7 +98,7 @@ export default async function handler(
       imageUrl = imageUrl.substring(imageUrl.indexOf("images"));      
       fs.unlink(path.join(process.cwd(), `public\\${oldProduct?.image!}`));
     }else{
-      imageUrl = oldProduct.image;
+      imageUrl = oldProduct?.image;
     }
       
       const product = await prisma.product.update({

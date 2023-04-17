@@ -5,6 +5,8 @@ import { getSession, useSession } from 'next-auth/react'
 import { prisma } from "../../lib/prisma"
 import Link from 'next/link'
 import ProductCard from '@/components/product_card'
+import Navbar from '../navbar'
+import Footer from '../footer'
 
 interface Props{
     shop:{
@@ -53,6 +55,8 @@ export default function Profile({shop, products} : Props) {
     router.push('/shop/register')
   }else{
     return (
+      <>
+      <Navbar />
         <div className='flex mx-10 my-10'>
             <div className='w-1/6 ml-5 -mt-10'>
                 <div className='text-center justify-center mt-10'>
@@ -96,6 +100,8 @@ export default function Profile({shop, products} : Props) {
                 </div>
             </div>
         </div>
+        <Footer />
+        </>
       )
   }
 }
