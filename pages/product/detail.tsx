@@ -4,6 +4,7 @@ import { GetServerSideProps } from 'next'
 import { prisma } from "../../lib/prisma"
 import { getSession} from 'next-auth/react';
 import Navbar from '../navbar'
+import Head from 'next/head';
 
 interface FetchData{
     product:{
@@ -27,12 +28,14 @@ export default function CreateShop({product} : FetchData) {
 
   return (
     <div>
+        <Head>
+            <title>
+                {product.name} | Store.ant
+            </title>
+        </Head>
         <Navbar/>
         <div className="my-5 mx-2">
-            <div>
-                <h1>Product Detail</h1>
-            </div>
-            <div id='content' className="flex flex-row ">
+            <div id='content' className="flex flex-row">
                 <section className='w-2/3 p-4'>
                     <div id='product-details' className="flex flex-row space-x-10">
                         <div id='product-image-container' className="bg-blue-gray-300 w-72 h-72 py-14">
@@ -83,8 +86,27 @@ export default function CreateShop({product} : FetchData) {
                         </button>
                     </div>
                 </section>
-                <section className='w-1/3 p-4'>
-                    <h1>store details</h1>
+                <section className='w-1/3 p-4 '>
+                    <div id='shop-mini-profile'>
+                        <h1 className='text-4xl'>Toko ABC</h1>
+                        <p id='store-rating' className='flex flex-row'>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 fill-blue-gray-300">
+                                <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clipRule="evenodd" />
+                            </svg>
+                            &nbsp;5.0<span className='text-gray-500'>&nbsp;rata-rata ulasan&nbsp;</span> 
+                            |&nbsp;
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 fill-blue-gray-300">
+                                <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 6a.75.75 0 00-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 000-1.5h-3.75V6z" clipRule="evenodd" />
+                            </svg>
+                            &nbsp;± 1 jam<span className='text-gray-500'>&nbsp;pesanan diproses</span> 
+                        </p>
+                        <p className='flex flex-row'>
+                        </p>
+                        <p className='flex flex-row'>
+                        </p>
+                    </div>
+                        <h1>Pengiriman</h1>
+                        <h1>Promo</h1>
                 </section>
             </div>
         </div>
