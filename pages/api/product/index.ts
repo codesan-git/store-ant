@@ -14,11 +14,13 @@ export default async function handler(
     const orderBy = {[sort]: order};
 
     const products = await prisma.product.findMany({
+        where:{stock: {not: 0}},
         select:{
             id:true,
             name:true,
             price: true,
             stock:true,
+            image: true,
         },
         orderBy,
     })

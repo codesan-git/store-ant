@@ -54,7 +54,7 @@ export default function CreateShop({product} : FetchData) {
 
   const handleUpdate = async (id: string) => {
     try {
-        if(!selectedFile) return;
+        //if(!selectedFile) return;
         const formData = new FormData();
         formData.append("image", selectedFile);
         formData.append("name", name);

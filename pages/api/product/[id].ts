@@ -82,9 +82,7 @@ export default async function handler(
         await fs.mkdir(path.join(process.cwd() + "/public", "/images/products"));
     }    
     const file = files.image;
-    let url = Array.isArray(file) ? file.map((f) => f.filepath) : file.filepath;
-    let imageUrl = String(url);
-    imageUrl = imageUrl.substring(imageUrl.indexOf("images"));
+    let url = Array.isArray(file) ? file.map((f) => f.filepath) : file?.filepath;
 
     try {
       const oldProduct = await prisma.product.findFirst({
@@ -93,8 +91,16 @@ export default async function handler(
           image: true
         }
       });
-      
+    
+    let imageUrl;
+    if(url){    
+      imageUrl = String(url);
+      imageUrl = imageUrl.substring(imageUrl.indexOf("images"));      
       fs.unlink(path.join(process.cwd(), `public\\${oldProduct?.image!}`));
+    }else{
+      imageUrl = oldProduct.image;
+    }
+      
       const product = await prisma.product.update({
         where: {id: Number(id)},
         data: {
