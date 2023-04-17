@@ -32,17 +32,10 @@ export default async function handler(
         }
     })
 
-    const product = await prisma.product.findFirst({
-        where:{id: productId},
-        select: {
-            stock: true
-        }
-    })
-
     await prisma.product.update({
         where: {id: productId},
         data:{
-            stock: (product?.stock! - Number(count))
+            stock: Number(count)
         }
     })
     res.status(200).json({ productInCart })
