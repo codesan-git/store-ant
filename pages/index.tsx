@@ -231,32 +231,4 @@ export default function Home() {
       <Footer />
     </>
   );
-<<<<<<< HEAD
 }
-
-export const getServerSideProps: GetServerSideProps = async () => {
-  const products = await prisma.product.findMany({
-    where:{stock: { not: 0}},
-    select: {
-      id: true,
-      name: true,
-      price: true,
-      stock: true,
-      category: true,
-      image: true,
-    },
-    orderBy: [
-      {
-        id: "asc",
-      },
-    ],
-  });
-  return {
-    props: {
-      products,
-    },
-  };
-};
-=======
-}
->>>>>>> f681cd8c626262c241a598ab481c94540cebdb46

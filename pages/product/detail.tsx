@@ -1,54 +1,29 @@
-import styles from "../../styles/Form.module.css";
-import { useRouter } from "next/router";
-import { GetServerSideProps } from "next";
-import { prisma } from "../../lib/prisma";
-import Image from "next/image";
-import Link from "next/link";
-import { getSession } from "next-auth/react";
-import Navbar from "../navbar";
-import { useState } from "react";
-import axios from "axios";
+import styles from '../../styles/Form.module.css'
+import { useRouter } from 'next/router'
+import { GetServerSideProps } from 'next'
+import { prisma } from "../../lib/prisma"
+import { getSession} from 'next-auth/react';
+import Navbar from '../navbar'
 
-interface FetchData {
-  product: {
-    id: Number;
-    name: string;
-    price: Number;
-    stock: Number;
-    category: Category;
-    image: string;
-  };
-}
-
-interface Category {
-  id: Number;
-  category: string;
-}
-
-interface CartData{
-    productId: Number;
-    count: Number
-}
-
-export default function CreateShop({ product }: FetchData) {
-  const [count, setCount] = useState(0);
-  const router = useRouter();
-  //   const {id} = router.query;
-
-  async function create() {
-    const data : CartData = {productId: product.id, count: count};
-    try{
-        fetch('http://localhost:3000/api/cart/add', {
-            body: JSON.stringify(data),
-            headers: {
-                'Content-Type' : 'application/json'
-            },
-            method: 'POST'
-        }).then(()=> router.back())
-    }catch(error){
-        console.log(error)
+interface FetchData{
+    product:{
+        id: Number,
+        name: string,
+        price: Number,
+        stock: Number,
+        category: Category,
+        image: string
     }
-  }
+}
+
+interface Category{
+  id: Number,
+  category: string
+}
+
+export default function CreateShop({product} : FetchData) {    
+  const router = useRouter();
+//   const {id} = router.query;
 
   return (
     <div>
@@ -107,28 +82,26 @@ export default function CreateShop({ product }: FetchData) {
                 </section>
             </div>
         </div>
-        </section>
-      </div>
     </div>
-  );
+  )
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getSession(context);
-  const product = await prisma.product.findFirst({
-    where: { id: Number(context.query.id) },
-    select: {
-      id: true,
-      name: true,
-      price: true,
-      stock: true,
-      category: true,
-      image: true,
-    },
-  });
-  return {
-    props: {
-      product,
-    },
-  };
-};
+    const session = await getSession(context);
+    const product = await prisma.product.findFirst({
+        where: { id: Number(context.query.id)},
+        select:{
+            id: true,
+            name: true,
+            price: true,
+            stock: true,
+            category: true,
+            image: true
+        }
+    })
+    return{
+        props:{
+            product
+        }
+    }
+}
