@@ -78,7 +78,40 @@ export default function CreateShop({product} : FetchData) {
                                 </svg>
                                 <h1>4.3</h1>
                             </div>
-                            <h1 className='text-4xl'>Rp.{product.price.toString()}</h1>
+                            <h1 className='text-4xl mb-4'>Rp.{product.price.toString()}</h1>
+                            <div className="custom-number-input h-10 w-32">
+                                <div className="flex flex-row h-10 w-full rounded-lg relative bg-transparent">
+                                    <button
+                                        onClick={()=>setCount(count - 1)}
+                                        disabled={count == 0? true : false}
+                                        className=" bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none"
+                                    >
+                                    <span className="m-auto text-2xl font-thin">−</span>
+                                    </button>
+                                    <input
+                                    type="text"
+                                    inputMode="numeric"
+                                    className="mx-auto outline-none focus:outline-none text-center w-full bg-gray-300 font-semibold text-md pointer-events-none md:text-basecursor-default flex items-center text-gray-700 "
+                                    name="custom-input-number"
+                                    value={String(count)}
+                                    ></input>
+                                    <button
+                                    onClick={()=>setCount(count + 1)}              
+                                    disabled={count == product.stock? true : false}
+                                    className="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-r cursor-pointer"
+                                    >
+                                    <span className="m-auto text-2xl font-thin">+</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id='button-group' className='mt-4 w-auto space-x-4'>
+                                <button disabled={count === 0? true : false} className='w-24 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
+                                    Beli
+                                </button>
+                                <button onClick={()=> create()} disabled={count === 0? true : false} className='w-36 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
+                                    Add to Cart
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <div className='my-4 w-100'>
@@ -99,61 +132,46 @@ export default function CreateShop({product} : FetchData) {
                             sapiente, eos mollitia doloremque.
                         </p>
                     </div>
-                    <div className="custom-number-input h-10 w-32">
-                      <div className="flex flex-row h-10 w-full rounded-lg relative bg-transparent">
-                        <button
-                          onClick={()=>setCount(count - 1)}
-                          disabled={count == 0? true : false}
-                          className=" bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none"
-                        >
-                          <span className="m-auto text-2xl font-thin">−</span>
-                        </button>
-                        <input
-                          type="text"
-                          inputMode="numeric"
-                          className="mx-auto outline-none focus:outline-none text-center w-full bg-gray-300 font-semibold text-md pointer-events-none md:text-basecursor-default flex items-center text-gray-700 "
-                          name="custom-input-number"
-                          value={String(count)}
-                        ></input>
-                        <button
-                          onClick={()=>setCount(count + 1)}              
-                          disabled={count == product.stock? true : false}
-                          className="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-r cursor-pointer"
-                        >
-                          <span className="m-auto text-2xl font-thin">+</span>
-                        </button>
-                      </div>
-                    </div>
-                    <div id='button-group' className='mt-4 w-auto space-x-4'>
-                        <button disabled={count === 0? true : false} className='w-24 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
-                            Beli
-                        </button>
-                        <button onClick={()=> create()} disabled={count === 0? true : false} className='w-36 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
-                            Add to Cart
-                        </button>
-                    </div>
                 </section>
-                <section className='w-1/3 p-4 '>
-                    <div id='shop-mini-profile'>
-                        <h1 className='text-4xl'>Toko ABC</h1>
-                        <p id='store-rating' className='flex flex-row'>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 fill-blue-gray-300">
-                                <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clipRule="evenodd" />
-                            </svg>
-                            &nbsp;5.0<span className='text-gray-500'>&nbsp;rata-rata ulasan&nbsp;</span> 
-                            |&nbsp;
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 fill-blue-gray-300">
-                                <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 6a.75.75 0 00-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 000-1.5h-3.75V6z" clipRule="evenodd" />
-                            </svg>
-                            &nbsp;± 1 jam<span className='text-gray-500'>&nbsp;pesanan diproses</span> 
-                        </p>
-                        <p className='flex flex-row'>
-                        </p>
-                        <p className='flex flex-row'>
-                        </p>
+                <section className='w-1/3 p-4 shadow-lg rounded-lg'>
+                    <div id='shop-mini-profile' className='flex flex-row py-2 border-b-2 border-b-black-800'>
+                        <div id='shop-profile-picture-container' className='mr-2'>
+                            <img 
+                                className='rounded-full w-16 h-16 border-2 border-gray-600' 
+                                src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
+                            />
+                        </div>
+                        <div id='profile-details'>
+                            <h1 className='text-4xl'>Toko ABC</h1>
+                            <p id='store-rating' className='flex flex-row'>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 fill-blue-gray-300">
+                                    <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clipRule="evenodd" />
+                                </svg>
+                                &nbsp;5.0<span className='text-gray-500'>&nbsp;rata-rata ulasan&nbsp;</span> 
+                                |&nbsp;
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 fill-blue-gray-300">
+                                    <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 6a.75.75 0 00-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 000-1.5h-3.75V6z" clipRule="evenodd" />
+                                </svg>
+                                &nbsp;± 1 jam<span className='text-gray-500'>&nbsp;pesanan diproses</span> 
+                            </p>
+                        </div>
                     </div>
-                        <h1>Pengiriman</h1>
-                        <h1>Promo</h1>
+                    <div id='deliveries-and-offers' className='py-2 space-y-2'>
+                        <div id='delivery-details space-y-2'>
+                            <h1 className='text-2xl'>Pengiriman</h1>
+                            <p className='font-thin flex flex-row'>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                            </svg>
+                                &nbsp;Dikirim dari <span className='font-bold'>&nbsp;Jakarta Pusat</span>
+                            </p>
+                        </div>
+                        <div id='offers'>
+                            <h1 className='text-2xl'>Promo</h1>
+                            <p></p>
+                        </div>
+                    </div>
                 </section>
             </div>
         </div>
