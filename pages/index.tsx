@@ -219,77 +219,11 @@ export default function Home() {
           <option value="price desc">Harga Tertinggi</option>
         </select>
         <div className="px-8 my-8 flex-col grid lg:grid-cols-4 gap-10 cursor-pointer">
-          {/* {products.map((product) => (
-            <div
-              data-theme="garden"
-              className="card w-auto glass"
-              key={product.id}
-              onClick={() =>
-                router.push({
-                  pathname: "/product/detail/",
-                  query: { id: String(product.id) },
-                })
-              }
-            >
-              <ProductCard product={product} />
-            </div>
-          ))} */}
           {renderProduct()}
         </div>
-        <p>test content</p>
-        {/* {getProduct()} */}
       </div>
       {/* End Content */}
       <Footer />
     </>
   );
 }
-
-// export const getServerSideProps: GetServerSideProps = async (context) => {
-//   const req = context.req;
-//   const res = context.res;
-  // const products = await prisma.product.findMany({
-  //   select: {
-  //     id: true,
-  //     name: true,
-  //     price: true,
-  //     stock: true,
-  //     category: true,
-  //     image: true,
-  //   },
-  //   orderBy: [
-  //     {
-  //       id: "asc",
-  //     },
-  //   ],
-  // });
-  // return {
-  //   props: {
-  //     products,
-  //   },
-  // };
-
-  // const { _page, _limit, _sort, _order } = context.query;
-  // const sort = (_sort ?? "id").toString();
-  // const order = _order ?? "desc";
-
-  // const orderBy = { [sort]: order };
-
-  // const products = await prisma.product.findMany({
-  //   select: {
-  //     id: true,
-  //     name: true,
-  //     price: true,
-  //     stock: true,
-  //   },
-  //   orderBy: {
-  //     name: "asc",
-  //   },
-  // });
-
-  // return {
-  //   props: {
-  //     products,
-  //   },
-  // };
-// };
