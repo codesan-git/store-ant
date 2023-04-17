@@ -59,24 +59,24 @@ export default function Home() {
   );
 
   const buttonSortHandler = (e: any) => {
-    setSortBy(e.target.value.split(' ')[0])
-    setSortDir(e.target.value.split(' ')[1]);
+    setSortBy(e.target.value.split(" ")[0]);
+    setSortDir(e.target.value.split(" ")[1]);
   };
 
-  const fetchProduct = async() => {
+  const fetchProduct = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/api/product',{
+      const response = await axios.get("http://localhost:3000/api/product", {
         params: {
           _sortBy: sortBy,
-          _sortDir: sortDir
-        }
-      })
-      setProducts(response.data)
-      console.log('dari fetchProduct',response.data)
+          _sortDir: sortDir,
+        },
+      });
+      setProducts(response.data);
+      console.log("dari fetchProduct", response.data);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
   // console.log('items gan',items)
   const renderProduct = () => {
     return products.map((product) => {
@@ -93,37 +93,6 @@ export default function Home() {
           }
         >
           <ProductCard product={product} />
-          {/* <>
-            <figure>
-              {value.image ? (
-                <img src={value.image} />
-              ) : (
-                <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg" />
-              )}
-            </figure>
-            <div className="card-body py-5 h-1/4">
-              <h2 className="card-title">{value.name}</h2>
-              <p className="text-md">{value.category?.category}</p>
-              <p className="text-md">Rp. {value.price}</p>
-              <p className="text-md">Qty. {value.stock}</p>
-            </div>
-            {onEdit && onDelete ? (
-              <div className="card-actions justify-end my-2">
-                <button
-                  onClick={() => onEdit(value.id.toString())}
-                  className="w-16 btn btn-primary"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => onDelete(value.id.toString())}
-                  className="w-16 btn bg-red-500"
-                >
-                  Delete
-                </button>
-              </div>
-            ) : null}
-          </> */}
         </div>
       );
     });
@@ -133,43 +102,6 @@ export default function Home() {
     fetchProduct();
   }, [sortDir, sortBy]);
 
-  // const sort_by = (name, reverse, primer) => {
-
-  //   const key = primer ?
-  //     function(x) {
-  //       return primer(x[field])
-  //     } :
-  //     function(x) {
-  //       return x[field]
-  //     };
-
-  //   reverse = !reverse ? 1 : -1;
-
-  //   return function(a, b) {
-  //     return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
-  //   }
-  // }
-
-  // const sort_by = (field, reverse, primer) => {
-
-  //   const key = primer ?
-  //     function(x) {
-  //       return primer(x[field])
-  //     } :
-  //     function(x) {
-  //       return x[field]
-  //     };
-
-  //   reverse = !reverse ? 1 : -1;
-
-  //   return function(a, b) {
-  //     return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
-  //   }
-  // }
-
-  // if (products) {
-  //   console.log("objectnya", JSON.parse(JSON.stringify(products)));
-  // }
   console.log("sortDirHandler", sortDir);
   console.log("sortByHandler", sortBy);
 
@@ -313,9 +245,9 @@ export default function Home() {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const req = context.req;
-  const res = context.res;
+// export const getServerSideProps: GetServerSideProps = async (context) => {
+//   const req = context.req;
+//   const res = context.res;
   // const products = await prisma.product.findMany({
   //   select: {
   //     id: true,
@@ -337,27 +269,27 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   //   },
   // };
 
-  const { _page, _limit, _sort, _order } = context.query;
-  const sort = (_sort ?? "id").toString();
-  const order = _order ?? "desc";
+  // const { _page, _limit, _sort, _order } = context.query;
+  // const sort = (_sort ?? "id").toString();
+  // const order = _order ?? "desc";
 
-  const orderBy = { [sort]: order };
+  // const orderBy = { [sort]: order };
 
-  const products = await prisma.product.findMany({
-    select: {
-      id: true,
-      name: true,
-      price: true,
-      stock: true,
-    },
-    orderBy: {
-      name: "asc",
-    },
-  });
+  // const products = await prisma.product.findMany({
+  //   select: {
+  //     id: true,
+  //     name: true,
+  //     price: true,
+  //     stock: true,
+  //   },
+  //   orderBy: {
+  //     name: "asc",
+  //   },
+  // });
 
-  return {
-    props: {
-      products,
-    },
-  };
-};
+  // return {
+  //   props: {
+  //     products,
+  //   },
+  // };
+// };

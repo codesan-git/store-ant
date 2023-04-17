@@ -12,7 +12,6 @@ export default async function handler(
     const order = _sortDir ?? 'asc';
 
     const orderBy = {[sort]: order};
-    // const productCount = await prisma.product.count()
 
     const products = await prisma.product.findMany({
         select:{
@@ -22,28 +21,6 @@ export default async function handler(
             stock:true,
         },
         orderBy,
-        // skip: offset,
-        // take: limit
     })
-
-    // res.setHeader('Content-Type', 'application/json');
-    // res.setHeader('x-total-count', productCount);
     res.status(200).json(products);
-
-
-//   try {
-//     const products = await prisma.product.findMany({
-//       select: {
-//         id: true,
-//         name: true,
-//         price: true,
-//         stock: true,
-//       },
-//     });
-//     console.log(products);
-//     res.status(200).json({ products });
-//   } catch (error) {
-//     console.log(error);
-//     res.status(400).json({ message: "Fail" });
-//   }
 }
