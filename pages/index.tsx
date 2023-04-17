@@ -14,6 +14,10 @@ import GetProduct from './getProduct';
 // import 'primereact/resources/primereact.css';                       
 // import 'primeicons/primeicons.css';                                 
 // import 'primeflex/primeflex.css'; 
+import { useState, Dispatch, useEffect } from "react";
+import useSWR from "swr";
+import { useSearchParams } from "next/navigation";
+import axios from "axios";
 
 async function handleGoogleSignOut() {
   signOut({ callbackUrl: "http://localhost:3000/login" });
@@ -25,21 +29,86 @@ interface Products {
     name: string;
     price: number;
     stock: number;
-    category: Category,
-    image: string
+    category: Category;
+    image: string;
   }[];
 }
 
-interface Category{
-  id: Number,
-  category: string
+interface Category {
+  id: Number;
+  category: string;
 }
 
-export default function Home({ products }: Products) {
+interface Sort {
+  _sort: string;
+}
+interface Order {
+  name: string;
+}
+
+export default function Home() {
   const { data: session } = useSession();
+  const [sortSort, setSortSort] = useState<Sort>({ _sort: "id" });
+  // const [sortOrder, setSortOrder] = useState<Order>({ _order: "desc" });
+  const [sortDir, setSortDir] = useState("desc");
+  const [sortBy, setSortBy] = useState("id");
+  const [products, setProducts] = useState([]);
+
+  const search = useSearchParams();
+  const searchQuery = search.get("_sort");
+  const encodedSearchQuery = encodeURI(searchQuery!);
   const router = useRouter();
 
-  
+  const { data, isLoading } = useSWR<{ products: Array<Products> }>(
+    `/api/product/search?name=${encodedSearchQuery}`
+  );
+
+  const buttonSortHandler = (e: any) => {
+    setSortBy(e.target.value.split(" ")[0]);
+    setSortDir(e.target.value.split(" ")[1]);
+  };
+
+  const fetchProduct = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/api/product", {
+        params: {
+          _sortBy: sortBy,
+          _sortDir: sortDir,
+        },
+      });
+      setProducts(response.data);
+      console.log("dari fetchProduct", response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  // console.log('items gan',items)
+  const renderProduct = () => {
+    return products.map((product) => {
+      return (
+        <div
+          data-theme="garden"
+          className="card w-auto glass"
+          key={product.id}
+          onClick={() =>
+            router.push({
+              pathname: "/product/detail/",
+              query: { id: String(product.id) },
+            })
+          }
+        >
+          <ProductCard product={product} />
+        </div>
+      );
+    });
+  };
+
+  useEffect(() => {
+    fetchProduct();
+  }, [sortDir, sortBy]);
+
+  console.log("sortDirHandler", sortDir);
+  console.log("sortByHandler", sortBy);
 
   return (
     <>
@@ -142,38 +211,27 @@ export default function Home({ products }: Products) {
           </div>
         </div>
         {/* End Carousel */}
-        {/* <DataView
-          value={products}
-          itemTemplate={itemTemplate}
-          header={header()}
-          sortField={sortField}
-          sortOrder={sortOrder}
-        /> */}
-        {/* <Button label="click"></Button> */}
+        <select
+          className="select select-bordered w-full max-w-xs"
+          onClick={buttonSortHandler}
+        >
+          <option disabled selected>
+            Sort Items
+          </option>
+          <option value="name asc">A-Z</option>
+          <option value="name desc">Z-A</option>
+          <option value="price asc">Harga Terendah</option>
+          <option value="price desc">Harga Tertinggi</option>
+        </select>
         <div className="px-8 my-8 flex-col grid lg:grid-cols-4 gap-10 cursor-pointer">
-          {products.map((product) => (
-            <div
-              data-theme="garden"
-              className="card w-auto glass"
-              key={product.id}
-              onClick={() =>
-                router.push({
-                  pathname: "/product/detail/",
-                  query: { id: String(product.id) },
-                })
-              }
-            >
-              <ProductCard product={product} />
-            </div>
-          ))}
+          {renderProduct()}
         </div>
-        <p className="text-3xl text-center">Sorting PrimeReact</p>
-        <GetProduct />
       </div>
       {/* End Content */}
       <Footer />
     </>
   );
+<<<<<<< HEAD
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
@@ -199,3 +257,6 @@ export const getServerSideProps: GetServerSideProps = async () => {
     },
   };
 };
+=======
+}
+>>>>>>> f681cd8c626262c241a598ab481c94540cebdb46

@@ -8,7 +8,7 @@ const requireAuth: string[] = [
     "/shop",
     "/address",
     "/api/address",
-    "/api/product",
+    // "/api/product", //kalau pakai ini getProduct akan terhalang middleware
     "/api/profile",
     "/api/shop",
 ];
