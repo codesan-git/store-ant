@@ -6,6 +6,10 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'static1.cbrimages.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn-icons-png.flaticon.com'
       }
     ]
   }

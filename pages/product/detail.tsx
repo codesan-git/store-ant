@@ -61,12 +61,13 @@ export default function CreateShop({product} : FetchData) {
             <div id='content' className="flex flex-row">
                 <section className='w-2/3 p-4'>
                     <div id='product-details' className="flex flex-row space-x-10">
-                        <div id='product-image-container' className="bg-blue-gray-300 w-72 h-72 py-14">
+                        <div id='product-image-container' className="bg-blue-gray-300 w-72 h-72 flex">
                           <Image
                             src={"https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"}
                             alt=''
                             width={288}
                             height={288}
+                            className='mx-auto my-auto'
                           />
                         </div>
                         <div id='product-name-and-price' className=''>
@@ -194,9 +195,33 @@ export default function CreateShop({product} : FetchData) {
                               </div>
                             </div>
                         </div>
-                        <div id='offer-details'>
+                        <div id='offer-details' className='space-y-2'>
                             <h1 className='text-2xl'>Promo</h1>
-                            <p></p>
+                            <div className='grid grid-cols-3 gap-4'>
+                              <div className='w-48 h-24 bg-red-400 justify-evenly flex flex-row'>
+                                  <div className='text-center '>
+                                    <h1>Voucher</h1>
+                                  </div>
+                                  <Image
+                                    src={"https://cdn-icons-png.flaticon.com/512/44/44304.png?w=740&t=st=1681801777~exp=1681802377~hmac=ac43cc48076f36206dc0829b64a6bdbc8eb56876e8d2123bdb3710b5330c9c80"}
+                                    alt=''
+                                    width={128}
+                                    height={128}
+                                  />
+                              </div>
+                              <div className='w-48 h-24 bg-red-400'>
+                                  <h1>Voucher</h1>
+                              </div>
+                              <div className='w-48 h-24 bg-red-400'>
+                                  <h1>Voucher</h1>
+                              </div>
+                              <div className='w-48 h-24 bg-red-400'>
+                                  <h1>Voucher</h1>
+                              </div>
+                              <div className='w-48 h-24 bg-red-400'>
+                                  <h1>Voucher</h1>
+                              </div>
+                            </div>
                         </div>
                     </div>
                 </section>
