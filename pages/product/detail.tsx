@@ -198,16 +198,18 @@ export default function CreateShop({product} : FetchData) {
                         <div id='offer-details' className='space-y-2'>
                             <h1 className='text-2xl'>Promo</h1>
                             <div className='grid grid-cols-3 gap-4'>
-                              <div className='w-48 h-24 bg-red-400 justify-evenly flex flex-row'>
-                                  <div className='text-center '>
+                              <div className='w-48 h-24 bg-red-400 flex flex-row justify-around'>
+                                  <div className='flex justify-center'>
                                     <h1>Voucher</h1>
                                   </div>
-                                  <Image
-                                    src={"https://cdn-icons-png.flaticon.com/512/44/44304.png?w=740&t=st=1681801777~exp=1681802377~hmac=ac43cc48076f36206dc0829b64a6bdbc8eb56876e8d2123bdb3710b5330c9c80"}
-                                    alt=''
-                                    width={128}
-                                    height={128}
-                                  />
+                                  <div className='flex'>
+                                    <Image
+                                      src={"https://cdn-icons-png.flaticon.com/512/44/44304.png?w=740&t=st=1681801777~exp=1681802377~hmac=ac43cc48076f36206dc0829b64a6bdbc8eb56876e8d2123bdb3710b5330c9c80"}
+                                      alt=''
+                                      width={64}
+                                      height={64}
+                                    />
+                                  </div>
                               </div>
                               <div className='w-48 h-24 bg-red-400'>
                                   <h1>Voucher</h1>
