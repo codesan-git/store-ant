@@ -5,6 +5,7 @@ import { prisma } from "../../lib/prisma"
 import { getSession} from 'next-auth/react';
 import Navbar from '../navbar'
 import Head from 'next/head';
+import Image from 'next/image';
 import {useState} from 'react';
 
 interface FetchData{
@@ -61,10 +62,12 @@ export default function CreateShop({product} : FetchData) {
                 <section className='w-2/3 p-4'>
                     <div id='product-details' className="flex flex-row space-x-10">
                         <div id='product-image-container' className="bg-blue-gray-300 w-72 h-72 py-14">
-                            <img className='object-fill'
-                                src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg" 
-                                alt=''
-                            />
+                          <Image
+                            src={"https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"}
+                            alt=''
+                            width={288}
+                            height={288}
+                          />
                         </div>
                         <div id='product-name-and-price' className=''>
                             <h1 className='text-6xl mb-4'>{product.name}</h1>
@@ -136,9 +139,12 @@ export default function CreateShop({product} : FetchData) {
                 <section className='w-1/3 p-4 shadow-lg rounded-lg'>
                     <div id='shop-mini-profile' className='flex flex-row py-2 border-b-2 border-b-black-800'>
                         <div id='shop-profile-picture-container' className='mr-2'>
-                            <img 
+                            <Image 
                                 className='rounded-full w-16 h-16 border-2 border-gray-600' 
                                 src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
+                                alt=''
+                                width={256}
+                                height={256}
                             />
                         </div>
                         <div id='profile-details'>
