@@ -9,7 +9,8 @@ import { getSession, useSession } from "next-auth/react";
 import { prisma } from "../../lib/prisma";
 import Navbar from "../navbar";
 import Footer from "../footer";
-import axios from "axios"
+import axios from "axios";
+import Swal from "sweetalert2";
 import {
   Tabs,
   TabsHeader,
@@ -57,6 +58,7 @@ export default function Profile({ profile, address }: Props) {
   const { data: session } = useSession();
   const [selectedImage, setSelectedImage] = useState("");
   const [selectedFile, setSelectedFile] = useState<File>();
+  const [submitted, setSubmitted] = useState(false);
 
   // const [photo, setPhoto] = useState<ChangePhoto>({
   //   photo: session?.user?.image!
@@ -113,14 +115,79 @@ export default function Profile({ profile, address }: Props) {
 
   const changePhoto = async () => {
     try {
-        if(!selectedFile) return;
-        const formData = new FormData();
-        formData.append("image", selectedFile);
-        await axios.post('http://localhost:3000/api/profile/photo', formData).then(()=> router.reload())
+      if (!selectedFile) return;
+      const formData = new FormData();
+      formData.append("image", selectedFile);
+      await axios
+        .post("http://localhost:3000/api/profile/photo", formData)
+        .then(() => router.reload());
     } catch (error: any) {
-        console.log(error);
+      console.log(error);
     }
-  }
+  };
+
+  const changePhoneNumber = (e: any) => {
+    e.preventDefault();
+    console.log("Sending");
+
+    let data = {
+      email: session?.user.email!,
+      token: session?.user.accessToken!,
+    };
+
+    fetch("/api/contact", {
+      method: "POST",
+      headers: {
+        Accept: "application/json, text/plain, */*",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }).then((res) => {
+      console.log("Response received");
+      if (res.status === 200) {
+        console.log("Response succeeded!");
+        setSubmitted(true);
+      }
+    });
+  };
+
+  const changeVerifyStatus = (e: any) => {
+    e.preventDefault();
+    console.log("Sending");
+
+    let data = {
+      email: session?.user.email!,
+      token: session?.user.accessToken!,
+    };
+
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, send it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fetch("/api/contact", {
+          method: "POST",
+          headers: {
+            Accept: "application/json, text/plain, */*",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }).then((res) => {
+          console.log("Response received");
+          if (res.status === 200) {
+            console.log("Response succeeded!");
+            setSubmitted(true);
+          }
+        });
+        Swal.fire("Please Check Your Email!", "Your file has been sent.", "success");
+      }
+    });
+  };
 
   const handleSubmit = async (data: FormData) => {
     try {
@@ -144,39 +211,44 @@ export default function Profile({ profile, address }: Props) {
             <div className="columns">
               <div className="card card-compact w-96 bg-base-100 shadow-xl">
                 <figure className="p-4">
-                <label>
-                      <input 
-                        type='file' 
-                        hidden 
-                        onChange={({target}) => {
-                            if(target.files){
-                                const file = target.files[0];
-                                setSelectedImage(URL.createObjectURL(file));
-                                setSelectedFile(file);
-                            }
-                        }}
-                      />
-                      <div className='aspect-video rounded flex items-center justify-center border-2 border-dashed cursor-pointer'>
-                          {selectedImage? (
-                            <img
-                              src={selectedImage}
-                              alt="img-profile"
-                              className="rounded-md w-96 h-96 object-cover"
-                            />
-                          ) : (
-                            <img
-                            src={session?.user?.image!}
-                            alt="img-profile"
-                            className="rounded-md w-96 h-96 object-cover"
-                          />
-                          )}
-                      </div>
+                  <label>
+                    <input
+                      type="file"
+                      hidden
+                      onChange={({ target }) => {
+                        if (target.files) {
+                          const file = target.files[0];
+                          setSelectedImage(URL.createObjectURL(file));
+                          setSelectedFile(file);
+                        }
+                      }}
+                    />
+                    <div className="aspect-video rounded flex items-center justify-center border-2 border-dashed cursor-pointer">
+                      {selectedImage ? (
+                        <img
+                          src={selectedImage}
+                          alt="img-profile"
+                          className="rounded-md w-96 h-96 object-cover"
+                        />
+                      ) : (
+                        <img
+                          src={session?.user?.image!}
+                          alt="img-profile"
+                          className="rounded-md w-96 h-96 object-cover"
+                        />
+                      )}
+                    </div>
                   </label>
                 </figure>
                 <div className="card-body">
                   <div className="card-actions justify-end">
-                    <p className="text-center">Ketuk gambar untuk mengubah foto</p>                    
-                    <button onClick={changePhoto} className="btn btn-primary btn-outline rounded-md w-full">
+                    <p className="text-center">
+                      Ketuk gambar untuk mengubah foto
+                    </p>
+                    <button
+                      onClick={changePhoto}
+                      className="btn btn-primary btn-outline rounded-md w-full"
+                    >
                       Simpan Foto
                     </button>
                   </div>
@@ -336,6 +408,7 @@ export default function Profile({ profile, address }: Props) {
                         <a
                           href="#"
                           className="btn btn-primary w-full rounded-md"
+                          onClick={(e) => changePhoneNumber(e)}
                         >
                           Send!
                         </a>
@@ -384,6 +457,25 @@ export default function Profile({ profile, address }: Props) {
                   {/* End The button to open modal */}
                 </div>
                 {/* End Handle Email */}
+
+                {/* isValidation? */}
+                {session?.user.emailVerified ? (
+                  <>
+                    <button className="btn w-full btn-md rounded-lg" disabled>
+                      Youre Verified
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      className="btn btn-outline btn-primary w-full btn-md rounded-lg"
+                      onClick={(e) => changeVerifyStatus(e)}
+                    >
+                      Verify Account
+                    </button>
+                  </>
+                )}
+                {/* End isValidation? */}
 
                 {/* End Handle Ubah Kontak */}
               </form>
@@ -462,6 +554,7 @@ export default function Profile({ profile, address }: Props) {
   ];
 
   console.log("user", session?.user);
+  console.log("cek emailVerification");
   return (
     <>
       <Navbar />
@@ -515,7 +608,7 @@ export default function Profile({ profile, address }: Props) {
             </TabsHeader>
             <TabsBody>
               {data.map(({ value, code }) => (
-                <TabPanel  key={value} value={value}>
+                <TabPanel key={value} value={value}>
                   {code}
                 </TabPanel>
               ))}

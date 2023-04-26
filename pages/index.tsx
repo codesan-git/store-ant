@@ -9,11 +9,12 @@ import { RxDotFilled } from "react-icons/rx";
 import Navbar from "./navbar";
 import Footer from "./footer";
 import ProductCard from "@/components/product_card";
+import styles from "../styles/Home.module.css";
 
-// import 'primereact/resources/themes/lara-light-indigo/theme.css';   
-// import 'primereact/resources/primereact.css';                       
-// import 'primeicons/primeicons.css';                                 
-// import 'primeflex/primeflex.css'; 
+// import 'primereact/resources/themes/lara-light-indigo/theme.css';
+// import 'primereact/resources/primereact.css';
+// import 'primeicons/primeicons.css';
+// import 'primeflex/primeflex.css';
 import { useState, Dispatch, useEffect } from "react";
 import useSWR from "swr";
 import { useSearchParams } from "next/navigation";
@@ -53,6 +54,7 @@ export default function Home() {
   const [sortDir, setSortDir] = useState("desc");
   const [sortBy, setSortBy] = useState("id");
   const [products, setProducts] = useState<any[]>([]);
+  const [submitted, setSubmitted] = useState(false);
 
   const search = useSearchParams();
   const searchQuery = search.get("_sort");
@@ -103,12 +105,38 @@ export default function Home() {
     });
   };
 
+  const handleNodemailer = (e: any) => {
+    e.preventDefault();
+    console.log("Sending");
+
+    let data = {
+      email: session?.user.email!,
+    };
+
+    fetch("/api/contact", {
+      method: "POST",
+      headers: {
+        Accept: "application/json, text/plain, */*",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }).then((res) => {
+      console.log("Response received");
+      if (res.status === 200) {
+        console.log("Response succeeded!");
+        setSubmitted(true);
+      }
+    });
+  };
+
   useEffect(() => {
     fetchProduct();
   }, [sortDir, sortBy]);
 
-  console.log("sortDirHandler", sortDir);
-  console.log("sortByHandler", sortBy);
+  // console.log("sortDirHandler", sortDir);
+  // console.log("sortByHandler", sortBy);
+  console.log('data yang kesimpen', useSession().data?.user)
+  console.log('data yang kesimpen2', session?.user.email!)
 
   return (
     <>
@@ -226,6 +254,14 @@ export default function Home() {
         <div className="px-8 my-8 flex-col grid lg:grid-cols-4 gap-10 cursor-pointer">
           {renderProduct()}
         </div>
+      </div>
+      <div className={styles.container}>
+          <input
+            type="submit"
+            onClick={(e) => {
+              handleNodemailer(e);
+            }}
+          />
       </div>
       {/* End Content */}
       <Footer />

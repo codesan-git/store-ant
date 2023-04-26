@@ -65,9 +65,11 @@ const authOptions : NextAuthOptions = {
     adapter: PrismaAdapter(prisma),
     secret: process.env.SECRET,
     session: {strategy: "jwt", maxAge: 3 * 60 * 60},
+    // session: {strategy: "jwt", maxAge: 10},
     jwt:{
       secret: process.env.JWT_SECRET,
       maxAge: 3 * 60 * 60
+      // maxAge: 10
     },
     callbacks: {
       async jwt({ token, account, user }) {
@@ -90,6 +92,7 @@ const authOptions : NextAuthOptions = {
         }else{
           session.user.image = userData?.image;
         }
+        session.user.emailVerified = userData?.emailVerified!;
         return session
       }
     },

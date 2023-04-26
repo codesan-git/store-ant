@@ -11,7 +11,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const {username, password, phonenumber} = req.body
+  const {username, password, phonenumber, emailVerified} = req.body
   const session = await getSession({req})
 
   try {
@@ -26,6 +26,7 @@ export default async function handler(
         addresses: {}
       },
       update: {
+        // ...req.body
         username: username,
         password: hashedPassword,
         phoneNumber: phonenumber
