@@ -58,7 +58,7 @@ export default function CreateShop({product} : FetchData) {
             </title>
         </Head>
         <Navbar/>
-        <div className="my-5 mx-2">
+        <div className="my-5 mx-2 px-48">
             <div id='content' className="flex flex-row">
                 <section className='w-2/3 p-4'>
                     <div id='product-details' className="flex flex-row space-x-10">
