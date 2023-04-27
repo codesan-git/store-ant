@@ -3,7 +3,7 @@ import Image from "next/image";
 const ShopDetailCard = () => {
     return (
     <>
-        <section id="shop-details" className='w-1/3 p-4 shadow-lg rounded-lg'>
+        <div id="shop-details" className=''>
             <div id='shop-mini-profile' className='flex flex-row py-2 border-b-2 border-b-black-800'>
                 <div id='shop-profile-picture-container' className='mr-2'>
                     <Image 
@@ -62,7 +62,7 @@ const ShopDetailCard = () => {
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
     </>)
 }
 
