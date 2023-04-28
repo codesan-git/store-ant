@@ -1,4 +1,3 @@
-import styles from '../../styles/Form.module.css'
 import { useRouter } from 'next/router'
 import { GetServerSideProps } from 'next'
 import { prisma } from "../../lib/prisma"
@@ -126,8 +125,8 @@ export default function CreateShop({product} : FetchData) {
                         Ipsam iste error vero obcaecati aliquid consequuntur asperiores distinctio ipsa alias, nihil, nam commodi, placeat nisi eius laborum.</p>
                     </div>
                 </section>
-                <section className='w-1/3 h-1/3 p-4 shadow-lg rounded-lg'>
-                  <div >
+                <section className='w-1/3 h-1/3 p-4 shadow-lg rounded-lg sticky top-2'>
+                  <div>
                       <h1>Stok {renderStockCount(product.stock)}</h1>
                       <h1 className='text-4xl my-2'>Rp.{product.price.toString()}</h1>
                       <div className="custom-number-input h-10 w-32">
