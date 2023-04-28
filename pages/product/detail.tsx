@@ -76,9 +76,12 @@ export default function CreateShop({product} : FetchData) {
           </section>
           <div id='mobile-item-order-section' className='visible sm:invisible fixed bottom-0 left-0 bg-blue-gray-300 flex flex-row p-2 h-18 w-screen align-middle justify-center'>
             <section id='price-section' className='w-1/2 flex flex-row justify-center'>
-              <div id='text-container' className='h-10 w-auto p-1 flex items-center justify-center text-white'>
+              {/* <div id='text-container' className='h-10 w-auto p-1 flex items-center justify-center text-white'>
                 <h1>Price: Rp.{product.price.toString()}</h1>
-              </div>
+              </div> */}
+              <button className='h-10 w-40 p-1 rounded-md bg-green-800 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
+                Placeholder Button
+              </button>
             </section>
             <section id='button-actions-section' className='w-1/2 space-x-2 flex flex-row justify-center'>
               <button className='h-10 w-20 p-1 rounded-md bg-green-800 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
