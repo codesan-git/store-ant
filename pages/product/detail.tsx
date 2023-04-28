@@ -1,4 +1,3 @@
-import styles from '../../styles/Form.module.css'
 import { useRouter } from 'next/router'
 import { GetServerSideProps } from 'next'
 import { prisma } from "../../lib/prisma"
@@ -6,7 +5,8 @@ import { getSession} from 'next-auth/react';
 import Navbar from '../navbar'
 import Head from 'next/head';
 import Image from 'next/image';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
+import ShopDetailCard from '@/components/shop_detail_card';
 
 interface FetchData{
     product:{
@@ -31,8 +31,16 @@ interface CartData{
 
 export default function CreateShop({product} : FetchData) { 
   const [count, setCount] = useState(0);   
+  const [Subtotal, setSubtotal] = useState(0);
   const router = useRouter();
   const {id} = router.query;
+
+  const handleCount = () => {
+
+    let newSubtotal = product.price.valueOf() * count;
+    console.log('New subtotal: ' + newSubtotal.toString())
+    setSubtotal(newSubtotal);
+  }
 
   async function create() {
     const data : CartData = {productId: product.id, count: (Number(product.stock) - Number(count))};
@@ -49,6 +57,10 @@ export default function CreateShop({product} : FetchData) {
     }
   }
 
+  useEffect(() => {
+    handleCount();
+  }, [count]);
+
   return (
     <div>
         <Head>
@@ -57,68 +69,36 @@ export default function CreateShop({product} : FetchData) {
             </title>
         </Head>
         <Navbar/>
-        <div className="my-5 mx-2">
-            <div id='content' className="flex flex-row">
-                <section className='w-2/3 p-4'>
-                    <div id='product-details' className="flex flex-row space-x-10">
-                        <div id='product-image-container' className="bg-blue-gray-300 w-72 h-72 flex">
-                          <Image
-                            src={"https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"}
-                            alt=''
-                            width={288}
-                            height={288}
-                            className='mx-auto my-auto'
-                          />
-                        </div>
-                        <div id='product-name-and-price' className=''>
-                            <h1 className='text-6xl mb-4'>{product.name}</h1>
-                            <div className='flex flex-row space-x-2 mb-2'>
-                                <h1>{product.category.category}</h1>
-                                <h1 className='text-gray-700'>•</h1>
-                                <h1>Stock {renderStockCount(product.stock)}</h1>
-                                <h1 className='text-gray-700'>•</h1>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 fill-yellow-500">
-                                    <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clipRule="evenodd" />
-                                </svg>
-                                <h1>4.3</h1>
-                            </div>
-                            <h1 className='text-4xl mb-4'>Rp.{product.price.toString()}</h1>
-                            <div className="custom-number-input h-10 w-32">
-                                <div className="flex flex-row h-10 w-full rounded-lg relative bg-transparent">
-                                    <button
-                                        onClick={()=>setCount(count - 1)}
-                                        disabled={count == 0? true : false}
-                                        className=" bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none"
-                                    >
-                                    <span className="m-auto text-2xl font-thin">−</span>
-                                    </button>
-                                    <input
-                                    type="text"
-                                    inputMode="numeric"
-                                    className="mx-auto outline-none focus:outline-none text-center w-full bg-gray-300 font-semibold text-md pointer-events-none md:text-basecursor-default flex items-center text-gray-700 "
-                                    name="custom-input-number"
-                                    value={String(count)}
-                                    ></input>
-                                    <button
-                                    onClick={()=>setCount(count + 1)}              
-                                    disabled={count == product.stock? true : false}
-                                    className="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-r cursor-pointer"
-                                    >
-                                    <span className="m-auto text-2xl font-thin">+</span>
-                                    </button>
-                                </div>
-                            </div>
-                            <div id='button-group' className='mt-4 w-auto space-x-4'>
-                                <button disabled={count === 0? true : false} className='w-24 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
-                                    Beli
-                                </button>
-                                <button onClick={()=> create()} disabled={count === 0? true : false} className='w-36 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
-                                    Add to Cart
-                                </button>
-                            </div>
-                        </div>
+        <div className="my-5 mx-2 px-48">
+            <div id='content' className="flex flex-row space-x-2">
+                <section id='product-details-and-description' className='w-2/3 space-y-2'>
+                    <div id='product-image-container' className="p-4 w-full h-auto flex">
+                      <img
+                        src={"https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"}
+                        alt=''
+                        className='mx-auto my-auto h-auto'
+                      />
                     </div>
-                    <div className='my-4 w-100'>
+                    <div id='product-title-container' className='p-4 flex flex-row items-center border-b-gray-300 border-b-2'>
+                      <h1 className='text-5xl w-1/2'>{product.name}</h1>
+                      <div id='actions' className='flex flex-row w-1/2 justify-end space-x-4'>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+                          <path fill-rule="evenodd" d="M15.75 4.5a3 3 0 11.825 2.066l-8.421 4.679a3.002 3.002 0 010 1.51l8.421 4.679a3 3 0 11-.729 1.31l-8.421-4.678a3 3 0 110-4.132l8.421-4.679a3 3 0 01-.096-.755z" clip-rule="evenodd" />
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                        </svg>
+                      </div>
+                    </div>
+                    <div id='category-and-description' className='p-4 border-b-gray-300 border-b-2'>
+                      <div className='flex flex-row space-x-2 mb-2'>
+                        <h1>{product.category.category}</h1>
+                        <h1 className='text-gray-700'>•</h1>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 fill-yellow-500">
+                          <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clipRule="evenodd" />
+                        </svg>
+                        <h1>4.3</h1>
+                      </div>
                         <h1 className='text-2xl mb-2'>Description</h1>
                         <p>
                             Lorem ipsum dolor, sit amet consectetur adipisicing elit. 
@@ -136,96 +116,54 @@ export default function CreateShop({product} : FetchData) {
                             sapiente, eos mollitia doloremque.
                         </p>
                     </div>
+                    <div id='store-details' className='p-4 border-b-gray-300 border-b-2'>
+                      <ShopDetailCard/>
+                    </div>
+                    <div id='reviews' className='p-4 border-b-gray-300 border-b-2'>
+                      <h1 className='text-2xl mb-2'>Reviews</h1>
+                      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptate suscipit laborum velit. 
+                        Ipsam iste error vero obcaecati aliquid consequuntur asperiores distinctio ipsa alias, nihil, nam commodi, placeat nisi eius laborum.</p>
+                    </div>
                 </section>
-                <section className='w-1/3 p-4 shadow-lg rounded-lg'>
-                    <div id='shop-mini-profile' className='flex flex-row py-2 border-b-2 border-b-black-800'>
-                        <div id='shop-profile-picture-container' className='mr-2'>
-                            <Image 
-                                className='rounded-full w-16 h-16 border-2 border-gray-600' 
-                                src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
-                                alt=''
-                                width={256}
-                                height={256}
-                            />
+                <section className='w-1/3 h-1/3 p-4 shadow-lg rounded-lg sticky top-2'>
+                  <div>
+                      <h1>Stok {renderStockCount(product.stock)}</h1>
+                      <h1 className='text-4xl my-2'>Rp.{product.price.toString()}</h1>
+                      <div className="custom-number-input h-10 w-32">
+                          <div className="flex flex-row h-10 w-full rounded-lg relative bg-transparent">
+                              <button
+                                  onClick={()=> setCount(count - 1)}
+                                  disabled={count == 0? true : false}
+                                  className=" bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none"
+                              >
+                                <span className="m-auto text-2xl font-thin">−</span>
+                              </button>
+                              <input
+                              type="text"
+                              inputMode="numeric"
+                              className="mx-auto outline-none focus:outline-none text-center w-full bg-gray-300 font-semibold text-md pointer-events-none md:text-basecursor-default flex items-center text-gray-700 "
+                              name="custom-input-number"
+                              value={String(count)}
+                              ></input>
+                              <button
+                              onClick={()=> setCount(count + 1)}              
+                              disabled={count == product.stock? true : false}
+                              className="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-r cursor-pointer"
+                              >
+                              <span className="m-auto text-2xl font-thin">+</span>
+                              </button>
+                          </div>
                         </div>
-                        <div id='profile-details'>
-                            <h1 className='text-4xl'>Toko ABC</h1>
-                            <p id='store-rating' className='flex flex-row'>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 fill-blue-gray-300">
-                                    <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clipRule="evenodd" />
-                                </svg>
-                                &nbsp;5.0<span className='text-gray-600'>&nbsp;rata-rata ulasan&nbsp;</span> 
-                                |&nbsp;
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 fill-blue-gray-300">
-                                    <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 6a.75.75 0 00-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 000-1.5h-3.75V6z" clipRule="evenodd" />
-                                </svg>
-                                &nbsp;± 1 jam<span className='text-gray-600'>&nbsp;pesanan diproses</span> 
-                            </p>
+                        <h1>Subtotal: Rp.{Subtotal}</h1>
+                        <div id='button-group' className='mt-4 w-auto space-x-4'>
+                            <button disabled={count === 0? true : false} className='w-24 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
+                                Beli
+                            </button>
+                            <button onClick={()=> create()} disabled={count === 0? true : false} className='w-36 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
+                                Add to Cart
+                            </button>
                         </div>
-                    </div>
-                    <div id='deliveries-and-offers' className='py-2 space-y-2'>
-                        <div id='delivery-details' className='space-y-2'>
-                            <h1 className='text-2xl'>Pengiriman</h1>
-                            <div id='store-location-information' className='flex flex-row'>
-                              <div id='location-icon-container'>
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-                                </svg>
-                              </div>
-                              <div id='location-information' className='px-2'>
-                                <p className='font-thin flex flex-row'>
-                                  Dikirim dari <span className='font-bold'>&nbsp;Jakarta Pusat</span>
-                                </p>
-                              </div>
-                            </div>
-                            <div id='transportation-fees-information' className='flex flex-row'>
-                              <div id='location-icon-container'>
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                                  <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
-                                </svg>
-                              </div>
-                              <div id='location-information flex flex-row' className='px-2'>
-                                <p className='font-thin' >
-                                  Ongkir Reguler 8 - 11,5 rb
-                                </p>
-                                <p className='font-thin' >
-                                  <span className='font-thin text-gray-600'>Estimasi tiba 20 - 22 Apr</span>
-                                </p>
-                              </div>
-                            </div>
-                        </div>
-                        <div id='offer-details' className='space-y-2'>
-                            <h1 className='text-2xl'>Promo</h1>
-                            <div className='grid grid-cols-3 gap-4'>
-                              <div className='w-48 h-24 bg-red-400 flex flex-row justify-around'>
-                                  <div className='flex justify-center'>
-                                    <h1>Voucher</h1>
-                                  </div>
-                                  <div className='flex'>
-                                    <Image
-                                      src={"https://cdn-icons-png.flaticon.com/512/44/44304.png?w=740&t=st=1681801777~exp=1681802377~hmac=ac43cc48076f36206dc0829b64a6bdbc8eb56876e8d2123bdb3710b5330c9c80"}
-                                      alt=''
-                                      width={64}
-                                      height={64}
-                                    />
-                                  </div>
-                              </div>
-                              <div className='w-48 h-24 bg-red-400'>
-                                  <h1>Voucher</h1>
-                              </div>
-                              <div className='w-48 h-24 bg-red-400'>
-                                  <h1>Voucher</h1>
-                              </div>
-                              <div className='w-48 h-24 bg-red-400'>
-                                  <h1>Voucher</h1>
-                              </div>
-                              <div className='w-48 h-24 bg-red-400'>
-                                  <h1>Voucher</h1>
-                              </div>
-                            </div>
-                        </div>
-                    </div>
+                  </div>
                 </section>
             </div>
         </div>
@@ -240,6 +178,8 @@ const renderStockCount = (stockNumber: Number) => {
         return <span className='text-red-500'>{stockNumber.toString()}</span>
     }
 }
+
+
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const session = await getSession(context);
