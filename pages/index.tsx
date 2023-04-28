@@ -255,14 +255,7 @@ export default function Home() {
           {renderProduct()}
         </div>
       </div>
-      <div className={styles.container}>
-          <input
-            type="submit"
-            onClick={(e) => {
-              handleNodemailer(e);
-            }}
-          />
-      </div>
+      
       {/* End Content */}
       <Footer />
     </>

@@ -189,6 +189,44 @@ export default function Profile({ profile, address }: Props) {
     });
   };
 
+  const resetPassword = (e: any) => {
+    e.preventDefault();
+    console.log("Sending");
+
+    let data = {
+      email: session?.user.email!,
+      token: session?.user.accessToken!,
+    };
+
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, send it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fetch("/api/resetpassword", {
+          method: "POST",
+          headers: {
+            Accept: "application/json, text/plain, */*",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }).then((res) => {
+          console.log("Response received");
+          if (res.status === 200) {
+            console.log("Response succeeded!");
+            setSubmitted(true);
+          }
+        });
+        Swal.fire("Please Check Your Email!", "Your file has been sent.", "success");
+      }
+    });
+  };
+
   const handleSubmit = async (data: FormData) => {
     try {
       create(data);
@@ -260,7 +298,10 @@ export default function Profile({ profile, address }: Props) {
               </div>
               <div className="card card-compact w-96 bg-base-100 shadow-xl mt-5">
                 <div className="card-actions justify-end">
-                  <button className="btn btn-primary btn-outline rounded-md w-full">
+                  <button 
+                  className="btn btn-primary btn-outline rounded-md w-full"
+                  onClick={(e) => resetPassword(e)}
+                  >
                     Ubah Kata Sandi
                   </button>
                 </div>
