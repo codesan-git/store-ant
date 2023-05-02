@@ -78,7 +78,7 @@ export default function CreateShop({product} : FetchData) {
                 />
             </div>
             <div id='product-title-container' className='p-4 flex flex-row items-center border-b-gray-300 border-b-2'>
-              <h1 className='text-5xl w-1/2'>{product.name}</h1>
+              <h1 className='text-4xl w-1/2'>{product.name}</h1>
               <div id='actions' className='flex flex-row w-1/2 justify-end space-x-4'>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
                   <path fill-rule="evenodd" d="M15.75 4.5a3 3 0 11.825 2.066l-8.421 4.679a3.002 3.002 0 010 1.51l8.421 4.679a3 3 0 11-.729 1.31l-8.421-4.678a3 3 0 110-4.132l8.421-4.679a3 3 0 01-.096-.755z" clip-rule="evenodd" />
@@ -98,17 +98,17 @@ export default function CreateShop({product} : FetchData) {
                 <h1>4.3</h1>
               </div>
                 <h1 className='text-2xl mb-2'>Description</h1>
-                <p>
+                <p className='text-justify'>
                     Lorem ipsum dolor, sit amet consectetur adipisicing elit. 
                     Fugiat quia doloribus est atque consequuntur in aut, cupiditate, iste velit, corrupti excepturi? Aspernatur maiores doloribus obcaecati possimus 
                     sapiente, eos mollitia doloremque.
                 </p>
-                <p>
+                <p className='text-justify'>
                     Lorem ipsum dolor, sit amet consectetur adipisicing elit. 
                     Fugiat quia doloribus est atque consequuntur in aut, cupiditate, iste velit, corrupti excepturi? Aspernatur maiores doloribus obcaecati possimus 
                     sapiente, eos mollitia doloremque.
                 </p>
-                <p>
+                <p className='text-justify'>
                     Lorem ipsum dolor, sit amet consectetur adipisicing elit. 
                     Fugiat quia doloribus est atque consequuntur in aut, cupiditate, iste velit, corrupti excepturi? Aspernatur maiores doloribus obcaecati possimus 
                     sapiente, eos mollitia doloremque.
@@ -119,7 +119,7 @@ export default function CreateShop({product} : FetchData) {
             </div>
             <div id='reviews' className='p-4 border-b-gray-300 border-b-2'>
               <h1 className='text-2xl mb-2'>Reviews</h1>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptate suscipit laborum velit. 
+              <p className='text-justify'>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptate suscipit laborum velit. 
                 Ipsam iste error vero obcaecati aliquid consequuntur asperiores distinctio ipsa alias, nihil, nam commodi, placeat nisi eius laborum.</p>
             </div>
           </section>
