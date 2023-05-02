@@ -123,7 +123,7 @@ export default function CreateShop({product} : FetchData) {
                 Ipsam iste error vero obcaecati aliquid consequuntur asperiores distinctio ipsa alias, nihil, nam commodi, placeat nisi eius laborum.</p>
             </div>
           </section>
-          <section id='item-order-section' className='invisible sm:visible fixed bottom-0 sm:static sm:w-1/3 p-2'> {/* The fixed bottom-0 is a temporary solution, if we add content in this section, it would create a large gap in the mobile view */}
+          <section id='item-order-section' className='hidden sm:block sm:w-1/3 p-2'>
             <div className='p-4 shadow-lg rounded-lg sticky top-2'>
               <h1>Stok {renderStockCount(product.stock)}</h1>
               <h1 className='text-4xl my-2'>Rp.{product.price.toString()}</h1>

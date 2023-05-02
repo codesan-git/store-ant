@@ -59,7 +59,7 @@ const Navbar = () => {
   return (
     <>
       {/* New Navbar */}
-      <div className="navbar bg-base-100 px-32 shadow">
+      <div className="navbar bg-base-100 sm:px-32 shadow">
         <div className="navbar-start">
           <div className="flex-1 lg:mx-16">
             <Link className="btn btn-ghost normal-case text-xl text-primary-focus" href="/">
@@ -91,7 +91,7 @@ const Navbar = () => {
             {/* End Dropdown */}
           </div>
         </div>
-        <div className="navbar-center hidden lg:flex">
+        <div className="navbar-center hidden sm:inline lg:flex">
           <form onSubmit={onSearch}>
             <input
               type="text"
