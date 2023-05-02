@@ -4,15 +4,15 @@ const ShopDetailCard = () => {
     return (
     <>
         <div id="shop-details" className=''>
-            <div id='shop-mini-profile' className='flex flex-row py-2 border-b-2 border-b-black-800'>
-                <div id='shop-profile-picture-container' className='mr-2'>
+            <div id='shop-mini-profile' className='flex flex-row w-auto py-2 border-b-2 border-b-black-800'>
+                <div id='shop-profile-picture-container' className='mr-2 w-1/3 flex items-center justify-center sm:w-auto'>
                     <img 
-                        className='object-cover rounded-full w-16 h-12 sm:h-16 border-2 border-gray-600'  //for Web view: rounded-full w-16 h-16 border-2
+                        className='object-cover rounded-full w-16 h-16 sm:h-16 border-2 border-gray-600'
                         src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
                         alt=''
                     />
                 </div>
-                <div id='profile-details'>
+                <div id='profile-details' className='w-2/3 sm:w-auto'>
                     <h1 className='text-2xl'>Toko ABC</h1>
                     <p id='store-rating' className='flex flex-row'>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 fill-blue-gray-300">
