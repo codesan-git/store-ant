@@ -59,7 +59,7 @@ const Navbar = () => {
   return (
     <>
       {/* New Navbar */}
-      <div className="navbar bg-base-100 sm:px-32 shadow">
+      <div className="navbar bg-base-100 sm:px-1 lg:px-32 shadow">
         <div className="navbar-start">
           <div className="flex-1 lg:mx-16">
             <Link className="btn btn-ghost normal-case text-xl text-primary-focus" href="/">
