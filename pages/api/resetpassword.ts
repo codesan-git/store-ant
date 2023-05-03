@@ -1,10 +1,11 @@
-// import { useSession } from "next-auth/react";
+import { prisma } from "../../lib/prisma";
 
 require("dotenv").config();
 
 let nodemailer = require("nodemailer");
-export default function (req: any, res: any) {
-  // const { data: session } = useSession();
+export default async function (req: any, res: any) {
+  const { email } = req.body
+
   const transporter = nodemailer.createTransport({
     port: 465, //587
     service: "gmail",
@@ -67,10 +68,17 @@ export default function (req: any, res: any) {
   </body>`,
   };
 
-  transporter.sendMail(mailData, function (err: any, info: any) {
-    if (err) console.log(err);
-    else console.log(info);
+  const findEmail = await prisma.user.findUnique({
+    where: { email: email },  
   });
+  if(findEmail){
+    transporter.sendMail(mailData, function (err: any, info: any) {
+      if (err) console.log(err);
+      else console.log(info);
+    });
+  }if(!findEmail){
+    return null
+  }
 
   console.log(req.body);
   res.send("success");

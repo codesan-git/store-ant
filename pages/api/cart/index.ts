@@ -18,7 +18,7 @@ export default async function handler(
     }
 
     const productInCart = await prisma.productInCart.findMany({
-        where:{cartId: cart.id},
+        where:{cartId: cart?.id},
         select:{
             id: true,
             productId: true,
