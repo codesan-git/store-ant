@@ -93,9 +93,9 @@ export default function Profile({shop, products} : Props) {
                 </section>
                 <div className='w-4/5 py-5 mx-auto flex-col grid lg:grid-cols-3 gap-10'>
                     {products.map(product =>(
-                        <div data-theme="garden" className="card w-auto glass" key={product.id}>
-                          <ProductCard product={product} onEdit={editProduct} onDelete={deleteProduct}/>                        
-                        </div>
+                        
+                          <ProductCard product={product} onEdit={editProduct} onDelete={deleteProduct} key={product.id}/>                        
+                        
                     ) )}
                 </div>
             </div>
