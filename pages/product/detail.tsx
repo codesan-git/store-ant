@@ -69,7 +69,7 @@ export default function CreateShop({product} : FetchData) {
         </Head>
         <Navbar/>
         <div className='sm:flex sm:flex-row'>
-          <section id='product-information-panel' className='mb-10 sm:mb-0 w-full sm:w-2/3'>
+          <section id='product-information-panel' className='mb-10 sm:mb-0 w-full lg:w-2/3'>
             <div id='product-image-container' className="p-4 w-full h-auto flex">
               <img
                 src={"https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"}
@@ -123,47 +123,47 @@ export default function CreateShop({product} : FetchData) {
                 Ipsam iste error vero obcaecati aliquid consequuntur asperiores distinctio ipsa alias, nihil, nam commodi, placeat nisi eius laborum.</p>
             </div>
           </section>
-          <section id='item-order-section' className='hidden sm:block sm:w-1/3 p-2'>
+          <section id='item-order-section' className='hidden lg:block sm:w-1/3 p-2'>
             <div className='p-4 shadow-lg rounded-lg sticky top-2'>
               <h1>Stok {renderStockCount(product.stock)}</h1>
               <h1 className='text-4xl my-2'>Rp.{product.price.toString()}</h1>
                       <div className="custom-number-input h-10 w-32">
                           <div className="flex flex-row h-10 w-full rounded-lg relative bg-transparent">
                               <button
-                                  onClick={()=> setCount(count - 1)}
-                                  disabled={count == 0? true : false}
-                                  className=" bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none"
+                                onClick={()=> setCount(count - 1)}
+                                disabled={count == 0? true : false}
+                                className=" bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none"
                               >
                                 <span className="m-auto text-2xl font-thin">−</span>
                               </button>
                               <input
-                              type="text"
-                              inputMode="numeric"
-                              className="mx-auto outline-none focus:outline-none text-center w-full bg-gray-300 font-semibold text-md pointer-events-none md:text-basecursor-default flex items-center text-gray-700 "
-                              name="custom-input-number"
-                              value={String(count)}
+                                type="text"
+                                inputMode="numeric"
+                                className="mx-auto outline-none focus:outline-none text-center w-full bg-gray-300 font-semibold text-md pointer-events-none md:text-basecursor-default flex items-center text-gray-700 "
+                                name="custom-input-number"
+                                value={String(count)}
                               ></input>
                               <button
-                              onClick={()=> setCount(count + 1)}              
-                              disabled={count == product.stock? true : false}
-                              className="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-r cursor-pointer"
+                                onClick={()=> setCount(count + 1)}              
+                                disabled={count == product.stock? true : false}
+                                className="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-r cursor-pointer"
                               >
-                              <span className="m-auto text-2xl font-thin">+</span>
+                                <span className="m-auto text-2xl font-thin">+</span>
                               </button>
                           </div>
                         </div>
                         <h1>Subtotal: Rp.{Subtotal}</h1>
                         <div id='button-group' className='mt-4 w-auto space-x-4'>
-                            <button disabled={count === 0? true : false} className='w-24 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
+                            <button disabled={count === 0? true : false} className='w-20 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
                                 Beli
                             </button>
-                            <button onClick={()=> create()} disabled={count === 0? true : false} className='w-36 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
+                            <button onClick={()=> create()} disabled={count === 0? true : false} className='w-32 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
                                 Add to Cart
                             </button>
                         </div>
             </div>
           </section>
-          <div id='mobile-item-order-section' className='visible sm:invisible fixed bottom-0 left-0 bg-blue-gray-300 flex flex-row p-2 h-18 w-screen align-middle justify-center'>
+          <div id='mobile-item-order-section' className='visible lg:invisible fixed bottom-0 left-0 bg-blue-gray-300 flex flex-row p-2 h-18 w-screen align-middle justify-center'>
             <section id='price-section' className='w-1/2 flex flex-row justify-center'>
               {/* <div id='text-container' className='h-10 w-auto p-1 flex items-center justify-center text-white'>
                 <h1>Price: Rp.{product.price.toString()}</h1>
