@@ -222,6 +222,15 @@ const Navbar = () => {
           {/* End Session Login */}
         </div>
       </div>
+      <form className='mt-4 sm:hidden' onSubmit={onSearch}>
+          <input
+            type="text"
+            placeholder="Shop now"
+            className="input input-bordered input-primary input-sm w-full placeholder-primary-focus"
+            value={query}
+            onChange={e => {setQuery(e.target.value); }}
+          />
+        </form>
       {/* End New Navbar */}
     </>
   );
