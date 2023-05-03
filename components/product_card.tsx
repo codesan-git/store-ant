@@ -26,12 +26,12 @@ const ProductCard = ( {product, onEdit, onDelete} : Props ) => {
         <div id="card" data-theme="garden" className="card w-auto glass">
             <figure className="h-1/2 bg-gray-500">
                 {product.image? (
-                    <img src={product.image} className="object-fill"/>
+                    <img src={product.image} alt="no image available" className="object-fill"/>
                 ) : (
                     <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"/>
                 )}
             </figure>
-            <div className="card-body p-8 h-1/2">
+            <div className="h-1/2 card-body p-8">
                 <h2 className="card-title">{product.name}</h2>
                 <p className='text-md'>{product.category?.category}</p>   
                 <p className="text-md">Rp. {product.price}</p>
