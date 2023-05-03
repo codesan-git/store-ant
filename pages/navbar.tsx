@@ -59,7 +59,7 @@ const Navbar = () => {
   return (
     <>
       {/* New Navbar */}
-      <div className="navbar bg-base-100 px-32 shadow">
+      <div className="navbar bg-base-100 sm:px-1 lg:px-32 shadow">
         <div className="navbar-start">
           <div className="flex-1 lg:mx-16">
             <Link className="btn btn-ghost normal-case text-xl text-primary-focus" href="/">
@@ -91,7 +91,7 @@ const Navbar = () => {
             {/* End Dropdown */}
           </div>
         </div>
-        <div className="navbar-center hidden lg:flex">
+        <div className="navbar-center hidden sm:inline lg:flex">
           <form onSubmit={onSearch}>
             <input
               type="text"
@@ -222,6 +222,15 @@ const Navbar = () => {
           {/* End Session Login */}
         </div>
       </div>
+      <form className='mt-4 sm:hidden' onSubmit={onSearch}>
+          <input
+            type="text"
+            placeholder="Shop now"
+            className="input input-bordered input-primary input-sm w-full placeholder-primary-focus"
+            value={query}
+            onChange={e => {setQuery(e.target.value); }}
+          />
+        </form>
       {/* End New Navbar */}
     </>
   );
