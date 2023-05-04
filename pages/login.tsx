@@ -10,6 +10,7 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { AiFillCloseCircle } from "react-icons/ai";
 
 interface FormData {
   email: string;
@@ -97,10 +98,6 @@ export default function Login() {
     });
   };
 
-  // useEffect(()=>{
-  //   getEmail()
-  // },[])
-
   return (
     <Layout>
       <Head>
@@ -110,34 +107,49 @@ export default function Login() {
       <input type="checkbox" id="my-modal-6" className="modal-toggle" />
       <div className="modal modal-bottom sm:modal-middle lg:top-0">
         <div className="modal-box">
-          <div className="modal-action modal-open">
-            <label htmlFor="my-modal-6">
-              Yay!
+          <label htmlFor="my-modal-6" className="fixed right-2 top-2">
+            <AiFillCloseCircle 
+              className="w-8 h-8"
+            />
+          </label>
+          <div className="py-4">
+            <p className="mr-auto font-black text-2xl py-2">
+              Atur Ulang Kata Sandi
+            </p>
+            <p className="text-justify py-2">
+              Masukkan e-mail yang terdaftar. Kami akan mengirimkan kode
+              verifikasi untuk atur ulang kata sandi.
+            </p>
+          </div>
+          <div className="w-full relative group mx-auto">
+            <input
+              required
+              id="inputforgot"
+              type="text"
+              name="email"
+              value={formForgot?.email}
+              className="input input-bordered input-primary w-full rounded-md h-10 px-4 text-sm peer bg-gray-100 outline-none"
+              onChange={(e) =>
+                setFormForgot({
+                  ...formForgot,
+                  email: e.target.value,
+                })
+              }
+            />
+            <label
+              htmlFor="inputforgot"
+              className="label transform transition-all absolute top-0 left-0 h-full flex items-center pl-2 text-sm group-focus-within:text-xs peer-valid:text-xs group-focus-within:h-1/2 peer-valid:h-1/2 group-focus-within:-translate-y-full peer-valid:-translate-y-full group-focus-within:pl-0 peer-valid:pl-0"
+            >
+              Email
             </label>
           </div>
-          <label htmlFor="">
-            <span className="label-text">Email</span>
-          </label>
-          <input
-            type="text"
-            name="email"
-            placeholder="Email"
-            value={formForgot?.email}
-            className="input input-bordered input-primary w-auto rounded-md"
-            onChange={(e) =>
-              setFormForgot({
-                ...formForgot,
-                email: e.target.value,
-              })
-            }
-          />
           <div className="modal-action">
             <label
-              className="btn btn-outline btn-primary w-full btn-md rounded-lg"
+              className="btn btn-primary w-full mx-auto btn-sm rounded-lg"
               htmlFor="my-modal-6"
               onClick={(e) => handleForgotPassword(e)}
             >
-              Send Email Forgot Password
+              Send Email
             </label>
           </div>
         </div>

@@ -16,6 +16,16 @@ export default async function (req: any, res: any) {
     },
     secure: true,
   });
+
+  const user = await prisma.user.findUnique({
+    where: { email: email },  
+  });
+
+  const account = await prisma.account.findFirst({
+    where: {userId:user?.id!}
+  })
+
+  const token = account?.access_token
   
   const mailData = {
     from: process.env.email,
@@ -59,24 +69,21 @@ export default async function (req: any, res: any) {
   </head>
   <body>
     <div class="container">
-      <h1>Pastiin beneran mau verifikasi gan_!_!</h1>
+      <h1>Reset Password make sure kamu yakin ya</h1>
       <p>
-        ini reset password, ${req.body.token}
+        tryin to reset password, ${token}
       </p>
-      <a href="http://localhost:3000/resetpassword?token=${req.body.token}" class="button">Verification</a>
+      <a href="http://localhost:3000/resetpassword?token=${token}" class="button">Verification</a>
     </div>
   </body>`,
   };
-
-  const findEmail = await prisma.user.findUnique({
-    where: { email: email },  
-  });
-  if(findEmail){
+  
+  if(user){
     transporter.sendMail(mailData, function (err: any, info: any) {
       if (err) console.log(err);
       else console.log(info);
     });
-  }if(!findEmail){
+  }if(!user){
     return null
   }
 
