@@ -44,7 +44,7 @@ export default function Profile({shop, products} : Props) {
         router.replace(router.asPath)
       })
     }catch(error){
-        console.log(error)
+        //console.log(error)
     }
   }
 

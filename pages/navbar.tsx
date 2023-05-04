@@ -24,7 +24,7 @@ const fetchCategories = async (url: string) => {
 const Navbar = () => {
 
   const {data: categoryData, isLoading} = useSWR<{categories : Array<Category>}>(
-    `/api/category/`,
+    `http://localhost:3000/api/category/`,
     fetchCategories
   )
 
@@ -39,13 +39,13 @@ const Navbar = () => {
   const onSearch = (event : React.FormEvent) => {
     event.preventDefault();
     const encodedSearchQuery = encodeURI(query);
-    router.push(`/search?q=${encodedSearchQuery}`);
+    router.push(`http://localhost:3000/search?q=${encodedSearchQuery}`);
     //console.log(encodedSearchQuery);
   }
 
   function onFilter(categoryId: string){
     const encodedSearchQuery = encodeURI(categoryId);
-    router.push(`/filter?q=${encodedSearchQuery}`);
+    router.push(`http://localhost:3000/filter?q=${encodedSearchQuery}`);
     //console.log(encodedSearchQuery);
   }
   

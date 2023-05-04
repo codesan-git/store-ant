@@ -1,9 +1,9 @@
 import axios from "axios";
 import { useRouter } from "next/router";
-import { GetServerSideProps } from "next";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { getSession, useSession } from "next-auth/react";
 
-export default function Validation({ token }: any) {
+export default function Validation({ token }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
   const { token: accessToken } = router.query;
   const { data: session } = useSession();

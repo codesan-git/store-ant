@@ -28,7 +28,7 @@ export default function Address() {
             method: 'POST'
         }).then(()=> { setForm({address: '', region: '', city: '', province: '', postcode: '', contact: ''}); router.back() })
     }catch(error){
-        console.log(error)
+        //console.log(error)
     }
   }
 
@@ -36,7 +36,7 @@ export default function Address() {
     try{
         create(data)
     }catch(error){
-        console.log(error)
+        //console.log(error)
     }
   }
 

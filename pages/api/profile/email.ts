@@ -23,7 +23,7 @@ export default async function handler(
     })
     res.status(200).json({ message: 'Email updated' })
   } catch (error) {
-    console.log(error)
+    //console.log(error)
     res.status(400).json({ message: "Fail" })
   }
 }

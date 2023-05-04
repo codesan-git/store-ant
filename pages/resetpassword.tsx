@@ -8,7 +8,7 @@ interface FormData {
   access_token?: string;
 }
 
-export default function Validation() {
+export default function Validation(props) {
   const router = useRouter();
   const { token: accessToken } = router.query;
   const [form, setForm] = useState<FormData>({

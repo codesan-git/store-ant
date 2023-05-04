@@ -57,7 +57,7 @@ export default async function handler(
     res.status(200).json({product})
     console.log(res)
     } catch (error) {
-      console.log(error)
+      //console.log(error)
     }
   }
 
@@ -68,7 +68,7 @@ export default async function handler(
       })
     res.json(product)
     } catch (error) {
-      console.log(error)
+      //console.log(error)
     }
   }
 

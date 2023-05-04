@@ -9,20 +9,19 @@ export default async function handler(
   const session = await getSession({req})
 
   try {
-    let cart = await prisma.cart.findFirst({
-      where: {userId: session?.user.id}
-    });
-
-    if(!cart){
-        res.status(200).json({ }) 
-    }
-
+    const shop = await prisma.shop.findFirst({
+        where:{userId: session?.user?.id!}
+    })
+    
     const productInCart = await prisma.productInCart.findMany({
-        where:{cartId: cart?.id},
+        where:{
+            product: {shopId: shop?.id!},
+        },
         select:{
             id: true,
             productId: true,
-            count: true
+            count: true,
+            status: true
         }
     })
 

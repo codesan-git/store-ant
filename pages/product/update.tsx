@@ -96,7 +96,7 @@ export default function CreateShop({product} : FetchData) {
     try{
         handleUpdate(id)
     }catch(error){
-        console.log(error)
+        //console.log(error)
     }
   }
 
