@@ -46,7 +46,7 @@ export default async function handler(
     console.log(products);
     res.status(200).json({products});
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     res.status(400).json({ message: "Fail" });
   }
 }

@@ -51,7 +51,7 @@ export default function CreateProduct() {
         formData.append("categoryId", form.categoryId);
         await axios.post('http://localhost:3000/api/product/create', formData).then(() => { setForm({name: '', price: '', stock:'', categoryId: '1'}); router.back() });
     } catch (error: any) {
-        console.log(error);
+        //console.log(error);
     }
   }
 

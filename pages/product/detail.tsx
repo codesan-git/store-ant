@@ -34,7 +34,7 @@ export default function CreateShop({product} : FetchData) {
   const {id} = router.query;
 
   async function create() {
-    const data : CartData = {productId: product.id, count: (Number(product.stock) - Number(count))};
+    const data : CartData = {productId: product.id, count: Number(count), productCount: (Number(product.stock) - Number(count))};
     try{
         fetch('http://localhost:3000/api/cart/add', {
             body: JSON.stringify(data),
@@ -44,7 +44,7 @@ export default function CreateShop({product} : FetchData) {
             method: 'POST'
         }).then(()=> router.back())
     }catch(error){
-        console.log(error)
+        //console.log(error)
     }
   }
 

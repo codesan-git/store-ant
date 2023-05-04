@@ -31,7 +31,7 @@ export default function ShopProduct({products} : Products) {
         refreshData()
       })
     }catch(error){
-        console.log(error)
+        //console.log(error)
     }
   }
 

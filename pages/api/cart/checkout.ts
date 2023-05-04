@@ -1,11 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
 import { prisma } from "../../../lib/prisma"
+import { Status } from '@prisma/client'
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const {id} = req.body
   const session = await getSession({req})
 
   try {
@@ -13,20 +15,16 @@ export default async function handler(
       where: {userId: session?.user.id}
     });
 
-    if(!cart){
-        res.status(200).json({ }) 
+    let i: Number;
+    for(i=0; i < id.length; i++){
+        const productInCart = await prisma.productInCart.update({
+            where:{id: Number(id[i])},
+            data:{
+                status: Status.UNPAID
+            }
+        })
     }
-
-    const productInCart = await prisma.productInCart.findMany({
-        where:{cartId: cart.id},
-        select:{
-            id: true,
-            productId: true,
-            count: true
-        }
-    })
-
-    res.status(200).json({productInCart})
+    res.status(200).json({ message: "Success!" })
   } catch (error) {
     //console.log(error)
     res.status(400).json({ message: "Fail" })

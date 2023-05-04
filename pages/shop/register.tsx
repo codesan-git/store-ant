@@ -24,7 +24,7 @@ export default function CreateShop() {
             method: 'POST'
         }).then(()=> { setForm({shopname: '', address: ''}); router.back() })
     }catch(error){
-        console.log(error)
+        //console.log(error)
     }
   }
 
@@ -32,7 +32,7 @@ export default function CreateShop() {
     try{
         create(data)
     }catch(error){
-        console.log(error)
+        //console.log(error)
     }
   }
 

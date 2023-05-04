@@ -79,7 +79,7 @@ export default function Home() {
       setProducts(response.data);
       console.log("dari fetchProduct", response.data);
     } catch (error) {
-      console.log(error);
+      //console.log(error);
     }
   };
   // console.log('items gan',items)

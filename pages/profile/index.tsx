@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { HiAtSymbol, HiKey, HiUser } from "react-icons/hi";
 import { useRouter } from "next/router";
-import { GetServerSideProps } from "next";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { getSession, useSession } from "next-auth/react";
 import { prisma } from "../../lib/prisma";
 import Navbar from "../navbar";
@@ -46,7 +46,7 @@ interface Props {
   }[];
 }
 
-export default function Profile({ profile, address }: Props) {
+export default function Profile({ profile, address }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [form, setForm] = useState<FormData>({
     username: profile?.username,
     phonenumber: profile?.phoneNumber,
@@ -107,7 +107,7 @@ export default function Profile({ profile, address }: Props) {
         router.push(router.asPath);
       });
     } catch (error) {
-      console.log(error);
+      //console.log(error);
     }
   }
 
@@ -118,7 +118,7 @@ export default function Profile({ profile, address }: Props) {
         formData.append("image", selectedFile);
         await axios.post('http://localhost:3000/api/profile/photo', formData).then(()=> router.reload())
     } catch (error: any) {
-        console.log(error);
+      //console.log(error);
     }
   }
 
@@ -126,7 +126,7 @@ export default function Profile({ profile, address }: Props) {
     try {
       create(data);
     } catch (error) {
-      console.log(error);
+      //console.log(error);
     }
   };
 

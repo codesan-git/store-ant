@@ -6,7 +6,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const {count, productId} = req.body
+  const {count, productId, productCount} = req.body
   const session = await getSession({req})
   console.log("PRODUCT ID = ", productId);
   console.log("COUNT = ", count);
@@ -35,12 +35,12 @@ export default async function handler(
     await prisma.product.update({
         where: {id: productId},
         data:{
-            stock: Number(count)
+            stock: Number(productCount)
         }
     })
     res.status(200).json({ productInCart })
   } catch (error) {
-    console.log(error)
+    //console.log(error)
     res.status(400).json({ message: "Fail" })
   }
 }

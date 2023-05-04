@@ -15,6 +15,16 @@ enum Gender {
   WOMAN
 }
 
+enum Status {
+  INCART
+  UNPAID
+  PACKING
+  DELIVERING
+  FINISHED
+  RETURNED
+  CANCELED
+}
+
 model Account {
   id                 String     @id @default(cuid())
   userId             String     @map("user_id")
@@ -128,6 +138,7 @@ model ProductInCart {
   cartId       Int @map("cart_id")
   productId    Int @map("product_id")
   count        Int
+  status       Status @default(INCART)
 
   cart Cart @relation(fields: [cartId], references: [id], onDelete: Cascade)
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)

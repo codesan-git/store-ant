@@ -14,7 +14,7 @@ interface FormData{
     password: string,
 }
 
-export default function Login() {
+export default function Login(props) {
   const [show, setShow] = useState<boolean>();
   const [form, setForm] = useState<FormData>({email: '', password: ''});
   const router = useRouter()
@@ -32,7 +32,20 @@ export default function Login() {
       callbackUrl: `${window.location.origin}`,
     });
 
-    res?.error ? console.log("ERROR ", res?.error) : router.push('/');
+    res?.error ? console.log("ERROR ", res?.error) : router.push("/");
+  }
+  const forgotPassword = async (data: FormData) => {
+    // console.log('form password', form.password)
+    try {
+      const response = await axios
+        .put(`http://localhost:3000/api/profile/resetpassword`, form)
+        .then(() => {
+          router.push("/");
+        });
+      console.log("dari fetchProduct", response);
+    } catch (error) {
+      //console.log(error);
+    }
   };
 
   return (
