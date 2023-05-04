@@ -24,7 +24,7 @@ interface Category{
 const ProductCard = ( {product, onEdit, onDelete} : Props ) => {
     return (
         <div id="card" data-theme="garden" className="card w-auto glass">
-            <figure className="h-1/2 bg-gray-500">
+            <figure className="h-max bg-gray-500">
                 {product.image? (
                     <img src={product.image} alt="no image available" className="object-fill"/>
                 ) : (
