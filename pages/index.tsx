@@ -85,7 +85,7 @@ export default function Home() {
     }
   };
   // console.log('items gan',items)
-  const renderProduct = () => {
+  const renderProducts = () => {
     return products.map((product) => {
       return (
         <div
@@ -209,7 +209,7 @@ export default function Home() {
         </div>
         <div id="product-carousel-container" className="relative">
           <div id="product-carousel" className="carousel w-full">
-            <div id="slide1" className="carousel-item relative w-full">
+            <div id="slide1" className="carousel-item relative w-full transition duration-700 ease-in-out">
               <img
                 src="https://images.unsplash.com/photo-1661956603025-8310b2e3036d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
                 className="w-full object-cover"
@@ -259,8 +259,8 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div id="product-list">
-
+        <div id="product-list" className="grid grid-cols-2 gap-10">
+          {renderProducts()}
         </div>
       </div>
     </>
