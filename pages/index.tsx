@@ -144,7 +144,7 @@ export default function Home() {
         <title>Homepage</title>
       </Head>
       <Navbar />
-      <div id="content" className="w-auto p-2 lg:w-3/4">
+      <div id="content" className="w-auto p-2 space-y-2">
         <div id="category-list" className=" carousel carousel-center p-4 h-28 space-x-1 items-center shadow rounded-md">
           {/* Best way to style a category */}
           <div id="category-item" className="carousel-item flex-col items-center p-2 w-16 h-16">
@@ -207,8 +207,57 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div id="product-carousel">
-
+        <div id="product-carousel-container" className="relative">
+          <div id="product-carousel" className="carousel w-full">
+            <div id="slide1" className="carousel-item relative w-full">
+              <img
+                src="https://images.unsplash.com/photo-1661956603025-8310b2e3036d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
+                className="w-full object-cover"
+              />
+              <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+                <a href="#slide4" className="btn btn-circle btn-sm lg:btn-md">❮</a>
+                <a href="#slide2" className="btn btn-circle btn-sm lg:btn-md">❯</a>
+              </div>
+            </div>
+            <div id="slide2" className="carousel-item relative w-full">
+              <img
+                src="https://images.unsplash.com/photo-1680500055774-7185391be33d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80"
+                className="w-full object-cover"
+              />
+              <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+                <a href="#slide1" className="btn btn-circle btn-sm lg:btn-md">❮</a>
+                <a href="#slide3" className="btn btn-circle btn-sm lg:btn-md">❯</a>
+              </div>
+            </div>
+            <div id="slide3" className="carousel-item relative w-full">
+              <img
+                src="https://images.unsplash.com/photo-1680371371611-9168e2d7bfcd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2146&q=80"
+                className="w-full object-cover"
+              />
+              <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+                <a href="#slide2" className="btn btn-circle btn-sm lg:btn-md">❮</a>
+                <a href="#slide4" className="btn btn-circle btn-sm lg:btn-md">❯</a>
+              </div>
+            </div>
+            <div id="slide4" className="carousel-item relative w-full">
+              <img
+                src="https://images.unsplash.com/photo-1679678691010-894374986c54?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1198&q=80"
+                className="w-full object-cover"
+              />
+              <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+                <a href="#slide3" className="btn btn-circle btn-sm lg:btn-md">❮</a>
+                <a href="#slide1" className="btn btn-circle btn-sm lg:btn-md">❯</a>
+              </div>
+            </div>
+          </div>
+          <div id='slide-button-group-container' className=" absolute w-full bottom-0 left-0">
+            <div className="flex justify-center w-full py-2 gap-2">
+              <a href="#slide1" className="text-2xl cursor-pointer text-slate-200 hover:bg-slate-50 hover:rounded-full hover:text-slate-700 active:text-slate-700"><RxDotFilled /></a> 
+              <a href="#slide2" className="text-2xl cursor-pointer text-slate-200 hover:bg-slate-50 hover:rounded-full hover:text-slate-700 active:text-slate-700"><RxDotFilled /></a> 
+              <a href="#slide3" className="text-2xl cursor-pointer text-slate-200 hover:bg-slate-50 hover:rounded-full hover:text-slate-700 active:text-slate-700"><RxDotFilled /></a> 
+              <a href="#slide4" className="text-2xl cursor-pointer text-slate-200 hover:bg-slate-50 hover:rounded-full hover:text-slate-700 active:text-slate-700"><RxDotFilled /></a>
+            </div>
+          </div>
         </div>
         <div id="product-list">
 
