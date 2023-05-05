@@ -17,8 +17,10 @@ export default async function handler(
 
   if (req.method === "GET") {
     try {
-      const token = session?.user.accessToken!;
-      res.status(200).json({ token });
+      const account = await prisma.account.findFirst({
+        where: {userId:user?.id!}
+      })
+      res.status(200).json(account?.access_token!);
       console.log(res);
     } catch (error) {
       //console.log(error);
