@@ -18,7 +18,7 @@ export default async function handler(
     const productInCart = await prisma.productInCart.update({
         where:{id: Number(id)},
         data:{
-            status: Status.RETURNING
+            status: Status.CANCEL_REJECTED
         }
     })
     res.status(200).json({ message: "Success!" })

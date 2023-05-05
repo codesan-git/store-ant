@@ -50,13 +50,13 @@ export default function Transaction({ cartItems }: InferGetServerSidePropsType<t
     console.log(belumBayar);
 
     for(i = 0; i < cartItems.length; i++){
-        if(cartItems[i].status === Status.PACKING)
+        if(cartItems[i].status === Status.PACKING || cartItems[i].status === Status.CANCELING || cartItems[i].status === Status.CANCEL_REJECTED)
             dikemas.push(cartItems[i]);
     }
     console.log(dikemas);
     
     for(i = 0; i < cartItems.length; i++){
-        if(cartItems[i].status === Status.DELIVERING)
+        if(cartItems[i].status === Status.DELIVERING || cartItems[i].status === Status.RETURNING)
             dikirim.push(cartItems[i]);
     }
     console.log(dikirim);
@@ -238,7 +238,11 @@ export default function Transaction({ cartItems }: InferGetServerSidePropsType<t
                                             <p>{cartItem.product.price}</p>
                                             <p>{cartItem.count}</p>
                                             <p>{cartItem.status}</p>
-                                            <button onClick={() => onCancel(Number(cartItem.id))} className="w-16 btn btn-primary">Cancel</button>
+                                            {cartItem.status === Status.CANCELING ? (                                                
+                                                <button disabled={true} className="w-32 btn btn-primary">Pembatalan Diajukan</button>
+                                            ) : (
+                                                <button disabled={cartItem.status === Status.CANCEL_REJECTED ? true : false} onClick={() => onCancel(Number(cartItem.id))} className="w-32 btn btn-primary">Batalkan</button>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -280,11 +284,15 @@ export default function Transaction({ cartItems }: InferGetServerSidePropsType<t
                                             <p>{cartItem.product.price}</p>
                                             <p>{cartItem.count}</p>
                                             <p>{cartItem.status}</p>
-                                            <div className="flex gap-x-2">
-                                                <button className="w-16 btn btn-primary">Lacak</button>                                                
-                                                <button onClick={() => onFinish(Number(cartItem.id))} className="w-16 btn btn-primary">Selesai</button>
-                                                <button onClick={() => onReturn(Number(cartItem.id))} className="w-32 btn btn-primary">Kembalikan</button>
-                                            </div>
+                                            {cartItem.status === Status.RETURNING ? (                                                
+                                                <button disabled={true} className="w-32 btn btn-primary">Pengembalian Diajukan</button>
+                                            ) : (
+                                                <div className="flex gap-x-2">
+                                                    <button className="w-16 btn btn-primary">Lacak</button>                                                
+                                                    <button onClick={() => onFinish(Number(cartItem.id))} className="w-16 btn btn-primary">Selesai</button>
+                                                    <button onClick={() => onReturn(Number(cartItem.id))} className="w-32 btn btn-primary">Kembalikan</button>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>

@@ -43,13 +43,13 @@ export default function Transaction({ cartItems }: InferGetServerSidePropsType<t
   if(cartItems){
     let i: Number;
     for(i = 0; i < cartItems.length; i++){
-        if(cartItems[i].status === Status.PACKING)
+        if(cartItems[i].status === Status.PACKING || cartItems[i].status === Status.CANCELING || cartItems[i].status === Status.CANCEL_REJECTED)
             dikemas.push(cartItems[i]);
     }
     console.log(dikemas);
     
     for(i = 0; i < cartItems.length; i++){
-        if(cartItems[i].status === Status.DELIVERING)
+        if(cartItems[i].status === Status.DELIVERING || cartItems[i].status === Status.RETURNING)
             dikirim.push(cartItems[i]);
     }
     console.log(dikirim);
@@ -77,6 +77,66 @@ export default function Transaction({ cartItems }: InferGetServerSidePropsType<t
     const cartId: CartId = {id: id};
     try{
         fetch('http://localhost:3000/api/shop/deliver', {
+            body: JSON.stringify(cartId),
+            headers: {
+                'Content-Type' : 'application/json'
+            },
+            method: 'PUT'
+        }).then(()=> router.reload())
+      }catch(error){
+          //console.log(error)
+      }
+  }
+
+  async function onAccept(id: Number) {
+    const cartId: CartId = {id: id};
+    try{
+        fetch('http://localhost:3000/api/shop/cancel', {
+            body: JSON.stringify(cartId),
+            headers: {
+                'Content-Type' : 'application/json'
+            },
+            method: 'PUT'
+        }).then(()=> router.reload())
+      }catch(error){
+          //console.log(error)
+      }
+  }
+
+  async function onReject(id: Number) {
+    const cartId: CartId = {id: id};
+    try{
+        fetch('http://localhost:3000/api/shop/reject', {
+            body: JSON.stringify(cartId),
+            headers: {
+                'Content-Type' : 'application/json'
+            },
+            method: 'PUT'
+        }).then(()=> router.reload())
+      }catch(error){
+          //console.log(error)
+      }
+  }
+
+  async function onReturn(id: Number) {
+    const cartId: CartId = {id: id};
+    try{
+        fetch('http://localhost:3000/api/shop/return', {
+            body: JSON.stringify(cartId),
+            headers: {
+                'Content-Type' : 'application/json'
+            },
+            method: 'PUT'
+        }).then(()=> router.reload())
+      }catch(error){
+          //console.log(error)
+      }
+  }
+
+  async function onFinish(id: Number) {
+    const cartId: CartId = {id: id};
+    try{
+        fetch('http://localhost:3000/api/shop/finish', {
             body: JSON.stringify(cartId),
             headers: {
                 'Content-Type' : 'application/json'
@@ -143,8 +203,17 @@ export default function Transaction({ cartItems }: InferGetServerSidePropsType<t
                                             <h2 className="card-title">{cartItem.product.name}</h2>
                                             <p>{cartItem.product.price}</p>
                                             <p>{cartItem.count}</p>
-                                            <p>{cartItem.status}</p>
-                                            <button onClick={() => onDeliver(Number(cartItem.id))} className="w-16 btn btn-primary">Kirim</button>
+                                            <p>{cartItem.status}</p>                                                                                                                                  
+                                            {cartItem.status === Status.CANCELING ? (    
+                                                <div className="flex gap-x-2">                                                
+                                                    <button onClick={() => onAccept(Number(cartItem.id))} className="w-16 btn btn-primary">Setuju</button>
+                                                    <button onClick={() => onReject(Number(cartItem.id))} className="w-16 btn btn-primary">Tolak</button>                                               
+                                                </div>            
+                                            ) : (
+                                                <div className="flex gap-x-2">
+                                                    <button onClick={() => onDeliver(Number(cartItem.id))} className="w-16 btn btn-primary">Kirim</button>                                                
+                                                </div>
+                                            )}  
                                         </div>
                                     </div>
                                 </div>
@@ -185,7 +254,17 @@ export default function Transaction({ cartItems }: InferGetServerSidePropsType<t
                                             <h2 className="card-title">{cartItem.product.name}</h2>
                                             <p>{cartItem.product.price}</p>
                                             <p>{cartItem.count}</p>
-                                            <p>{cartItem.status}</p>
+                                            <p>{cartItem.status}</p>                                                                                      
+                                            {cartItem.status === Status.RETURNING ? (    
+                                                <div className="flex gap-x-2">                                                
+                                                    <button onClick={() => onReturn(Number(cartItem.id))} className="w-16 btn btn-primary">Setuju</button>
+                                                    <button onClick={() => onFinish(Number(cartItem.id))} className="w-16 btn btn-primary">Tolak</button>                                               
+                                                </div>            
+                                            ) : (
+                                                <div className="flex gap-x-2">
+                                                    <button className="w-16 btn btn-primary">Lacak</button>                                                
+                                                </div>
+                                            )}  
                                         </div>
                                     </div>
                                 </div>

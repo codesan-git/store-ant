@@ -18,11 +18,15 @@ enum Gender {
 enum Status {
   INCART
   UNPAID
+  PAID
   PACKING
   DELIVERING
   FINISHED
+  RETURNING
   RETURNED
+  CANCELING
   CANCELED
+  CANCEL_REJECTED
 }
 
 model Account {
@@ -64,6 +68,7 @@ model Shop {
   userId   String @unique @map("user_id")
   shopName String
   product  Product[]
+  image    String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -139,6 +144,8 @@ model ProductInCart {
   productId    Int @map("product_id")
   count        Int
   status       Status @default(INCART)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now())
 
   cart Cart @relation(fields: [cartId], references: [id], onDelete: Cascade)
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)

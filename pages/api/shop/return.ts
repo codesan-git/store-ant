@@ -18,8 +18,19 @@ export default async function handler(
     const productInCart = await prisma.productInCart.update({
         where:{id: Number(id)},
         data:{
-            status: Status.RETURNING
+            status: Status.RETURNED
         }
+    })
+
+    const product = await prisma.product.findFirst({
+      where:{id: Number(productInCart.productId)}
+    })
+
+    const productUpdate = await prisma.product.update({
+      where:{id: Number(product.id)},
+      data:{
+        stock: Number(Number(product.stock) + Number(productInCart.count))
+      }
     })
     res.status(200).json({ message: "Success!" })
   } catch (error) {
