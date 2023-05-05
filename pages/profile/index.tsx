@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "../../styles/Form.module.css";
 import Image from "next/image";
 import { useState } from "react";
@@ -57,6 +57,7 @@ export default function Profile({ profile, address }: InferGetServerSidePropsTyp
   const router = useRouter();
   const { data: session } = useSession();
   const [selectedImage, setSelectedImage] = useState("");
+  const [token, setToken] = useState("")
   const [selectedFile, setSelectedFile] = useState<File>();
   const [submitted, setSubmitted] = useState(false);
 
@@ -151,13 +152,19 @@ export default function Profile({ profile, address }: InferGetServerSidePropsTyp
     });
   };
 
+  const getToken = async () => {
+    const res = (await axios.get(`http://localhost:3000/api/validation/${session?.user.id}`)).data
+    setToken(res)
+    console.log('response token', res)
+  }
+
   const changeVerifyStatus = (e: any) => {
     e.preventDefault();
     console.log("Sending");
 
     let data = {
       email: session?.user.email!,
-      token: session?.user.accessToken!,
+      token: token,
     };
 
     Swal.fire({
@@ -195,7 +202,7 @@ export default function Profile({ profile, address }: InferGetServerSidePropsTyp
 
     let data = {
       email: session?.user.email!,
-      token: session?.user.accessToken!,
+      token: token,
     };
 
     Swal.fire({
@@ -593,6 +600,10 @@ export default function Profile({ profile, address }: InferGetServerSidePropsTyp
         constantly trying to express ourselves and actualize our dreams.`,
     },
   ];
+
+  useEffect(() => {
+    getToken();
+  }, []);
 
   console.log("user", session?.user);
   console.log("cek emailVerification");
