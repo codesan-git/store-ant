@@ -62,7 +62,7 @@ export default function Cart({ cartItems }: CartItems) {
               'Content-Type' : 'application/json'
           },
           method: 'PUT'
-      }).then(()=> router.back())
+      }).then(()=> router.push("http://localhost:3000/transactions"))
     }catch(error){
         //console.log(error)
     }
