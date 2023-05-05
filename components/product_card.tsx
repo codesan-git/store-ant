@@ -29,19 +29,19 @@ const ProductCard = ( {product, onClick , onEdit, onDelete} : Props ) => {
     }
 
     return (
-      <div id="card" data-theme="garden" className={`card w-auto glass`} onClick={onCardClick}>  {/*Find a way to style cursor pointer if onClick is not null*/}
-        <figure className="h-max bg-gray-500">
+      <div id="card" data-theme="garden" className={`card glass w-30 lg:w-auto`} onClick={onCardClick}>  {/*Find a way to style cursor pointer if onClick is not null*/}
+        <figure className="h-1/3 bg-gray-500">
           {product.image? (
-            <img src={product.image} alt="no image available" className="object-fill"/>
+            <img src={product.image} alt="no image available" className="object-cover"/>
           ) : (
             <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"/>
           )}
         </figure>
-        <div className="h-1/2 card-body p-8">
-          <h2 className="card-title">{product.name}</h2>
-          <p className='text-md'>{product.category?.category}</p>   
-          <p className="text-md">Rp. {product.price}</p>
-          <p className="text-md">Qty. {product.stock}</p>
+        <div className="h-2/3 card-body p-4">
+          <h1 className="card-title text-lg">{product.name}</h1>
+          <h1 className='text-sm lg:text-md '>{product.category?.category}</h1>
+          <h1 className="text-sm lg:text-md ">Rp. {product.price}</h1>
+          <h1 className="text-sm lg:text-md ">Qty. {product.stock}</h1>
           {
             (onEdit && onDelete) 
             ? <div className="card-actions justify-end my-2">

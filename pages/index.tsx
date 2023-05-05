@@ -131,7 +131,7 @@ export default function Home() {
         <title>Homepage</title>
       </Head>
       <Navbar />
-      <div id="content" className="w-auto p-2 space-y-2">
+      <div id="content" className="w-auto p-2 space-y-4">
         <div id="category-list" className=" carousel carousel-center p-4 h-28 space-x-1 items-center shadow rounded-md">
           {/* Best way to style a category */}
           <div id="category-item" className="carousel-item flex-col items-center p-2 w-16 h-16">
@@ -195,7 +195,7 @@ export default function Home() {
           </div>
         </div>
         <div id="product-carousel-container" className="relative">
-          <div id="product-carousel" className="carousel w-full">
+          <div id="product-carousel" className="carousel w-full rounded-lg">
             <div id="slide1" className="carousel-item relative w-full transition duration-700 ease-in-out">
               <img
                 src="https://images.unsplash.com/photo-1661956603025-8310b2e3036d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
