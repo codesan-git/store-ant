@@ -29,15 +29,15 @@ const ProductCard = ( {product, onClick , onEdit, onDelete} : Props ) => {
     }
 
     return (
-      <div id="card" data-theme="garden" className={`card glass w-30 lg:w-auto`} onClick={onCardClick}>  {/*Find a way to style cursor pointer if onClick is not null*/}
-        <figure className="h-1/3 bg-gray-500">
-          {product.image? (
-            <img src={product.image} alt="no image available" className="object-cover"/>
-          ) : (
-            <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"/>
-          )}
-        </figure>
-        <div className="h-2/3 card-body p-4">
+      <div id="card" data-theme="garden" className={`card glass w-30  h-64 lg:h-auto lg:w-auto`} onClick={onCardClick}>  {/*Find a way to style cursor pointer if onClick is not null*/}
+        
+        
+        {product.image? (
+          <img src={product.image} alt="no image available" className="w-full h-1/2 object-cover rounded-t-2xl"/>
+        ) : (
+          <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"/>
+        )}
+        <div className=" card-body p-4">
           <h1 className="card-title text-lg">{product.name}</h1>
           <h1 className='text-sm lg:text-md '>{product.category?.category}</h1>
           <h1 className="text-sm lg:text-md ">Rp. {product.price}</h1>

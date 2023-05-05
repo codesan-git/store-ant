@@ -132,29 +132,17 @@ export default function Home() {
         <title>Homepage</title>
       </Head>
       <Navbar />
-      <div id="content" className="w-auto p-2 space-y-4">
-        <div id="category-list" className=" carousel carousel-center p-4 h-28 space-x-1 items-center shadow rounded-md">
-          {/* Best way to style a category */}
-          <div id="category-item" className="carousel-item flex-col items-center p-2 w-16 h-16">
-            <div id="category-icon-container" className="h-1/2 w-full flex justify-center items-center ">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
-                <path fillRule="evenodd" d="M19.952 1.651a.75.75 0 01.298.599V16.303a3 3 0 01-2.176 2.884l-1.32.377a2.553 2.553 0 11-1.403-4.909l2.311-.66a1.5 1.5 0 001.088-1.442V6.994l-9 2.572v9.737a3 3 0 01-2.176 2.884l-1.32.377a2.553 2.553 0 11-1.402-4.909l2.31-.66a1.5 1.5 0 001.088-1.442V9.017 5.25a.75.75 0 01.544-.721l10.5-3a.75.75 0 01.658.122z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <div id="category-name-container" className="flex justify-center items-center h-1/2 w-full ">
-              <h1 className="text-xs text-center">Rumah Tangga</h1>
-            </div>
-          </div>
-          
+      <div id="content" className="p-2 space-y-4">
+        <div id="category-list" className=" carousel carousel-center p-4 h-28 space-x-1 items-center shadow rounded-md lg:hidden">
           <CategoryListItem/>
           <CategoryListItem/>
           <CategoryListItem/>
           <CategoryListItem/>
           <CategoryListItem/>
         </div>
-        <div id="product-carousel-container" className="relative">
-          <div id="product-carousel" className="carousel w-full rounded-lg">
-            <div id="slide1" className="carousel-item relative w-full transition duration-700 ease-in-out">
+        <div id="product-carousel-container" className="relative flex justify-center">
+          <div id="product-carousel" className="carousel w-full rounded-lg lg:w-3/4 lg:h-96">
+            <div id="slide1" className="carousel-item relative w-full transition duration-700 ease-in-out hover:cursor-pointer">
               <img
                 src="https://images.unsplash.com/photo-1661956603025-8310b2e3036d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
                 className="w-full object-cover"
@@ -164,7 +152,7 @@ export default function Home() {
                 <a href="#slide2" className="btn btn-circle btn-sm lg:btn-md">❯</a>
               </div>
             </div>
-            <div id="slide2" className="carousel-item relative w-full">
+            <div id="slide2" className="carousel-item relative w-full hover:cursor-pointer">
               <img
                 src="https://images.unsplash.com/photo-1680500055774-7185391be33d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80"
                 className="w-full object-cover"
@@ -174,7 +162,7 @@ export default function Home() {
                 <a href="#slide3" className="btn btn-circle btn-sm lg:btn-md">❯</a>
               </div>
             </div>
-            <div id="slide3" className="carousel-item relative w-full">
+            <div id="slide3" className="carousel-item relative w-full hover:cursor-pointer">
               <img
                 src="https://images.unsplash.com/photo-1680371371611-9168e2d7bfcd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2146&q=80"
                 className="w-full object-cover"
@@ -184,7 +172,7 @@ export default function Home() {
                 <a href="#slide4" className="btn btn-circle btn-sm lg:btn-md">❯</a>
               </div>
             </div>
-            <div id="slide4" className="carousel-item relative w-full">
+            <div id="slide4" className="carousel-item relative w-full hover:cursor-pointer">
               <img
                 src="https://images.unsplash.com/photo-1679678691010-894374986c54?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1198&q=80"
                 className="w-full object-cover"
@@ -204,8 +192,10 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div id="product-list" className="grid grid-cols-2 gap-5">
-          {products.map((product) => <ProductCard onClick={() => routeToProduct(product.id)} product={product} key={product.id}/>)}
+        <div id="product-list-container" className="flex justify-center">  
+          <div id="product-list" className="grid grid-cols-2 lg:grid-cols-4 gap-5 lg:w-3/4">
+            {products.map((product) => <ProductCard onClick={() => routeToProduct(product.id)} product={product} key={product.id}/>)}
+          </div>
         </div>
       </div>
     </>
