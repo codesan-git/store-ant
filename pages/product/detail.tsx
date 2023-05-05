@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { GetServerSideProps } from 'next'
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import { prisma } from "../../lib/prisma"
 import { getSession} from 'next-auth/react';
 import Navbar from '../navbar'
@@ -28,7 +28,7 @@ interface CartData{
   count: Number
 }
 
-export default function CreateShop({product} : FetchData) { 
+export default function CreateShop({product}: InferGetServerSidePropsType<typeof getServerSideProps>) { 
   const [count, setCount] = useState(0);   
   const [Subtotal, setSubtotal] = useState(0);
   const router = useRouter();

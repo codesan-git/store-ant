@@ -21,7 +21,7 @@ export default async function handler(
         where:{cartId: cart?.id},
         select:{
             id: true,
-            productId: true,
+            product: true,
             count: true
         }
     })

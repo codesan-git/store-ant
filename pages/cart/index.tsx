@@ -29,6 +29,7 @@ interface CartId {
 }
 
 export default function Cart({ cartItems }: CartItems) {
+  console.log(cartItems)
   const [data, setData] = useState([]); 
   const router = useRouter();
 

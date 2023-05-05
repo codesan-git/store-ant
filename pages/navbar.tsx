@@ -5,7 +5,24 @@ import Link from "next/link";
 import { HiShoppingCart } from "react-icons/hi";
 import { useState } from 'react';
 import { Category } from "@prisma/client";
+import { Status } from '@prisma/client';
 import useSWR from 'swr';
+import { InferGetServerSidePropsType } from "next";
+
+interface CartItems {
+  id: Number;
+  product: Product;
+  count: Number;
+  price: Number;
+}
+
+interface Product {
+  id: string;
+  name: string;
+  price: Number;
+  stock: Number;
+  image: string;
+}
 
 async function handleGoogleSignOut() {
     signOut({ callbackUrl: "http://localhost:3000/login" });
@@ -21,8 +38,7 @@ const fetchCategories = async (url: string) => {
 }
 
 // export default function 
-const Navbar = () => {
-
+export default function Navbar(){
   const {data: categoryData, isLoading} = useSWR<{categories : Array<Category>}>(
     `http://localhost:3000/api/category/`,
     fetchCategories
@@ -34,6 +50,18 @@ const Navbar = () => {
     router.replace(router.asPath);
   };
 
+  const {data: cartItems, isLoading: loadingCart} = useSWR<{productInCart : Array<CartItems>}>(
+    `http://localhost:3000/api/cart/`,
+    fetchCategories
+  )
+
+  let price = 0;
+  if(cartItems){
+    let i:Number;
+    for(i = 0; i < cartItems.productInCart.length; i++){
+      price += (Number(cartItems.productInCart[i].count) * Number(cartItems.productInCart[i].product.price));
+    }
+  }
   
   const [query, setQuery] = useState('');
   const onSearch = (event : React.FormEvent) => {
@@ -123,7 +151,11 @@ const Navbar = () => {
                         d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
                       />
                     </svg>
-                    <span className="badge badge-sm indicator-item">8</span>
+                    {cartItems ? (
+                    <span className="badge badge-sm indicator-item">{cartItems.productInCart.length}</span>
+                    ) : (
+                      <></>
+                    )}
                   </div>
                 </label>
                 <div
@@ -131,8 +163,12 @@ const Navbar = () => {
                   className="mt-3 card card-compact dropdown-content w-52 bg-base-100 shadow"
                 >
                   <div className="card-body">
-                    <span className="font-bold text-lg">8 Items</span>
-                    <span className="text-info">Subtotal: $999</span>
+                    {cartItems ? (
+                      <span className="font-bold text-lg">{cartItems.productInCart.length} Items</span>
+                    ) : (
+                      <span className="font-bold text-lg">No Items Yet</span>
+                    )}
+                    <span className="text-info">Subtotal: Rp.{price}</span>
                     <div className="card-actions">
                       <button onClick={()=> router.push('http://localhost:3000/cart')} className="btn btn-primary btn-block">
                         View cart
@@ -236,4 +272,4 @@ const Navbar = () => {
   );
 }
 
-export default Navbar
+//export default Navbar
