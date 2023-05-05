@@ -84,26 +84,13 @@ export default function Home() {
       console.log(error);
     }
   };
-  // console.log('items gan',items)
-  const renderProducts = () => {
-    return products.map((product) => {
-      return (
-        <div
-          data-theme="garden"
-          className="card w-auto glass"
-          key={product.id}
-          onClick={() =>
-            router.push({
-              pathname: "/product/detail/",
-              query: { id: String(product.id) },
-            })
-          }
-        >
-          <ProductCard product={product} />
-        </div>
-      );
+
+  const routeToProduct = (productId: number) => {
+    router.push({
+      pathname: "/product/detail/",
+      query: {id: String(productId)}
     });
-  };
+  }
 
   const handleNodemailer = (e: any) => {
     e.preventDefault();
@@ -259,8 +246,8 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div id="product-list" className="grid grid-cols-2 gap-10">
-          {renderProducts()}
+        <div id="product-list" className="grid grid-cols-2 gap-5">
+          {products.map((product) => <ProductCard onClick={() => routeToProduct(product.id)} product={product} key={product.id}/>)}
         </div>
       </div>
     </>
