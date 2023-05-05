@@ -7,6 +7,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const {id} = req.body
   const session = await getSession({req})
 
   try {
@@ -14,20 +15,13 @@ export default async function handler(
       where: {userId: session?.user.id}
     });
 
-    if(!cart){
-        res.status(200).json({ }) 
-    }
-
-    const productInCart = await prisma.productInCart.findMany({
-        where:{cartId: cart?.id, status: Status.INCART},
-        select:{
-            id: true,
-            product: true,
-            count: true
+    const productInCart = await prisma.productInCart.update({
+        where:{id: Number(id)},
+        data:{
+            status: Status.PACKING
         }
     })
-
-    res.status(200).json({productInCart})
+    res.status(200).json({ message: "Success!" })
   } catch (error) {
     //console.log(error)
     res.status(400).json({ message: "Fail" })

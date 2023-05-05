@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
 import { prisma } from "../../../lib/prisma"
+import { Status } from '@prisma/client'
 
 export default async function handler(
   req: NextApiRequest,
@@ -24,7 +25,7 @@ export default async function handler(
   }
 
   const existingData = await prisma.productInCart.findFirst({
-    where:{productId: productId, cartId: cart.id}
+    where:{productId: productId, cartId: cart.id, status: Status.INCART}
   })
   console.log("DATA: ", existingData);
 

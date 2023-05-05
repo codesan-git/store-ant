@@ -27,6 +27,10 @@ interface Product {
     image: string;
 }
 
+interface CartId {
+    id: Number;
+}
+
 export default function Transaction({ cartItems }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
   const{data:session} = useSession();
@@ -34,6 +38,8 @@ export default function Transaction({ cartItems }: InferGetServerSidePropsType<t
   let dikemas = new Array();
   let dikirim = new Array();
   let selesai = new Array();
+  let dibatalkan = new Array();
+  let dikembalikan = new Array();
 
   if(cartItems){
     let i: Number;
@@ -60,6 +66,78 @@ export default function Transaction({ cartItems }: InferGetServerSidePropsType<t
             selesai.push(cartItems[i]);
     }
     console.log(selesai);
+
+    for(i = 0; i < cartItems.length; i++){
+        if(cartItems[i].status === Status.CANCELED)
+            dibatalkan.push(cartItems[i]);
+    }
+    console.log(dibatalkan);
+    
+    for(i = 0; i < cartItems.length; i++){
+        if(cartItems[i].status === Status.RETURNED)
+            dikembalikan.push(cartItems[i]);
+    }
+    console.log(dikembalikan);
+  }
+
+  async function onBayar(id: Number) {
+    const cartId: CartId = {id: id};
+    try{
+        fetch('http://localhost:3000/api/cart/pay', {
+            body: JSON.stringify(cartId),
+            headers: {
+                'Content-Type' : 'application/json'
+            },
+            method: 'PUT'
+        }).then(()=> router.reload())
+      }catch(error){
+          //console.log(error)
+      }
+  }
+
+  async function onCancel(id: Number) {
+    const cartId: CartId = {id: id};
+    try{
+        fetch('http://localhost:3000/api/cart/cancel', {
+            body: JSON.stringify(cartId),
+            headers: {
+                'Content-Type' : 'application/json'
+            },
+            method: 'PUT'
+        }).then(()=> router.reload())
+      }catch(error){
+          //console.log(error)
+      }
+  }
+  
+  async function onFinish(id: Number) {
+    const cartId: CartId = {id: id};
+    try{
+        fetch('http://localhost:3000/api/cart/finish', {
+            body: JSON.stringify(cartId),
+            headers: {
+                'Content-Type' : 'application/json'
+            },
+            method: 'PUT'
+        }).then(()=> router.reload())
+      }catch(error){
+          //console.log(error)
+      }
+  }
+
+  async function onReturn(id: Number) {
+    const cartId: CartId = {id: id};
+    try{
+        fetch('http://localhost:3000/api/cart/return', {
+            body: JSON.stringify(cartId),
+            headers: {
+                'Content-Type' : 'application/json'
+            },
+            method: 'PUT'
+        }).then(()=> router.reload())
+      }catch(error){
+          //console.log(error)
+      }
   }
 
   return (
@@ -118,6 +196,7 @@ export default function Transaction({ cartItems }: InferGetServerSidePropsType<t
                                             <p>{cartItem.product.price}</p>
                                             <p>{cartItem.count}</p>
                                             <p>{cartItem.status}</p>
+                                            <button onClick={() => onBayar(Number(cartItem.id))} className="w-16 btn btn-primary">Bayar</button>
                                         </div>
                                     </div>
                                 </div>
@@ -159,6 +238,7 @@ export default function Transaction({ cartItems }: InferGetServerSidePropsType<t
                                             <p>{cartItem.product.price}</p>
                                             <p>{cartItem.count}</p>
                                             <p>{cartItem.status}</p>
+                                            <button onClick={() => onCancel(Number(cartItem.id))} className="w-16 btn btn-primary">Cancel</button>
                                         </div>
                                     </div>
                                 </div>
@@ -200,6 +280,11 @@ export default function Transaction({ cartItems }: InferGetServerSidePropsType<t
                                             <p>{cartItem.product.price}</p>
                                             <p>{cartItem.count}</p>
                                             <p>{cartItem.status}</p>
+                                            <div className="flex gap-x-2">
+                                                <button className="w-16 btn btn-primary">Lacak</button>                                                
+                                                <button onClick={() => onFinish(Number(cartItem.id))} className="w-16 btn btn-primary">Selesai</button>
+                                                <button onClick={() => onReturn(Number(cartItem.id))} className="w-32 btn btn-primary">Kembalikan</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -220,6 +305,88 @@ export default function Transaction({ cartItems }: InferGetServerSidePropsType<t
                 {selesai.length !==0 ? (
                     <div>
                         {selesai.map((cartItem) => (
+                        <div
+                            className="card bg-base-100 shadow-xl text-md"
+                            key={String(cartItem.id)}
+                        >
+                            <div className="flex">
+                                <div className="card-body py-5">
+                                    <figure className="rounded-md h-40 w-40">
+                                        {cartItem.product.image? (
+                                            <img src={`http://localhost:3000/${cartItem.product.image}`}/>
+                                        ) : (
+                                            <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"/>
+                                        )}
+                                    </figure>
+                                </div>
+                                <div className="w-full">
+                                    <div className="py-5 px-10 flex w-full">
+                                        <div>
+                                            <h2 className="card-title">{cartItem.product.name}</h2>
+                                            <p>{cartItem.product.price}</p>
+                                            <p>{cartItem.count}</p>
+                                            <p>{cartItem.status}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        ))}
+                    </div>
+                ) : (
+                    <p>No on going transaction</p>
+                )}
+            </div>
+            <div className='w-full mx-10 bg-gray-100 py-5'>
+                <section className="w-full mx-auto flex flex-col gap-10">
+                    <div className="title">
+                            <p className="text-lg">Dibatalkan</p>
+                    </div>
+                </section> 
+                {dibatalkan.length !==0 ? (
+                    <div>
+                        {dibatalkan.map((cartItem) => (
+                        <div
+                            className="card bg-base-100 shadow-xl text-md"
+                            key={String(cartItem.id)}
+                        >
+                            <div className="flex">
+                                <div className="card-body py-5">
+                                    <figure className="rounded-md h-40 w-40">
+                                        {cartItem.product.image? (
+                                            <img src={`http://localhost:3000/${cartItem.product.image}`}/>
+                                        ) : (
+                                            <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"/>
+                                        )}
+                                    </figure>
+                                </div>
+                                <div className="w-full">
+                                    <div className="py-5 px-10 flex w-full">
+                                        <div>
+                                            <h2 className="card-title">{cartItem.product.name}</h2>
+                                            <p>{cartItem.product.price}</p>
+                                            <p>{cartItem.count}</p>
+                                            <p>{cartItem.status}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        ))}
+                    </div>
+                ) : (
+                    <p>No on going transaction</p>
+                )}
+            </div>
+            <div className='w-full mx-10 bg-gray-100 py-5'>
+                <section className="w-full mx-auto flex flex-col gap-10">
+                    <div className="title">
+                            <p className="text-lg">Dikembalikan</p>
+                    </div>
+                </section> 
+                {dikembalikan.length !==0 ? (
+                    <div>
+                        {dikembalikan.map((cartItem) => (
                         <div
                             className="card bg-base-100 shadow-xl text-md"
                             key={String(cartItem.id)}
