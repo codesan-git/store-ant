@@ -27,6 +27,10 @@ interface Product {
     image: string;
 }
 
+interface CartId {
+    id: Number;
+}
+
 export default function Transaction({ cartItems }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
   const{data:session} = useSession();
