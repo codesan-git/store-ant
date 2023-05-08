@@ -41,7 +41,7 @@ export default function Transaction({ cartItems }: InferGetServerSidePropsType<t
   let dikembalikan = new Array();
 
   if(cartItems){
-    let i: Number;
+    let i: number;
     for(i = 0; i < cartItems.length; i++){
         if(cartItems[i].status === Status.PACKING || cartItems[i].status === Status.CANCELING || cartItems[i].status === Status.CANCEL_REJECTED)
             dikemas.push(cartItems[i]);
@@ -88,7 +88,7 @@ export default function Transaction({ cartItems }: InferGetServerSidePropsType<t
       }
   }
 
-  async function onAccept(id: Number) {
+  async function onCancel(id: Number) {
     const cartId: CartId = {id: id};
     try{
         fetch('http://localhost:3000/api/shop/cancel', {
@@ -206,12 +206,13 @@ export default function Transaction({ cartItems }: InferGetServerSidePropsType<t
                                             <p>{cartItem.status}</p>                                                                                                                                  
                                             {cartItem.status === Status.CANCELING ? (    
                                                 <div className="flex gap-x-2">                                                
-                                                    <button onClick={() => onAccept(Number(cartItem.id))} className="w-16 btn btn-primary">Setuju</button>
+                                                    <button onClick={() => onCancel(Number(cartItem.id))} className="w-16 btn btn-primary">Setuju</button>
                                                     <button onClick={() => onReject(Number(cartItem.id))} className="w-16 btn btn-primary">Tolak</button>                                               
                                                 </div>            
                                             ) : (
                                                 <div className="flex gap-x-2">
-                                                    <button onClick={() => onDeliver(Number(cartItem.id))} className="w-16 btn btn-primary">Kirim</button>                                                
+                                                    <button onClick={() => onDeliver(Number(cartItem.id))} className="w-16 btn btn-primary">Kirim</button> 
+                                                    <button onClick={() => onCancel(Number(cartItem.id))} className="w-16 btn btn-primary">Batalkan</button>                                               
                                                 </div>
                                             )}  
                                         </div>
@@ -415,8 +416,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const cartItems = await prisma.productInCart.findMany({
     where:{
         product: {shopId: shop?.id!},
-        status: {not: Status.UNPAID},
-        status: {not: Status.INCART}
+        status: {not: Status.UNPAID}
     },
     select:{
         id: true,

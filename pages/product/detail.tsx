@@ -24,8 +24,9 @@ interface Category{
 }
 
 interface CartData{
-  productId: Number;
-  count: Number
+  productId: Number,
+  count: Number,
+  productCount: Number
 }
 
 export default function CreateShop({product}: InferGetServerSidePropsType<typeof getServerSideProps>) { 
