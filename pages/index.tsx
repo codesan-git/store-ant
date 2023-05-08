@@ -96,8 +96,8 @@ export default function Home() {
     fetchCategories
   );
 
-  const onFilter  = (categoryId: string) =>{
-    const encodedSearchQuery = encodeURI(categoryId);
+  const onFilter  = (categoryId: number) =>{
+    const encodedSearchQuery = encodeURI(categoryId.toString());
     router.push(`http://localhost:3000/filter?q=${encodedSearchQuery}`);
     //console.log(encodedSearchQuery);
   }

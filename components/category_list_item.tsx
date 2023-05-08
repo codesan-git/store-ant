@@ -2,7 +2,7 @@ import { Category } from "@prisma/client";
 import { useRouter } from "next/router";
 
 interface Props {
-  onClick?: (product: string) => void,
+  onClick?: (product: number) => void,
   category: Category
 }
 
