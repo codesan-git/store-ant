@@ -1,8 +1,11 @@
+import { Category } from "@prisma/client";
+
 interface Props {
-  onClick?: () => void
+  onClick?: () => void,
+  category: Category
 }
 
-const CategoryListItem = ({onClick} : Props) => {
+const CategoryListItem = ({onClick, category} : Props) => {
 
   const onItemClick = () => {
 
@@ -18,7 +21,7 @@ const CategoryListItem = ({onClick} : Props) => {
         </svg>
       </div>
       <div id="category-name-container" className="flex justify-center items-center h-1/2 w-full ">
-        <h1 className="text-xs text-center">Rumah Tangga</h1>
+        <h1 className="text-xs text-center">{category.category}</h1>
       </div>
     </div>
   );

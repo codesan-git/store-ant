@@ -4,6 +4,7 @@ import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
 import { prisma } from "../lib/prisma";
+import { Category } from "@prisma/client";
 import { HiShoppingCart } from "react-icons/hi";
 import { RxDotFilled } from "react-icons/rx";
 import Navbar from "./navbar";
@@ -36,10 +37,6 @@ interface Products {
   }[];
 }
 
-interface Category {
-  id: Number;
-  category: string;
-}
 
 interface Sort {
   _sort: string;
@@ -71,6 +68,14 @@ export default function Home() {
     setSortDir(e.target.value.split(" ")[1]);
   };
 
+  const fetchCategories = async (url: string) => {
+    const response = await fetch(url);
+  
+    if(!response.ok) throw new Error("Failed to fetch Categories for Navbar");
+    
+    return response.json();
+  }
+
   const fetchProduct = async () => {
     try {
       const response = await axios.get("http://localhost:3000/api/product", {
@@ -85,6 +90,11 @@ export default function Home() {
       //console.log(error);
     }
   };
+
+  const {data: categoryData, isLoading: categoryDataIsLoading} = useSWR<{categories: Array<Category>}>(
+    `http://localhost:3000/api/category/`, 
+    fetchCategories
+  );
 
   const routeToProduct = (productId: number) => {
     router.push({
@@ -134,11 +144,11 @@ export default function Home() {
       <Navbar />
       <div id="content" className="p-2 space-y-4">
         <div id="category-list" className=" carousel carousel-center p-4 h-28 space-x-1 items-center shadow rounded-md lg:hidden">
-          <CategoryListItem/>
-          <CategoryListItem/>
-          <CategoryListItem/>
-          <CategoryListItem/>
-          <CategoryListItem/>
+          {
+            categoryDataIsLoading 
+            ? null 
+            : categoryData?.categories.map((category) => <CategoryListItem category={category} key={category.id.valueOf()}/>)
+          }
         </div>
         <div id="product-carousel-container" className="relative flex justify-center">
           <div id="product-carousel" className="carousel w-full rounded-lg lg:w-3/4 lg:h-96">
