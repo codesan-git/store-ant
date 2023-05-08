@@ -222,7 +222,7 @@ export default function Navbar(){
               {/* Dropdown Chart */}
               <div className="dropdown dropdown-hover dropdown-left mx-5">
                 <label tabIndex={0} className="btn btn-ghost m-1 text-lg">
-                  <HiShoppingCart />
+                  <HiShoppingCart className="hidden sm:block"/>
                 </label>
                 <div
                   tabIndex={0}

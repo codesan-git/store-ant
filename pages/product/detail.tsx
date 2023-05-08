@@ -164,7 +164,7 @@ export default function CreateShop({product}: InferGetServerSidePropsType<typeof
                         </div>
             </div>
           </section>
-          <div id='mobile-item-order-section' className='visible lg:invisible fixed bottom-0 left-0 bg-blue-gray-300 flex flex-row p-2 h-18 w-screen align-middle justify-center'>
+          <div id='mobile-item-order-section' className='lg:hidden fixed bottom-0 left-0 bg-blue-gray-300 flex flex-row p-2 h-18 w-screen align-middle justify-center'>
             <section id='price-section' className='w-1/2 flex flex-row justify-center'>
               {/* <div id='text-container' className='h-10 w-auto p-1 flex items-center justify-center text-white'>
                 <h1>Price: Rp.{product.price.toString()}</h1>
