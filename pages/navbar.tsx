@@ -57,9 +57,11 @@ export default function Navbar(){
 
   let price = 0;
   if(cartItems){
-    let i:Number;
-    for(i = 0; i < cartItems.productInCart.length; i++){
-      price += (Number(cartItems.productInCart[i].count) * Number(cartItems.productInCart[i].product.price));
+    let i:number;
+    if(cartItems.productInCart){
+      for(i = 0; i < cartItems.productInCart.length; i++){
+        price += (Number(cartItems.productInCart[i].count) * Number(cartItems.productInCart[i].product.price));
+      }
     }
   }
   
