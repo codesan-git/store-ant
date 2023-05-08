@@ -241,7 +241,7 @@ export default function Navbar(){
                 </div>
               </div>
               {/* End Dropdown Chart */}
-              <p className="text-primary-focus mx-5">|</p>
+              <p className="hidden sm:block text-primary-focus mx-5">|</p>
               <Link
                 className="btn btn-outline btn-primary text-md btn-sm text-gray-100 lg:mx-4"
                 href="/login"
