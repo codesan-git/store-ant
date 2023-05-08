@@ -96,6 +96,13 @@ export default function Home() {
     fetchCategories
   );
 
+  const onFilter  = (categoryId: string) =>{
+    const encodedSearchQuery = encodeURI(categoryId);
+    router.push(`http://localhost:3000/filter?q=${encodedSearchQuery}`);
+    //console.log(encodedSearchQuery);
+  }
+  
+
   const routeToProduct = (productId: number) => {
     router.push({
       pathname: "/product/detail/",
@@ -147,7 +154,7 @@ export default function Home() {
           {
             categoryDataIsLoading 
             ? null 
-            : categoryData?.categories.map((category) => <CategoryListItem category={category} key={category.id.valueOf()}/>)
+            : categoryData?.categories.map((category) => <CategoryListItem category={category} onClick={onFilter} key={category.id.valueOf()}/>)
           }
         </div>
         <div id="product-carousel-container" className="relative flex justify-center">

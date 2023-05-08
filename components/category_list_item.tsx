@@ -1,7 +1,8 @@
 import { Category } from "@prisma/client";
+import { useRouter } from "next/router";
 
 interface Props {
-  onClick?: () => void,
+  onClick?: (product: string) => void,
   category: Category
 }
 
@@ -9,7 +10,7 @@ const CategoryListItem = ({onClick, category} : Props) => {
 
   const onItemClick = () => {
 
-    if(onClick != null) onClick();
+    if(onClick != null) onClick(category.id);
 
   }
 
