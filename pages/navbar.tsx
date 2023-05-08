@@ -5,7 +5,6 @@ import Link from "next/link";
 import { HiShoppingCart } from "react-icons/hi";
 import { useState } from 'react';
 import { Category } from "@prisma/client";
-import { Status } from '@prisma/client';
 import useSWR from 'swr';
 import { InferGetServerSidePropsType } from "next";
 
