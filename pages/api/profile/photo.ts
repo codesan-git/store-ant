@@ -52,7 +52,7 @@ export default async function handler(
         const user = await prisma.user.update({
           where:{ id: session?.user.id},
           data:{
-            image: imageUrl
+            image: "http:\\\\localhost:3000\\" + imageUrl
           }
         })
         res.status(200).json({ message: 'profile updated'});
