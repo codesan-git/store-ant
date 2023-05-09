@@ -81,7 +81,7 @@ export default function CreateShop({ product, ratings }: FetchData) {
     }
   }
 
-  async function checkout() {
+  async function checkout(count: number) {
     const data: CartData = {
       productId: product.id,
       count: Number(count),
@@ -292,7 +292,7 @@ export default function CreateShop({ product, ratings }: FetchData) {
             <h1>Subtotal: Rp.{Subtotal}</h1>
             <div id="button-group" className="mt-4 w-auto space-x-4">
               <button
-                onClick={() => checkout()}
+                onClick={() => checkout(1)}
                 disabled={count === 0 ? true : false}
                 className="w-20 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent"
               >
@@ -318,7 +318,7 @@ export default function CreateShop({ product, ratings }: FetchData) {
               </button>
             </section>
             <section id='button-actions-section' className='w-1/2 space-x-2 flex flex-row justify-center'>
-              <button className='h-10 w-20 p-1 rounded-md bg-green-800 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
+              <button onClick={() => checkout(1)} className='h-10 w-20 p-1 rounded-md bg-green-800 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
                 Beli
               </button>
               <button onClick={()=> addToCart(1)} className='h-10 w-24 p-1 rounded-md bg-green-800 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
