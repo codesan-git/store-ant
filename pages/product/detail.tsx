@@ -44,6 +44,7 @@ interface CartData {
   productId: Number;
   count: Number;
   productCount: Number;
+  isCheckout: boolean;
 }
 
 export default function CreateShop({ product, ratings }: FetchData) {
@@ -65,6 +66,7 @@ export default function CreateShop({ product, ratings }: FetchData) {
       productId: product.id,
       count: Number(count),
       productCount: Number(product.stock) - Number(count),
+      isCheckout: false
     };
     try {
       fetch("http://localhost:3000/api/cart/add", {
@@ -74,6 +76,26 @@ export default function CreateShop({ product, ratings }: FetchData) {
         },
         method: "POST",
       }).then(() => router.back());
+    } catch (error) {
+      //console.log(error)
+    }
+  }
+
+  async function checkout() {
+    const data: CartData = {
+      productId: product.id,
+      count: Number(count),
+      productCount: Number(product.stock) - Number(count),
+      isCheckout: true
+    };
+    try {
+      fetch("http://localhost:3000/api/cart/add", {
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+      }).then(() => router.push("http://localhost:3000/transactions"));
     } catch (error) {
       //console.log(error)
     }
@@ -270,6 +292,7 @@ export default function CreateShop({ product, ratings }: FetchData) {
             <h1>Subtotal: Rp.{Subtotal}</h1>
             <div id="button-group" className="mt-4 w-auto space-x-4">
               <button
+                onClick={() => checkout()}
                 disabled={count === 0 ? true : false}
                 className="w-20 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent"
               >
