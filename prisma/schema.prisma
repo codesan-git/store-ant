@@ -64,11 +64,12 @@ model Profile {
 }
 
 model Shop {
-  id       Int    @id @default(autoincrement())
-  userId   String @unique @map("user_id")
-  shopName String
-  product  Product[]
-  image    String?
+  id            Int    @id @default(autoincrement())
+  userId        String @unique @map("user_id")
+  shopName      String
+  product       Product[]
+  image         String?
+  averageRating Float @default(5.00)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -119,6 +120,7 @@ model Product {
   price         Int
   stock         Int
   productInCart ProductInCart[]
+  averageRating Float @default(5.00)
 
   category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   shop Shop @relation(fields: [shopId], references: [id], onDelete: Cascade)
@@ -146,9 +148,20 @@ model ProductInCart {
   status       Status @default(INCART)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @default(now())
+  Rating       Rating?
 
   cart Cart @relation(fields: [cartId], references: [id], onDelete: Cascade)
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model Rating {
+  id              Int @id @default(autoincrement())
+  productInCartId Int @map("productInCart_id") @unique
+  rate            Int
+  comment         String?
+  image           String?
+  
+  productInCart ProductInCart @relation(fields: [productInCartId], references: [id], onDelete: Cascade)
 }
 
 model VerificationToken {

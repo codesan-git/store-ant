@@ -31,7 +31,7 @@ interface CartId {
     id: Number;
 }
 
-export default function Transaction({ cartItems }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Transaction({ cartItems }: CartItems) {
   const router = useRouter();
   const{data:session} = useSession();
   let belumBayar = new Array();
@@ -42,7 +42,7 @@ export default function Transaction({ cartItems }: InferGetServerSidePropsType<t
   let dikembalikan = new Array();
 
   if(cartItems){
-    let i: Number;
+    let i: number;
     for(i = 0; i < cartItems.length; i++){
         if(cartItems[i].status === Status.UNPAID)
             belumBayar.push(cartItems[i]);
@@ -138,6 +138,14 @@ export default function Transaction({ cartItems }: InferGetServerSidePropsType<t
       }catch(error){
           //console.log(error)
       }
+  }
+
+  async function onRate(id: Number){
+    console.log("CLICK, ID: ", id);
+    router.push({
+        pathname: "http://localhost:3000/rate",
+        query: {id: String(id)}
+    });
   }
 
   return (
@@ -334,6 +342,7 @@ export default function Transaction({ cartItems }: InferGetServerSidePropsType<t
                                             <p>{cartItem.product.price}</p>
                                             <p>{cartItem.count}</p>
                                             <p>{cartItem.status}</p>
+                                            <button onClick={()=> onRate(cartItem.id)} className="w-32 btn btn-primary">Nilai</button>
                                         </div>
                                     </div>
                                 </div>
