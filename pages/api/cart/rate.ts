@@ -31,7 +31,7 @@ export default async function handler(
         where:{id: productInCart?.productId}
     })
     
-    const ratings = await prisma.rating.findMany({
+    let ratings = await prisma.rating.findMany({
         where:{
             productInCart:{
                 product:{
@@ -49,6 +49,27 @@ export default async function handler(
 
     const shop = await prisma.shop.update({
         where:{id: product?.shopId},
+        data:{
+            averageRating: avgRating
+        }
+    })
+
+    ratings = await prisma.rating.findMany({
+        where:{
+            productInCart:{
+                productId: product?.id
+             }
+        }
+    })
+
+    i = 0; ratingTotal = 0; avgRating = 0;
+    for(i = 0; i < ratings?.length; i++){
+        ratingTotal += ratings[i].rate;
+    }
+    avgRating = ratingTotal / ratings?.length;
+
+    const productEdit = await prisma.product.update({
+        where:{id: product?.id},
         data:{
             averageRating: avgRating
         }

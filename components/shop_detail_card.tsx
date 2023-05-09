@@ -1,26 +1,44 @@
+import { Shop } from "@prisma/client";
 import Image from "next/image";
 
-const ShopDetailCard = () => {
+interface Props{
+    shop: Shop;
+}
+
+const ShopDetailCard = ({shop}: Props) => {
     return (
     <>
         <div id="shop-details" className=''>
             <div id='shop-mini-profile' className='flex flex-row w-auto py-2 border-b-2 border-b-black-800'>
                 <div id='shop-profile-picture-container' className='mr-2 w-1/3 flex items-center justify-center sm:w-auto'>
-                    <img 
-                        className='object-cover rounded-full w-16 h-16 sm:h-16 border-2 border-gray-600'
-                        src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
-                        alt=''
-                    />
+                    {shop.image ? (
+                        <img 
+                            className='object-cover rounded-full w-16 h-16 sm:h-16 border-2 border-gray-600'
+                            src={shop.image!}
+                            onError={({ currentTarget }) => {
+                                currentTarget.onerror = null; // prevents looping
+                                currentTarget.src =
+                                "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
+                            }}
+                            alt=''
+                        />
+                    ) : (
+                        <img 
+                            className='object-cover rounded-full w-16 h-16 sm:h-16 border-2 border-gray-600'
+                            src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
+                            alt=''
+                        />
+                    )}
                 </div>
                 <div id='profile-details' className='w-2/3 sm:w-auto'>
-                    <h1 className='text-2xl'>Toko ABC</h1>
+                    <h1 className='text-2xl'>{shop.shopName}</h1>
                     <div className="lg:flex lg:flex-row">
                         <div id="store-rating" className="flex flex-row">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 fill-blue-gray-300">
                                 <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clipRule="evenodd" />
                             </svg>
                             <p className="pl-2">
-                                5.0 <span className='text-gray-600'>rata-rata ulasan</span>
+                                {Number.parseFloat(String(shop.averageRating)).toFixed(2)} <span className='text-gray-600'>rata-rata ulasan</span>
                             </p>
                         </div>
                         <div className="hidden lg:block">
