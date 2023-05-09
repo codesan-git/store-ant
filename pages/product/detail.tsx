@@ -36,16 +36,15 @@ export default function CreateShop({product}: InferGetServerSidePropsType<typeof
   const {id} = router.query;
 
   const handleCount = () => {
-
     let newSubtotal = product.price.valueOf() * count;
     console.log('New subtotal: ' + newSubtotal.toString())
     setSubtotal(newSubtotal);
   }
 
-  async function create() {
+  const addToCart = async (count: number) => {
     const data : CartData = {productId: product.id, count: Number(count), productCount: (Number(product.stock) - Number(count))};
     try{
-        fetch('http://localhost:3000/api/cart/add', {
+        await fetch('http://localhost:3000/api/cart/add', {
             body: JSON.stringify(data),
             headers: {
                 'Content-Type' : 'application/json'
@@ -158,7 +157,7 @@ export default function CreateShop({product}: InferGetServerSidePropsType<typeof
                             <button disabled={count === 0? true : false} className='w-20 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
                                 Beli
                             </button>
-                            <button onClick={()=> create()} disabled={count === 0? true : false} className='w-32 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
+                            <button onClick={()=> addToCart(count)} disabled={count === 0? true : false} className='w-32 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
                                 Add to Cart
                             </button>
                         </div>
@@ -177,7 +176,7 @@ export default function CreateShop({product}: InferGetServerSidePropsType<typeof
               <button className='h-10 w-20 p-1 rounded-md bg-green-800 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
                 Beli
               </button>
-              <button className='h-10 w-24 p-1 rounded-md bg-green-800 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
+              <button onClick={()=> addToCart(1)} className='h-10 w-24 p-1 rounded-md bg-green-800 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
                 Add to cart
               </button>
             </section>

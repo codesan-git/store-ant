@@ -8,7 +8,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const session = await getSession({req})
-
+  
   try {
     let cart = await prisma.cart.findFirst({
       where: {userId: session?.user.id}
