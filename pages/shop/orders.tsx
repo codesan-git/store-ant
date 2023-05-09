@@ -212,7 +212,7 @@ export default function Transaction({ cartItems }: InferGetServerSidePropsType<t
                                             ) : (
                                                 <div className="flex gap-x-2">
                                                     <button onClick={() => onDeliver(Number(cartItem.id))} className="w-16 btn btn-primary">Kirim</button> 
-                                                    <button onClick={() => onCancel(Number(cartItem.id))} className="w-16 btn btn-primary">Batalkan</button>                                               
+                                                    <button onClick={() => onCancel(Number(cartItem.id))} className="w-32 btn btn-primary">Batalkan</button>                                               
                                                 </div>
                                             )}  
                                         </div>

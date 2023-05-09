@@ -11,7 +11,8 @@ import Footer from '../footer'
 interface Props{
     shop:{
         id: Number,
-        shopName: string
+        shopName: string,
+        averageRating: Number
     }
     products:{
       id: string,
@@ -67,6 +68,7 @@ export default function Profile({shop, products} : Props) {
                     </div>
                     <div className='details font-bold text-lg'>
                         <h5>{shop.shopName}</h5>
+                        <p>Rating: {String(shop.averageRating)}/ 5</p>
                     </div>
                 </div>
                 <div className="drawer-side">
@@ -110,7 +112,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         where: { userId: session?.user?.id },
         select:{
             id: true,
-            shopName: true
+            shopName: true,
+            averageRating: true
         }
     })
     const products = await prisma.product.findMany({
