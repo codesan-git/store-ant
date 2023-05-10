@@ -2,7 +2,7 @@
 CREATE TYPE "Gender" AS ENUM ('MAN', 'WOMAN');
 
 -- CreateEnum
-CREATE TYPE "Status" AS ENUM ('INCART', 'UNPAID', 'PACKING', 'DELIVERING', 'FINISHED', 'RETURNED', 'CANCELED');
+CREATE TYPE "Status" AS ENUM ('INCART', 'UNPAID', 'PAID', 'PACKING', 'DELIVERING', 'FINISHED', 'RETURNING', 'RETURNED', 'CANCELING', 'CANCELED', 'CANCEL_REJECTED');
 
 -- CreateTable
 CREATE TABLE "Account" (
@@ -42,6 +42,8 @@ CREATE TABLE "Shop" (
     "id" SERIAL NOT NULL,
     "user_id" TEXT NOT NULL,
     "shopName" TEXT NOT NULL,
+    "image" TEXT,
+    "averageRating" DOUBLE PRECISION NOT NULL DEFAULT 5.00,
 
     CONSTRAINT "Shop_pkey" PRIMARY KEY ("id")
 );
@@ -90,8 +92,10 @@ CREATE TABLE "Product" (
     "category_id" INTEGER NOT NULL,
     "name" TEXT NOT NULL,
     "image" TEXT,
+    "description" TEXT,
     "price" INTEGER NOT NULL,
     "stock" INTEGER NOT NULL,
+    "averageRating" DOUBLE PRECISION NOT NULL DEFAULT 5.00,
 
     CONSTRAINT "Product_pkey" PRIMARY KEY ("id")
 );
@@ -119,8 +123,21 @@ CREATE TABLE "ProductInCart" (
     "product_id" INTEGER NOT NULL,
     "count" INTEGER NOT NULL,
     "status" "Status" NOT NULL DEFAULT 'INCART',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "ProductInCart_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Rating" (
+    "id" SERIAL NOT NULL,
+    "productInCart_id" INTEGER NOT NULL,
+    "rate" INTEGER NOT NULL,
+    "comment" TEXT,
+    "image" TEXT,
+
+    CONSTRAINT "Rating_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -158,6 +175,9 @@ CREATE UNIQUE INDEX "Cart_id_key" ON "Cart"("id");
 CREATE UNIQUE INDEX "Cart_user_id_key" ON "Cart"("user_id");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Rating_productInCart_id_key" ON "Rating"("productInCart_id");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "VerificationToken_token_key" ON "VerificationToken"("token");
 
 -- CreateIndex
@@ -192,3 +212,6 @@ ALTER TABLE "ProductInCart" ADD CONSTRAINT "ProductInCart_cart_id_fkey" FOREIGN 
 
 -- AddForeignKey
 ALTER TABLE "ProductInCart" ADD CONSTRAINT "ProductInCart_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "Product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Rating" ADD CONSTRAINT "Rating_productInCart_id_fkey" FOREIGN KEY ("productInCart_id") REFERENCES "ProductInCart"("id") ON DELETE CASCADE ON UPDATE CASCADE;
