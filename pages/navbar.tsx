@@ -154,7 +154,7 @@ export default function Navbar(){
                       />
                     </svg>
                     {cartItems ? (
-                    <span className="badge badge-sm indicator-item">{cartItems.productInCart.length}</span>
+                    <span className="badge badge-sm indicator-item">{cartItems.productInCart?.length}</span>
                     ) : (
                       <></>
                     )}
@@ -166,7 +166,7 @@ export default function Navbar(){
                 >
                   <div className="card-body">
                     {cartItems ? (
-                      <span className="font-bold text-lg">{cartItems.productInCart.length} Items</span>
+                      <span className="font-bold text-lg">{cartItems.productInCart?.length} Items</span>
                     ) : (
                       <span className="font-bold text-lg">No Items Yet</span>
                     )}

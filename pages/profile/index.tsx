@@ -154,7 +154,7 @@ export default function Profile({ profile, address }: InferGetServerSidePropsTyp
 
   const getToken = async () => {
     const res = (await axios.get(`http://localhost:3000/api/validation/${session?.user.id}`)).data
-    setToken(res)
+    setToken(session?.user.accessToken!)
     console.log('response token', res)
   }
 
