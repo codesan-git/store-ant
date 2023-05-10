@@ -22,11 +22,12 @@ interface FormData{
     name: string,
     price: string,
     stock: string,
+    description: string,
     categoryId: string
 }
 
 export default function CreateProduct() {
-  const [form, setForm] = useState<FormData>({name: '', price: '', stock:'', categoryId: '1'});
+  const [form, setForm] = useState<FormData>({name: '', price: '', stock:'', description: '', categoryId: '1'});
   const router = useRouter()
   const [selectedImage, setSelectedImage] = useState("");
   const [selectedFile, setSelectedFile] = useState<File>();
@@ -48,8 +49,9 @@ export default function CreateProduct() {
         formData.append("name", form.name);
         formData.append("price", form.price);
         formData.append("stock", form.stock);
+        formData.append("description", form.description);
         formData.append("categoryId", form.categoryId);
-        await axios.post('http://localhost:3000/api/product/create', formData).then(() => { setForm({name: '', price: '', stock:'', categoryId: '1'}); router.back() });
+        await axios.post('http://localhost:3000/api/product/create', formData).then(() => {router.back() });
     } catch (error: any) {
         //console.log(error);
     }
@@ -92,6 +94,12 @@ export default function CreateProduct() {
                 </select>
                 <div className={styles.input_group}>
                     <input type="text" name="name" placeholder="Name" className={styles.input_text} value={form?.name} onChange={e => setForm({...form, name: e.target.value})}/>
+                    {/* <span className="icon flex items-center px-4">
+                        <HiAtSymbol size={25}/>
+                    </span> */}
+                </div>
+                <div className={styles.input_group}>
+                    <textarea name="desc" placeholder="Description" className='w-80 h-40' value={form?.description} onChange={e => setForm({...form, description: e.target.value})}/>
                     {/* <span className="icon flex items-center px-4">
                         <HiAtSymbol size={25}/>
                     </span> */}

@@ -34,7 +34,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
     const { fields, files } = await readFile(req, true);
-    const {name, price, stock, categoryId} = fields;
+    const {name, price, stock, categoryId, description} = fields;
     const session = await getSession({req})
     const shop = await prisma.shop.findUnique({
         where: {
@@ -61,6 +61,7 @@ export default async function handler(
                 name: name as string,
                 price: Number(price),
                 stock: Number(stock),
+                description: description as string,
                 image: imageUrl
             }
         })

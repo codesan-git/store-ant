@@ -15,6 +15,7 @@ interface FetchData {
     price: Number;
     stock: Number;
     category: Category;
+    description: string;
     image: string;
     averageRating: number;
     shop: Shop;
@@ -188,6 +189,9 @@ export default function CreateShop({ product, ratings }: FetchData) {
             </div>
             <h1 className="text-2xl mb-2">Description</h1>
             <p className="text-justify">
+              {product.description}
+            </p>
+            {/* <p className="text-justify">
               Lorem ipsum dolor, sit amet consectetur adipisicing elit. Fugiat
               quia doloribus est atque consequuntur in aut, cupiditate, iste
               velit, corrupti excepturi? Aspernatur maiores doloribus obcaecati
@@ -198,13 +202,7 @@ export default function CreateShop({ product, ratings }: FetchData) {
               quia doloribus est atque consequuntur in aut, cupiditate, iste
               velit, corrupti excepturi? Aspernatur maiores doloribus obcaecati
               possimus sapiente, eos mollitia doloremque.
-            </p>
-            <p className="text-justify">
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Fugiat
-              quia doloribus est atque consequuntur in aut, cupiditate, iste
-              velit, corrupti excepturi? Aspernatur maiores doloribus obcaecati
-              possimus sapiente, eos mollitia doloremque.
-            </p>
+            </p> */}
           </div>
           <div id="store-details" className="p-4 border-b-gray-300 border-b-2">
             <ShopDetailCard shop={product.shop} />
@@ -348,6 +346,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       price: true,
       stock: true,
       category: true,
+      description: true,
       image: true,
       averageRating: true,
       shop: true

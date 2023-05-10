@@ -117,6 +117,7 @@ model Product {
   categoryId    Int @map("category_id")
   name          String
   image         String?
+  description   String?
   price         Int
   stock         Int
   productInCart ProductInCart[]
