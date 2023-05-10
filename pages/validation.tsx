@@ -3,7 +3,11 @@ import { useRouter } from "next/router";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { getSession, useSession } from "next-auth/react";
 
-export default function Validation({ token }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+interface Token {
+  token: string
+}
+
+export default function Validation({token} : Token) {
   const router = useRouter();
   const { token: accessToken } = router.query;
   const { data: session } = useSession();
@@ -19,9 +23,15 @@ export default function Validation({ token }: InferGetServerSidePropsType<typeof
     }
   };
 
+  console.log('session user', session?.user.accessToken)
+  console.log('accesstoken', accessToken)
+  console.log('token doang', token)
+  console.log('user', session?.user)
+
+
   return (
     <>
-      {accessToken == session?.user.accessToken! ? (
+      {accessToken === token /*session?.user.accessToken!*/ ? (
         <>
           <div className="card lg:w-96 bg-base-100 shadow-xl mx-auto lg:my-36">
             <figure className="px-10 pt-10">
