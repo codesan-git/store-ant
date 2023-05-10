@@ -1,6 +1,7 @@
 import React from 'react'
 import { useRouter } from 'next/router'
 import { useState } from 'react';
+import axios from 'axios';
 
 interface Rating{
     cartId: number;
@@ -14,17 +15,18 @@ export default function Rate() {
 
   const [star, setStar] = useState(1);   
   const [comment, setComment] = useState("");   
+  const [selectedImage, setSelectedImage] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File>();
 
   async function rate() {
     const data:Rating = {cartId: Number(id), star: star, comment: comment};
     try{
-        fetch('http://localhost:3000/api/cart/rate/', {
-            body: JSON.stringify(data),
-            headers: {
-                'Content-Type' : 'application/json'
-            },
-            method: 'POST'
-        }).then(()=> router.back())
+        const formData = new FormData();
+        formData.append("image", selectedFile as File);
+        formData.append("cartId", String(id));
+        formData.append("star", String(star));
+        formData.append("comment", comment);
+        await axios.post('http://localhost:3000/api/cart/rate/', formData).then(() => { router.back() });
     }catch(error){
         //console.log(error)
     }
@@ -66,7 +68,28 @@ export default function Rate() {
                     <p>Comment</p>
                     <textarea name="comment" className='w-80 h-40' value={comment} onChange={(e) => setComment(e.target.value)}/>
                 </div>
-
+                <div className='max-w-4xl space-y-6'>
+                    <label>
+                        <input 
+                            type='file' 
+                            hidden 
+                            onChange={({target}) => {
+                                if(target.files){
+                                    const file = target.files[0];
+                                    setSelectedImage(URL.createObjectURL(file));
+                                    setSelectedFile(file);
+                                }
+                            }}
+                        />
+                        <div className='w-80 aspect-video rounded flex border-2 border-dashed cursor-pointer'>
+                            {selectedImage? (
+                                <img src={selectedImage} alt=""/>
+                            ) : (
+                                <span>Select Image</span>
+                            )}
+                        </div>
+                    </label>
+                </div>
                 <div className="w-32 btn btn-primary">
                     <button onClick={()=>rate()}>Save</button>
                 </div>

@@ -518,7 +518,7 @@ export default function Transaction({ cartItems }: CartItems) {
                               key={String(cartItem.id)}
                             >
                               <div className="flex">
-                                <div className="card-body py-5 w-full">
+                                <div className="card-body py-5 w-auto">
                                   <figure className="rounded-md h-52 w-52 m-auto">
                                     {cartItem.product.image ? (
                                       <img
@@ -542,7 +542,7 @@ export default function Transaction({ cartItems }: CartItems) {
                                         onClick={() =>
                                           onBayar(Number(cartItem.id))
                                         }
-                                        className="w-full btn btn-primary"
+                                        className="w-32 btn btn-primary"
                                       >
                                         Bayar
                                       </button>
@@ -885,6 +885,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       status: true,
     },
   });
+
+  console.log(cartItems);
   return {
     props: {
       cartItems,

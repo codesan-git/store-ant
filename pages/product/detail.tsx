@@ -24,6 +24,7 @@ interface FetchData {
     id: Number;
     rate: Number;
     comment: string;
+    image: string;
     productInCart: ProductInCart;
   }[];
 }
@@ -49,7 +50,7 @@ interface CartData {
 }
 
 export default function CreateShop({ product, ratings }: FetchData) {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(1);
   const [Subtotal, setSubtotal] = useState(0);
   const router = useRouter();
   const { id } = router.query;
@@ -217,10 +218,10 @@ export default function CreateShop({ product, ratings }: FetchData) {
                     key={String(rating.id)}
                   >
                       <div className="flex">
-                        <div id='rating-profile-picture-container' className='mx-5 w-1/3 flex items-center justify-center sm:w-auto'>
+                        <div id='rating-profile-picture-container' className='mx-5 w-1/3 flex sm:w-auto'>
                         {rating.productInCart.cart.user.image ? (
                             <img
-                              className='object-cover rounded-full w-16 h-16 sm:h-16 border-2 border-gray-600'
+                              className='mt-5 object-cover rounded-full w-16 h-16 sm:h-16 border-2 border-gray-600'
                               src={`${rating.productInCart.cart.user.image}`}                              
                               onError={({ currentTarget }) => {
                                 currentTarget.onerror = null; // prevents looping
@@ -230,7 +231,7 @@ export default function CreateShop({ product, ratings }: FetchData) {
                             />
                         ) : (
                             <img 
-                              className='object-cover rounded-full w-16 h-16 sm:h-16 border-2 border-gray-600'
+                              className='mt-5 object-cover rounded-full w-16 h-16 sm:h-16 border-2 border-gray-600'
                               src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg" 
                             />
                         )}
@@ -243,6 +244,23 @@ export default function CreateShop({ product, ratings }: FetchData) {
                             </h2>
                             <p>{String(rating.rate)}/5</p>
                             <p>{rating.comment}</p>
+                            {rating.image ? (
+                                <img
+                                className='object-cover w-64 h-auto border-2 border-gray-600'
+                                  src={`http:\\\\localhost:3000\\\\${rating.image}`}                              
+                                  onError={({ currentTarget }) => {
+                                    currentTarget.onerror = null; // prevents looping
+                                    currentTarget.src =
+                                    "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
+                                  }}
+                                />
+                            ) : (
+                                <img 
+                                  hidden={true}
+                                  className='object-cover w-64 h-64 sm:h-16 border-2 border-gray-600'
+                                  src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg" 
+                                />
+                            )}
                           </div>
                         </div>
                       </div>
@@ -266,7 +284,7 @@ export default function CreateShop({ product, ratings }: FetchData) {
               <div className="flex flex-row h-10 w-full rounded-lg relative bg-transparent">
                 <button
                   onClick={() => setCount(count - 1)}
-                  disabled={count == 0 ? true : false}
+                  disabled={count == 1 ? true : false}
                   className=" bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none"
                 >
                   <span className="m-auto text-2xl font-thin">−</span>
@@ -364,6 +382,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       id: true,
       rate: true,
       comment: true,
+      image: true,
       productInCart: {
         select: {
           cart: {

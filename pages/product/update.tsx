@@ -56,7 +56,7 @@ export default function CreateShop({product} : FetchData) {
     try {
         // if(!selectedFile) return
         const formData = new FormData();
-        formData.append("image", selectedFile);
+        formData.append("image", selectedFile as File);
         formData.append("name", name);
         formData.append("price", price);
         formData.append("stock", stock);
