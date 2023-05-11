@@ -59,68 +59,38 @@ export default function CreateProduct() {
 
   return (
     <div>
-        <section className="w-3/4 mx-auto flex flex-col gap-10">
-            <div className="title">
-                <h1 className="text-gray-800 text-4xl font-bold py-4">Add Product</h1>
-                <p className="mx-auto text-gray-400">Add product</p>
-            </div>
-            <form onSubmit={e=>{e.preventDefault(); handleUpload();}} className="flex flex-col gap-5">
-                <div className='max-w-4xl mx-auto p-20 space-y-6'>
-                    <label>
-                        <input 
-                            type='file' 
-                            hidden 
-                            onChange={({target}) => {
-                                if(target.files){
-                                    const file = target.files[0];
-                                    setSelectedImage(URL.createObjectURL(file));
-                                    setSelectedFile(file);
-                                }
-                            }}
-                        />
-                        <div className='w-40 aspect-video rounded flex items-center justify-center border-2 border-dashed cursor-pointer'>
-                            {selectedImage? (
-                                <img src={selectedImage} alt=""/>
-                            ) : (
-                                <span>Select Image</span>
-                            )}
-                        </div>
-                    </label>
-                </div>
-                <select onChange={e => {e.preventDefault(); setForm({...form, categoryId: e.target.value})}} name="categoryOption" id="categoryOption">
-                    {data.categories.map(category =>(
-                        <option value={category.id} key={category.id}>{category.category}</option>
-                    ))}
-                </select>
-                <div className={styles.input_group}>
-                    <input type="text" name="name" placeholder="Name" className={styles.input_text} value={form?.name} onChange={e => setForm({...form, name: e.target.value})}/>
-                    {/* <span className="icon flex items-center px-4">
-                        <HiAtSymbol size={25}/>
-                    </span> */}
-                </div>
-                <div className={styles.input_group}>
-                    <textarea name="desc" placeholder="Description" className='w-80 h-40' value={form?.description} onChange={e => setForm({...form, description: e.target.value})}/>
-                    {/* <span className="icon flex items-center px-4">
-                        <HiAtSymbol size={25}/>
-                    </span> */}
-                </div>
-                <div className={styles.input_group}>
-                    <input type="number" name="price" placeholder="Price" className={styles.input_text} value={form?.price} onChange={e => setForm({...form, price: e.target.value})}/>
-                    {/* <span className="icon flex items-center px-4" onClick={()=>setShow(!show)}>
-                        <HiKey size={25}/>
-                    </span> */}
-                </div>                
-                <div className={styles.input_group}>
-                    <input type="number" name="stock" placeholder="Qty" className={styles.input_text} value={form?.stock} onChange={e => setForm({...form, stock: e.target.value})}/>
-                    {/* <span className="icon flex items-center px-4" onClick={()=>setShow(!show)}>
-                        <HiKey size={25}/>
-                    </span> */}
-                </div>
-                <div className={styles.input_group}>
-                    <button type="submit" className={styles.button}>Add</button>
-                </div>
-            </form>
+      <h1 className='text-2xl'>Add Product</h1>
+      <form action="">
+        <section>
+
         </section>
+        <section  className='space-y-4 p-2 flex flex-col'>
+          <div className='flex flex-col space-y-1'>
+            <label htmlFor="product-name-input">Name</label>
+            <input  id='product-name-input' name='product-name' type="text" className='border border-black focus:border-none' />
+          </div>
+          <div className='flex flex-col space-y-1'>
+            <label htmlFor="">Description</label>
+            <textarea name="product-description" id="product-description-input" className='h-36 border border-black focus:border-none'/>
+          </div>
+          <div className='flex flex-col space-y-1'>
+            <label htmlFor="product-quantity-input">Quantity</label>
+            <input id='product-quantity-input' name='product-quantity' type="number" className='border border-black focus:border-none'/>
+          </div>
+          <div className='flex flex-col space-y-1'>
+            <label htmlFor="product-price-input">Price</label>
+            <input id='product-price-input' name='product-price' type="number" className='border border-black focus:border-none'/>
+          </div>
+          <div className='flex flex-col space-y-1'>
+            <label htmlFor="">Category</label>
+            <select name="product-category" id="product-category-input" className='h-8 p-2'>
+              <option value="">Makanan</option>
+              <option value="">Waifu</option>
+              <option value="">Pasokon</option>
+            </select>
+          </div>
+        </section>
+      </form>
     </div>
   )
 }
