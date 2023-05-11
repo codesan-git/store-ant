@@ -59,10 +59,10 @@ export default function CreateProduct() {
 
   return (
     <div>
-      <h1 className='text-2xl'>Add Product</h1>
+      <h1 className='text-2xl text-gray-800 font-bold'>Add Product</h1>
       <form action="">
         <section>
-
+          {/* <input type="file" name="" id="" /> */}
         </section>
         <section  className='space-y-4 p-2 flex flex-col'>
           <div className='flex flex-col space-y-1'>
@@ -70,8 +70,12 @@ export default function CreateProduct() {
             <input  id='product-name-input' name='product-name' type="text" className='border border-black focus:border-none' />
           </div>
           <div className='flex flex-col space-y-1'>
-            <label htmlFor="">Description</label>
-            <textarea name="product-description" id="product-description-input" className='h-36 border border-black focus:border-none'/>
+            <label htmlFor="">Category</label>
+            <select name="product-category" id="product-category-input" className='h-8 p-2'>
+              <option value="">Makanan</option>
+              <option value="">Waifu</option>
+              <option value="">Pasokon</option>
+            </select>
           </div>
           <div className='flex flex-col space-y-1'>
             <label htmlFor="product-quantity-input">Quantity</label>
@@ -82,13 +86,12 @@ export default function CreateProduct() {
             <input id='product-price-input' name='product-price' type="number" className='border border-black focus:border-none'/>
           </div>
           <div className='flex flex-col space-y-1'>
-            <label htmlFor="">Category</label>
-            <select name="product-category" id="product-category-input" className='h-8 p-2'>
-              <option value="">Makanan</option>
-              <option value="">Waifu</option>
-              <option value="">Pasokon</option>
-            </select>
+            <label htmlFor="">Description</label>
+            <textarea name="product-description" id="product-description-input" className='h-36 border border-black focus:border-none'/>
           </div>
+          <button className='btn fill-indigo-700'>
+            Submit
+          </button>
         </section>
       </form>
     </div>
