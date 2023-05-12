@@ -245,15 +245,19 @@ export default function CreateShop({ product, ratings }: FetchData) {
                             <p>{String(rating.rate)}/5</p>
                             <p>{rating.comment}</p>
                             {rating.image ? (
-                                <img
-                                className='object-cover w-64 h-auto border-2 border-gray-600'
-                                  src={`http:\\\\localhost:3000\\\\${rating.image}`}                              
-                                  onError={({ currentTarget }) => {
-                                    currentTarget.onerror = null; // prevents looping
-                                    currentTarget.src =
-                                    "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
-                                  }}
-                                />
+                                <div className="flex gap-x-2">
+                                  {rating.image.split(",").map((image) => (
+                                    <img
+                                      className='object-cover w-64 h-auto border-2 border-gray-600'
+                                      src={`http:\\\\localhost:3000\\\\${image}`}                              
+                                      onError={({ currentTarget }) => {
+                                        currentTarget.onerror = null; // prevents looping
+                                        currentTarget.src =
+                                        "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
+                                      }}
+                                    />
+                                  ))}
+                                </div>
                             ) : (
                                 <img 
                                   hidden={true}

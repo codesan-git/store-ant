@@ -7,7 +7,7 @@ import Link from "next/link";
 import ProductCard from "@/components/product_card";
 import Navbar from "./navbar";
 import Footer from "./footer";
-import { Status } from "@prisma/client";
+import { Rating, Status } from "@prisma/client";
 import type { TabsStylesType } from "@material-tailwind/react";
 
 // TABS
@@ -32,6 +32,7 @@ interface CartItems {
     count: Number;
     price: Number;
     status: Status;
+    Rating: Rating;
   }[];
 }
 
@@ -728,7 +729,7 @@ export default function Transaction({ cartItems }: CartItems) {
                                       <p>{cartItem.product.price}</p>
                                       <p>{cartItem.count}</p>
                                       <p>{cartItem.status}</p>
-                                      <button onClick={()=> onRate(cartItem.id)} className="w-32 btn btn-primary">Nilai</button>
+                                      <button /*disabled={cartItem.Rating ? true : false}*/ onClick={()=> onRate(cartItem.id)} className="w-32 btn btn-primary">Nilai</button>
                                     </div>
                                   </div>
                                 </div>
@@ -883,6 +884,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       product: true,
       count: true,
       status: true,
+      Rating: true
     },
   });
 
