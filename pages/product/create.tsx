@@ -59,10 +59,13 @@ export default function CreateProduct() {
 
   return (
     <div>
-      <h1 className='text-2xl text-gray-800 font-bold mb-2'>Add Product</h1>
+      <h1 className='lg:hidden text-2xl text-gray-800 font-bold mb-2 font-bold'>Add Product</h1>
       <form action="" className='lg:flex lg:flex-row lg:justify-center lg:px-10'>
-        <section className='lg:w-1/3 lg:flex lg:justify-center lg:items-center'>
-          <div className='border-gray-600 border border-dashed rounded-xl flex justify-center items-center h-40 lg:h-5/6 lg:w-5/6 relative'>
+        <section className='lg:w-1/3 flex lg:flex-col justify-center items-center'>
+          <div className='hidden lg:block font-bold w-5/6 mb-2'>
+            <h1 className='text-2xl text-gray-800 font-bold mb-2 font-bold'>Add Product</h1>
+          </div>
+          <div className='border-gray-600 border border-dashed rounded-xl flex justify-center items-center h-40 w-40 lg:h-5/6 lg:w-5/6 relative'>
             <input type="file" accept='.jpg, .jpeg .png, .svg .webp' name="product-image" id="product-image-input" className='w-full h-full cursor-pointer opacity-0 absolute' 
               onChange={({target}) => {
                 if(target.files){
@@ -81,7 +84,7 @@ export default function CreateProduct() {
           </div>
         </section>
         <section  className='p-4 lg:w-1/2'>
-          <div className=' space-y-4 flex flex-col justify-center items-center'>
+          <div className=' space-y-4 flex flex-col'>
             <div className='flex flex-col space-y-1 w-full'>
               <label htmlFor="product-name-input" className='font-bold'>Name</label>
               <input  id='product-name-input' name='product-name' type="text" className='p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white'/>
@@ -106,7 +109,7 @@ export default function CreateProduct() {
               <label htmlFor="" className='font-bold'>Description</label>
               <textarea name="product-description" id="product-description-input" className='p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white'/>
             </div>
-            <button className='btn fill-indigo-700 lg:w-28'>
+            <button className='h-10 lg:w-36 rounded text-white bg-indigo-700 '>
               Submit
             </button>
           </div>
