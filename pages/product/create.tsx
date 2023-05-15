@@ -112,7 +112,7 @@ export default function CreateProduct() {
               <label htmlFor="" className='font-bold'>Description</label>
               <textarea name="product-description" id="product-description-input" className='p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white'/>
             </div>
-            <button className='h-10 lg:w-36 rounded text-white'>
+            <button className='h-10 lg:w-36 rounded text-white bg-indigo-700'>
               Submit
             </button>
           </div>
