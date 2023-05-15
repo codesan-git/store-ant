@@ -29,7 +29,7 @@ interface FormData{
 export default function CreateProduct() {
   const [form, setForm] = useState<FormData>({name: '', price: '', stock:'', description: '', categoryId: '1'});
   const router = useRouter()
-  const [selectedImage, setSelectedImage] = useState("");
+  const [selectedImage, setSelectedImage] = useState<string>();
   const [selectedFile, setSelectedFile] = useState<File>();
 
   const {data, isLoading} = useSWR<{categories : Array<Category>}>(
@@ -57,6 +57,25 @@ export default function CreateProduct() {
     }
   }
 
+  const renderSelectedImage = () => {
+
+    console.log("renderSelectedImage");
+    console.log(selectedFile);
+
+    if(selectedFile) return <img src={selectedImage} alt="" />;
+    
+    return (
+      <>
+        <label htmlFor="product-image-input" className='hover:cursor-pointer flex flex-row'>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+          </svg>
+          &nbsp;Select Image
+        </label>
+      </>
+    );
+  }
+
   return (
     <div className=''>
       <div id='title-hack-container' className=''>
@@ -69,7 +88,7 @@ export default function CreateProduct() {
       <form action="" className='lg:flex lg:flex-row'>
         <section className='lg:w-1/3 flex lg:flex-col justify-center items-center'>
           <div className='border-gray-600 border border-dashed rounded-xl flex justify-center items-center h-40 w-40 lg:h-5/6 lg:w-5/6 relative'>
-            <input type="file" accept='.jpg, .jpeg .png, .webp' name="product-image" id="product-image-input" className='w-full h-full cursor-pointer opacity-0 absolute' 
+            <input type="file" accept='.jpg, .jpeg, .png, .webp' name="product-image" id="product-image-input" className='w-full h-full cursor-pointer opacity-0 absolute' 
               onChange={({target}) => {
                 if(target.files){
                     const file = target.files[0];
@@ -78,12 +97,7 @@ export default function CreateProduct() {
                 }
             }}
             />
-            <label htmlFor="product-image-input" className='hover:cursor-pointer flex flex-row'>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-              </svg>
-              &nbsp;Select Image
-            </label>
+            {renderSelectedImage()}
           </div>
         </section>
         <section  className='p-4 lg:w-2/3'>
