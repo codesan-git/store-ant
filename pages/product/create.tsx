@@ -86,8 +86,8 @@ export default function CreateProduct() {
         </section>
       </div>
       <form action="" className='lg:flex lg:flex-row'>
-        <section className='lg:w-1/3 flex lg:flex-col justify-center items-center'>
-          <div className='border-gray-600 border border-dashed rounded-xl flex justify-center items-center h-40 w-40 lg:h-5/6 lg:w-5/6 relative'>
+        <section className='p-4 lg:w-1/3 flex lg:flex-col justify-center items-center'>
+          <div className='border-gray-600 border border-dashed rounded-xl flex justify-center items-center h-40 w-full lg:h-5/6 lg:w-5/6 relative'>
             <input type="file" accept='.jpg, .jpeg, .png, .webp' name="product-image" id="product-image-input" className='w-full h-full cursor-pointer opacity-0 absolute' 
               onChange={({target}) => {
                 if(target.files){
