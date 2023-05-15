@@ -77,16 +77,16 @@ export default function CreateProduct() {
   }
 
   return (
-    <div className=''>
+    <div className='lg:px-36'>
       <div id='title-hack-container' className=''>
-        <section className='lg:w-1/3 flex lg:flex-col lg:justify-center lg:items-center'>
+        <section className='pl-4 lg:w-1/2 flex lg:flex-col lg:justify-center lg:items-center'>
           <div className='lg:w-5/6 justify-start'>
             <h1 className=' text-2xl  font-bold mb-2 font-bold'>Add Product</h1>
           </div>
         </section>
       </div>
       <form action="" className='lg:flex lg:flex-row'>
-        <section className='p-4 lg:w-1/3 flex lg:flex-col justify-center items-center'>
+        <section className='px-4 lg:w-1/2 flex lg:flex-col justify-center items-center'>
           <div className='border-gray-600 border border-dashed rounded-xl flex justify-center items-center h-40 w-full lg:h-5/6 lg:w-5/6 relative'>
             <input type="file" accept='.jpg, .jpeg, .png, .webp' name="product-image" id="product-image-input" className='w-full h-full cursor-pointer opacity-0 absolute' 
               onChange={({target}) => {
@@ -100,7 +100,7 @@ export default function CreateProduct() {
             {renderSelectedImage()}
           </div>
         </section>
-        <section  className='p-4 lg:w-2/3'>
+        <section  className='p-4 lg:w-1/2'>
           <div className=' space-y-4 flex flex-col'>
             <div className='flex flex-col space-y-1 w-full'>
               <label htmlFor="product-name-input" className='font-bold'>Name</label>
@@ -124,7 +124,7 @@ export default function CreateProduct() {
             </div>
             <div className='flex flex-col space-y-1 w-full'>
               <label htmlFor="" className='font-bold'>Description</label>
-              <textarea name="product-description" id="product-description-input" className='p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white'/>
+              <textarea name="product-description" id="product-description-input" className='p-2 h-48 border rounded-lg border-gray-400 focus:border-none focus:border-white'/>
             </div>
             <button className='h-10 lg:w-36 rounded text-white bg-indigo-700'>
               Submit
