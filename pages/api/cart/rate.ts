@@ -19,6 +19,7 @@ const readFile = (req: NextApiRequest, saveLocally?: boolean)
         options.filename = (name, ext, path, form) => {
             return Date.now().toString() + "_" + path.originalFilename;
         }
+        options.multiples = true;
     }
     const form = formidable(options);
     return new Promise((resolve, reject) => {
@@ -44,7 +45,7 @@ export default async function handler(
     let avgRating = 0, ratingTotal = 0;
 
     const file = files.image;
-    let url = Array.isArray(file) ? file.map((f) => f.filepath) : file?.filepath;
+    let urls = Array.isArray(file) ? file.map((f) => f.filepath) : file?.filepath;
 
     const oldRating = await prisma.rating.findFirst({
         where: {productInCartId: Number(cartId)},
@@ -53,13 +54,18 @@ export default async function handler(
         }
     });
 
-    let imageUrl;
-    if(url){    
-      imageUrl = String(url);
-      imageUrl = imageUrl.substring(imageUrl.indexOf("images"));      
-      fs.unlink(path.join(process.cwd(), `public\\${oldRating?.image!}`));
+    let imageUrl = new Array();
+    if(urls){    
+      if(Array.isArray(urls)){
+        (urls as string[]).forEach((url) => {
+            imageUrl.push(String(url).substring(String(url).indexOf("images")));
+            fs.unlink(path.join(process.cwd(), `public\\${oldRating?.image!}`));
+          })
+      } else{
+        imageUrl.push(String(urls).substring(String(urls).indexOf("images")));
+      }
     }else{
-      imageUrl = oldRating?.image;
+      imageUrl.push(oldRating?.image);
     }
 
   try {
@@ -69,12 +75,12 @@ export default async function handler(
             productInCartId: Number(cartId),
             rate: Number(star),
             comment: comment as string,
-            image: imageUrl
+            image: imageUrl.join(",")
         },
         update:{
             rate: Number(star),
             comment: comment as string,
-            image: imageUrl
+            image: imageUrl.join(",")
         }
     })
 
