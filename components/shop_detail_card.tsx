@@ -14,7 +14,7 @@ const ShopDetailCard = ({shop}: Props) => {
                     {shop.image ? (
                         <img 
                             className='object-cover rounded-full w-16 h-16 sm:h-16 border-2 border-gray-600'
-                            src={shop.image!}
+                            src={`http://localhost:3000/${shop.image!}`}
                             onError={({ currentTarget }) => {
                                 currentTarget.onerror = null; // prevents looping
                                 currentTarget.src =
