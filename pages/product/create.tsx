@@ -29,7 +29,7 @@ interface FormData{
 export default function CreateProduct() {
   const [form, setForm] = useState<FormData>({name: '', price: '', stock:'', description: '', categoryId: '1'});
   const router = useRouter()
-  const [selectedImage, setSelectedImage] = useState("");
+  const [selectedImage, setSelectedImage] = useState<string>();
   const [selectedFile, setSelectedFile] = useState<File>();
 
   const {data, isLoading} = useSWR<{categories : Array<Category>}>(
@@ -40,6 +40,8 @@ export default function CreateProduct() {
   if(!data?.categories){
     return null;
   }
+
+  // Peter TODO: Review form submit code
   
   const handleUpload = async () => {
     try {
@@ -57,70 +59,94 @@ export default function CreateProduct() {
     }
   }
 
+  const renderSelectedImage = () => {
+
+    console.log("renderSelectedImage");
+    console.log(selectedFile);
+
+    if(selectedFile) return <img src={selectedImage} alt="Unable to display selected image" className='w-full h-1/2 object-cover'/>;
+    
+    return (
+      <>
+        <label htmlFor="product-image-input" className='hover:cursor-pointer flex flex-row'>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+          </svg>
+          &nbsp;Select Image
+        </label>
+      </>
+    );
+  }
+
   return (
-    <div>
-        <section className="w-3/4 mx-auto flex flex-col gap-10">
-            <div className="title">
-                <h1 className="text-gray-800 text-4xl font-bold py-4">Add Product</h1>
-                <p className="mx-auto text-gray-400">Add product</p>
-            </div>
-            <form onSubmit={e=>{e.preventDefault(); handleUpload();}} className="flex flex-col gap-5">
-                <div className='max-w-4xl mx-auto p-20 space-y-6'>
-                    <label>
-                        <input 
-                            type='file' 
-                            hidden 
-                            onChange={({target}) => {
-                                if(target.files){
-                                    const file = target.files[0];
-                                    setSelectedImage(URL.createObjectURL(file));
-                                    setSelectedFile(file);
-                                }
-                            }}
-                        />
-                        <div className='w-40 aspect-video rounded flex items-center justify-center border-2 border-dashed cursor-pointer'>
-                            {selectedImage? (
-                                <img src={selectedImage} alt=""/>
-                            ) : (
-                                <span>Select Image</span>
-                            )}
-                        </div>
-                    </label>
-                </div>
-                <select onChange={e => {e.preventDefault(); setForm({...form, categoryId: e.target.value})}} name="categoryOption" id="categoryOption">
-                    {data.categories.map(category =>(
-                        <option value={category.id} key={category.id}>{category.category}</option>
-                    ))}
-                </select>
-                <div className={styles.input_group}>
-                    <input type="text" name="name" placeholder="Name" className={styles.input_text} value={form?.name} onChange={e => setForm({...form, name: e.target.value})}/>
-                    {/* <span className="icon flex items-center px-4">
-                        <HiAtSymbol size={25}/>
-                    </span> */}
-                </div>
-                <div className={styles.input_group}>
-                    <textarea name="desc" placeholder="Description" className='w-80 h-40' value={form?.description} onChange={e => setForm({...form, description: e.target.value})}/>
-                    {/* <span className="icon flex items-center px-4">
-                        <HiAtSymbol size={25}/>
-                    </span> */}
-                </div>
-                <div className={styles.input_group}>
-                    <input type="number" name="price" placeholder="Price" className={styles.input_text} value={form?.price} onChange={e => setForm({...form, price: e.target.value})}/>
-                    {/* <span className="icon flex items-center px-4" onClick={()=>setShow(!show)}>
-                        <HiKey size={25}/>
-                    </span> */}
-                </div>                
-                <div className={styles.input_group}>
-                    <input type="number" name="stock" placeholder="Qty" className={styles.input_text} value={form?.stock} onChange={e => setForm({...form, stock: e.target.value})}/>
-                    {/* <span className="icon flex items-center px-4" onClick={()=>setShow(!show)}>
-                        <HiKey size={25}/>
-                    </span> */}
-                </div>
-                <div className={styles.input_group}>
-                    <button type="submit" className={styles.button}>Add</button>
-                </div>
-            </form>
+    <div className='lg:px-36'>
+      <div id='title-hack-container' className=''>
+        <section className='pl-4 lg:w-1/2 flex lg:flex-col lg:justify-center lg:items-center'>
+          <div className='lg:w-5/6 justify-start'>
+            <h1 className=' text-2xl  font-bold mb-2 font-bold'>Add Product</h1>
+          </div>
         </section>
+      </div>
+      <form action="" onSubmit={e=>{e.preventDefault(); handleUpload();}} className='lg:flex lg:flex-row'>
+        <section className='px-4 lg:w-1/2 flex lg:flex-col justify-center items-center'>
+          <div className='border-gray-600 border border-dashed rounded-xl flex justify-center items-center h-40 w-full lg:h-5/6 lg:w-5/6 relative'>
+            <input type="file" accept='.jpg, .jpeg, .png, .webp' name="product-image" id="product-image-input" className='w-full h-full cursor-pointer opacity-0 absolute' 
+              onChange={({target}) => {
+                if(target.files){
+                    const file = target.files[0];
+                    setSelectedImage(URL.createObjectURL(file));
+                    setSelectedFile(file);
+                }
+            }}
+            />
+            {renderSelectedImage()}
+          </div>
+          <div className='hidden lg:block px-4 lg:w-5/6'>
+            {/* Place multiple photos here */}
+          </div>
+        </section>
+        <section  className='p-4 lg:w-1/2'>
+          <div className=' space-y-4 flex flex-col'>
+            <div className='flex flex-col space-y-1 w-full'>
+              <label htmlFor="product-name-input" className='font-bold'>Name</label>
+              <input  id='product-name-input' name='product-name' type="text" className='p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white'
+                value={form?.name} onChange={e => setForm({...form, name: e.target.value})}
+              />
+            </div>
+            <div className='flex flex-col space-y-1 w-full'>
+              <label htmlFor="product-category-input" className='font-bold'>Category</label>
+              <select name="product-category" id="product-category-input" className='p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white'
+                onChange={e => {e.preventDefault(); setForm({...form, categoryId: e.target.value})}} 
+              >
+                {data.categories.map(category =>(
+                        <option value={category.id} key={category.id}>{category.category}</option>
+                ))}
+              </select>
+            </div>
+            <div className='flex flex-col space-y-1 w-full'>
+              <label htmlFor="product-quantity-input" className='font-bold'>Quantity</label>
+              <input id='product-quantity-input' name='product-quantity' type="number" className='p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white'
+                value={form?.stock} onChange={e => setForm({...form, stock: e.target.value})}
+              />
+            </div>
+            <div className='flex flex-col space-y-1 w-full'>
+              <label htmlFor="product-price-input" className='font-bold'>Price</label>
+              <input id='product-price-input' name='product-price' type="number" className='p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white'
+                value={form?.price} onChange={e => setForm({...form, price: e.target.value})}
+              />
+            </div>
+            <div className='flex flex-col space-y-1 w-full'>
+              <label htmlFor="" className='font-bold'>Description</label>
+              <textarea name="product-description" id="product-description-input" className='p-2 h-48 border rounded-lg border-gray-400 focus:border-none focus:border-white'
+                value={form?.description} onChange={e => setForm({...form, description: e.target.value})}
+              />
+            </div>
+            <button className='h-10 lg:w-36 rounded text-white bg-indigo-700'>
+              Submit
+            </button>
+          </div>
+        </section>
+      </form>
     </div>
   )
 }
