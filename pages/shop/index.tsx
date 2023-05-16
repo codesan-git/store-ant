@@ -74,10 +74,10 @@ export default function Profile({shop, products} : Props) {
                 <div className="drawer-side">
                     <label htmlFor="my-drawer-2" className="drawer-overlay"></label> 
                     <ul className="menu p-4 w-full bg-base-100 text-base-content">
-                    <li><a>Profile</a></li>
-                    <li><a>Products</a></li>
-                    <li><a>Orders</a></li>
-                    <li><a>Stats</a></li>
+                    <li><Link href="/shop">Profile</Link></li>
+                    <li><Link href="">Products</Link></li>
+                    <li><Link href="/shop/orders">Orders</Link></li>
+                    <li><Link href="/shop/stats">Stats</Link></li>
                     </ul>
                 </div>
             </div>

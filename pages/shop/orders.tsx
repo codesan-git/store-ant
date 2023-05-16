@@ -166,10 +166,10 @@ export default function Transaction({ cartItems }: InferGetServerSidePropsType<t
               <div className="drawer-side">
                   <label htmlFor="my-drawer-2" className="drawer-overlay"></label> 
                   <ul className="menu p-4 w-full bg-base-100 text-base-content">
-                  <li><a>Profile</a></li>
-                  <li><a>Orders</a></li>
-                  <li><a>Notifications</a></li>
-                  <li><a>Vouchers</a></li>
+                    <li><a>Profile</a></li>
+                    <li><a>Orders</a></li>
+                    <li><a>Notifications</a></li>
+                    <li><a>Vouchers</a></li>
                   </ul>
               </div>
           </div>
