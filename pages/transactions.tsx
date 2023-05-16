@@ -730,7 +730,8 @@ export default function Transaction({ cartItems }: CartItems) {
                                       <p>{cartItem.product.price}</p>
                                       <p>{cartItem.count}</p>
                                       <p>{cartItem.status}</p>
-                                      <a href="#form-review-modal">Open Modal</a>
+                                      <label htmlFor="form-review-modal" className="">Open Modal</label>
+                                      <ReviewModal id="form-review-modal" product={cartItem.product}/>
                                       <button /*disabled={cartItem.Rating ? true : false}*/ onClick={()=> onRate(cartItem.id)} className="w-32 btn btn-primary">Nilai</button>
                                     </div>
                                   </div>
@@ -858,7 +859,6 @@ export default function Transaction({ cartItems }: CartItems) {
             </div>
           </div>
         </div>
-      <ReviewModal id="form-review-modal"/>
       </div> {/*end body div tag*/}
       {/* <Footer /> */}
       
