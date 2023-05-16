@@ -40,6 +40,8 @@ export default function CreateProduct() {
   if(!data?.categories){
     return null;
   }
+
+  // Peter TODO: Review form submit code
   
   const handleUpload = async () => {
     try {
@@ -62,7 +64,7 @@ export default function CreateProduct() {
     console.log("renderSelectedImage");
     console.log(selectedFile);
 
-    if(selectedFile) return <img src={selectedImage} alt="" />;
+    if(selectedFile) return <img src={selectedImage} alt="Unable to display selected image" className='w-full h-1/2 object-cover'/>;
     
     return (
       <>
@@ -85,7 +87,7 @@ export default function CreateProduct() {
           </div>
         </section>
       </div>
-      <form action="" className='lg:flex lg:flex-row'>
+      <form action="" onSubmit={e=>{e.preventDefault(); handleUpload();}} className='lg:flex lg:flex-row'>
         <section className='px-4 lg:w-1/2 flex lg:flex-col justify-center items-center'>
           <div className='border-gray-600 border border-dashed rounded-xl flex justify-center items-center h-40 w-full lg:h-5/6 lg:w-5/6 relative'>
             <input type="file" accept='.jpg, .jpeg, .png, .webp' name="product-image" id="product-image-input" className='w-full h-full cursor-pointer opacity-0 absolute' 
@@ -99,32 +101,45 @@ export default function CreateProduct() {
             />
             {renderSelectedImage()}
           </div>
+          <div className='hidden lg:block px-4 lg:w-5/6'>
+            {/* Place multiple photos here */}
+          </div>
         </section>
         <section  className='p-4 lg:w-1/2'>
           <div className=' space-y-4 flex flex-col'>
             <div className='flex flex-col space-y-1 w-full'>
               <label htmlFor="product-name-input" className='font-bold'>Name</label>
-              <input  id='product-name-input' name='product-name' type="text" className='p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white'/>
+              <input  id='product-name-input' name='product-name' type="text" className='p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white'
+                value={form?.name} onChange={e => setForm({...form, name: e.target.value})}
+              />
             </div>
             <div className='flex flex-col space-y-1 w-full'>
               <label htmlFor="product-category-input" className='font-bold'>Category</label>
-              <select name="product-category" id="product-category-input" className='p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white'>
-                <option value="">Makanan</option>
-                <option value="">Waifu</option>
-                <option value="">Pasokon</option>
+              <select name="product-category" id="product-category-input" className='p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white'
+                onChange={e => {e.preventDefault(); setForm({...form, categoryId: e.target.value})}} 
+              >
+                {data.categories.map(category =>(
+                        <option value={category.id} key={category.id}>{category.category}</option>
+                ))}
               </select>
             </div>
             <div className='flex flex-col space-y-1 w-full'>
               <label htmlFor="product-quantity-input" className='font-bold'>Quantity</label>
-              <input id='product-quantity-input' name='product-quantity' type="number" className='p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white'/>
+              <input id='product-quantity-input' name='product-quantity' type="number" className='p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white'
+                value={form?.stock} onChange={e => setForm({...form, stock: e.target.value})}
+              />
             </div>
             <div className='flex flex-col space-y-1 w-full'>
               <label htmlFor="product-price-input" className='font-bold'>Price</label>
-              <input id='product-price-input' name='product-price' type="number" className='p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white'/>
+              <input id='product-price-input' name='product-price' type="number" className='p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white'
+                value={form?.price} onChange={e => setForm({...form, price: e.target.value})}
+              />
             </div>
             <div className='flex flex-col space-y-1 w-full'>
               <label htmlFor="" className='font-bold'>Description</label>
-              <textarea name="product-description" id="product-description-input" className='p-2 h-48 border rounded-lg border-gray-400 focus:border-none focus:border-white'/>
+              <textarea name="product-description" id="product-description-input" className='p-2 h-48 border rounded-lg border-gray-400 focus:border-none focus:border-white'
+                value={form?.description} onChange={e => setForm({...form, description: e.target.value})}
+              />
             </div>
             <button className='h-10 lg:w-36 rounded text-white bg-indigo-700'>
               Submit
