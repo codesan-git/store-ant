@@ -1,4 +1,5 @@
 import { Product } from "@prisma/client";
+import { useState } from "react";
 
 interface Props {
   id: string
@@ -6,7 +7,83 @@ interface Props {
 }
 
 const ReviewModal = ({id, product} : Props) => {
-  console.log(`image location: ${product.image}`);
+
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]); //TODO: pass the setState function from transactions.tsx
+
+  const handleImageUpload = (e: any) => {
+
+    // console.log(`obj list: ${obj.target}`);
+
+    let files = e.target.files;
+
+    console.log(`filecount in event's target: ${files.length}`)
+    console.log(`filecount in selectedFiles Sate: ${selectedFiles.length}`)
+
+    // if((selectedFiles.length + files.length) > 5 ) return;
+
+    // for (const file of files){
+    //   console.log(`filename: ${file}`);
+    // }
+
+    setSelectedFiles([...selectedFiles, ...files]);
+
+  }
+
+  const renderInitialImageInput = () => {
+    if(selectedFiles.length > 0) return;
+
+    return (
+      <>
+        <div className='border-gray-600 border border-dashed rounded-xl flex justify-center items-center h-24 w-full relative'>
+          <input type="file" accept='.jpg, .jpeg, .png, .webp' multiple={true} name="product-image" id="product-image-input" className='w-full h-full cursor-pointer opacity-0 absolute' 
+            onChange={handleImageUpload}
+          />
+          <label htmlFor="product-image-input" className='hover:cursor-pointer flex flex-row'>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+            </svg>
+            &nbsp;Upload Image
+          </label>
+        </div>
+      </>
+    );
+  }
+
+  const renderSelectedImages = () => {
+    if(selectedFiles)
+      return (
+        <div className="grid grid-cols-5 gap-2">
+          {
+            selectedFiles.map( 
+              (file, key) => 
+                <div key={key} className="relative">
+                  {/* <img src={URL.createObjectURL(file)} alt="" /> */}
+                  <div className="flex justify-center items-center bg-black text-white rounded-full h-4 w-4 text-xs font-bold font-bold absolute -right-0 -top-2 hover:cursor-pointer">✕</div>
+                  <img src={URL.createObjectURL(file)} alt="" className="h-12 w-12 object-cover" />
+                </div>
+            )
+          }
+          {
+            (selectedFiles.length > 0 && selectedFiles.length < 5) 
+            ? <div className='border-gray-600 border border-dashed rounded-xl flex justify-center items-center w-16 h-16 w-full relative'>
+                <input type="file" accept='.jpg, .jpeg, .png, .webp' multiple={true} name="product-image" id="product-image-input" className='w-full h-full cursor-pointer opacity-0 absolute' 
+                  onChange={handleImageUpload}
+                />
+                <label htmlFor="product-image-input" className='hover:cursor-pointer flex flex-row'>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                  </svg>
+                </label>
+              </div>
+            : <></>
+          }
+        </div>
+      );
+
+    return
+  }
+  
+
   return (
     <>
       <input type="checkbox" id={id} className="modal-toggle"/>
@@ -28,16 +105,8 @@ const ReviewModal = ({id, product} : Props) => {
               <input type="radio" name="rating-1" className="mask mask-star" />
               <input type="radio" name="rating-1" className="mask mask-star" />
             </div>
-            <div className='border-gray-600 border border-dashed rounded-xl flex justify-center items-center h-24 w-full relative'>
-              <input type="file" accept='.jpg, .jpeg, .png, .webp' name="product-image" id="product-image-input" className='w-full h-full cursor-pointer opacity-0 absolute' />
-              {/* {renderSelectedImage()} */}
-              <label htmlFor="product-image-input" className='hover:cursor-pointer flex flex-row'>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-                </svg>
-                &nbsp;Upload Image
-              </label>
-            </div>
+            {renderInitialImageInput()}
+            {renderSelectedImages()}
             <div id="commet-input-group" className="flex flex-col space-y-1">
               <label htmlFor="" className="font-extrabold">Komentar</label>
               <textarea aria-label="Example: lorem" name="user-comment" id="comment-input-field" className="h-40 p-2 rounded border border-gray-600"/>
