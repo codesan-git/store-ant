@@ -6,16 +6,18 @@ interface Props {
 }
 
 const ReviewModal = ({id, product} : Props) => {
+  console.log(`image location: ${product.image}`);
   return (
     <>
       <input type="checkbox" id={id} className="modal-toggle"/>
-      <div className="modal">
+      <div className="modal modal-bottom sm:modal-middle">
         <div className="modal-box">
           <div className="w-full flex justify-end">
             <label htmlFor={id} className="text-lg font-bold">✕</label>
           </div>
           <div id="product-box" className="p-2 space-x-2 flex flex-row bg-blue-gray-100">
-            <img src="" alt="" className="w-10 h-10 border"/>
+            {/* <img src={`https://localhost:3000/${product.image}`} alt="none" className="w-10 h-10 border object-cover"/> */} {/*This won't work for some reason*/}
+            <img src={`https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg`} alt="none" className="w-10 h-10 border object-cover"/> 
             <h1>{product.name}</h1>
           </div>
           <form id="review-form" action="" className="pt-4 space-y-4">
@@ -26,7 +28,7 @@ const ReviewModal = ({id, product} : Props) => {
               <input type="radio" name="rating-1" className="mask mask-star" />
               <input type="radio" name="rating-1" className="mask mask-star" />
             </div>
-            <div className='border-gray-600 border border-dashed rounded-xl flex justify-center items-center h-40 w-full relative'>
+            <div className='border-gray-600 border border-dashed rounded-xl flex justify-center items-center h-24 w-full relative'>
               <input type="file" accept='.jpg, .jpeg, .png, .webp' name="product-image" id="product-image-input" className='w-full h-full cursor-pointer opacity-0 absolute' />
               {/* {renderSelectedImage()} */}
               <label htmlFor="product-image-input" className='hover:cursor-pointer flex flex-row'>
