@@ -29,6 +29,16 @@ const ReviewModal = ({id, product} : Props) => {
 
   }
 
+  const handleRemoveImage = (imageName: string) => {
+    setSelectedFiles(selectedFiles.filter(file => file.name !== imageName));
+
+    /* TODO: Fix bug related to file removal logic
+    *
+    *  The current way we remove files is still a simple solution. The bug arises when you upload a file with the same file names, deleting
+    *  one of them would result in the removal of both of them. Maybe change the logic into remove at index instead.
+    */
+  }
+
   const renderInitialImageInput = () => {
     if(selectedFiles.length > 0) return;
 
@@ -58,14 +68,16 @@ const ReviewModal = ({id, product} : Props) => {
               (file, key) => 
                 <div key={key} className="relative">
                   {/* <img src={URL.createObjectURL(file)} alt="" /> */}
-                  <div className="flex justify-center items-center bg-black text-white rounded-full h-4 w-4 text-xs font-bold font-bold absolute -right-0 -top-2 hover:cursor-pointer">✕</div>
+                  <div onClick={() => handleRemoveImage(file.name)} className="flex justify-center items-center bg-black text-white rounded-full h-4 w-4 text-xs font-bold font-bold absolute -right-0 -top-2 hover:cursor-pointer">
+                    ✕
+                  </div>
                   <img src={URL.createObjectURL(file)} alt="" className="h-12 w-12 object-cover" />
                 </div>
             )
           }
           {
             (selectedFiles.length > 0 && selectedFiles.length < 5) 
-            ? <div className='border-gray-600 border border-dashed rounded-xl flex justify-center items-center w-16 h-16 w-full relative'>
+            ? <div className='border-gray-600 border border-dashed rounded-xl flex justify-center items-center w-12 h-12 relative'>
                 <input type="file" accept='.jpg, .jpeg, .png, .webp' multiple={true} name="product-image" id="product-image-input" className='w-full h-full cursor-pointer opacity-0 absolute' 
                   onChange={handleImageUpload}
                 />
