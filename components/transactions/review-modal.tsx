@@ -45,7 +45,7 @@ const ReviewModal = ({id, product} : Props) => {
     return (
       <>
         <div className='border-gray-600 border border-dashed rounded-xl flex justify-center items-center h-24 w-full relative'>
-          <input type="file" accept='.jpg, .jpeg, .png, .webp' multiple={true} name="product-image" id="product-image-input" className='w-full h-full cursor-pointer opacity-0 absolute' 
+          <input type="file" accept='.jpg, .jpeg, .png, .webp' multiple name="product-image" id="product-image-input" className='w-full h-full cursor-pointer opacity-0 absolute' 
             onChange={handleImageUpload}
           />
           <label htmlFor="product-image-input" className='hover:cursor-pointer flex flex-row'>
@@ -68,16 +68,16 @@ const ReviewModal = ({id, product} : Props) => {
               (file, key) => 
                 <div key={key} className="relative">
                   {/* <img src={URL.createObjectURL(file)} alt="" /> */}
-                  <div onClick={() => handleRemoveImage(file.name)} className="flex justify-center items-center bg-black text-white rounded-full h-4 w-4 text-xs font-bold font-bold absolute -right-0 -top-2 hover:cursor-pointer">
+                  <div onClick={() => handleRemoveImage(file.name)} className="flex justify-center items-center bg-black text-white rounded-full h-4 w-4 text-xs font-bold absolute -right-0 -top-2 sm:right-3 hover:cursor-pointer">
                     ✕
                   </div>
-                  <img src={URL.createObjectURL(file)} alt="" className="h-12 w-12 object-cover" />
+                  <img src={URL.createObjectURL(file)} alt="" className="w-12 h-12 sm:w-16 sm:h-16 object-cover border border-gray-600" />
                 </div>
             )
           }
           {
             (selectedFiles.length > 0 && selectedFiles.length < 5) 
-            ? <div className='border-gray-600 border border-dashed rounded-xl flex justify-center items-center w-12 h-12 relative'>
+            ? <div className='border-gray-600 border border-dashed rounded-lg flex justify-center items-center w-12 h-12 sm:w-16 sm:h-16 relative'>
                 <input type="file" accept='.jpg, .jpeg, .png, .webp' multiple={true} name="product-image" id="product-image-input" className='w-full h-full cursor-pointer opacity-0 absolute' 
                   onChange={handleImageUpload}
                 />
@@ -101,7 +101,7 @@ const ReviewModal = ({id, product} : Props) => {
       <input type="checkbox" id={id} className="modal-toggle"/>
       <div className="modal modal-bottom sm:modal-middle">
         <div className="modal-box">
-          <div className="w-full flex justify-end">
+          <div className="w-full flex justify-end" onClick={() => setSelectedFiles([])}>
             <label htmlFor={id} className="text-lg font-bold">✕</label>
           </div>
           <div id="product-box" className="p-2 space-x-2 flex flex-row bg-blue-gray-100">
