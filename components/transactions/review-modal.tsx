@@ -8,7 +8,9 @@ interface Props {
 
 const ReviewModal = ({id, product} : Props) => {
 
+  const [starValue, setStarValue] = useState<number>(1);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]); //TODO: pass the setState function from transactions.tsx
+  const [comment, setComment] = useState<string>("");
 
   const handleImageUpload = (e: any) => {
 
@@ -37,6 +39,11 @@ const ReviewModal = ({id, product} : Props) => {
     *  The current way we remove files is still a simple solution. The bug arises when you upload a file with the same file names, deleting
     *  one of them would result in the removal of both of them. Maybe change the logic into remove at index instead.
     */
+  }
+
+  const onClose = () => {
+    setSelectedFiles([]);
+    setStarValue(1); 
   }
 
   const renderInitialImageInput = () => {
@@ -100,8 +107,8 @@ const ReviewModal = ({id, product} : Props) => {
     <>
       <input type="checkbox" id={id} className="modal-toggle"/>
       <div className="modal modal-bottom sm:modal-middle">
-        <div className="modal-box">
-          <div className="w-full flex justify-end" onClick={() => setSelectedFiles([])}>
+        <div className="modal-box space-y-2">
+          <div className="w-full flex justify-end" onClick={onClose}>
             <label htmlFor={id} className="text-lg font-bold">✕</label>
           </div>
           <div id="product-box" className="p-2 space-x-2 flex flex-row bg-blue-gray-100">
@@ -109,25 +116,29 @@ const ReviewModal = ({id, product} : Props) => {
             <img src={`https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg`} alt="none" className="w-10 h-10 border object-cover"/> 
             <h1>{product.name}</h1>
           </div>
-          <form id="review-form" action="" className="pt-4 space-y-4">
-            <div className="rating rating-lg flex justify-center  items-center">
-              <input type="radio" name="rating-1" className="mask mask-star" />
-              <input type="radio" name="rating-1" className="mask mask-star" checked />
-              <input type="radio" name="rating-1" className="mask mask-star" />
-              <input type="radio" name="rating-1" className="mask mask-star" />
-              <input type="radio" name="rating-1" className="mask mask-star" />
+          <form id="review-form" action="" className="pt-4 space-y-1">
+            <div className="rating rating-lg flex justify-center items-center mb-2">
+              <input type="radio" name="rating-1" className="mask mask-star" onClick={() => setStarValue(1)}/>
+              <input type="radio" name="rating-1" className="mask mask-star" onClick={() => setStarValue(2)}/>
+              <input type="radio" name="rating-1" className="mask mask-star" onClick={() => setStarValue(3)}/>
+              <input type="radio" name="rating-1" className="mask mask-star" onClick={() => setStarValue(4)}/>
+              <input type="radio" name="rating-1" className="mask mask-star" onClick={() => setStarValue(5)}/>
             </div>
             {renderInitialImageInput()}
             {renderSelectedImages()}
             <div id="commet-input-group" className="flex flex-col space-y-1">
               <label htmlFor="" className="font-extrabold">Komentar</label>
-              <textarea aria-label="Example: lorem" name="user-comment" id="comment-input-field" className="h-40 p-2 rounded border border-gray-600"/>
+              <textarea aria-label="Example: lorem" name="user-comment" id="comment-input-field" onChange={(e) => setComment(e.target.value)} className="h-40 p-2 rounded border border-gray-600"/>
             </div>
-            <button className='h-10 w-full rounded text-white bg-indigo-700' onClick={e => e.preventDefault}>
+            {/* <button type="submit" className='h-10 w-full rounded text-white bg-indigo-700 hover:bg-indigo-900' onClick={e => e.preventDefault()}>
               Submit
-            </button>
+            </button> */}
           </form>
-
+          <div className="" onClick={() => console.log('Closed modal')}>
+            <label htmlFor={id} className="h-10 w-full rounded text-white bg-indigo-700 hover:bg-indigo-900 hover:cursor-pointer flex justify-center items-center">
+              Submit
+            </label>
+          </div>
         </div>
       </div>
     </>
