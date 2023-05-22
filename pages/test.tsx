@@ -1,49 +1,97 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
-import { signIn, signOut, getSession } from 'next-auth/react'
+import { useEffect, useState } from "react";
+import { IoMdPin } from "react-icons/io";
 
-export default function Home({session}) {
+export default function App() {
+  // const [globalCoords, setGlobalCoords] = useState({x: 0, y: 0});
+  const [localCoords, setLocalCoords] = useState({ x: 0, y: 0 });
+  const [pinLocation, setPinLocation] = useState("");
+
+  const handleMouseClick = (event: any) => {
+    // 👇️ Get the mouse position relative to the element
+    const target = event.target as HTMLInputElement;
+    setLocalCoords({
+      x: event.clientX - target?.offsetLeft,
+      y: event.clientY - target?.offsetTop,
+    });
+  };
+
+  // useEffect(() => {
+  //   const handleGlobalMouseMove = event => {
+  //     setGlobalCoords({
+  //       x: event.clientX,
+  //       y: event.clientY,
+  //     });
+  //   };
+  //   window.addEventListener('mousemove', handleGlobalMouseMove);
+
+  //   return () => {
+  //     window.removeEventListener(
+  //       'mousemove',
+  //       handleGlobalMouseMove,
+  //     );
+  //   };
+  // }, []);
+
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Nextjs</title>
-        <meta name="description" content="Nextjs" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <main>
-        {!session && (
-          <>
-            <h1>
-              Nextjs
-            </h1>
-            <h2 className={styles.subheader}>
-              You're not logged in
-            </h2>
-            <br />
-            <button onClick={() => signIn("google")}>Sign In</button>
-          </>
-        )}
-        {session && (
-          <>
-            <h1>
-              Dashboard
-            </h1>
-            <h2 className={styles.subheader}>
-              Signed in as {session.user.email}
-            </h2>
-            <br />
-            <button onClick={signOut}>Sign Out</button>
-          </>
-        )}
-      </main>
+    <div>
+      <div
+        onClick={handleMouseClick}
+        style={{
+          padding: "4rem",
+          backgroundColor: "lightgray",
+          border: "1px solid black",
+          width: "500px",
+        }}
+      >
+        <h2>
+          Relative: ({localCoords.x}, {localCoords.y})
+        </h2>
+      </div>
+
+      <br />
+
+      <div className="relative">
+        <div className="flex justify-center">
+          {pinLocation === "location1" ? (
+            <button className="absolute mr-36 mt-10 cursor-pointer">
+              <IoMdPin
+                style={{ color: "blue" }}
+                onClick={() => setPinLocation("")}
+              />
+            </button>
+          ) : (
+            <button className="absolute mr-36 mt-10 cursor-pointer">
+              <IoMdPin
+                style={{ color: "red" }}
+                onClick={() => setPinLocation("location1")}
+              />
+            </button>
+          )}
+        </div>
+        <div className="flex justify-center">
+          {pinLocation === "location2" ? (
+            <button className="absolute ml-60 mt-10 cursor-pointer">
+              <IoMdPin
+                style={{ color: "blue" }}
+                onClick={() => setPinLocation("")}
+              />
+            </button>
+          ) : (
+            <button className="absolute ml-60 mt-10 cursor-pointer">
+              <IoMdPin
+                style={{ color: "red" }}
+                onClick={() => setPinLocation("location2")}
+              />
+            </button>
+          )}
+        </div>
+        <img
+          src="https://cdn.discordapp.com/attachments/1075964120991539250/1108246099023630477/png-transparent-studio-apartment-house-floor-plan-apartment-building-apartment-plan.png"
+          alt="map"
+          onClick={handleMouseClick}
+          className="w-96 h-96 bg-cover m-auto"
+        />
+      </div>
     </div>
-  )
+  );
 }
-
-
-export async function getServerSideProps(ctx) {
-  const session = await getSession(ctx)
-  return {
-    props: { session },
-  }
-}]
