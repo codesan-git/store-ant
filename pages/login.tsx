@@ -21,7 +21,7 @@ interface Data {
   email: string;
 }
 
-export default function Login(props) {
+export default function Login() {
   const [show, setShow] = useState<boolean>();
   const [form, setForm] = useState<FormData>({ email: "", password: "" });
   const [formForgot, setFormForgot] = useState<Data>({ email: "" });

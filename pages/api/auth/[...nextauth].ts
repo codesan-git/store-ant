@@ -75,10 +75,10 @@ const authOptions : NextAuthOptions = {
       async jwt({ token, account, user }) {
         // Persist the OAuth access_token and or the user id to the token right after signin
         if (account) {
-          token.accessToken = account.access_token
-          token.id = user?.id
+          token.accessToken = account.access_token;
+          token.id = user?.id;
         }
-        return token
+        return token;
       },
       async session({ session, token, user }) {
         // Send properties to the client, like an access_token and user id from a provider.
@@ -93,7 +93,8 @@ const authOptions : NextAuthOptions = {
           session.user.image = userData?.image;
         }
         session.user.emailVerified = userData?.emailVerified!;
-        return session
+        session.user.role = userData?.Role!;
+        return session;
       }
     },
 };

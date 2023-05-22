@@ -1,3 +1,4 @@
+import { Role } from "@prisma/client"
 import NextAuth, { DefaultSession } from "next-auth"
 
 declare module "next-auth" {
@@ -8,7 +9,8 @@ declare module "next-auth" {
     user: {
       id: string,
       accessToken: string,
-      emailVerified: Date
+      emailVerified: Date,
+      role: Role
     } & DefaultSession["user"]
   }
 }
