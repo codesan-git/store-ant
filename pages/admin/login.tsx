@@ -28,10 +28,10 @@ export default function Login() {
   async function loginUser(data: FormData) {
     console.log("login");
     const res = await signIn("credentials", {
-      redirect: false,
+      redirect: true,
       email: data.email,
       password: data.password,
-      callbackUrl: `${window.location.origin}`,
+      callbackUrl: "/admin/console/",
     });
 
     res?.error ? console.log("ERROR ", res?.error) : router.push("/");

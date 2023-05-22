@@ -171,6 +171,15 @@ model Rating {
   productInCart ProductInCart @relation(fields: [productInCartId], references: [id], onDelete: Cascade)
 }
 
+model Event {
+  id              Int @id @default(autoincrement())
+  startDate       DateTime
+  endDate         DateTime
+  image           String
+  eventPath       String
+  eventName       String
+}
+
 model VerificationToken {
   id         Int      @id @default(autoincrement())
   identifier String

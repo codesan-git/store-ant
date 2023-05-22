@@ -1,3 +1,4 @@
+import { Role } from "@prisma/client";
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -16,6 +17,7 @@ const requireAuth: string[] = [
     "api/cart",
     "api/transactions/"
 ];
+const protectedPaths: string[] = ["/admin/console"];
 
 export async function middleware(request: NextRequest) {
   const res = NextResponse.next();
@@ -30,6 +32,23 @@ export async function middleware(request: NextRequest) {
     if (!token) {
       const url = new URL(`/login`, request.url);
       url.searchParams.set("callbackUrl", encodeURI(request.url));
+      return NextResponse.redirect(url);
+    }
+  }
+  
+  if (protectedPaths.some((path) => pathname.startsWith(path))) {
+    const token = await getToken({
+      req: request,
+      secret: process.env.JWT_SECRET,
+    });
+    console.log("ROLE : ", token?.role);
+    //check not logged in
+    if (!token) {
+      const url = new URL(`/admin/login`, request.url);
+      url.searchParams.set("callbackUrl", encodeURI(request.url));
+      return NextResponse.redirect(url);
+    } else if(token.role != Role.ADMIN){
+      const url = new URL(`/403`, request.url);
       return NextResponse.redirect(url);
     }
   }

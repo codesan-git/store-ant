@@ -76,7 +76,11 @@ const authOptions : NextAuthOptions = {
         // Persist the OAuth access_token and or the user id to the token right after signin
         if (account) {
           token.accessToken = account.access_token;
+          const userData = await prisma.user.findUnique({
+            where: {id: user?.id}
+          })
           token.id = user?.id;
+          token.role = userData?.Role;
         }
         return token;
       },
