@@ -1,16 +1,19 @@
 import { Product } from "@prisma/client";
+import axios from "axios";
 import { useState } from "react";
 
 interface Props {
-  id: string
-  product: Product
+  htmlElementId: string,
+  selectProductCallback: () => any;
 }
 
-const ReviewModal = ({id, product} : Props) => {
+const ReviewModal = ({htmlElementId: id, selectProductCallback} : Props) => {
 
-  const [starValue, setStarValue] = useState<number>(1);
+  const [starValue, setStarValue] = useState<number>(5);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]); //TODO: pass the setState function from transactions.tsx
   const [comment, setComment] = useState<string>("");
+
+  const {currentRateProduct, currentCartItemId} = selectProductCallback();
 
   const handleImageUpload = (e: any) => {
 
@@ -28,7 +31,6 @@ const ReviewModal = ({id, product} : Props) => {
     // }
 
     setSelectedFiles([...selectedFiles, ...files]);
-
   }
 
   const handleRemoveImage = (imageName: string) => {
@@ -41,12 +43,30 @@ const ReviewModal = ({id, product} : Props) => {
     */
   }
 
+  const onSubmit = async () => {
+    try{
+      const formData = new FormData();
+      selectedFiles.forEach((file) => formData.append("image", file) );
+      formData.append("cartId", String(currentCartItemId));
+      formData.append("star", String(starValue));
+      formData.append("comment", comment);
+      await axios.post('http://localhost:3000/api/cart/rate/', formData);
+    }catch(error){
+      console.log(`Error in posting data. Error: ${error}`);
+    }
+
+    setStarValue(5);
+    setSelectedFiles([]);
+    setComment("");
+  }
+
   const onClose = () => {
     setSelectedFiles([]);
     setStarValue(1); 
   }
 
   const renderInitialImageInput = () => {
+
     if(selectedFiles.length > 0) return;
 
     return (
@@ -106,7 +126,7 @@ const ReviewModal = ({id, product} : Props) => {
   return (
     <>
       <input type="checkbox" id={id} className="modal-toggle"/>
-      <div className="modal modal-bottom sm:modal-middle">
+      <div id={id} className="modal modal-bottom sm:modal-middle">
         <div className="modal-box space-y-2">
           <div className="w-full flex justify-end" onClick={onClose}>
             <label htmlFor={id} className="text-lg font-bold">✕</label>
@@ -114,7 +134,7 @@ const ReviewModal = ({id, product} : Props) => {
           <div id="product-box" className="p-2 space-x-2 flex flex-row bg-blue-gray-100">
             {/* <img src={`https://localhost:3000/${product.image}`} alt="none" className="w-10 h-10 border object-cover"/> */} {/*This won't work for some reason*/}
             <img src={`https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg`} alt="none" className="w-10 h-10 border object-cover"/> 
-            <h1>{product.name}</h1>
+            <h1>{currentRateProduct}</h1>
           </div>
           <form id="review-form" action="" className="pt-4 space-y-1">
             <div className="rating rating-lg flex justify-center items-center mb-2">
@@ -128,13 +148,19 @@ const ReviewModal = ({id, product} : Props) => {
             {renderSelectedImages()}
             <div id="commet-input-group" className="flex flex-col space-y-1">
               <label htmlFor="" className="font-extrabold">Komentar</label>
-              <textarea aria-label="Example: lorem" name="user-comment" id="comment-input-field" onChange={(e) => setComment(e.target.value)} className="h-40 p-2 rounded border border-gray-600"/>
+              <textarea value={comment} aria-label="Example: lorem" name="user-comment" id="comment-input-field" onChange={(e) => setComment(e.target.value)} className="h-40 p-2 rounded border border-gray-600"/>
             </div>
+            {/* Trial and error, clean later when all done */}
             {/* <button type="submit" className='h-10 w-full rounded text-white bg-indigo-700 hover:bg-indigo-900' onClick={e => e.preventDefault()}>
               Submit
             </button> */}
+            {/* <label htmlFor={id} className="h-10 w-full rounded text-white bg-indigo-700 hover:bg-indigo-900 hover:cursor-pointer flex justify-center items-center">
+              <button onClick={onSubmit}>
+                Submit
+              </button>
+            </label> */}
           </form>
-          <div className="" onClick={() => console.log('Closed modal')}>
+          <div className="" onClick={onSubmit}>
             <label htmlFor={id} className="h-10 w-full rounded text-white bg-indigo-700 hover:bg-indigo-900 hover:cursor-pointer flex justify-center items-center">
               Submit
             </label>

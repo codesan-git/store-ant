@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { getSession, useSession } from "next-auth/react";
 import { prisma } from "../lib/prisma";
 import Link from "next/link";
-import ProductCard from "@/components/product_card";
+import ProductCard from "@/pages/components/product_card";
 import Navbar from "./navbar";
 import Footer from "./footer";
 import { Rating, Status } from "@prisma/client";
@@ -23,7 +23,7 @@ import {
   UserCircleIcon,
   Cog6ToothIcon,
 } from "@heroicons/react/24/solid";
-import ReviewModal from "@/components/transactions/review-modal";
+import ReviewModal from "@/pages/components/transactions/review-modal";
 // END TABS
 
 interface CartItems {
@@ -61,6 +61,12 @@ export default function Transaction({ cartItems }: CartItems) {
 
   const [openTab, setOpenTab] = React.useState(1);
   const [open, setOpen] = React.useState(false);
+  const [currentRateProduct, setCurrentRateProduct] = useState<String>("");
+  const [currentCartItemId, setCurrentCartItemId] = useState<Number>();
+
+  useEffect(() => {
+
+  }, [currentRateProduct, currentCartItemId]);
 
   //  TABS
   const data = [
@@ -201,6 +207,14 @@ export default function Transaction({ cartItems }: CartItems) {
         query: {id: String(id)}
     });
   }
+
+  const getCurrentSelectedProductForRate = () => {
+    console.log(`returning ${currentRateProduct} and ${currentCartItemId?.toString()}`);
+    return {
+      currentRateProduct,
+      currentCartItemId
+    };
+  };
 
   return (
     <>
@@ -730,9 +744,8 @@ export default function Transaction({ cartItems }: CartItems) {
                                       <p>{cartItem.product.price}</p>
                                       <p>{cartItem.count}</p>
                                       <p>{cartItem.status}</p>
-                                      <label htmlFor="form-review-modal" className="w-32 btn btn-primary">Open Modal</label>
-                                      <ReviewModal id="form-review-modal" product={cartItem.product}/>
-                                      <button /*disabled={cartItem.Rating ? true : false}*/ onClick={()=> onRate(cartItem.id)} className="w-32 btn btn-primary">Nilai</button>
+                                      <label onClick={() => {setCurrentRateProduct(cartItem.product.name); setCurrentCartItemId(cartItem.id)}} htmlFor={`review-modal`} className="w-32 btn btn-primary">Rate</label>
+                                      <ReviewModal htmlElementId={`review-modal`}  selectProductCallback={getCurrentSelectedProductForRate}/>
                                     </div>
                                   </div>
                                 </div>
