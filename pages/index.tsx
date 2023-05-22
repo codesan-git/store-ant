@@ -9,7 +9,7 @@ import { HiShoppingCart } from "react-icons/hi";
 import { RxDotFilled } from "react-icons/rx";
 import Navbar from "./navbar";
 import Footer from "./footer";
-import ProductCard from "@/components/product_card";
+import ProductCard from "@/pages/components/product_card";
 import styles from "../styles/Home.module.css";
 
 // import 'primereact/resources/themes/lara-light-indigo/theme.css';
@@ -20,7 +20,7 @@ import { useState, Dispatch, useEffect } from "react";
 import useSWR from "swr";
 import { useSearchParams } from "next/navigation";
 import axios from "axios";
-import CategoryListItem from "@/components/category_list_item";
+import CategoryListItem from "@/pages/components/category_list_item";
 
 async function handleGoogleSignOut() {
   signOut({ callbackUrl: "http://localhost:3000/login" });
