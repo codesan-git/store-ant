@@ -30,7 +30,7 @@ export default function CreateProduct() {
   const [form, setForm] = useState<FormData>({name: '', price: '', stock:'', description: '', categoryId: '1'});
   const router = useRouter()
   const [selectedImage, setSelectedImage] = useState<string>();
-  const [selectedFile, setSelectedFile] = useState<File>();
+  const [files, setFile] = useState<any[]>([]);
 
   const {data, isLoading} = useSWR<{categories : Array<Category>}>(
     `/api/category/`,
@@ -42,12 +42,35 @@ export default function CreateProduct() {
   }
 
   // Peter TODO: Review form submit code
+  // Bila: hehe
+
+  function handleFile(target: any){
+    let file = target.files;
+
+    for (let i = 0; i < file.length; i++) {
+      const fileType = file[i]["type"];
+      const validImageTypes = ["image/gif", "image/jpeg", "image/png"];
+      if (validImageTypes.includes(fileType)) {
+        setFile([...files, file[i]]);
+      } else {
+        console.log("only images accepted");
+      }
+      console.log("FILES: ", files);
+    }
+  };
+  
+  const removeImage = (i: string) => {
+    setFile(files.filter((x) => x.name !== i));
+    if(files.length >= 2)
+      setSelectedImage(URL.createObjectURL(files[files.length - 2]));
+  };
   
   const handleUpload = async () => {
     try {
-        if(!selectedFile) return;
+        if(files.length == 0) return;
         const formData = new FormData();
-        formData.append("image", selectedFile);
+        files.forEach((file) => formData.append("image", file) );
+        //formData.append("image", selectedFile);
         formData.append("name", form.name);
         formData.append("price", form.price);
         formData.append("stock", form.stock);
@@ -61,10 +84,7 @@ export default function CreateProduct() {
 
   const renderSelectedImage = () => {
 
-    console.log("renderSelectedImage");
-    console.log(selectedFile);
-
-    if(selectedFile) return <img src={selectedImage} alt="Unable to display selected image" className='w-full h-1/2 object-cover'/>;
+    if(selectedImage) return <img src={selectedImage} alt="Unable to display selected image" className='w-full h-1/2 object-cover'/>;
     
     return (
       <>
@@ -92,17 +112,33 @@ export default function CreateProduct() {
           <div className='border-gray-600 border border-dashed rounded-xl flex justify-center items-center h-40 w-full lg:h-5/6 lg:w-5/6 relative'>
             <input type="file" accept='.jpg, .jpeg, .png, .webp' name="product-image" id="product-image-input" className='w-full h-full cursor-pointer opacity-0 absolute' 
               onChange={({target}) => {
+                handleFile(target); 
                 if(target.files){
-                    const file = target.files[0];
+                  const file = target.files[0];
+                  if(file)
                     setSelectedImage(URL.createObjectURL(file));
-                    setSelectedFile(file);
                 }
-            }}
+              }}
             />
             {renderSelectedImage()}
           </div>
-          <div className='hidden lg:block px-4 lg:w-5/6'>
-            {/* Place multiple photos here */}
+          <div className='flex flex-wrap gap-2 mt-2'>
+            {files.map((file, key) => {
+                return (
+                  <div key={key} className="relative overflow-hidden">
+                    <div
+                      onClick={() => {
+                        removeImage(file.name);
+                      }}
+                      className="right-1 hover:text-white cursor-pointer bg-red-400"
+                    >Remove</div>
+                    <img
+                      className="h-20 w-20 rounded-md"
+                      src={URL.createObjectURL(file)}
+                    />
+                  </div>
+                );
+              })}
           </div>
         </section>
         <section  className='p-4 lg:w-1/2'>

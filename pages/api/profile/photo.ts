@@ -46,7 +46,7 @@ export default async function handler(
     imageUrl = imageUrl.substring(imageUrl.indexOf("images"));
 
     try {
-        fs.unlink(path.join(process.cwd(), `public\\${session?.user.image!}`));
+        fs.unlink(path.join(process.cwd(), `public\\${session?.user.image!.substring(session?.user.image!.indexOf("http:\\\\localhost:3000\\"))}`));
 
         // // // CREATE
         const user = await prisma.user.update({

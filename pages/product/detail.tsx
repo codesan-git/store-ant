@@ -51,7 +51,9 @@ interface CartData {
 
 export default function CreateShop({ product, ratings }: FetchData) {
   const [count, setCount] = useState(1);
+  const [index, setIndex] = useState(0);
   const [Subtotal, setSubtotal] = useState(0);
+  const [selectedImage, setSelectedImage] = useState(product.image.split(",")[0]);
   const router = useRouter();
   const { id } = router.query;
 
@@ -103,6 +105,12 @@ export default function CreateShop({ product, ratings }: FetchData) {
     }
   }
 
+  function onImageClick(i: number){
+    let images = product.image.split(",");
+    setSelectedImage(images[i]);
+    setIndex(i)
+  }
+
   useEffect(() => {
     handleCount();
   }, [count]);
@@ -118,17 +126,39 @@ export default function CreateShop({ product, ratings }: FetchData) {
           id="product-information-panel"
           className="mb-10 sm:mb-0 w-full lg:w-2/3"
         >
-          <div id="product-image-container" className="p-4 w-full h-auto flex">
-            <img
-              src={`http://localhost:3000/${product.image}`}
-              onError={({ currentTarget }) => {
-                currentTarget.onerror = null; // prevents looping
-                currentTarget.src =
-                  "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg";
-              }}
-              alt=""
-              className="mx-auto my-auto h-auto"
-            />
+          <div id="product-image-container" className="p-4 w-full h-auto">
+            <div className="w-full h-auto">
+              <img
+                src={`http://localhost:3000/${selectedImage}`}
+                onError={({ currentTarget }) => {
+                  currentTarget.onerror = null; // prevents looping
+                  currentTarget.src =
+                    "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg";
+                }}
+                alt=""
+                className="mx-auto my-auto h-auto"
+              />           
+              <div className="absolute flex w-fit mx-10 transform -translate-y-1/4 left-5 right-5 top-1/2">
+                <button disabled={index === 0 ? true : false} onClick={()=> onImageClick(index - 1)} className="btn btn-circle btn-sm lg:btn-md">❮</button>
+                <button disabled={index === product.image.split(",").length - 1 ? true : false} onClick={()=> onImageClick(index + 1)} className="btn btn-circle btn-sm lg:btn-md">❯</button>
+              </div>
+            </div>
+            <div className="flex h-40 mt-5 gap-x-5">
+              {product.image.split(",").map((image, i)=>(
+                <img
+                  key = {i}
+                  src={`http://localhost:3000/${image}`}
+                  onClick={()=>{onImageClick(i)}}
+                  onError={({ currentTarget }) => {
+                    currentTarget.onerror = null; // prevents looping
+                    currentTarget.src =
+                      "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg";
+                  }}
+                  alt=""
+                  className="mx-auto my-auto w-1/4 h-full"
+                />
+              ))}
+            </div>
           </div>
           <div
             id="product-title-container"

@@ -19,7 +19,9 @@ const readFile = (req: NextApiRequest, saveLocally?: boolean)
         options.filename = (name, ext, path, form) => {
             return Date.now().toString() + "_" + path.originalFilename;
         }
+        options.multiples = true;
     }
+
     const form = formidable(options);
     return new Promise((resolve, reject) => {
       form.parse(req, (err, fields, files) => {
@@ -48,9 +50,20 @@ export default async function handler(
         await fs.mkdir(path.join(process.cwd() + "/public", "/images/products"));
     }    
     const file = files.image;
-    let url = Array.isArray(file) ? file.map((f) => f.filepath) : file.filepath;
-    let imageUrl = String(url);
-    imageUrl = imageUrl.substring(imageUrl.indexOf("images"));
+    let urls = Array.isArray(file) ? file.map((f) => f.filepath) : file.filepath;
+
+    let imageUrl = new Array();
+    if(urls){    
+      if(Array.isArray(urls)){
+        (urls as string[]).forEach((url) => {
+            imageUrl.push(String(url).substring(String(url).indexOf("images")));
+        })
+      } else{
+        imageUrl.push(String(urls).substring(String(urls).indexOf("images")));
+      }
+    }else{
+      imageUrl.push("");
+    }
 
     try {
         // // // CREATE
@@ -62,7 +75,7 @@ export default async function handler(
                 price: Number(price),
                 stock: Number(stock),
                 description: description as string,
-                image: imageUrl
+                image: imageUrl.join(",")
             }
         })
         res.status(200).json({ message: 'product created', data: product });
