@@ -347,7 +347,7 @@ export default function Transaction({ cartItems }: CartItems) {
                                 <figure className="rounded-md h-40 w-40">
                                   {cartItem.product.image ? (
                                     <img
-                                      src={`http://localhost:3000/${cartItem.product.image}`}
+                                      src={`http://localhost:3000/${cartItem.product.image.split(",")[0]}`}
                                       className="h-full w-full bg-no-repeat bg-center bg-cover"
                                     />
                                   ) : (
@@ -401,7 +401,7 @@ export default function Transaction({ cartItems }: CartItems) {
                                 <figure className="rounded-md h-40 w-40">
                                   {cartItem.product.image ? (
                                     <img
-                                      src={`http://localhost:3000/${cartItem.product.image}`}
+                                      src={`http://localhost:3000/${cartItem.product.image.split(",")[0]}`}
                                       className="w-full h-full"
                                     />
                                   ) : (
@@ -471,7 +471,7 @@ export default function Transaction({ cartItems }: CartItems) {
                                 <figure className="rounded-md h-40 w-40">
                                   {cartItem.product.image ? (
                                     <img
-                                      src={`http://localhost:3000/${cartItem.product.image}`}
+                                      src={`http://localhost:3000/${cartItem.product.image.split(",")[0]}`}
                                     />
                                   ) : (
                                     <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg" />
@@ -544,7 +544,7 @@ export default function Transaction({ cartItems }: CartItems) {
                                 <figure className="rounded-md h-40 w-40">
                                   {cartItem.product.image ? (
                                     <img
-                                      src={`http://localhost:3000/${cartItem.product.image}`}
+                                      src={`http://localhost:3000/${cartItem.product.image.split(",")[0]}`}
                                     />
                                   ) : (
                                     <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg" />
@@ -594,7 +594,7 @@ export default function Transaction({ cartItems }: CartItems) {
                                 <figure className="rounded-md h-40 w-40">
                                   {cartItem.product.image ? (
                                     <img
-                                      src={`http://localhost:3000/${cartItem.product.image}`}
+                                      src={`http://localhost:3000/${cartItem.product.image.split(",")[0]}`}
                                     />
                                   ) : (
                                     <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg" />
@@ -660,7 +660,7 @@ export default function Transaction({ cartItems }: CartItems) {
                                 <figure className="rounded-md h-40 w-40">
                                   {cartItem.product.image ? (
                                     <img
-                                      src={`http://localhost:3000/${cartItem.product.image}`}
+                                      src={`http://localhost:3000/${cartItem.product.image.split(",")[0]}`}
                                     />
                                   ) : (
                                     <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg" />
