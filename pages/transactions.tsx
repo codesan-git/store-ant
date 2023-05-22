@@ -582,9 +582,9 @@ export default function Transaction({ cartItems }: CartItems) {
                     className={openTab === 5 ? "block" : "hidden"}
                     id="link5"
                   >
-                    {dikemas.length !== 0 ? (
+                    {dibatalkan.length !== 0 ? (
                       <div>
-                        {dikemas.map((cartItem) => (
+                        {dibatalkan.map((cartItem) => (
                           <div
                             className="card bg-base-100 shadow-xl text-md"
                             key={String(cartItem.id)}
@@ -610,29 +610,6 @@ export default function Transaction({ cartItems }: CartItems) {
                                     <p>{cartItem.product.price}</p>
                                     <p>{cartItem.count}</p>
                                     <p>{cartItem.status}</p>
-                                    {cartItem.status === Status.CANCELING ? (
-                                      <button
-                                        disabled={true}
-                                        className="w-32 btn btn-primary"
-                                      >
-                                        Pembatalan Diajukan
-                                      </button>
-                                    ) : (
-                                      <button
-                                        disabled={
-                                          cartItem.status ===
-                                          Status.CANCEL_REJECTED
-                                            ? true
-                                            : false
-                                        }
-                                        onClick={() =>
-                                          onCancel(Number(cartItem.id))
-                                        }
-                                        className="w-32 btn btn-primary"
-                                      >
-                                        Batalkan
-                                      </button>
-                                    )}
                                   </div>
                                 </div>
                               </div>
