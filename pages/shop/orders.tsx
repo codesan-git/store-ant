@@ -4,7 +4,7 @@ import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import { getSession, useSession } from 'next-auth/react'
 import { prisma } from "../../lib/prisma"
 import Link from 'next/link'
-import ProductCard from '@/components/product_card'
+import ProductCard from '@/pages/components/product_card'
 import Navbar from '../navbar'
 import Footer from '../footer'
 import { Status } from '@prisma/client'
@@ -166,10 +166,10 @@ export default function Transaction({ cartItems }: InferGetServerSidePropsType<t
               <div className="drawer-side">
                   <label htmlFor="my-drawer-2" className="drawer-overlay"></label> 
                   <ul className="menu p-4 w-full bg-base-100 text-base-content">
-                  <li><a>Profile</a></li>
-                  <li><a>Orders</a></li>
-                  <li><a>Notifications</a></li>
-                  <li><a>Vouchers</a></li>
+                    <li><a>Profile</a></li>
+                    <li><a>Orders</a></li>
+                    <li><a>Notifications</a></li>
+                    <li><a>Vouchers</a></li>
                   </ul>
               </div>
           </div>

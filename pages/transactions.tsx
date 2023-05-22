@@ -1,13 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { getSession, useSession } from "next-auth/react";
 import { prisma } from "../lib/prisma";
 import Link from "next/link";
-import ProductCard from "@/components/product_card";
+import ProductCard from "@/pages/components/product_card";
 import Navbar from "./navbar";
 import Footer from "./footer";
-import { Status } from "@prisma/client";
+import { Rating, Status } from "@prisma/client";
 import type { TabsStylesType } from "@material-tailwind/react";
 
 // TABS
@@ -23,6 +23,7 @@ import {
   UserCircleIcon,
   Cog6ToothIcon,
 } from "@heroicons/react/24/solid";
+import ReviewModal from "@/pages/components/transactions/review-modal";
 // END TABS
 
 interface CartItems {
@@ -32,6 +33,7 @@ interface CartItems {
     count: Number;
     price: Number;
     status: Status;
+    Rating: Rating;
   }[];
 }
 
@@ -59,6 +61,12 @@ export default function Transaction({ cartItems }: CartItems) {
 
   const [openTab, setOpenTab] = React.useState(1);
   const [open, setOpen] = React.useState(false);
+  const [currentRateProductName, setCurrentRateProductName] = useState<String>("");
+  const [currentCartItemId, setCurrentCartItemId] = useState<Number>();
+
+  useEffect(() => {
+
+  }, [currentRateProductName, currentCartItemId]);
 
   //  TABS
   const data = [
@@ -199,6 +207,19 @@ export default function Transaction({ cartItems }: CartItems) {
         query: {id: String(id)}
     });
   }
+
+  const onRateClick = (productName: String, cartItemId: Number) => {
+    setCurrentRateProductName(productName); 
+    setCurrentCartItemId(cartItemId);
+  }
+
+  const getCurrentSelectedProductForRate = () => {
+    console.log(`returning ${currentRateProductName} and ${currentCartItemId?.toString()}`);
+    return {
+      currentRateProductName,
+      currentCartItemId
+    };
+  };
 
   return (
     <>
@@ -518,7 +539,7 @@ export default function Transaction({ cartItems }: CartItems) {
                               key={String(cartItem.id)}
                             >
                               <div className="flex">
-                                <div className="card-body py-5 w-full">
+                                <div className="card-body py-5 w-auto">
                                   <figure className="rounded-md h-52 w-52 m-auto">
                                     {cartItem.product.image ? (
                                       <img
@@ -542,7 +563,7 @@ export default function Transaction({ cartItems }: CartItems) {
                                         onClick={() =>
                                           onBayar(Number(cartItem.id))
                                         }
-                                        className="w-full btn btn-primary"
+                                        className="w-32 btn btn-primary"
                                       >
                                         Bayar
                                       </button>
@@ -728,7 +749,7 @@ export default function Transaction({ cartItems }: CartItems) {
                                       <p>{cartItem.product.price}</p>
                                       <p>{cartItem.count}</p>
                                       <p>{cartItem.status}</p>
-                                      <button onClick={()=> onRate(cartItem.id)} className="w-32 btn btn-primary">Nilai</button>
+                                      <label onClick={() => onRateClick(cartItem.product.name,cartItem.id)} htmlFor={`review-modal`} className="w-32 btn btn-primary">Rate</label>
                                     </div>
                                   </div>
                                 </div>
@@ -855,7 +876,8 @@ export default function Transaction({ cartItems }: CartItems) {
             </div>
           </div>
         </div>
-      </div>
+        <ReviewModal htmlElementId={`review-modal`}  selectProductCallback={getCurrentSelectedProductForRate}/>
+      </div> {/*end body div tag*/}
       {/* <Footer /> */}
       
     </>
@@ -883,8 +905,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       product: true,
       count: true,
       status: true,
+      Rating: true
     },
   });
+
+  console.log(cartItems);
   return {
     props: {
       cartItems,
