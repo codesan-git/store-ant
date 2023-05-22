@@ -13,7 +13,7 @@ const ReviewModal = ({htmlElementId: id, selectProductCallback} : Props) => {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]); //TODO: pass the setState function from transactions.tsx
   const [comment, setComment] = useState<string>("");
 
-  const {currentRateProduct, currentCartItemId} = selectProductCallback();
+  const {currentRateProductName, currentCartItemId} = selectProductCallback();
 
   const handleImageUpload = (e: any) => {
 
@@ -134,7 +134,7 @@ const ReviewModal = ({htmlElementId: id, selectProductCallback} : Props) => {
           <div id="product-box" className="p-2 space-x-2 flex flex-row bg-blue-gray-100">
             {/* <img src={`https://localhost:3000/${product.image}`} alt="none" className="w-10 h-10 border object-cover"/> */} {/*This won't work for some reason*/}
             <img src={`https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg`} alt="none" className="w-10 h-10 border object-cover"/> 
-            <h1>{currentRateProduct}</h1>
+            <h1>{currentRateProductName}</h1>
           </div>
           <form id="review-form" action="" className="pt-4 space-y-1">
             <div className="rating rating-lg flex justify-center items-center mb-2">
@@ -150,15 +150,6 @@ const ReviewModal = ({htmlElementId: id, selectProductCallback} : Props) => {
               <label htmlFor="" className="font-extrabold">Komentar</label>
               <textarea value={comment} aria-label="Example: lorem" name="user-comment" id="comment-input-field" onChange={(e) => setComment(e.target.value)} className="h-40 p-2 rounded border border-gray-600"/>
             </div>
-            {/* Trial and error, clean later when all done */}
-            {/* <button type="submit" className='h-10 w-full rounded text-white bg-indigo-700 hover:bg-indigo-900' onClick={e => e.preventDefault()}>
-              Submit
-            </button> */}
-            {/* <label htmlFor={id} className="h-10 w-full rounded text-white bg-indigo-700 hover:bg-indigo-900 hover:cursor-pointer flex justify-center items-center">
-              <button onClick={onSubmit}>
-                Submit
-              </button>
-            </label> */}
           </form>
           <div className="" onClick={onSubmit}>
             <label htmlFor={id} className="h-10 w-full rounded text-white bg-indigo-700 hover:bg-indigo-900 hover:cursor-pointer flex justify-center items-center">

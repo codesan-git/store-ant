@@ -61,12 +61,12 @@ export default function Transaction({ cartItems }: CartItems) {
 
   const [openTab, setOpenTab] = React.useState(1);
   const [open, setOpen] = React.useState(false);
-  const [currentRateProduct, setCurrentRateProduct] = useState<String>("");
+  const [currentRateProductName, setCurrentRateProductName] = useState<String>("");
   const [currentCartItemId, setCurrentCartItemId] = useState<Number>();
 
   useEffect(() => {
 
-  }, [currentRateProduct, currentCartItemId]);
+  }, [currentRateProductName, currentCartItemId]);
 
   //  TABS
   const data = [
@@ -208,10 +208,15 @@ export default function Transaction({ cartItems }: CartItems) {
     });
   }
 
+  const onRateClick = (productName: String, cartItemId: Number) => {
+    setCurrentRateProductName(productName); 
+    setCurrentCartItemId(cartItemId);
+  }
+
   const getCurrentSelectedProductForRate = () => {
-    console.log(`returning ${currentRateProduct} and ${currentCartItemId?.toString()}`);
+    console.log(`returning ${currentRateProductName} and ${currentCartItemId?.toString()}`);
     return {
-      currentRateProduct,
+      currentRateProductName,
       currentCartItemId
     };
   };
@@ -744,8 +749,7 @@ export default function Transaction({ cartItems }: CartItems) {
                                       <p>{cartItem.product.price}</p>
                                       <p>{cartItem.count}</p>
                                       <p>{cartItem.status}</p>
-                                      <label onClick={() => {setCurrentRateProduct(cartItem.product.name); setCurrentCartItemId(cartItem.id)}} htmlFor={`review-modal`} className="w-32 btn btn-primary">Rate</label>
-                                      <ReviewModal htmlElementId={`review-modal`}  selectProductCallback={getCurrentSelectedProductForRate}/>
+                                      <label onClick={() => onRateClick(cartItem.product.name,cartItem.id)} htmlFor={`review-modal`} className="w-32 btn btn-primary">Rate</label>
                                     </div>
                                   </div>
                                 </div>
@@ -872,6 +876,7 @@ export default function Transaction({ cartItems }: CartItems) {
             </div>
           </div>
         </div>
+        <ReviewModal htmlElementId={`review-modal`}  selectProductCallback={getCurrentSelectedProductForRate}/>
       </div> {/*end body div tag*/}
       {/* <Footer /> */}
       
