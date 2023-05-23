@@ -20,7 +20,8 @@ interface Props{
       price: number,
       stock: number,
       category: Category,
-      image: string
+      image: string,
+      rating: number
     }[]
 }
 

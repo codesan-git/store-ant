@@ -51,7 +51,9 @@ interface CartData {
 
 export default function CreateShop({ product, ratings }: FetchData) {
   const [count, setCount] = useState(1);
+  const [index, setIndex] = useState(0);
   const [Subtotal, setSubtotal] = useState(0);
+  const [selectedImage, setSelectedImage] = useState(product.image.split(",")[0]);
   const router = useRouter();
   const { id } = router.query;
 
@@ -103,6 +105,68 @@ export default function CreateShop({ product, ratings }: FetchData) {
     }
   }
 
+  function onImageClick(i: number){
+    let images = product.image.split(",");
+    setSelectedImage(images[i]);
+    setIndex(i)
+  }
+
+   const renderRatingStars = (rating: Number) => { //Ugly hack, do not do this next time
+
+    let markedStars: Boolean[] = [];
+
+    for(let i = 1; i <= 5; i++) {
+      if(i <= rating.valueOf()){
+        markedStars.push(true);
+      }
+      else{
+        markedStars.push(false);
+      }
+    }
+    
+    return (
+      <>
+        <div className="flex flex-row">
+          {markedStars.map((isMarked) => {
+            if(isMarked) return (
+              <>
+                <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="w-6 h-6 fill-yellow-500"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </>
+            );
+
+            return (
+              <>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="w-6 h-6 fill-gray-500"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </>
+            );
+          })}
+        </div>
+      </>
+    );
+   }
+
   useEffect(() => {
     handleCount();
   }, [count]);
@@ -118,17 +182,39 @@ export default function CreateShop({ product, ratings }: FetchData) {
           id="product-information-panel"
           className="mb-10 sm:mb-0 w-full lg:w-2/3"
         >
-          <div id="product-image-container" className="p-4 w-full h-auto flex">
-            <img
-              src={`http://localhost:3000/${product.image}`}
-              onError={({ currentTarget }) => {
-                currentTarget.onerror = null; // prevents looping
-                currentTarget.src =
-                  "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg";
-              }}
-              alt=""
-              className="mx-auto my-auto h-auto"
-            />
+          <div id="product-image-container" className="p-4 w-full h-auto">
+            <div className="w-full h-auto">
+              <img
+                src={`http://localhost:3000/${selectedImage}`}
+                onError={({ currentTarget }) => {
+                  currentTarget.onerror = null; // prevents looping
+                  currentTarget.src =
+                    "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg";
+                }}
+                alt=""
+                className="mx-auto my-auto h-auto"
+              />           
+              <div className="absolute flex w-fit mx-10 transform -translate-y-1/4 left-5 right-5 top-1/2">
+                <button disabled={index === 0 ? true : false} onClick={()=> onImageClick(index - 1)} className="btn btn-circle btn-sm lg:btn-md">❮</button>
+                <button disabled={index === product.image.split(",").length - 1 ? true : false} onClick={()=> onImageClick(index + 1)} className="btn btn-circle btn-sm lg:btn-md">❯</button>
+              </div>
+            </div>
+            <div className="flex h-40 mt-5 gap-x-5">
+              {product.image.split(",").map((image, i)=>(
+                <img
+                  key = {i}
+                  src={`http://localhost:3000/${image}`}
+                  onClick={()=>{onImageClick(i)}}
+                  onError={({ currentTarget }) => {
+                    currentTarget.onerror = null; // prevents looping
+                    currentTarget.src =
+                      "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg";
+                  }}
+                  alt=""
+                  className="mx-auto my-auto w-1/4 h-full"
+                />
+              ))}
+            </div>
           </div>
           <div
             id="product-title-container"
@@ -192,18 +278,6 @@ export default function CreateShop({ product, ratings }: FetchData) {
             <p className="text-justify">
               {product.description}
             </p>
-            {/* <p className="text-justify">
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Fugiat
-              quia doloribus est atque consequuntur in aut, cupiditate, iste
-              velit, corrupti excepturi? Aspernatur maiores doloribus obcaecati
-              possimus sapiente, eos mollitia doloremque.
-            </p>
-            <p className="text-justify">
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Fugiat
-              quia doloribus est atque consequuntur in aut, cupiditate, iste
-              velit, corrupti excepturi? Aspernatur maiores doloribus obcaecati
-              possimus sapiente, eos mollitia doloremque.
-            </p> */}
           </div>
           <div id="store-details" className="p-4 border-b-gray-300 border-b-2">
             <ShopDetailCard shop={product.shop} />
@@ -242,12 +316,13 @@ export default function CreateShop({ product, ratings }: FetchData) {
                             <h2 className="card-title">
                               {rating.productInCart.cart.user?.name}
                             </h2>
-                            <p>{String(rating.rate)}/5</p>
+                            {renderRatingStars(rating.rate)}
                             <p>{rating.comment}</p>
                             {rating.image ? (
                                 <div className="flex gap-x-2">
-                                  {rating.image.split(",").map((image) => (
+                                  {rating.image.split(",").map((image, i) => (
                                     <img
+                                    key={i}
                                       className='object-cover w-64 h-auto border-2 border-gray-600'
                                       src={`http:\\\\localhost:3000\\\\${image}`}                              
                                       onError={({ currentTarget }) => {

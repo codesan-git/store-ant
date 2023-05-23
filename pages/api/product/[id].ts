@@ -19,6 +19,7 @@ const readFile = (req: NextApiRequest, saveLocally?: boolean)
         options.filename = (name, ext, path, form) => {
             return Date.now().toString() + "_" + path.originalFilename;
         }
+        options.multiples = true;
     }
     const form = formidable(options);
     return new Promise((resolve, reject) => {
@@ -36,7 +37,7 @@ export default async function handler(
   const session = await getSession({req})
   const id = req.query.id
   
-  const shop = await prisma.shop.findUnique({
+  const shop = await prisma.shop.findFirst({
     where: {
       userId: session?.user?.id
     },
@@ -74,7 +75,7 @@ export default async function handler(
 
   if(req.method === 'PUT'){
     const { fields, files } = await readFile(req, true);
-    const {name, price, stock, categoryId} = fields
+    const {imageString, name, price, stock, categoryId} = fields
 
     try {
         await fs.readdir(path.join(process.cwd() + "/public", "/images/products"));
@@ -82,7 +83,7 @@ export default async function handler(
         await fs.mkdir(path.join(process.cwd() + "/public", "/images/products"));
     }    
     const file = files.image;
-    let url = Array.isArray(file) ? file.map((f) => f.filepath) : file?.filepath;
+    let urls = Array.isArray(file) ? file.map((f) => f.filepath) : file?.filepath;
 
     try {
       const oldProduct = await prisma.product.findFirst({
@@ -91,29 +92,41 @@ export default async function handler(
           image: true
         }
       });
-    
-    let imageUrl;
-    if(url){    
-      imageUrl = String(url);
-      imageUrl = imageUrl.substring(imageUrl.indexOf("images"));      
-      fs.unlink(path.join(process.cwd(), `public\\${oldProduct?.image!}`));
-    }else{
-      imageUrl = oldProduct?.image;
-    }
+      
+      let imageUrl = new Array();
+      if(imageString !== ""){
+          ((imageString as string).split(",")).forEach((image) => {
+            imageUrl.push(image);
+          })
+      }
+  
+      if(urls){    
+        if(Array.isArray(urls)){
+          (urls as string[]).forEach((url) => {
+              imageUrl.push(String(url).substring(String(url).indexOf("images")));
+          })
+          let oldImages = oldProduct?.image?.split(",");
+          oldImages?.forEach(image => {            
+            fs.unlink(path.join(process.cwd(), `public\\${image}`));
+          });
+        } else{
+          imageUrl.push(String(urls).substring(String(urls).indexOf("images")));
+        }
+      }
       
       const product = await prisma.product.update({
         where: {id: Number(id)},
         data: {
-            categoryId: Number(categoryId),
+            categoryId: Number(categoryId!),
             name: name as string,
             price: Number(price),
             stock: Number(stock),
-            image: imageUrl
+            image: imageUrl.join(",")
         }
       })
       res.status(200).json({ message: 'product updated', data: product });
     } catch (error) {
-        res.status(400).json({ message: "Fail" })
+      res.status(400).json({ message: "Fail" })
     }
   }
 }

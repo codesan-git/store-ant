@@ -7,10 +7,14 @@ const requireAuth: string[] = [
     "/profile",
     "/shop",
     "/address",
+    "/cart",
+    "/transactions",
     "/api/address",
     // "/api/product", //kalau pakai ini getProduct akan terhalang middleware
     "/api/profile",
     "/api/shop",
+    "api/cart",
+    "api/transactions/"
 ];
 
 export async function middleware(request: NextRequest) {

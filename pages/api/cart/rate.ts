@@ -21,6 +21,7 @@ const readFile = (req: NextApiRequest, saveLocally?: boolean)
         }
         options.multiples = true;
     }
+    
     const form = formidable(options);
     return new Promise((resolve, reject) => {
       form.parse(req, (err, fields, files) => {
