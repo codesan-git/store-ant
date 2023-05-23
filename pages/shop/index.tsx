@@ -21,7 +21,7 @@ interface Props{
       stock: number,
       category: Category,
       image: string,
-      rating: number
+      averageRating: number
     }[]
 }
 
@@ -125,7 +125,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
           price: true,
           stock: true,
           category: true,
-          image: true
+          image: true,
+          averageRating: true,
         },
         orderBy: [
           {
