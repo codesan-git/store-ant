@@ -26,18 +26,18 @@ export default function Sales({finishedOrders, soldProducts, cancelled, returned
   return (
     <div>
       <Navbar/>
-      <p className="card-title mt-5">Products Sold: {soldProducts.length} Products in {finishedOrders.length} Orders | {Number.parseFloat(String(finishedOrders.length / allOrders.length * 100)).toFixed(2)}%</p>
+      <p className="card-title mt-5">Products Sold: {soldProducts?.length} Products in {finishedOrders?.length} Orders | {Number.parseFloat(String(finishedOrders?.length / allOrders?.length * 100)).toFixed(2)}%</p>
       <div className='flex-col grid lg:grid-cols-3 gap-10'>
-        {soldProducts.map((sold) => (
+        {soldProducts?.map((sold) => (
           <div
           className="card bg-base-100 shadow-xl text-md w-full"
-          key={String(sold.id)}
+          key={String(sold?.id)}
           >
               <div className="flex">
                   <div className="card-body py-5">
                       <figure className="rounded-md h-40 w-40">
-                          {sold.product.image? (
-                              <img src={`http://localhost:3000/${sold.product.image.split(",")[0]}`}/>
+                          {sold?.product.image? (
+                              <img src={`http://localhost:3000/${sold?.product.image.split(",")[0]}`}/>
                           ) : (
                               <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"/>
                           )}
@@ -46,9 +46,9 @@ export default function Sales({finishedOrders, soldProducts, cancelled, returned
                   <div className="w-full">
                       <div className="py-5 px-10 flex w-full">
                           <div>
-                              <h2 className="card-title">{sold.product.name}</h2>
-                              <p>{sold.product.price}</p>
-                              <p>Amount Sold: {sold.count}</p>
+                              <h2 className="card-title">{sold?.product.name}</h2>
+                              <p>{sold?.product.price}</p>
+                              <p>Amount Sold: {sold?.count}</p>
                           </div>
                       </div>
                   </div>
@@ -56,7 +56,7 @@ export default function Sales({finishedOrders, soldProducts, cancelled, returned
           </div>
         ))}
       </div>
-      <p className="card-title mt-5">Products Returned: {returnedProducts.length} Products in {returnedOrders.length} Orders | {Number.parseFloat(String(returnedOrders.length / allOrders.length * 100)).toFixed(2)}%</p>
+      <p className="card-title mt-5">Products Returned: {returnedProducts?.length} Products in {returnedOrders?.length} Orders | {Number.parseFloat(String(returnedOrders?.length / allOrders?.length * 100)).toFixed(2)}%</p>
       <div className='flex-col grid lg:grid-cols-3 gap-10'>
         {returnedProducts?.map((returned) => (
           <div
@@ -86,8 +86,8 @@ export default function Sales({finishedOrders, soldProducts, cancelled, returned
           </div>
         ))}
       </div>
-      <p className="card-title mt-5">Orders Cancelled: {cancelled.length} Orders | {Number.parseFloat(String(cancelled.length / allOrders.length * 100)).toFixed(2)}%</p>
-      <p className="card-title mt-5">Total Orders: {allOrders.length} Orders</p>
+      <p className="card-title mt-5">Orders Cancelled: {cancelled?.length} Orders | {Number.parseFloat(String(cancelled?.length / allOrders?.length * 100)).toFixed(2)}%</p>
+      <p className="card-title mt-5">Total Orders: {allOrders?.length} Orders</p>
       <p className="card-title mt-5">Total Revenue: Rp.{revenue},-</p>
     </div>
   )
@@ -206,12 +206,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     return {
       props: {
-        finishedOrders,
-        soldProducts,
-        cancelled,
-        returnedOrders,
+        finishedOrders: JSON.parse(JSON.stringify(finishedOrders)),
+        soldProducts: JSON.parse(JSON.stringify(soldProducts)),
+        cancelled: JSON.parse(JSON.stringify(cancelled)),
+        returnedOrders: JSON.parse(JSON.stringify(returnedOrders)),
         returnedProducts: JSON.parse(JSON.stringify(returnedProducts)),
-        allOrders,
+        allOrders: JSON.parse(JSON.stringify(allOrders)),
         revenue
       },
     };
