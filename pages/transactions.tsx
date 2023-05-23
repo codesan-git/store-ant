@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { getSession, useSession } from "next-auth/react";
@@ -23,6 +23,7 @@ import {
   UserCircleIcon,
   Cog6ToothIcon,
 } from "@heroicons/react/24/solid";
+import ReviewModal from "./components/transactions/review-modal";
 // END TABS
 
 interface CartItems {
@@ -59,6 +60,8 @@ export default function Transaction({ cartItems }: CartItems) {
 
   const [openTab, setOpenTab] = React.useState(1);
   const [open, setOpen] = React.useState(false);
+  const [currentRateProductName, setCurrentRateProductName] = useState<String>("");
+  const [currentCartItemId, setCurrentCartItemId] = useState<Number>();
 
   //  TABS
   const data = [
@@ -199,6 +202,19 @@ export default function Transaction({ cartItems }: CartItems) {
       query: { id: String(id) },
     });
   }
+
+  const onRateClick = (productName: String, cartItemId: Number) => {
+    setCurrentRateProductName(productName); 
+    setCurrentCartItemId(cartItemId);
+  }
+
+  const getCurrentSelectedProductForRate = () => {
+    console.log(`returning ${currentRateProductName} and ${currentCartItemId?.toString()}`);
+    return {
+      currentRateProductName,
+      currentCartItemId
+    };
+  };
 
   return (
     <>
@@ -560,13 +576,7 @@ export default function Transaction({ cartItems }: CartItems) {
                                     <p>{cartItem.product.price}</p>
                                     <p>{cartItem.count}</p>
                                     <p>{cartItem.status}</p>
-                                    <button
-                                      disabled={cartItem.rate ? true : false}
-                                      onClick={() => onRate(cartItem.id)}
-                                      className="w-32 btn btn-primary"
-                                    >
-                                      Nilai
-                                    </button>
+                                    <label onClick={() => onRateClick(cartItem.product.name,cartItem.id)} htmlFor={`review-modal`} className="w-32 btn btn-primary">Rate</label>
                                   </div>
                                 </div>
                               </div>
@@ -669,6 +679,7 @@ export default function Transaction({ cartItems }: CartItems) {
             </div>
           </div>
         </div>
+        <ReviewModal htmlElementId={`review-modal`}  selectProductCallback={getCurrentSelectedProductForRate}/>
       </div>
       {/* <Footer /> */}
     </>
