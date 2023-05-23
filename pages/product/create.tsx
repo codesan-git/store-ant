@@ -82,9 +82,18 @@ export default function CreateProduct() {
     }
   }
 
-  const renderSelectedImage = () => {
+  const renderInputMessage = () => {
 
-    if(selectedImage) return <img src={selectedImage} alt="Unable to display selected image" className='w-full h-1/2 object-cover'/>;
+    if(files.length >= 5) return (
+      <>
+        <label htmlFor="product-image-input" className='hover:cursor-pointer flex flex-row'>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+          </svg>
+          &nbsp;You have reached the max limit for photos.
+        </label>          
+      </>
+    );
     
     return (
       <>
@@ -110,7 +119,7 @@ export default function CreateProduct() {
       <form action="" onSubmit={e=>{e.preventDefault(); handleUpload();}} className='lg:flex lg:flex-row'>
         <section className='px-4 lg:w-1/2 flex lg:flex-col justify-center items-center'>
           <div className='border-gray-600 border border-dashed rounded-xl flex justify-center items-center h-40 w-full lg:h-5/6 lg:w-5/6 relative'>
-            <input type="file" accept='.jpg, .jpeg, .png, .webp' name="product-image" id="product-image-input" className='w-full h-full cursor-pointer opacity-0 absolute' 
+            <input disabled={files.length >= 5} type="file" accept='.jpg, .jpeg, .png, .webp' name="product-image" id="product-image-input" className='w-full h-full cursor-pointer opacity-0 absolute' 
               onChange={({target}) => {
                 handleFile(target); 
                 if(target.files){
@@ -120,9 +129,9 @@ export default function CreateProduct() {
                 }
               }}
             />
-            {renderSelectedImage()}
+            {renderInputMessage()}
           </div>
-          <div className='flex flex-wrap gap-2 mt-2'>
+          <div className='flex flex-wrap gap-2 mt-2'> {/**/}
             {files.map((file, key) => {
                 return (
                   <div key={key} className="relative overflow-hidden">
