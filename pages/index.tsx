@@ -34,6 +34,7 @@ interface Products {
     stock: number;
     category: Category;
     image: string;
+    averageRating: number
   }[];
 }
 

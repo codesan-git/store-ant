@@ -21,7 +21,8 @@ export default async function handler(
             price: true,
             stock:true,
             image: true,
-            category: true
+            category: true,
+            averageRating: true
         },
         orderBy,
     })
