@@ -29,12 +29,12 @@ const ProductCard = ( {product, onClick , onEdit, onDelete} : Props ) => {
     }
 
     return (
-      <div id="card" data-theme="garden" className='card glass w-30 h-64 lg:h-auto lg:w-auto hover:cursor-pointer' onClick={onCardClick}>  {/*Find a way to style cursor pointer if onClick is not null*/}
+      <div id="card" data-theme="garden" className='card glass w-30 h-96 lg:h-auto lg:w-auto hover:cursor-pointer' onClick={onCardClick}>  {/*Find a way to style cursor pointer if onClick is not null*/}
         {product.image? (
           <img 
             src={product.image.split(",")[0]} 
             alt="no image available" 
-            className="w-full h-1/2 object-cover rounded-t-2xl"                                         
+            className="w-full h-44 lg:h-44 object-cover rounded-t-2xl"                                         
             onError={({ currentTarget }) => {
               currentTarget.onerror = null; // prevents looping
               currentTarget.src =
