@@ -45,7 +45,20 @@ interface Order {
   name: string;
 }
 
-export default function Home() {
+interface EventData {
+  events: Event[];
+}
+
+interface Event {
+  id: number;
+  eventName: string;
+  eventPath: string;
+  startDate: Date;
+  endDate: Date;
+  image: string;
+}
+
+export default function Home({ events }: EventData) {
   const { data: session } = useSession();
   const [sortSort, setSortSort] = useState<Sort>({ _sort: "id" });
   // const [sortOrder, setSortOrder] = useState<Order>({ _order: "desc" });
@@ -53,6 +66,8 @@ export default function Home() {
   const [sortBy, setSortBy] = useState("id");
   const [products, setProducts] = useState<any[]>([]);
   const [submitted, setSubmitted] = useState(false);
+  const [index, setIndex] = useState(0);
+  const [selectedImage, setSelectedImage] = useState(events[0].image);
 
   const search = useSearchParams();
   const searchQuery = search.get("_sort");
@@ -99,9 +114,7 @@ export default function Home() {
   const onFilter  = (categoryId: number) =>{
     const encodedSearchQuery = encodeURI(categoryId.toString());
     router.push(`http://localhost:3000/filter?q=${encodedSearchQuery}`);
-    //console.log(encodedSearchQuery);
   }
-  
 
   const routeToProduct = (productId: number) => {
     router.push({
@@ -126,9 +139,7 @@ export default function Home() {
       },
       body: JSON.stringify(data),
     }).then((res) => {
-      console.log("Response received");
       if (res.status === 200) {
-        console.log("Response succeeded!");
         setSubmitted(true);
       }
     });
@@ -138,10 +149,15 @@ export default function Home() {
     fetchProduct();
   }, [sortDir, sortBy]);
 
-  // console.log("sortDirHandler", sortDir);
-  // console.log("sortByHandler", sortBy);
-  console.log('data yang kesimpen', useSession().data?.user)
-  console.log('data yang kesimpen2', session?.user.email!)
+  function navigateCarousel(i: number){
+    console.log("CLICK, INDEX: ", i);
+    if(i >= events.length)
+      i = 0;
+    if(i < 0)
+      i = events.length - 1;
+    setSelectedImage(events[i].image);
+    setIndex(i);
+  }
 
   return (
     <>
@@ -159,53 +175,23 @@ export default function Home() {
         </div>
         <div id="product-carousel-container" className="relative flex justify-center">
           <div id="product-carousel" className="carousel w-full rounded-lg lg:w-3/4 lg:h-96">
-            <div id="slide1" className="carousel-item relative w-full transition duration-700 ease-in-out hover:cursor-pointer">
-              <img
-                src="https://images.unsplash.com/photo-1661956603025-8310b2e3036d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
-                className="w-full object-cover"
-              />
-              <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-                <a href="#slide4" className="btn btn-circle btn-sm lg:btn-md">❮</a>
-                <a href="#slide2" className="btn btn-circle btn-sm lg:btn-md">❯</a>
+              <div id="slide1" className="carousel-item relative w-full transition duration-700 ease-in-out hover:cursor-pointer">
+                <img
+                  src={`http://localhost:3000/${selectedImage}`}
+                  className="w-full object-cover"
+                  onClick={() => window.open(events[index].eventPath)}
+                />
+                <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+                  <button onClick={()=> navigateCarousel(index - 1)} className="btn btn-circle btn-sm lg:btn-md">❮</button>
+                  <button onClick={()=> navigateCarousel(index + 1)} className="btn btn-circle btn-sm lg:btn-md">❯</button>
+                </div>
               </div>
-            </div>
-            <div id="slide2" className="carousel-item relative w-full hover:cursor-pointer">
-              <img
-                src="https://images.unsplash.com/photo-1680500055774-7185391be33d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80"
-                className="w-full object-cover"
-              />
-              <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-                <a href="#slide1" className="btn btn-circle btn-sm lg:btn-md">❮</a>
-                <a href="#slide3" className="btn btn-circle btn-sm lg:btn-md">❯</a>
-              </div>
-            </div>
-            <div id="slide3" className="carousel-item relative w-full hover:cursor-pointer">
-              <img
-                src="https://images.unsplash.com/photo-1680371371611-9168e2d7bfcd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2146&q=80"
-                className="w-full object-cover"
-              />
-              <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-                <a href="#slide2" className="btn btn-circle btn-sm lg:btn-md">❮</a>
-                <a href="#slide4" className="btn btn-circle btn-sm lg:btn-md">❯</a>
-              </div>
-            </div>
-            <div id="slide4" className="carousel-item relative w-full hover:cursor-pointer">
-              <img
-                src="https://images.unsplash.com/photo-1679678691010-894374986c54?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1198&q=80"
-                className="w-full object-cover"
-              />
-              <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-                <a href="#slide3" className="btn btn-circle btn-sm lg:btn-md">❮</a>
-                <a href="#slide1" className="btn btn-circle btn-sm lg:btn-md">❯</a>
-              </div>
-            </div>
           </div>
           <div id='slide-button-group-container' className=" absolute w-full bottom-0 left-0">
             <div className="flex justify-center w-full py-2 gap-2">
-              <a href="#slide1" className="text-2xl cursor-pointer text-slate-200 hover:bg-slate-50 hover:rounded-full hover:text-slate-700 active:text-slate-700"><RxDotFilled /></a> 
-              <a href="#slide2" className="text-2xl cursor-pointer text-slate-200 hover:bg-slate-50 hover:rounded-full hover:text-slate-700 active:text-slate-700"><RxDotFilled /></a> 
-              <a href="#slide3" className="text-2xl cursor-pointer text-slate-200 hover:bg-slate-50 hover:rounded-full hover:text-slate-700 active:text-slate-700"><RxDotFilled /></a> 
-              <a href="#slide4" className="text-2xl cursor-pointer text-slate-200 hover:bg-slate-50 hover:rounded-full hover:text-slate-700 active:text-slate-700"><RxDotFilled /></a>
+              {events.map((eventData, i) => (
+                <button onClick={()=> navigateCarousel(i)} className="text-2xl cursor-pointer text-slate-200 hover:bg-slate-50 hover:rounded-full hover:text-slate-700 active:text-slate-700"><RxDotFilled /></button> 
+              ))}
             </div>
           </div>
         </div>
@@ -218,3 +204,13 @@ export default function Home() {
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const events = await prisma.event.findMany();
+
+  return {
+    props: {
+      events: JSON.parse(JSON.stringify(events)),
+    },
+  };
+};

@@ -1,7 +1,8 @@
 import React from "react";
 import { GetServerSideProps } from "next";
-import { getSession } from "next-auth/react";
 import { prisma } from "@/lib/prisma";
+import { useRouter } from "next/router";
+import { signOut } from "next-auth/react";
 
 interface EventData {
   events: Event[];
@@ -17,18 +18,53 @@ interface Event {
 }
 
 export default function Admin({ events }: EventData) {
+  const router = useRouter();
+
+  async function handleSignOut() {
+    signOut({ callbackUrl: "http://localhost:3000/admin/login" });
+  }
 
   async function onEdit(id:string) {
-    
+    router.push({
+      pathname: '/admin/console/event/update/',
+      query: { id: id },
+    })
   }
   
   async function onDelete(id:string) {
-    
+    try{
+      fetch(`http://localhost:3000/api/admin/event/${id}`, {
+        headers: {
+          'Content-Type' : 'application/json'
+        },
+        method: 'DELETE'
+      }).then(()=>{
+        router.replace(router.asPath)
+      })
+    }catch(error){
+        //console.log(error)
+    }
   }
 
   return (
     <div>
-      <p className="card-title">Events</p>
+      <div className="flex w-full justify-between">
+        <p className="card-title">Events</p>  
+        <div className="flex gap-x-5">
+          <button
+            onClick={() => router.push('/admin/console/event/create')}
+            className="w-64 btn btn-primary"
+          >
+            Tambah Event
+          </button>
+          <button
+            onClick={() => handleSignOut()}
+            className="w-32 btn btn-primary"
+          >
+            Log Out
+          </button>
+        </div>
+      </div>
       <div className="mt-5">
         {events.length !== 0 ? (
           <div>
@@ -80,8 +116,7 @@ export default function Admin({ events }: EventData) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getSession(context);
+export const getServerSideProps: GetServerSideProps = async () => {
   const events = await prisma.event.findMany();
 
   return {

@@ -63,19 +63,32 @@ export default async function handler(
     imageUrl.push(oldImage);
   }
 
-  try {
-    const event = await prisma.event.update({
-      where: { id: Number(id) },
-      data: {
-        eventName: eventName as string,
-        eventPath: eventPath as string,
-        startDate: new Date(startDate as string),
-        endDate: new Date(endDate as string),
-        image: imageUrl.join(","),
-      },
-    });
-    res.status(200).json({ message: "product created", data: event });
-  } catch (error) {
-    res.status(400).json({ message: "Fail" });
+  if(req.method === "PUT"){
+    try {
+      const event = await prisma.event.update({
+        where: { id: Number(id) },
+        data: {
+          eventName: eventName as string,
+          eventPath: eventPath as string,
+          startDate: new Date(startDate as string),
+          endDate: new Date(endDate as string),
+          image: imageUrl.join(","),
+        },
+      });
+      res.status(200).json({ message: "product created", data: event });
+    } catch (error) {
+      res.status(400).json({ message: "Fail" });
+    }
+  }
+  
+  if(req.method === "DELETE"){
+    try {
+      const event = await prisma.event.deleteMany({
+        where: { id: Number(id) } 
+      })
+      res.json(event)
+    } catch (error) {
+      //console.log(error)
+    }
   }
 }
