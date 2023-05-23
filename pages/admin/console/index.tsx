@@ -78,7 +78,12 @@ export default function Admin({ events }: EventData) {
                     <figure className="rounded-md h-40 w-40">
                       {event.image ? (
                         <img
-                          src={`http://localhost:3000/${event.image}`}
+                          src={`http://localhost:3000/${event.image}`}                                        
+                          onError={({ currentTarget }) => {
+                            currentTarget.onerror = null; // prevents looping
+                            currentTarget.src =
+                            "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
+                          }}
                         />
                       ) : (
                         <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg" />

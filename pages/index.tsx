@@ -180,7 +180,12 @@ export default function Home({ events }: EventData) {
                 <img
                   src={`http://localhost:3000/${selectedImage}`}
                   className="w-full object-cover"
-                  onClick={() => window.open(events[index].eventPath)}
+                  onClick={() => window.open(events[index].eventPath)}                                        
+                  onError={({ currentTarget }) => {
+                    currentTarget.onerror = null; // prevents looping
+                    currentTarget.src =
+                    "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
+                  }}
                 />
                 <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
                   <button onClick={()=> navigateCarousel(index - 1)} className="btn btn-circle btn-sm lg:btn-md">❮</button>
