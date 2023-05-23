@@ -58,16 +58,16 @@ export default function Sales({finishedOrders, soldProducts, cancelled, returned
       </div>
       <p className="card-title mt-5">Products Returned: {returnedProducts.length} Products in {returnedOrders.length} Orders | {Number.parseFloat(String(returnedOrders.length / allOrders.length * 100)).toFixed(2)}%</p>
       <div className='flex-col grid lg:grid-cols-3 gap-10'>
-        {returnedProducts.map((returned) => (
+        {returnedProducts?.map((returned) => (
           <div
           className="card bg-base-100 shadow-xl text-md w-full"
-          key={String(returned.id)}
+          key={String(returned?.id)}
           >
               <div className="flex">
                   <div className="card-body py-5">
                       <figure className="rounded-md h-40 w-40">
-                          {returned.product.image? (
-                              <img src={`http://localhost:3000/${returned.product.image.split(",")[0]}`}/>
+                          {returned?.product.image? (
+                              <img src={`http://localhost:3000/${returned?.product.image.split(",")[0]}`}/>
                           ) : (
                               <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"/>
                           )}
@@ -76,9 +76,9 @@ export default function Sales({finishedOrders, soldProducts, cancelled, returned
                   <div className="w-full">
                       <div className="py-5 px-10 flex w-full">
                           <div>
-                              <h2 className="card-title">{returned.product.name}</h2>
-                              <p>{returned.product.price}</p>
-                              <p>Amount Returned: {returned.count}</p>
+                              <h2 className="card-title">{returned?.product.name}</h2>
+                              <p>{returned?.product.price}</p>
+                              <p>Amount Returned: {returned?.count}</p>
                           </div>
                       </div>
                   </div>
@@ -210,7 +210,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         soldProducts,
         cancelled,
         returnedOrders,
-        returnedProducts,
+        returnedProducts: JSON.parse(JSON.stringify(returnedProducts)),
         allOrders,
         revenue
       },
