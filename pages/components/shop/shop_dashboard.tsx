@@ -85,7 +85,6 @@ const ShopDashboard = ({ shop }: Props) => {
               </li>
             </ul>
           </li>
-            {/*Create dropdown menu here using https://tailwindcomponents.com/component/tailwind-css-sidebar-dropdown*/}
           <li>
             <Link href={''} className="flex p-2 text-base font-normal rounded-lg transition duration-200 hover:bg-gray-300">
               <HiChartPie className="h-6 w-6"/>
