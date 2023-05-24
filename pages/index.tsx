@@ -191,7 +191,7 @@ export default function Home({ events }: EventData) {
           <div id='slide-button-group-container' className=" absolute w-full bottom-0 left-0">
             <div className="flex justify-center w-full py-2 gap-2">
               {events.map((eventData, i) => (
-                <button onClick={()=> navigateCarousel(i)} className="text-2xl cursor-pointer text-slate-200 hover:bg-slate-50 hover:rounded-full hover:text-slate-700 active:text-slate-700"><RxDotFilled /></button> 
+                <button key={i} onClick={()=> navigateCarousel(i)} className="text-2xl cursor-pointer text-slate-200 hover:bg-slate-50 hover:rounded-full hover:text-slate-700 active:text-slate-700"><RxDotFilled /></button> 
               ))}
             </div>
           </div>
