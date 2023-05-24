@@ -32,7 +32,11 @@ const ShopDashboard = ({ shop }: Props) => {
         </div>
         <h1 className="font-bold">{shop.shopName}</h1>
         <h1 className="font-bold">Rating: {shop.averageRating.toString()}/5</h1>
-        <button className="rounded-md bg-green-500 hover:bg-green-400 transition duration-200 p-1 w-24 text-white">Edit</button>
+        <button className="rounded-md bg-green-500 hover:bg-green-400 transition duration-200 p-1 w-24 text-white">
+          <Link href={'/shop/profile'}>
+            Edit
+          </Link>
+        </button>
       </div>
       <div id="shop-stats" className="py-2 px-4 border border-y-gray-600">
         <h1>Balance: Rp.30.000,00</h1>
