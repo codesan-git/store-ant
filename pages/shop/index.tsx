@@ -61,7 +61,7 @@ export default function Profile({shop, products} : Props) {
       <>
       <Navbar />
         <div className='flex mx-10 my-10'>
-            <ShopDashboard/>
+            <ShopDashboard shop={shop}/>
             <div id='shop-dashboard' className='w-1/6 ml-5 -mt-10'>
                 <div className='text-center justify-center mt-10'>
                     <div className="avatar">
@@ -84,7 +84,7 @@ export default function Profile({shop, products} : Props) {
                     </ul>
                 </div>
             </div>
-            <div id='product-list' className='w-full mx-10 bg-gray-100 py-5'>
+            {/* <div id='product-list' className='w-full bg-gray-100 py-5'>
                 <section className="w-4/5 mx-auto flex flex-col gap-10">
                     <div className="title">
                     <div className='flex'>
@@ -101,7 +101,7 @@ export default function Profile({shop, products} : Props) {
                           <ProductCard product={product} onEdit={editProduct} onDelete={deleteProduct} key={product.id}/>                        
                     ) )}
                 </div>
-            </div>
+            </div> */}
         </div>
         <Footer />
         </>
