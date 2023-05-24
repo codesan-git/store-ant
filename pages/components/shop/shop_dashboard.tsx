@@ -1,7 +1,12 @@
 import { User } from "next-auth";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { HiHome, HiChartPie, HiChatBubbleBottomCenterText, HiShoppingBag, HiCurrencyDollar } from "react-icons/hi2";
+import { useState } from "react";
+import { 
+  HiHome, HiChartPie, HiChatBubbleBottomCenterText, 
+  HiShoppingBag, HiCurrencyDollar, HiChevronDown,
+  HiChevronUp
+} from "react-icons/hi2";
 
 interface Props {
   shop:{
@@ -14,14 +19,16 @@ interface Props {
 const ShopDashboard = ({ shop }: Props) => {
 
   const {data: session} = useSession();
+  
+  const [isSalesDropdownClosed, setIsSalesDropdownClosed] = useState<Boolean>(true);
 
   return(
     <>
       <div id='dashboard' className="lg:shadow-md lg:w-1/6"> {/*Try to use drawer here*/}
         <div id="shop-profile" className="flex flex-col justify-center items-center px-2 py-4 space-y-2 border border-b-black">
           <div id="profile-photo-container" className="avatar">
-            <div className="w-24 rounded-full">
-              <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg" alt="" />
+            <div className="w-24 rounded-full border border-black">
+              <img src={session?.user.image!} alt="" />
             </div>
           </div>
           <h1 className="font-bold">{shop.shopName}</h1>
@@ -34,32 +41,50 @@ const ShopDashboard = ({ shop }: Props) => {
         <div id="dashboard-navigation" className="p-2">
           <ul className="">
             <li>
-              <Link href={''} className="flex p-2 text-base font-normal rounded-2xl transition duration-200 hover:bg-gray-300">
+              <Link href={''} className="flex p-2 text-base font-normal rounded-lg transition duration-200 hover:bg-gray-300">
                 <HiHome className="h-6 w-6"/>
                 <span className="ml-3">Home</span>
               </Link>
             </li>
             <li>
-              <Link href={''} className="flex p-2 text-base font-normal rounded-2xl transition duration-200 hover:bg-gray-300">
+              <Link href={''} className="flex p-2 text-base font-normal rounded-lg transition duration-200 hover:bg-gray-300">
                 <HiChatBubbleBottomCenterText className="h-6 w-6"/>
                 <span className="ml-3">Chat</span>
               </Link>
             </li>
             <li>
-              <Link href={''} className="flex p-2 text-base font-normal rounded-2xl transition duration-200 hover:bg-gray-300">
+              <Link href={''} className="flex p-2 text-base font-normal rounded-lg transition duration-200 hover:bg-gray-300">
                 <HiShoppingBag className="h-6 w-6"/>
                 <span className="ml-3">Products</span>
               </Link>
             </li>
             <li>
-              <Link href={''} className="flex p-2 text-base font-normal rounded-2xl transition duration-200 hover:bg-gray-300">
+              <button type="button" onClick={() => setIsSalesDropdownClosed(!isSalesDropdownClosed)} className="flex items-center whitespace-nowrap w-full p-2 text-base font-normal rounded-lg transition duration-200 hover:bg-gray-300" >
                 <HiCurrencyDollar className="h-6 w-6"/>
-                <span className="ml-3">Sales</span>
-              </Link>
+                <span className="flex-1 ml-3 text-left">Sales</span>
+                {isSalesDropdownClosed ? <HiChevronDown className="h-6 w-6"/> : <HiChevronUp className="h-6 w-6"/>}
+              </button>
+              <ul id="sales-ul-dropdown" hidden={isSalesDropdownClosed.valueOf()} className="transition duration-75 bg-gray-200">
+                <li>
+                  <Link href={''} className="flex p-2 pl-11 text-base font-normal rounded-lg transition duration-200 hover:bg-gray-300">
+                    Orders
+                  </Link>
+                </li>
+                <li>
+                  <Link href={''} className="flex p-2 pl-11 text-base font-normal rounded-lg transition duration-200 hover:bg-gray-300">
+                    Complaints
+                  </Link>
+                </li>
+                <li>
+                  <Link href={''} className="flex p-2 pl-11 text-base font-normal rounded-lg transition duration-200 hover:bg-gray-300">
+                    Reviews
+                  </Link>
+                </li>
+              </ul>
             </li>
               {/*Create dropdown menu here using https://tailwindcomponents.com/component/tailwind-css-sidebar-dropdown*/}
             <li>
-              <Link href={''} className="flex p-2 text-base font-normal rounded-2xl transition duration-200 hover:bg-gray-300">
+              <Link href={''} className="flex p-2 text-base font-normal rounded-lg transition duration-200 hover:bg-gray-300">
                 <HiChartPie className="h-6 w-6"/>
                 <span className="ml-3">Stats</span>
               </Link>
