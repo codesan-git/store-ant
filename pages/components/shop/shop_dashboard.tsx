@@ -39,7 +39,7 @@ const ShopDashboard = ({ shop }: Props) => {
         </button>
       </div>
       <div id="shop-stats" className="py-2 px-4 border border-y-gray-600">
-        <h1>Balance: Rp.30.000,00</h1>
+        <h1>Kas: Rp.30.000,00</h1>
       </div>
       <div id="dashboard-navigation" className="p-2">
         <ul className="">

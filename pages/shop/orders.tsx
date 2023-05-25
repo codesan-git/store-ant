@@ -8,30 +8,31 @@ import ProductCard from '@/pages/components/product_card'
 import Navbar from '../navbar'
 import Footer from '../footer'
 import { Status } from '@prisma/client'
+import ShopDashboard from '../components/shop/shop_dashboard'
 
 interface CartItems {
-    cartItems: {
-      id: Number;
-      product: Product;
-      count: Number;
-      price: Number;
-      status: Status;
-    }[];
+  cartItems: {
+    id: Number;
+    product: Product;
+    count: Number;
+    price: Number;
+    status: Status;
+  }[];
 }
 
 interface Product {
-    id: string;
-    name: string;
-    price: number;
-    stock: number;
-    image: string;
+  id: string;
+  name: string;
+  price: number;
+  stock: number;
+  image: string;
 }
 
 interface CartId {
-    id: Number;
+  id: Number;
 }
 
-export default function Transaction({ cartItems }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Orders({ cartItems, shop }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
   const{data:session} = useSession();
   let dikemas = new Array();
@@ -43,32 +44,32 @@ export default function Transaction({ cartItems }: InferGetServerSidePropsType<t
   if(cartItems){
     let i: number;
     for(i = 0; i < cartItems.length; i++){
-        if(cartItems[i].status === Status.PACKING || cartItems[i].status === Status.CANCELING || cartItems[i].status === Status.CANCEL_REJECTED)
-            dikemas.push(cartItems[i]);
+      if(cartItems[i].status === Status.PACKING || cartItems[i].status === Status.CANCELING || cartItems[i].status === Status.CANCEL_REJECTED)
+        dikemas.push(cartItems[i]);
     }
     console.log(dikemas);
     
     for(i = 0; i < cartItems.length; i++){
-        if(cartItems[i].status === Status.DELIVERING || cartItems[i].status === Status.RETURNING)
-            dikirim.push(cartItems[i]);
+      if(cartItems[i].status === Status.DELIVERING || cartItems[i].status === Status.RETURNING)
+        dikirim.push(cartItems[i]);
     }
     console.log(dikirim);
     
     for(i = 0; i < cartItems.length; i++){
-        if(cartItems[i].status === Status.FINISHED)
-            selesai.push(cartItems[i]);
+      if(cartItems[i].status === Status.FINISHED)
+        selesai.push(cartItems[i]);
     }
     console.log(selesai);
     
     for(i = 0; i < cartItems.length; i++){
-        if(cartItems[i].status === Status.CANCELED)
-            dibatalkan.push(cartItems[i]);
+      if(cartItems[i].status === Status.CANCELED)
+        dibatalkan.push(cartItems[i]);
     }
     console.log(dibatalkan);
     
     for(i = 0; i < cartItems.length; i++){
-        if(cartItems[i].status === Status.RETURNED)
-            dikembalikan.push(cartItems[i]);
+      if(cartItems[i].status === Status.RETURNED)
+        dikembalikan.push(cartItems[i]);
     }
     console.log(dikembalikan);
   }
@@ -152,27 +153,7 @@ export default function Transaction({ cartItems }: InferGetServerSidePropsType<t
     <>
       <Navbar />
       <div className='flex mx-10 my-10'>
-          <div className='w-1/6 ml-5 -mt-10'>
-              <div className='text-center justify-center mt-10'>
-                  <div className="avatar">
-                      <div className="w-24 rounded-full">
-                          <img src={session?.user?.image!} width="300" height="300" />
-                      </div>
-                  </div>
-                  <div className='details font-bold text-lg'>
-                      <h5>{session?.user?.email}</h5>
-                  </div>
-              </div>
-              <div className="drawer-side">
-                  <label htmlFor="my-drawer-2" className="drawer-overlay"></label> 
-                  <ul className="menu p-4 w-full bg-base-100 text-base-content">
-                    <li><a>Profile</a></li>
-                    <li><a>Orders</a></li>
-                    <li><a>Notifications</a></li>
-                    <li><a>Vouchers</a></li>
-                  </ul>
-              </div>
-          </div>
+          <ShopDashboard shop={shop}/>
           <div className="w-full">
             <div className='w-full mx-10 bg-gray-100 py-5'>
                 <section className="w-full mx-auto flex flex-col gap-10">
@@ -409,6 +390,7 @@ export default function Transaction({ cartItems }: InferGetServerSidePropsType<t
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context);
+
   const shop = await prisma.shop.findFirst({
     where:{userId: session?.user?.id!}
   })
@@ -427,6 +409,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   })
   return {
     props: {
+      shop,
       cartItems,
     },
   };
