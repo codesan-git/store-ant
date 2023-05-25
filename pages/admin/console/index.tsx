@@ -58,6 +58,12 @@ export default function Admin({ events }: EventData) {
             Tambah Event
           </button>
           <button
+            onClick={() => router.push('/admin/console/complain/')}
+            className="w-64 btn btn-primary"
+          >
+            Lihat Pengajuan Pengembalian
+          </button>
+          <button
             onClick={() => handleSignOut()}
             className="w-32 btn btn-primary"
           >
@@ -114,7 +120,7 @@ export default function Admin({ events }: EventData) {
             ))}
           </div>
         ) : (
-          <p>No on going transaction</p>
+          <p>No on going events</p>
         )}
       </div>
     </div>
