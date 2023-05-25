@@ -58,6 +58,12 @@ export default function Admin({ events }: EventData) {
             Tambah Event
           </button>
           <button
+            onClick={() => router.push('/admin/console/complain/')}
+            className="w-64 btn btn-primary"
+          >
+            Lihat Pengajuan Pengembalian
+          </button>
+          <button
             onClick={() => handleSignOut()}
             className="w-32 btn btn-primary"
           >
@@ -78,7 +84,12 @@ export default function Admin({ events }: EventData) {
                     <figure className="rounded-md h-40 w-40">
                       {event.image ? (
                         <img
-                          src={`http://localhost:3000/${event.image}`}
+                          src={`http://localhost:3000/${event.image}`}                                        
+                          onError={({ currentTarget }) => {
+                            currentTarget.onerror = null; // prevents looping
+                            currentTarget.src =
+                            "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
+                          }}
                         />
                       ) : (
                         <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg" />
@@ -109,7 +120,7 @@ export default function Admin({ events }: EventData) {
             ))}
           </div>
         ) : (
-          <p>No on going transaction</p>
+          <p>No on going events</p>
         )}
       </div>
     </div>

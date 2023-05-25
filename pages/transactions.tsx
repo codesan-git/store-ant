@@ -111,14 +111,19 @@ export default function Transaction({ cartItems }: CartItems) {
     for (i = 0; i < cartItems.length; i++) {
       if (
         cartItems[i].status === Status.DELIVERING ||
-        cartItems[i].status === Status.RETURNING
+        cartItems[i].status === Status.RETURNING || 
+        cartItems[i].status === Status.NEED_ADMIN_REVIEW
       )
         dikirim.push(cartItems[i]);
     }
     console.log(dikirim);
 
     for (i = 0; i < cartItems.length; i++) {
-      if (cartItems[i].status === Status.FINISHED) selesai.push(cartItems[i]);
+      if (
+          cartItems[i].status === Status.FINISHED || 
+          cartItems[i].status === Status.RETURN_REJECTED
+      ) 
+        selesai.push(cartItems[i]);
     }
     console.log(selesai);
 
@@ -181,25 +186,28 @@ export default function Transaction({ cartItems }: CartItems) {
   }
 
   async function onReturn(id: Number) {
-    const cartId: CartId = { id: id };
-    try {
-      fetch("http://localhost:3000/api/cart/return", {
-        body: JSON.stringify(cartId),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "PUT",
-      }).then(() => router.reload());
-    } catch (error) {
-      //console.log(error)
-    }
+    router.push({
+      pathname: "http://localhost:3000/complain/create",
+      query: {id: String(id)}
+    })
+    // const cartId: CartId = { id: id };
+    // try {
+    //   fetch("http://localhost:3000/api/cart/return", {
+    //     body: JSON.stringify(cartId),
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     method: "PUT",
+    //   }).then(() => router.reload());
+    // } catch (error) {
+    //   //console.log(error)
+    // }
   }
 
-  async function onRate(id: Number) {
-    console.log("CLICK, ID: ", id);
+  async function onDetail(id: string) {
     router.push({
-      pathname: "http://localhost:3000/rate",
-      query: { id: String(id) },
+      pathname: "/complain/detail",
+      query: { id: id },
     });
   }
 
@@ -504,33 +512,50 @@ export default function Transaction({ cartItems }: CartItems) {
                                     <p>{cartItem.count}</p>
                                     <p>{cartItem.status}</p>
                                     {cartItem.status === Status.RETURNING ? (
-                                      <button
-                                        disabled={true}
-                                        className="w-32 btn btn-primary"
-                                      >
-                                        Pengembalian Diajukan
-                                      </button>
-                                    ) : (
-                                      <div className="flex gap-x-2">
-                                        <button className="w-16 btn btn-primary">
-                                          Lacak
-                                        </button>
+                                      <div className="flex gap-x-5">
                                         <button
-                                          onClick={() =>
-                                            onFinish(Number(cartItem.id))
-                                          }
-                                          className="w-16 btn btn-primary"
-                                        >
-                                          Selesai
-                                        </button>
-                                        <button
-                                          onClick={() =>
-                                            onReturn(Number(cartItem.id))
-                                          }
+                                          disabled={true}
                                           className="w-32 btn btn-primary"
                                         >
-                                          Kembalikan
+                                          Pengembalian Diajukan
                                         </button>
+                                        
+                                        <button
+                                          className="w-16 btn btn-primary"
+                                          onClick={() => onDetail(cartItem.id.toString())}
+                                        >
+                                          Lihat
+                                        </button>
+                                      </div>
+                                    ) : (
+                                      <div>
+                                        {cartItem.status === Status.NEED_ADMIN_REVIEW ? (
+                                          <div>
+                                            <p>Menunggu review admin untuk pengembalian</p>
+                                          </div>
+                                        ) : (
+                                          <div className="flex gap-x-2">
+                                            <button className="w-16 btn btn-primary">
+                                              Lacak
+                                            </button>
+                                            <button
+                                              onClick={() =>
+                                                onFinish(Number(cartItem.id))
+                                              }
+                                              className="w-16 btn btn-primary"
+                                            >
+                                              Selesai
+                                            </button>
+                                            <button
+                                              onClick={() =>
+                                                onReturn(Number(cartItem.id))
+                                              }
+                                              className="w-32 btn btn-primary"
+                                            >
+                                              Kembalikan
+                                            </button>
+                                          </div>
+                                        )}
                                       </div>
                                     )}
                                   </div>

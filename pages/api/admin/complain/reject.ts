@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
-import { prisma } from "../../../lib/prisma"
+import { prisma } from "../../../../lib/prisma"
 import { Status } from '@prisma/client'
 
 export default async function handler(
@@ -18,7 +18,7 @@ export default async function handler(
     const productInCart = await prisma.productInCart.update({
         where:{id: Number(id)},
         data:{
-            status: Status.FINISHED
+            status: Status.RETURN_REJECTED
         }
     })
     res.status(200).json({ message: "Success!" })
