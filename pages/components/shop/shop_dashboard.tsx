@@ -34,7 +34,7 @@ const ShopDashboard = ({ shop }: Props) => {
         <h1 className="font-bold">Rating: {shop.averageRating.toString()}/5</h1>
         <button className="rounded-md bg-green-500 hover:bg-green-400 transition duration-200 p-1 w-24 text-white">
           <Link href={'/shop/profile'} className="flex justify-center items-center">
-            Edit
+            Edit Toko
           </Link>
         </button>
       </div>
