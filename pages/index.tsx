@@ -9,7 +9,7 @@ import { HiShoppingCart } from "react-icons/hi";
 import { RxDotFilled } from "react-icons/rx";
 import Navbar from "./navbar";
 import Footer from "./footer";
-import ProductCard from "@/pages/components/product_card";
+import ProductCard from "@/components/index/product_card";
 import styles from "../styles/Home.module.css";
 
 // import 'primereact/resources/themes/lara-light-indigo/theme.css';
@@ -20,7 +20,7 @@ import { useState, Dispatch, useEffect } from "react";
 import useSWR from "swr";
 import { useSearchParams } from "next/navigation";
 import axios from "axios";
-import CategoryListItem from "@/pages/components/category_list_item";
+import CategoryListItem from "@/components/index/category_list_item";
 
 async function handleGoogleSignOut() {
   signOut({ callbackUrl: "http://localhost:3000/login" });
@@ -180,7 +180,12 @@ export default function Home({ events }: EventData) {
                 <img
                   src={`http://localhost:3000/${selectedImage}`}
                   className="w-full object-cover"
-                  onClick={() => window.open(events[index].eventPath)}
+                  onClick={() => window.open(events[index].eventPath)}                                        
+                  onError={({ currentTarget }) => {
+                    currentTarget.onerror = null; // prevents looping
+                    currentTarget.src =
+                    "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
+                  }}
                 />
                 <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
                   <button onClick={()=> navigateCarousel(index - 1)} className="btn btn-circle btn-sm lg:btn-md">❮</button>

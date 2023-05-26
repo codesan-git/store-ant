@@ -28,10 +28,17 @@ enum Status {
   DELIVERING
   FINISHED
   RETURNING
+  NEED_ADMIN_REVIEW
   RETURNED
+  RETURN_REJECTED
   CANCELING
   CANCELED
   CANCEL_REJECTED
+}
+
+enum ComplainStatus {
+  OPEN
+  CLOSED
 }
 
 model Account {
@@ -156,6 +163,7 @@ model ProductInCart {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @default(now())
   Rating       Rating?
+  Complain     Complain?
 
   cart Cart @relation(fields: [cartId], references: [id], onDelete: Cascade)
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
@@ -178,6 +186,26 @@ model Event {
   image           String
   eventPath       String
   eventName       String
+}
+
+model Complain {
+  id                Int @id @default(autoincrement())
+  productInCartId   Int @map("productInCart_id") @unique
+  image             String
+  description       String
+  status            ComplainStatus @default(OPEN)
+  ShopComment       ShopComment?
+
+  productInCart ProductInCart @relation(fields: [productInCartId], references: [id], onDelete: Cascade)
+}
+
+model ShopComment {
+  id                Int @id @default(autoincrement())
+  complainId        Int @map("Complain_id") @unique
+  image             String
+  description       String
+  
+  complain Complain @relation(fields: [complainId], references: [id], onDelete: Cascade)
 }
 
 model VerificationToken {

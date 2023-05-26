@@ -4,11 +4,11 @@ import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import { getSession, useSession } from 'next-auth/react'
 import { prisma } from "../../lib/prisma"
 import Link from 'next/link'
-import ProductCard from '@/pages/components/product_card'
+import ProductCard from '@/components/product_card'
 import Navbar from '../navbar'
 import Footer from '../footer'
 import { Status } from '@prisma/client'
-import ShopDashboard from '../components/shop/shop_dashboard'
+import ShopDashboard from '../../components/shop/shop_dashboard'
 
 interface CartItems {
   cartItems: {
@@ -50,14 +50,14 @@ export default function Orders({ cartItems, shop }: InferGetServerSidePropsType<
     console.log(dikemas);
     
     for(i = 0; i < cartItems.length; i++){
-      if(cartItems[i].status === Status.DELIVERING || cartItems[i].status === Status.RETURNING)
-        dikirim.push(cartItems[i]);
+        if(cartItems[i].status === Status.DELIVERING || cartItems[i].status === Status.RETURNING || cartItems[i].status === Status.NEED_ADMIN_REVIEW)
+            dikirim.push(cartItems[i]);
     }
     console.log(dikirim);
     
     for(i = 0; i < cartItems.length; i++){
-      if(cartItems[i].status === Status.FINISHED)
-        selesai.push(cartItems[i]);
+        if(cartItems[i].status === Status.FINISHED || cartItems[i].status === Status.RETURN_REJECTED)
+            selesai.push(cartItems[i]);
     }
     console.log(selesai);
     
@@ -243,8 +243,16 @@ export default function Orders({ cartItems, shop }: InferGetServerSidePropsType<
                                                     <button onClick={() => onFinish(Number(cartItem.id))} className="w-16 btn btn-primary">Tolak</button>                                               
                                                 </div>            
                                             ) : (
-                                                <div className="flex gap-x-2">
-                                                    <button className="w-16 btn btn-primary">Lacak</button>                                                
+                                                <div>
+                                                    {cartItem.status === Status.NEED_ADMIN_REVIEW? (
+                                                        <div>
+                                                            <p>Menunggu review admin untuk pengembalian</p>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="flex gap-x-2">
+                                                            <button className="w-16 btn btn-primary">Lacak</button>                                                
+                                                        </div>
+                                                    )}
                                                 </div>
                                             )}  
                                         </div>
