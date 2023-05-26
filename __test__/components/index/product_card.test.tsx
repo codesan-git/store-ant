@@ -31,6 +31,7 @@ describe('Product Card', () => {
 
   it('should render a product correctly when it is given a product only', async () => {
 
+    //  ARRANGE
     const component = <ProductCard product={dummyProduct}/>; //TODO: move to beforeEach();
 
     const result = render(component);
@@ -40,6 +41,9 @@ describe('Product Card', () => {
     const productPrice = await result.findByTestId('product-price');
     const productStock = await result.findByTestId('product-stock');
 
+    //  ACT
+
+    //  ASSERT
     expect(productTitle).toHaveTextContent(dummyProduct.name);
     expect(productCategory).toHaveTextContent(dummyProduct.category?.category!);
     expect(productPrice).toHaveTextContent(`Rp. ${dummyProduct.price}`);
