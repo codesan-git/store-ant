@@ -5,8 +5,9 @@ import { getSession } from "next-auth/react";
 import Navbar from "../navbar";
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import ShopDetailCard from "@/components/shop_detail_card";
+import ShopDetailCard from "@/components/product/shop_detail_card";
 import { Shop, User } from "@prisma/client";
+import Link from "next/link";
 
 interface FetchData {
   product: {
@@ -177,6 +178,24 @@ export default function CreateShop({ product, ratings }: FetchData) {
         <title>{product.name} | Store.ant</title>
       </Head>
       <Navbar />
+      <div id='breadcrumb' className='breadcrumbs my-8'>
+          <ul>
+            <li>
+              <Link href={{
+                pathname: '/'
+              }}>Home</Link>
+            </li>
+            <li>
+              <Link href={{
+                pathname: '/filter',
+                query: {
+                  q: Number(product.category.id)
+                }
+              }}>{product.category.category}</Link>
+            </li>
+            <li>{product.name}</li>
+          </ul>
+      </div>
       <div className="sm:flex sm:flex-row">
         <section
           id="product-information-panel"

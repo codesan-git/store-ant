@@ -3,8 +3,9 @@ import Head from 'next/head';
 import Navbar from './navbar';
 import Footer from './footer';
 import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Product } from '@prisma/client';
+import { Category, Product } from '@prisma/client';
 import useSWR from 'swr';
 import ProductCard from '@/components/index/product_card';
 
@@ -18,6 +19,17 @@ const fetchProducts = async(url: string) => {
     return response.json();
 }
 
+const fetchCategoryName = async (url: string) => {
+
+  const response = await fetch(url);
+
+  if(!response.ok) {
+    throw new Error("failed");
+
+  }
+  return response.json();
+}
+
 export default function Search() {
   const search = useSearchParams();
   const searchQuery = search.get('q');
@@ -29,9 +41,16 @@ export default function Search() {
     fetchProducts
   )
 
+  const {data: categoryData, isLoading:waitingForCategory} = useSWR<{category: Category}>(
+    `/api/category/${encodedSearchQuery}`,
+    fetchCategoryName
+  );
+
   if(!data?.products){
     return null;
   }
+
+  console.log(`Fetched Category data: ${categoryData?.category.category}`);
 
   return (
     <div>
@@ -42,7 +61,17 @@ export default function Search() {
 
       {/* Content */}
       <div className="w-3/4 mx-auto">
-        <div className="px-8 my-8 flex-col grid lg:grid-cols-4 gap-10">
+        <div id='breadcrumb' className='breadcrumbs my-8'>
+          <ul>
+            <li>
+              <Link href={{
+                pathname: '/'
+              }}>Home</Link>
+            </li>
+            <li>{categoryData?.category.category}</li>
+          </ul>
+        </div>
+        <div className="px-8 flex-col grid lg:grid-cols-4 gap-10">
           {data!.products.map((product) => (
             <div
               data-theme="garden"
