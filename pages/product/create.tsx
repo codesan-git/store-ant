@@ -167,7 +167,7 @@ export default function CreateProduct() {
                 onChange={e => {e.preventDefault(); setForm({...form, categoryId: e.target.value})}} 
               >
                 {data.categories.map(category =>(
-                        <option value={category.id} key={category.id}>{category.category}</option>
+                  <option value={category.id} key={category.id}>{category.category}</option>
                 ))}
               </select>
             </div>
