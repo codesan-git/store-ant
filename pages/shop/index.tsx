@@ -4,7 +4,7 @@ import { GetServerSideProps } from 'next'
 import { getSession, useSession } from 'next-auth/react'
 import { prisma } from "../../lib/prisma"
 import Link from 'next/link'
-import ProductCard from '@/components/product_card'
+import ProductCard from '@/components/index/product_card';
 import Navbar from '../navbar'
 import Footer from '../footer'
 import ShopDashboard from '../../components/shop/shop_dashboard'
