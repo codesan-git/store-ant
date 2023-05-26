@@ -4,11 +4,11 @@ import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import { getSession, useSession } from 'next-auth/react'
 import { prisma } from "../../lib/prisma"
 import Link from 'next/link'
-import ProductCard from '@/pages/components/product_card'
+import ProductCard from '@/components/product_card'
 import Navbar from '../navbar'
 import Footer from '../footer'
 import { Status } from '@prisma/client'
-import ShopDashboard from '../components/shop/shop_dashboard'
+import ShopDashboard from '../../components/shop/shop_dashboard'
 
 interface CartItems {
   cartItems: {

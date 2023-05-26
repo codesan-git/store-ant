@@ -5,7 +5,7 @@ import { getSession } from "next-auth/react";
 import Navbar from "../navbar";
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import ShopDetailCard from "@/pages/components/shop_detail_card";
+import ShopDetailCard from "@/components/shop_detail_card";
 import { Shop, User } from "@prisma/client";
 
 interface FetchData {

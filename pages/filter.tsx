@@ -6,7 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { Product } from '@prisma/client';
 import useSWR from 'swr';
-import ProductCard from '@/pages/components/product_card';
+import ProductCard from '@/components/product_card';
 
 const fetchProducts = async(url: string) => {
     const response = await fetch(url);

@@ -4,7 +4,7 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { getSession, useSession } from "next-auth/react";
 import { prisma } from "../lib/prisma";
 import Link from "next/link";
-import ProductCard from "./components/product_card";
+import ProductCard from "../components/product_card";
 import Navbar from "./navbar";
 import Footer from "./footer";
 import { Status } from "@prisma/client";
@@ -23,7 +23,7 @@ import {
   UserCircleIcon,
   Cog6ToothIcon,
 } from "@heroicons/react/24/solid";
-import ReviewModal from "./components/transactions/review-modal";
+import ReviewModal from "../components/transactions/review-modal";
 // END TABS
 
 interface CartItems {
