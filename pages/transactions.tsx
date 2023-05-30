@@ -23,14 +23,15 @@ import {
   Cog6ToothIcon,
 } from "@heroicons/react/24/solid";
 import ReviewModal from "../components/transactions/review-modal";
+import axios from "axios";
 // END TABS
 
 interface CartItems {
   cartItems: {
-    id: Number;
+    id: number;
     product: Product;
-    count: Number;
-    price: Number;
+    count: number;
+    price: number;
     status: Status;
   }[];
 }
@@ -43,8 +44,18 @@ interface Product {
   image: string;
 }
 
-interface CartId {
-  id: Number;
+interface Params {
+  id: number;
+  price: number
+}
+
+interface CartId{
+  id: number
+}
+
+interface TransactionToken {
+  token: string;
+  redirectUrl: string;
 }
 
 export default function Transaction({ cartItems }: CartItems) {
@@ -59,7 +70,8 @@ export default function Transaction({ cartItems }: CartItems) {
 
   const [openTab, setOpenTab] = React.useState(1);
   const [open, setOpen] = React.useState(false);
-  const [currentRateProductName, setCurrentRateProductName] = useState<String>("");
+  const [currentRateProductName, setCurrentRateProductName] =
+    useState<String>("");
   const [currentCartItemId, setCurrentCartItemId] = useState<Number>();
 
   //  TABS
@@ -110,7 +122,7 @@ export default function Transaction({ cartItems }: CartItems) {
     for (i = 0; i < cartItems.length; i++) {
       if (
         cartItems[i].status === Status.DELIVERING ||
-        cartItems[i].status === Status.RETURNING || 
+        cartItems[i].status === Status.RETURNING ||
         cartItems[i].status === Status.NEED_ADMIN_REVIEW
       )
         dikirim.push(cartItems[i]);
@@ -119,9 +131,9 @@ export default function Transaction({ cartItems }: CartItems) {
 
     for (i = 0; i < cartItems.length; i++) {
       if (
-          cartItems[i].status === Status.FINISHED || 
-          cartItems[i].status === Status.RETURN_REJECTED
-      ) 
+        cartItems[i].status === Status.FINISHED ||
+        cartItems[i].status === Status.RETURN_REJECTED
+      )
         selesai.push(cartItems[i]);
     }
     console.log(selesai);
@@ -138,23 +150,28 @@ export default function Transaction({ cartItems }: CartItems) {
     }
     console.log(dikembalikan);
   }
-
-  async function onBayar(id: Number) {
-    const cartId: CartId = { id: id };
-    try {
-      fetch("http://localhost:3000/api/cart/pay", {
-        body: JSON.stringify(cartId),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "PUT",
-      }).then(() => router.reload());
-    } catch (error) {
-      //console.log(error)
-    }
+  
+  async function onBayar(id: number, price: number) {
+    const params : Params = {id: id, price: price};
+    const transactionToken : TransactionToken = (await axios.post(`http://localhost:3000/api/cart/pay`, params)).data;
+    console.log('transaction token: ', transactionToken.token);
+    console.log('redirect url: ', transactionToken.redirectUrl);
+    window.open(transactionToken.redirectUrl);
+    // try {
+    //   const response = await fetch("http://localhost:3000/api/cart/pay", {
+    //     body: JSON.stringify(cartId),
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     method: "PUT",
+    //   });
+    //   console.log("response:", response.json());
+    // } catch (error) {
+    //   //console.log(error)
+    // }
   }
 
-  async function onCancel(id: Number) {
+  async function onCancel(id: number) {
     const cartId: CartId = { id: id };
     try {
       fetch("http://localhost:3000/api/cart/cancel", {
@@ -169,7 +186,7 @@ export default function Transaction({ cartItems }: CartItems) {
     }
   }
 
-  async function onFinish(id: Number) {
+  async function onFinish(id: number) {
     const cartId: CartId = { id: id };
     try {
       fetch("http://localhost:3000/api/cart/finish", {
@@ -187,8 +204,8 @@ export default function Transaction({ cartItems }: CartItems) {
   async function onReturn(id: Number) {
     router.push({
       pathname: "http://localhost:3000/complain/create",
-      query: {id: String(id)}
-    })
+      query: { id: String(id) },
+    });
     // const cartId: CartId = { id: id };
     // try {
     //   fetch("http://localhost:3000/api/cart/return", {
@@ -213,20 +230,22 @@ export default function Transaction({ cartItems }: CartItems) {
   async function onCommentDetail(id: number) {
     router.push({
       pathname: "http://localhost:3000/complain/response/",
-      query: {id: id}
-    })
+      query: { id: id },
+    });
   }
 
   const onRateClick = (productName: String, cartItemId: Number) => {
-    setCurrentRateProductName(productName); 
+    setCurrentRateProductName(productName);
     setCurrentCartItemId(cartItemId);
-  }
+  };
 
   const getCurrentSelectedProductForRate = () => {
-    console.log(`returning ${currentRateProductName} and ${currentCartItemId?.toString()}`);
+    console.log(
+      `returning ${currentRateProductName} and ${currentCartItemId?.toString()}`
+    );
     return {
       currentRateProductName,
-      currentCartItemId
+      currentCartItemId,
     };
   };
 
@@ -377,7 +396,9 @@ export default function Transaction({ cartItems }: CartItems) {
                                 <figure className="rounded-md h-40 w-40">
                                   {cartItem.product.image ? (
                                     <img
-                                      src={`http://localhost:3000/${cartItem.product.image.split(",")[0]}`}
+                                      src={`http://localhost:3000/${
+                                        cartItem.product.image.split(",")[0]
+                                      }`}
                                       className="h-full w-full bg-no-repeat bg-center bg-cover"
                                     />
                                   ) : (
@@ -397,11 +418,11 @@ export default function Transaction({ cartItems }: CartItems) {
                                   </div>
                                   <div className="w-1/3 my-auto px-10 border-l-2 border-primary">
                                     <p className="disabled">Total Harga</p>
-                                    <p>Rp. {cartItem.product.price}</p>
+                                    <p>Rp. {cartItem.product.price * cartItem.count}</p>
                                   </div>
                                 </div>
                                 <button
-                                  onClick={() => onBayar(Number(cartItem.id))}
+                                  onClick={() => onBayar(Number(cartItem.id), (cartItem.product.price * cartItem.count))}
                                   className="w-32 btn btn-sm btn-primary rounded-md"
                                 >
                                   Bayar
@@ -431,7 +452,9 @@ export default function Transaction({ cartItems }: CartItems) {
                                 <figure className="rounded-md h-40 w-40">
                                   {cartItem.product.image ? (
                                     <img
-                                      src={`http://localhost:3000/${cartItem.product.image.split(",")[0]}`}
+                                      src={`http://localhost:3000/${
+                                        cartItem.product.image.split(",")[0]
+                                      }`}
                                       className="w-full h-full"
                                     />
                                   ) : (
@@ -501,7 +524,9 @@ export default function Transaction({ cartItems }: CartItems) {
                                 <figure className="rounded-md h-40 w-40">
                                   {cartItem.product.image ? (
                                     <img
-                                      src={`http://localhost:3000/${cartItem.product.image.split(",")[0]}`}
+                                      src={`http://localhost:3000/${
+                                        cartItem.product.image.split(",")[0]
+                                      }`}
                                     />
                                   ) : (
                                     <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg" />
@@ -525,26 +550,34 @@ export default function Transaction({ cartItems }: CartItems) {
                                         >
                                           Pengembalian Diajukan
                                         </button>
-                                        
+
                                         <button
                                           className="w-16 btn btn-primary"
-                                          onClick={() => onDetail(cartItem.id.toString())}
+                                          onClick={() =>
+                                            onDetail(cartItem.id.toString())
+                                          }
                                         >
                                           Lihat
                                         </button>
                                       </div>
                                     ) : (
                                       <div>
-                                        {cartItem.status === Status.NEED_ADMIN_REVIEW ? (
+                                        {cartItem.status ===
+                                        Status.NEED_ADMIN_REVIEW ? (
                                           <div>
-                                            <p>Menunggu review admin untuk pengembalian</p>
-                                            <div  className="card-actions my-2">
-                                                <button
-                                                    onClick={() => onCommentDetail(cartItem.id)}
-                                                    className="w-64 btn btn-primary"
-                                                >
-                                                    Lihat Komentar Toko
-                                                </button>
+                                            <p>
+                                              Menunggu review admin untuk
+                                              pengembalian
+                                            </p>
+                                            <div className="card-actions my-2">
+                                              <button
+                                                onClick={() =>
+                                                  onCommentDetail(cartItem.id)
+                                                }
+                                                className="w-64 btn btn-primary"
+                                              >
+                                                Lihat Komentar Toko
+                                              </button>
                                             </div>
                                           </div>
                                         ) : (
@@ -599,7 +632,9 @@ export default function Transaction({ cartItems }: CartItems) {
                                 <figure className="rounded-md h-40 w-40">
                                   {cartItem.product.image ? (
                                     <img
-                                      src={`http://localhost:3000/${cartItem.product.image.split(",")[0]}`}
+                                      src={`http://localhost:3000/${
+                                        cartItem.product.image.split(",")[0]
+                                      }`}
                                     />
                                   ) : (
                                     <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg" />
@@ -615,7 +650,18 @@ export default function Transaction({ cartItems }: CartItems) {
                                     <p>{cartItem.product.price}</p>
                                     <p>{cartItem.count}</p>
                                     <p>{cartItem.status}</p>
-                                    <label onClick={() => onRateClick(cartItem.product.name,cartItem.id)} htmlFor={`review-modal`} className="w-32 btn btn-primary">Rate</label>
+                                    <label
+                                      onClick={() =>
+                                        onRateClick(
+                                          cartItem.product.name,
+                                          cartItem.id
+                                        )
+                                      }
+                                      htmlFor={`review-modal`}
+                                      className="w-32 btn btn-primary"
+                                    >
+                                      Rate
+                                    </label>
                                   </div>
                                 </div>
                               </div>
@@ -643,7 +689,9 @@ export default function Transaction({ cartItems }: CartItems) {
                                 <figure className="rounded-md h-40 w-40">
                                   {cartItem.product.image ? (
                                     <img
-                                      src={`http://localhost:3000/${cartItem.product.image.split(",")[0]}`}
+                                      src={`http://localhost:3000/${
+                                        cartItem.product.image.split(",")[0]
+                                      }`}
                                     />
                                   ) : (
                                     <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg" />
@@ -686,7 +734,9 @@ export default function Transaction({ cartItems }: CartItems) {
                                 <figure className="rounded-md h-40 w-40">
                                   {cartItem.product.image ? (
                                     <img
-                                      src={`http://localhost:3000/${cartItem.product.image.split(",")[0]}`}
+                                      src={`http://localhost:3000/${
+                                        cartItem.product.image.split(",")[0]
+                                      }`}
                                     />
                                   ) : (
                                     <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg" />
@@ -718,7 +768,10 @@ export default function Transaction({ cartItems }: CartItems) {
             </div>
           </div>
         </div>
-        <ReviewModal htmlElementId={`review-modal`}  selectProductCallback={getCurrentSelectedProductForRate}/>
+        <ReviewModal
+          htmlElementId={`review-modal`}
+          selectProductCallback={getCurrentSelectedProductForRate}
+        />
       </div>
       {/* <Footer /> */}
     </>
