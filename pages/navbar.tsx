@@ -37,7 +37,7 @@ const fetchCategories = async (url: string) => {
 }
 
 // export default function 
-export default function Navbar(){
+const Navbar = () => {
   const {data: categoryData, isLoading} = useSWR<{categories : Array<Category>}>(
     `http://localhost:3000/api/category/`,
     fetchCategories
@@ -97,7 +97,7 @@ export default function Navbar(){
               <span className="text-secondary-focus">ant</span>
             </Link>
             {/* Dropdown */}
-            <div className="dropdown dropdown-hover mr-4">
+            <div className="modal modal-bottom sm:dropdown sm:dropdown-hover sm:mr-4">
               <label
                 tabIndex={0}
                 className="mx-2 btn btn-link no-underline text-accent-content hidden xl:flex"
@@ -278,4 +278,4 @@ export default function Navbar(){
   );
 }
 
-//export default Navbar
+export default Navbar;

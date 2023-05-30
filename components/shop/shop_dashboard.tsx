@@ -62,7 +62,7 @@ const ShopDashboard = ({ shop }: Props) => {
             </Link>
           </li>
           <li>
-            <button type="button" onClick={() => setIsSalesDropdownClosed(!isSalesDropdownClosed)} className="flex items-center whitespace-nowrap w-full p-2 text-base font-normal rounded-lg transition duration-200 hover:bg-gray-300" >
+            <button type="button" onClick={() => setIsSalesDropdownClosed(!isSalesDropdownClosed)} className="flex items-center whitespace-nowrap w-full p-2 text-base font-normal rounded-lg hover:bg-gray-300" >
               <HiCurrencyDollar className="h-6 w-6"/>
               <span className="flex-1 ml-3 text-left">Sales</span>
               {isSalesDropdownClosed ? <HiChevronDown className="h-6 w-6"/> : <HiChevronUp className="h-6 w-6"/>}
