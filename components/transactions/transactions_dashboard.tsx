@@ -25,13 +25,50 @@ const TransactionsDashboard = () => {
                 </div>
               </Link>
             </li>
-            <li>
+            <li className="relative">
               <button className="flex justify-center items-center text-center p-1 w-32 h-12 text-sm font-normal rounded-sm bg-gray-300" onClick={onBerlangsungClicked}>
                 <span className="mr-1">
                   Berlangsung
                 </span>
-                {berlangsungIsOpen ? <HiChevronUp className="h-6 w-6"/> : <HiChevronDown className="h-6 w-6"/>}
+                {berlangsungIsOpen ? <HiChevronDown className="h-6 w-6"/> : <HiChevronUp className="h-6 w-6"/>}
               </button>
+              <ul hidden={berlangsungIsOpen.valueOf()} className="static">
+                <li>
+                  <Link href={''} className="flex justify-center text-center p-1 w-32 h-12 text-sm font-normal rounded-sm bg-gray-300">
+                    <div className="flex justify-center items-center text-center">
+                      Menunggu Konfirmasi
+                    </div>
+                  </Link>
+                </li>
+                <li>
+                  <Link href={''} className="flex justify-center text-center p-1 w-32 h-12 text-sm font-normal rounded-sm bg-gray-300">
+                    <div className="flex justify-center items-center text-center">
+                      Pesanan Diproses
+                    </div>
+                  </Link>
+                </li>
+                <li>
+                  <Link href={''} className="flex justify-center text-center p-1 w-32 h-12 text-sm font-normal rounded-sm bg-gray-300">
+                    <div className="flex justify-center items-center text-center">
+                      Menunggu Kurir
+                    </div>
+                  </Link>
+                </li>
+                <li>
+                  <Link href={''} className="flex justify-center text-center p-1 w-32 h-12 text-sm font-normal rounded-sm bg-gray-300">
+                    <div className="flex justify-center items-center text-center">
+                      Pesanan Dikirim
+                    </div>
+                  </Link>
+                </li>
+                <li>
+                  <Link href={''} className="flex justify-center text-center p-1 w-32 h-12 text-sm font-normal rounded-sm bg-gray-300">
+                    <div className="flex justify-center items-center text-center">
+                      Pesanan Tiba
+                    </div>
+                  </Link>
+                </li>
+              </ul>
             </li>
             <li>
               <Link href={''} className="flex justify-center text-center p-1 w-32 h-12 text-sm font-normal rounded-sm bg-gray-300">
