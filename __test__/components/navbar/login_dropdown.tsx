@@ -14,7 +14,7 @@ const LoginDropdown = ({session, onLogoutClick}: Props) => {
 
   return (
     <Fragment>
-      <div className="dropdown dropdown-end"> {/*Login Dropdown*/}
+      <div className="dropdown dropdown-end">
         <label tabIndex={0} className="btn btn-ghost btn-circle avatar mr-3">
           <div className="w-10 rounded-full">
             <img src={session?.user?.image!} />
