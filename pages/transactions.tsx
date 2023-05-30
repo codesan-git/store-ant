@@ -4,7 +4,6 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { getSession, useSession } from "next-auth/react";
 import { prisma } from "../lib/prisma";
 import Link from "next/link";
-import ProductCard from "../components/product_card";
 import Navbar from "./navbar";
 import Footer from "./footer";
 import { Status } from "@prisma/client";
@@ -209,6 +208,13 @@ export default function Transaction({ cartItems }: CartItems) {
       pathname: "/complain/detail",
       query: { id: id },
     });
+  }
+
+  async function onCommentDetail(id: number) {
+    router.push({
+      pathname: "http://localhost:3000/complain/response/",
+      query: {id: id}
+    })
   }
 
   const onRateClick = (productName: String, cartItemId: Number) => {
@@ -532,6 +538,14 @@ export default function Transaction({ cartItems }: CartItems) {
                                         {cartItem.status === Status.NEED_ADMIN_REVIEW ? (
                                           <div>
                                             <p>Menunggu review admin untuk pengembalian</p>
+                                            <div  className="card-actions my-2">
+                                                <button
+                                                    onClick={() => onCommentDetail(cartItem.id)}
+                                                    className="w-64 btn btn-primary"
+                                                >
+                                                    Lihat Komentar Toko
+                                                </button>
+                                            </div>
                                           </div>
                                         ) : (
                                           <div className="flex gap-x-2">

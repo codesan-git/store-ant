@@ -37,7 +37,7 @@ export default function Complain({ complains }: Complain) {
 
   async function onDetail(id: string) {
     router.push({
-      pathname: "/admin/console/event/update/",
+      pathname: "/admin/console/complain/detail",
       query: { id: id },
     });
   }
