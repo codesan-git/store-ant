@@ -1,6 +1,7 @@
 import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { Fragment } from "react";
 
 interface Props {
   session: Session
@@ -9,10 +10,10 @@ interface Props {
 
 const LoginDropdown = ({session, onLogoutClick}: Props) => {
 
-  
+
 
   return (
-    <>
+    <Fragment>
       <div className="dropdown dropdown-end"> {/*Login Dropdown*/}
         <label tabIndex={0} className="btn btn-ghost btn-circle avatar mr-3">
           <div className="w-10 rounded-full">
@@ -59,7 +60,7 @@ const LoginDropdown = ({session, onLogoutClick}: Props) => {
           </li>
         </ul>
       </div>
-    </>
+    </Fragment>
   );
 }
 
