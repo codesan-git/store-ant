@@ -60,7 +60,7 @@ const Products = ({shop, products} : Props) => {
     return (
       <>
       <Navbar />
-        <div className='flex mx-10 my-10 space-x-4'>
+        <div className='flex flex-row py-4 space-x-2'>
             <ShopDashboard shop={shop}/>
             {/* <div id='shop-dashboard' className='w-1/6 ml-5 -mt-10'>
                 <div className='text-center justify-center mt-10'>

@@ -37,7 +37,7 @@ const TransactionsDashboard = () => {
         <div id="title-container" className="hidden lg:block pt-4 px-4">
           <h1 className="text-3xl">Pembelian</h1>
         </div>
-        <div id="transactions-dashboard-navigation" className="w-auto">
+        <div id="transactions-dashboard-navigation" className="">
           <ul className="flex flex-row lg:flex-col lg:h-auto space-x-2 lg:space-x-0 overflow-x-auto lg:overflow-visible ">
             <li>
               <Link href={''} className="flex justify-center lg:justify-start p-1 lg:p-4 w-32 lg:w-auto h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300"> {/*TODO: reduce centering classnames*/}

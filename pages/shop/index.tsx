@@ -41,17 +41,17 @@ export default function Profile({shop, products} : Props) {
     router.push('/shop/register')
   }else{
     return (
-      <>
-      <Navbar />
-        <div className='flex mx-10 my-10 space-x-4'>
-            <ShopDashboard shop={shop}/>
-            <div id='product-list' className='w-full bg-gray-100 py-5'>
-                
-            </div>
+      <div>
+        <Navbar />
+        <div className='flex flex-row py-4 space-x-2'>
+          <ShopDashboard shop={shop}/>
+          <div id='product-list' className='w-full bg-gray-100 py-5'>
+              
+          </div>
         </div>
         <Footer />
-        </>
-      )
+      </div>
+    )
   }
 }
 

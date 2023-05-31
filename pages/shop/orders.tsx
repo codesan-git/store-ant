@@ -152,7 +152,7 @@ export default function Orders({ cartItems, shop }: InferGetServerSidePropsType<
   return (
     <>
       <Navbar />
-      <div className='flex mx-10 my-10'>
+      <div className='flex flex-row py-4 space-x-2'>
           <ShopDashboard shop={shop}/>
           <div className="w-full">
             <div className='w-full mx-10 bg-gray-100 py-5'>

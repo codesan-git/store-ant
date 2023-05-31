@@ -183,10 +183,13 @@ export default function Transaction({ cartItems }: CartItems) {
   return (
     <div>
       <Navbar />
-      <div className="">
+      <div className="flex lg:flex-row flex-col py-4 space-y-2 lg:space-y-0 lg:space-x-2">
         <TransactionsDashboard />
+        <div className="w-full bg-gray-300 py-5">
+          
+        </div>
       </div>
-      {/* <Footer /> */}
+      <Footer />
     </div>
   );
 }
