@@ -7,8 +7,9 @@ import Link from "next/link";
 import Navbar from "./navbar";
 import Footer from "./footer";
 import { Status } from "@prisma/client";
-import ReviewModal from "../components/transactions/review-modal";
+import ReviewModal from "../components/transactions/review_modal";
 import TransactionsDashboard from "@/components/transactions/transactions_dashboard";
+import ProductTransaction from "@/components/transactions/product_transaction";
 
 interface CartItems {
   cartItems: {
@@ -185,8 +186,9 @@ export default function Transaction({ cartItems }: CartItems) {
       <Navbar />
       <div className="flex lg:flex-row flex-col py-4 space-y-2 lg:space-y-0 lg:space-x-2">
         <TransactionsDashboard />
-        <div className="w-full bg-gray-300 py-5">
-          
+        <div className="w-full space-y-2 bg-gray-100">
+          <ProductTransaction/>
+          <ProductTransaction/>
         </div>
       </div>
       <Footer />
