@@ -30,63 +30,61 @@ const TransactionsDashboard = () => {
   * yeah, knew it, right at the end of the day I found a critical bug. If you load the page in web, then you click "Sebelumnya", and you change the view into 
   * mobile mode, the modal won't show up, because it needs to be activated by the label that is assigned to it.
   */
+
   return (
     <Fragment>
-      <div id="transactions-dashboard" className="">
-        <div id="title-container" className="hidden lg:block">
-          <h1 className="text-4xl">Pembelian</h1>
+      <div id="transactions-dashboard" className="lg:shadow-md lg:w-1/6 bg-none lg:bg-gray-400">
+        <div id="title-container" className="hidden lg:block pt-4 px-4">
+          <h1 className="text-3xl">Pembelian</h1>
         </div>
         <div id="transactions-dashboard-navigation" className="w-auto">
-          <ul className="flex flex-row lg:flex-col lg:h-96 w-auto space-x-2 overflow-x-auto">
+          <ul className="flex flex-row lg:flex-col lg:h-auto space-x-2 lg:space-x-0 overflow-x-auto lg:overflow-visible ">
             <li>
-              <Link href={''} className="flex justify-center items-center text-center p-1 w-32 h-12 text-sm font-normal rounded-sm bg-gray-300"> {/*TODO: reduce centering classnames*/}
-                <div className="flex justify-center items-center text-center">
+              <Link href={''} className="flex justify-center lg:justify-start p-1 lg:p-4 w-32 lg:w-auto h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300"> {/*TODO: reduce centering classnames*/}
+                <span className="flex justify-center items-center text-center">
                   Menungggu Pembayaran
-                </div>
+                </span>
               </Link>
             </li>
-            <li id="berlangsung-mobile-version" className="sm:hidden">
-              <label htmlFor="berlangsung-modal" className="flex justify-center items-center text-center p-1 w-32 h-12 text-sm font-normal rounded-sm bg-gray-300 hover:cursor-pointer">Berlangsung</label>
-            </li>
-            <li id="berlangsung-web-version" className="hidden sm:block">
-              <button className="flex justify-center items-center text-center p-1 w-32 h-12 text-sm font-normal rounded-sm bg-gray-300" onClick={onBerlangsungClicked}>
-                <span className="mr-1">
+            <li id="berlangsung-web-version" className="">
+              <button className="flex justify-center lg:justify-start items-center text-center p-2 lg:p-4 w-32 lg:w-full h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300" onClick={onBerlangsungClicked}>
+                <span className="flex-1 text-left ml-1 lg:ml-0">
                   Berlangsung
                 </span>
                 {berlangsungIsOpen ? <HiChevronUp className="h-6 w-6"/> : <HiChevronDown className="h-6 w-6"/>}
               </button>
-              <ul hidden={!berlangsungIsOpen.valueOf()}>
+              <ul hidden={!berlangsungIsOpen.valueOf()} className="bg-gray-400">
                 <li>
-                  <Link href={''} className="flex justify-center text-center p-1 w-32 h-12 text-sm font-normal rounded-sm bg-gray-300">
-                    <div className="flex justify-center items-center text-center">
+                  <Link href={''} className="flex justify-center lg:justify-start p-1 lg:p-4 w-32 lg:w-auto h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300">
+                    <span className="flex justify-center items-center text-center lg:pl-6">
                       Menunggu Konfirmasi
-                    </div>
+                    </span>
                   </Link>
                 </li>
                 <li>
-                  <Link href={''} className="flex justify-center text-center p-1 w-32 h-12 text-sm font-normal rounded-sm bg-gray-300">
-                    <div className="flex justify-center items-center text-center">
+                  <Link href={''} className="flex justify-center lg:justify-start p-1 lg:p-4 w-32 lg:w-auto h-12 text-sm font-normal rounded-sm lg:rounded-none hover:bg-gray-300 transition duration-300">
+                    <div className="flex justify-center items-center text-center lg:pl-6">
                       Pesanan Diproses
                     </div>
                   </Link>
                 </li>
                 <li>
-                  <Link href={''} className="flex justify-center text-center p-1 w-32 h-12 text-sm font-normal rounded-sm bg-gray-300">
-                    <div className="flex justify-center items-center text-center">
+                  <Link href={''} className="flex justify-center lg:justify-start p-1 lg:p-4 w-32 lg:w-auto h-12 text-sm font-normal rounded-sm lg:rounded-none hover:bg-gray-300 transition duration-300">
+                    <div className="flex justify-center items-center text-center lg:pl-6">
                       Menunggu Kurir
                     </div>
                   </Link>
                 </li>
                 <li>
-                  <Link href={''} className="flex justify-center text-center p-1 w-32 h-12 text-sm font-normal rounded-sm bg-gray-300">
-                    <div className="flex justify-center items-center text-center">
+                  <Link href={''} className="flex justify-center lg:justify-start p-1 lg:p-4 w-32 lg:w-auto h-12 text-sm font-normal rounded-sm lg:rounded-none hover:bg-gray-300 transition duration-300">
+                    <div className="flex justify-center items-center text-center lg:pl-6">
                       Pesanan Dikirim
                     </div>
                   </Link>
                 </li>
                 <li>
-                  <Link href={''} className="flex justify-center text-center p-1 w-32 h-12 text-sm font-normal rounded-sm bg-gray-300">
-                    <div className="flex justify-center items-center text-center">
+                  <Link href={''} className="flex justify-center lg:justify-start p-1 lg:p-4 w-32 lg:w-auto h-12 text-sm font-normal rounded-sm lg:rounded-none hover:bg-gray-300 transition duration-300">
+                    <div className="flex justify-center items-center text-center lg:pl-6">
                       Pesanan Tiba
                     </div>
                   </Link>
@@ -94,66 +92,20 @@ const TransactionsDashboard = () => {
               </ul>
             </li>
             <li>
-              <Link href={''} className="flex justify-center text-center p-1 w-32 h-12 text-sm font-normal rounded-sm bg-gray-300">
-                <div className="flex justify-center items-center text-center">
+              <Link href={''} className="flex justify-center lg:justify-start items-center text-center p-1 lg:p-4 w-32 lg:w-full h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300">
+                <span className="flex justify-center items-center text-center">
                   Berhasil
-                </div>
+                </span>
               </Link>
             </li>
             <li>
-              <Link href={''} className="flex justify-center text-center p-1 w-32 h-12 text-sm font-normal rounded-sm bg-gray-300">
-                <div className="flex justify-center items-center text-center">
+              <Link href={''} className="flex justify-center lg:justify-start items-center text-center p-1 lg:p-4 w-32 lg:w-full h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300">
+                <span className="flex justify-center items-center text-center">
                   Tidak Berhasil
-                </div>
+                </span>
               </Link>
             </li>
           </ul>
-        </div>
-        <div id="berlangsung-modal-container">
-          <input type="checkbox" id="berlangsung-modal" className="modal-toggle"/>
-          <div className="modal modal-bottom">
-            <div className="modal-box h-screen relative bg-gray-200">
-              <label htmlFor="berlangsung-modal" className="absolute right-5 top-5 text-2xl hover:cursor-pointer">✕</label>
-              <h1 className="text-xl font-bold">Berlangsung</h1>
-              <ul className="">
-                <li>
-                  <Link href={''} className="flex p-2 h-12 text-sm font-normal">
-                    <div className="flex justify-center items-center text-center">
-                      Menunggu Konfirmasi
-                    </div>
-                  </Link>
-                </li>
-                <li>
-                  <Link href={''} className="flex p-2 h-12 text-sm font-normal">
-                    <div className="flex justify-center items-center text-center">
-                      Pesanan Diproses
-                    </div>
-                  </Link>
-                </li>
-                <li>
-                  <Link href={''} className="flex p-2 h-12 text-sm font-normal">
-                    <div className="flex justify-center items-center text-center">
-                      Menunggu Kurir
-                    </div>
-                  </Link>
-                </li>
-                <li>
-                  <Link href={''} className="flex p-2 h-12 text-sm font-normal">
-                    <div className="flex justify-center items-center text-center">
-                      Pesanan Dikirim
-                    </div>
-                  </Link>
-                </li>
-                <li>
-                  <Link href={''} className="flex p-2 h-12 text-sm font-normal">
-                    <div className="flex justify-center items-center text-center">
-                      Pesanan Tiba
-                    </div>
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </div>
         </div>
       </div>
     </Fragment>
