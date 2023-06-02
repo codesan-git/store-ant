@@ -15,15 +15,19 @@ const ProductTransaction = () => { //TODO: readjust background colors based on w
         </div>
       </div>
       <div id="lower-detail">
-        <div id="product-details" className="flex flex-row space-x-2 p-2 bg-gray-300">
+        <div id="product-details" className="flex flex-row p-2 bg-gray-300">
           <div id="product-detail-img-container" className="">
-            <img className="w-24 h-24 object-cover" src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"/>
+            <img className="w-36 h-36 object-cover" src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"/>
           </div>
-          <div>
+          <div id="product-detail" className="flex-1 p-4 flex flex-col justify-center">
             <h1 className="">Kode Transaksi</h1>
             <h1 className="font-bold">Nama Barang</h1>
             <h1 className="">Qty</h1>
             <h1 className="">+X Produk Lainnya</h1>
+          </div>
+          <div id="total-details-lower" className="hidden lg:flex lg:flex-col lg:justify-center w-1/3 p-4 space-y-2 border-l-gray-500 border-l-2">
+            <h1 className="">Total Belanja</h1>
+            <h1 className="font-bold">Rp Jumlah Harga</h1>
           </div>
         </div>
         <div id="total-section" className="flex flex-row p-2 bg-gray-400">
