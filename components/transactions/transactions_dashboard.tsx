@@ -31,7 +31,7 @@ const TransactionsDashboard = () => {
   * mobile mode, the modal won't show up, because it needs to be activated by the label that is assigned to it.
   */
 
-  return (
+  return ( //TODO: Make the dashboard sticky on the Transactions Page
     <Fragment>
       <div id="transactions-dashboard" className="lg:shadow-md lg:w-1/6 bg-none lg:bg-gray-400">
         <div id="title-container" className="hidden lg:block pt-4 px-4">

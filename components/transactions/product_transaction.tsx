@@ -21,6 +21,26 @@ const ProductTransaction = ({ ProductStatus }: Props) => { //TODO: readjust back
 
   const renderActionButtons = () => { //TODO: REFACTOR THIS SWITCH CASE CODE SMELL
 
+    //it's either this way of dynamic rendering or a long switch case code smell
+    const bayarButtonStatuses:  Array<TRANSACTION_STATUS> = [TRANSACTION_STATUS.AWAITING_PAYMENT];
+    const detailTransaksiButtonStatuses: Array<TRANSACTION_STATUS> = [
+      TRANSACTION_STATUS.AWAITING_CONFIRMATION, 
+      TRANSACTION_STATUS.BEING_PROCESSED, 
+      TRANSACTION_STATUS.AWAITING_COURIER, 
+      TRANSACTION_STATUS.DELIVERING, 
+      TRANSACTION_STATUS.REACHED_DESTINATION, 
+      TRANSACTION_STATUS.SUCCESS, 
+      TRANSACTION_STATUS.FAILED
+    ];
+
+    const bayarButton = <button onClick={(e) => e.preventDefault()} className="w-24 text-white bg-green-500">Bayar</button>
+    const detailTransaksiButton = <button onClick={(e) => e.preventDefault()} className="w-32 border-2 border-green-500 text-green-500">Detail Transaksi</button>
+    const ulasProdukButton = <button onClick={(e) => e.preventDefault()} className="w-32 text-white bg-green-500">Ulas Produk</button>
+    const cekResiButton = <button onClick={(e) => e.preventDefault()} className="w-32 text-white bg-green-500">Cek Resi</button>
+    const selesaiButton =<button onClick={(e) => e.preventDefault()} className="w-32 text-white bg-green-500">Selesai</button>
+
+    //better idea: Create a callback function argument that passes all the handle functions and buttons to render as objects and render them there
+
     if(ProductStatus === TRANSACTION_STATUS.AWAITING_PAYMENT){
       return (
         <Fragment>
@@ -91,7 +111,7 @@ const ProductTransaction = ({ ProductStatus }: Props) => { //TODO: readjust back
             Detail Transaksi
           </button>
           <button onClick={(e) => e.preventDefault()} className="w-32 text-white bg-green-500">
-            Cek  Resi
+            Cek Resi
           </button>
           <button onClick={(e) => e.preventDefault()} className="w-8 h-8 flex justify-center items-center bg-black">
             <HiOutlineEllipsisVertical className="text-white"/>
@@ -130,7 +150,13 @@ const ProductTransaction = ({ ProductStatus }: Props) => { //TODO: readjust back
       );
     }
 
-    return <></>;
+    return <Fragment>
+      {bayarButtonStatuses.includes(ProductStatus) ? bayarButton : null}
+      {}
+      <button onClick={(e) => e.preventDefault()} className="w-8 h-8 flex justify-center items-center bg-black">
+        <HiOutlineEllipsisVertical className="text-white"/>
+      </button>
+    </Fragment>;
   }
 
   return (
@@ -147,7 +173,7 @@ const ProductTransaction = ({ ProductStatus }: Props) => { //TODO: readjust back
       </div>
       <div id="lower-detail">
         <div id="product-details" className="flex flex-row p-2 bg-gray-300">
-          <div id="product-detail-img-container" className="">
+          <div id="product-detail-img-container" className=" flex justify-center items-center">
             <img className="w-36 h-36 object-cover" src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"/>
           </div>
           <div id="product-detail" className="flex-1 p-4 flex flex-col justify-center">
