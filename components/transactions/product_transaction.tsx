@@ -17,6 +17,8 @@ export enum TRANSACTION_STATUS {
   REACHED_DESTINATION
 }
 
+//TODO: Nama toko jadi size sm, yang lain jadi xs
+
 const ProductTransaction = ({ ProductStatus }: Props) => { //TODO: readjust background colors based on website. the one in the wireframe are just placeholder colors.
 
   const renderTransactionStatus = () => {
@@ -77,10 +79,10 @@ const ProductTransaction = ({ ProductStatus }: Props) => { //TODO: readjust back
     else if (ProductStatus === TRANSACTION_STATUS.SUCCESS){
       return (
         <Fragment>
-          <button onClick={(e) => e.preventDefault()} className="w-32 border-2 border-green-500 text-green-500">
+          <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
             Detail Transaksi
           </button>
-          <button onClick={(e) => e.preventDefault()} className="w-32 text-white bg-green-500">
+          <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 text-white bg-green-500">
             Ulas Produk
           </button>
           <button onClick={(e) => e.preventDefault()} className="w-8 h-8 flex justify-center items-center bg-black">
@@ -92,7 +94,7 @@ const ProductTransaction = ({ ProductStatus }: Props) => { //TODO: readjust back
     else if (ProductStatus === TRANSACTION_STATUS.FAILED){
       return (
         <Fragment>
-          <button onClick={(e) => e.preventDefault()} className="text-sm lg:text-base w-32 border-2 border-green-500 text-green-500">
+          <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
             Detail Transaksi
           </button>
           <button onClick={(e) => e.preventDefault()} className="w-8 h-8 flex justify-center items-center bg-black">
@@ -104,7 +106,7 @@ const ProductTransaction = ({ ProductStatus }: Props) => { //TODO: readjust back
     else if (ProductStatus === TRANSACTION_STATUS.BEING_PROCESSED){
       return (
         <Fragment>
-          <button onClick={(e) => e.preventDefault()} className="w-32 border-2 border-green-500 text-green-500">
+          <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
             Detail Transaksi
           </button>
           <button onClick={(e) => e.preventDefault()} className="w-8 h-8 flex justify-center items-center bg-black">
@@ -116,10 +118,10 @@ const ProductTransaction = ({ ProductStatus }: Props) => { //TODO: readjust back
     else if (ProductStatus === TRANSACTION_STATUS.AWAITING_COURIER){
       return (
         <Fragment>
-          <button onClick={(e) => e.preventDefault()} className="w-32 border-2 border-green-500 text-green-500">
+          <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
             Detail Transaksi
           </button>
-          <button onClick={(e) => e.preventDefault()} className="w-32 text-white bg-green-500">
+          <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 text-white bg-green-500">
             Cek Resi
           </button>
           <button onClick={(e) => e.preventDefault()} className="w-8 h-8 flex justify-center items-center bg-black">
@@ -131,10 +133,10 @@ const ProductTransaction = ({ ProductStatus }: Props) => { //TODO: readjust back
     else if (ProductStatus === TRANSACTION_STATUS.DELIVERING){
       return (
         <Fragment>
-          <button onClick={(e) => e.preventDefault()} className="w-32 border-2 border-green-500 text-green-500">
+          <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
             Detail Transaksi
           </button>
-          <button onClick={(e) => e.preventDefault()} className="w-32 text-white bg-green-500">
+          <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 text-white bg-green-500">
             Cek Resi
           </button>
           <button onClick={(e) => e.preventDefault()} className="w-8 h-8 flex justify-center items-center bg-black">
@@ -146,10 +148,10 @@ const ProductTransaction = ({ ProductStatus }: Props) => { //TODO: readjust back
     else if (ProductStatus === TRANSACTION_STATUS.REACHED_DESTINATION){
       return (
         <Fragment>
-          <button onClick={(e) => e.preventDefault()} className="w-32 border-2 border-green-500 text-green-500">
+          <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
             Detail Transaksi
           </button>
-          <button onClick={(e) => e.preventDefault()} className="w-32 text-white bg-green-500">
+          <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 text-white bg-green-500">
             Selesai
           </button>
           <button onClick={(e) => e.preventDefault()} className="w-8 h-8 flex justify-center items-center bg-black">
@@ -173,11 +175,11 @@ const ProductTransaction = ({ ProductStatus }: Props) => { //TODO: readjust back
     <div className="">
       <div id="upper-detail" className="flex flex-row p-2 bg-gray-400">
         <div className="w-1/2 flex justify-start items-center ">
-          <h1 className="text-xl font-bold">Nama Toko</h1>
+          <h1 className="text-sm lg:text-xl font-bold">Nama Toko</h1>
         </div>
         <div className="w-1/2 flex flex-col lg:flex-row lg:items-center lg:space-x-2 justify-end">
           {renderTransactionStatus()}
-          <h1 className="flex justify-end text-sm">29 Mei 2023, 15:00</h1>
+          <h1 className="flex justify-end text-xs lg:text-sm">29 Mei 2023, 15:00</h1>
         </div>
       </div>
       <div id="lower-detail">
@@ -186,10 +188,10 @@ const ProductTransaction = ({ ProductStatus }: Props) => { //TODO: readjust back
             <img className="w-36 h-36 object-cover" src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"/>
           </div>
           <div id="product-detail" className="flex-1 p-4 flex flex-col justify-center">
-            <h1 className="">Kode Transaksi</h1>
-            <h1 className="font-bold">Nama Barang</h1>
-            <h1 className="">Qty</h1>
-            <h1 className="">+X Produk Lainnya</h1>
+            <h1 className="text-xs lg:text-base">Kode Transaksi</h1>
+            <h1 className="text-xs lg:text-base font-bold">Nama Barang</h1>
+            <h1 className="text-xs lg:text-base">Qty</h1>
+            <h1 className="text-xs lg:text-base">+X Produk Lainnya</h1>
           </div>
           <div id="total-details-lower" className="hidden lg:flex lg:flex-col lg:justify-center w-1/3 p-4 space-y-2 border-l-gray-500 border-l-2">
             <h1 className="">Total Belanja</h1>
@@ -197,11 +199,11 @@ const ProductTransaction = ({ ProductStatus }: Props) => { //TODO: readjust back
           </div>
         </div>
         <div id="total-section" className="flex flex-row p-2 bg-gray-400">
-          <div id="total-details" className="w-1/2 lg:hidden">
+          <div id="total-details" className="w-1/3 lg:hidden">
             <h1 className="text-xs">Total Belanja</h1>
             <h1 className="text-xs">Rp Jumlah Harga</h1>
           </div>
-          <div id="transaction-actions" className="w-1/2 lg:w-full flex flex-row justify-end space-x-2">
+          <div id="transaction-actions" className="w-2/3 lg:w-full flex flex-row justify-end space-x-2">
             {renderActionButtons()}
           </div>
         </div>
