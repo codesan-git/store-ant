@@ -1,7 +1,7 @@
 import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 
 interface Props {
   session: Session
@@ -10,12 +10,12 @@ interface Props {
 
 const LoginDropdown = ({session, onLogoutClick}: Props) => {
 
-
+  const [dropdownOpen, setDropdownOpen] = useState<Boolean>(false);
 
   return (
     <Fragment>
       <div className="dropdown dropdown-end">
-        <label tabIndex={0} className="btn btn-ghost btn-circle avatar mr-3">
+        <label tabIndex={0} className="btn btn-ghost btn-circle avatar mr-3" onClick={() => setDropdownOpen(true)}>
           <div className="w-10 rounded-full">
             <img src={session?.user?.image!} />
           </div>
@@ -59,6 +59,61 @@ const LoginDropdown = ({session, onLogoutClick}: Props) => {
             <button onClick={onLogoutClick}>Logout</button>
           </li>
         </ul>
+      </div>
+      <div hidden={!dropdownOpen.valueOf()} id="menu-menu-modal" className="lg:hidden p-4 bg-white space-y-2 fixed w-full h-full top-0 right-0 left-0 bottom-0 z-50">
+        <div id="main-menu-modal-x-container" className="flex flex-row space-x-2">
+          <button onClick={() => setDropdownOpen(false)} className="font-bold text-2xl">✕</button>
+          <h1 className="font-bold text-2xl">Menu utama</h1>
+        </div>
+        <div id="main-menu-modal-content" className="">
+          <div id="user-mini-profile" className="flex flex-row items-center p-2 space-x-2 bg-blue-gray-50">
+            <div id="modal-profile-photo-container" className="flex align-middle">
+              <div className="avatar w-10">
+                <img src={session?.user?.image!}  className="rounded-full" />
+              </div>
+            </div>
+            <div>
+              <p className="truncate">{session.user.name}</p>
+              <h1>Rp. Saldo</h1>
+            </div>
+          </div>
+          <div>
+            <ul>
+              <li>
+                <Link className="flex p-2 text-base font-normal transition duration-200 hover:bg-gray-300" href={{pathname: '/profile'}}>
+                  <span>Profil</span> 
+                </Link>
+              </li>
+              <li>
+                <Link className="flex p-2 text-base font-normal transition duration-200 hover:bg-gray-300" href={{pathname: '/shop'}}>
+                  <span>Toko</span> 
+                </Link>
+              </li>
+              <li>
+                <Link className="flex p-2 text-base font-normal transition duration-200 hover:bg-gray-300" href={{pathname: '/transactions'}}>
+                  <span>Pembelian</span> 
+                </Link>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <ul>
+              <li>
+                <Link className="flex p-2 text-base font-normal transition duration-200 hover:bg-gray-300" href={{pathname: '/profile'}}>
+                  <span>Penarikan Dana</span> 
+                </Link>
+              </li>
+              <li>
+                <Link className="flex p-2 text-base font-normal transition duration-200 hover:bg-gray-300" href={{pathname: '/profile'}}>
+                  <span>Pusat Bantuan</span> 
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div className="p-2">
+          <button onClick={onLogoutClick}>Logout</button>
+        </div>
       </div>
     </Fragment>
   );

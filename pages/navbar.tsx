@@ -230,6 +230,7 @@ const Navbar = () => {
           />
         </form>
       {/* End New Navbar */}
+      
     </>
   );
 }
