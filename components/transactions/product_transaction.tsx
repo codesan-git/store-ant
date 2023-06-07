@@ -21,6 +21,14 @@ export enum TRANSACTION_STATUS {
 
 const ProductTransaction = ({ ProductStatus }: Props) => { //TODO: readjust background colors based on website. the one in the wireframe are just placeholder colors.
 
+  const extraActionsModal = () => {
+    return (
+      <div className="lg:hidden p-4 bg-white space-y-2 fixed w-full h-full top-0 right-0 left-0 bottom-0 z-50">
+
+      </div>
+    )
+  }
+
   const renderTransactionStatus = () => {
     if (ProductStatus === TRANSACTION_STATUS.AWAITING_PAYMENT) return <h1 className="flex justify-end text-sm font-bold">Bayar Sebelum</h1>;
     if (ProductStatus === TRANSACTION_STATUS.FAILED) return <h1 className="flex justify-end text-sm font-bold text-red-600">Dibatalkan Sistem</h1>;

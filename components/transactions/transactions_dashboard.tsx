@@ -6,8 +6,59 @@ const TransactionsDashboard = () => {
 
   const [berlangsungIsOpen, setBerlangsungIsOpen] = useState<Boolean>(false);
 
-  const onBerlangsungClicked = () => {
-    setBerlangsungIsOpen(!berlangsungIsOpen);
+  const berlangsungBottomModal = () => {
+    return(
+      <div id="berlangsung-bottom-modal" hidden={!berlangsungIsOpen.valueOf()} className="lg:hidden align-bottom bg-gray-900 bg-opacity-75 fixed w-full h-full -top-2 right-0 left-0 bottom-0 z-50">
+        <div className="h-1/2" onClick={() => setBerlangsungIsOpen(false)}>
+          {/* This exists just so that the content gets pushed down. I could do without having this div, but it would require flex and align-bottom to do so and the modal would still appear despite closing it*/}
+        </div>
+        <div id="berlangsung-modal-box" className="p-2 bg-white h-1/2 w-full rounded-lg overflow-y-hidden overscroll-contain">
+          <div id="main-menu-modal-x-container" className="flex flex-row space-x-2">
+            <button onClick={() => setBerlangsungIsOpen(false)} className="font-bold text-2xl">✕</button>
+            <h1 className="font-bold text-2xl">Berlangsung</h1>
+          </div>
+          <div id="berlangsung-modal-content">
+            <ul>
+              <li>
+                <Link href={''} className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300">
+                  <div className="flex justify-center items-center text-center lg:pl-6">
+                    Menunggu Konfirmasi
+                  </div>
+                </Link>
+              </li>
+              <li>
+                <Link href={''} className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300">
+                  <div className="flex justify-center items-center text-center lg:pl-6">
+                    Pesanan Diproses
+                  </div>
+                </Link>
+              </li>
+              <li>
+                <Link href={''} className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300">
+                  <div className="flex justify-center items-center text-center lg:pl-6">
+                    Menunggu Kurir
+                  </div>
+                </Link>
+              </li>
+              <li>
+                <Link href={''} className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300">
+                  <div className="flex justify-center items-center text-center lg:pl-6">
+                    Pesanan Dikirim
+                  </div>
+                </Link>
+              </li>
+              <li>
+                <Link href={''} className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300">
+                  <div className="flex justify-center items-center text-center lg:pl-6">
+                    Pesanan Tiba
+                  </div>
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   /*    
@@ -46,8 +97,16 @@ const TransactionsDashboard = () => {
                 </span>
               </Link>
             </li>
-            <li id="berlangsung-web-version" className="">
-              <button className="flex justify-center lg:justify-start items-center text-center p-2 lg:p-4 w-32 lg:w-full h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300" onClick={onBerlangsungClicked}>
+            <li id="berlangsung-mobile-version" className="lg:hidden">
+              <button className="flex justify-center lg:justify-start items-center text-center p-2 lg:p-4 w-32 lg:w-full h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300" onClick={() => setBerlangsungIsOpen(true)}>
+                <span className="flex-1 text-left ml-1 lg:ml-0">
+                  Berlangsung
+                </span>
+                {berlangsungIsOpen ? <HiChevronUp className="h-6 w-6"/> : <HiChevronDown className="h-6 w-6"/>}
+              </button>
+            </li>
+            <li id="berlangsung-web-version" className="hidden lg:block">
+              <button className="flex justify-center lg:justify-start items-center text-center p-2 lg:p-4 w-32 lg:w-full h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300" onClick={() => setBerlangsungIsOpen(!berlangsungIsOpen)}>
                 <span className="flex-1 text-left ml-1 lg:ml-0">
                   Berlangsung
                 </span>
@@ -99,7 +158,7 @@ const TransactionsDashboard = () => {
               </Link>
             </li>
             <li>
-              <Link href={''} className="flex justify-center lg:justify-start items-center text-center p-1 lg:p-4 w-32 lg:w-full h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300">
+              <Link href={''} className="modal modal-box flex justify-center lg:justify-start items-center text-center p-1 lg:p-4 w-32 lg:w-full h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300">
                 <span className="flex justify-center items-center text-center">
                   Tidak Berhasil
                 </span>
@@ -108,6 +167,7 @@ const TransactionsDashboard = () => {
           </ul>
         </div>
       </div>
+      {berlangsungBottomModal()}
     </Fragment>
   );
 }
