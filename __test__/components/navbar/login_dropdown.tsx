@@ -12,6 +12,9 @@ const LoginDropdown = ({session, onLogoutClick}: Props) => {
 
   const [dropdownOpen, setDropdownOpen] = useState<Boolean>(false);
 
+  //TODO: bugfix for dropdown logic. Bug occurs when you enter web-view mode, click on the dropdown, then click anywhere to close dropdown, then change to mobile-view mode
+  // The modal is still open even though we close the dropdown in web-view mode. This is because we don't have a handler that would set the Dropdown closed when we click elsewhere
+
   return (
     <Fragment>
       <div className="dropdown dropdown-end">
@@ -111,8 +114,8 @@ const LoginDropdown = ({session, onLogoutClick}: Props) => {
             </ul>
           </div>
         </div>
-        <div className="p-2">
-          <button onClick={onLogoutClick}>Logout</button>
+        <div className="">
+          <button onClick={onLogoutClick} className="p-2 w-28 transition duration-200 hover:bg-gray-300">Logout</button>
         </div>
       </div>
     </Fragment>
