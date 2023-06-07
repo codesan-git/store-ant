@@ -71,6 +71,21 @@ const ProductTransaction = ({ ProductStatus }: Props) => { //TODO: readjust back
 
   const renderActionButtons = () => { //TODO: REFACTOR THIS SWITCH CASE CODE SMELL
 
+    const renderExtraActionDropdown = () => {
+      return(
+        <div className="relative">
+          <button onClick={() => setExtraActionsIsOpen(!extraActionsIsOpen)} className="w-8 h-8 flex justify-center items-center bg-black relative">
+            <HiOutlineEllipsisVertical className="text-white"/>
+          </button>
+          <ul hidden={!extraActionsIsOpen.valueOf()} className="fixed mt-1 right-10 w-36 bg-white space-y-2">
+            <li className="p-2 rounded-sm hover:bg-gray-100 transition duration-300">Tanya Penjual</li>
+            <li className="p-2 rounded-sm hover:bg-gray-100 transition duration-300">Batalkan</li>
+            <li className="p-2 rounded-sm hover:bg-gray-100 transition duration-300">Pusat Bantuan</li>
+          </ul>
+        </div>
+      );
+    }
+
     //it's either this way of dynamic rendering or a long switch case code smell
     const bayarButtonStatuses:  Array<TRANSACTION_STATUS> = [TRANSACTION_STATUS.AWAITING_PAYMENT];
     const detailTransaksiButtonStatuses: Array<TRANSACTION_STATUS> = [
@@ -97,9 +112,7 @@ const ProductTransaction = ({ ProductStatus }: Props) => { //TODO: readjust back
           <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-24 h-8 text-white bg-green-500">
             Bayar
           </button>
-          <button onClick={() => setExtraActionsIsOpen(true)} className="w-8 h-8 flex justify-center items-center bg-black">
-            <HiOutlineEllipsisVertical className="text-white"/>
-          </button>
+          {renderExtraActionDropdown()}
         </Fragment>
       );
     }
