@@ -1,18 +1,35 @@
 import { Fragment, useState } from "react";
 import { HiOutlineEllipsisVertical } from "react-icons/hi2";
-import { Product, ProductInCart, Status } from "@prisma/client";
+import { ProductInCart, Status } from "@prisma/client";
 import Link from "next/link";
 
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  stock: number;
+  image: string;
+}
+
+interface Transaction {
+  id: Number;
+  product: Product;
+  count: Number;
+  price: Number;
+  status: Status;
+}
+
 interface Props {
-  ProductStatus: Status
-  // product: Product
+  transaction: Transaction
+  onRateClick: (productName: String, cartItemId: Number) => void
+
 }
 
 //TODO: Nama toko jadi size sm, yang lain jadi xs
 
-const ProductTransaction = ({ ProductStatus}: Props) => { //TODO: readjust background colors based on website. the one in the wireframe are just placeholder colors.
+const ProductTransaction = ({ onRateClick, transaction }: Props) => { //TODO: readjust background colors based on website. the one in the wireframe are just placeholder colors.
 
-  console.log(`Transaction with status ${ProductStatus.toString()}`);
+  const transactionTotal = transaction.count.valueOf() * transaction.product.price.valueOf();
 
   const [extraActionsIsOpen, setExtraActionsIsOpen] = useState<Boolean>(false);
 
@@ -53,10 +70,10 @@ const ProductTransaction = ({ ProductStatus}: Props) => { //TODO: readjust backg
   }
 
   const renderTransactionStatus = () => {
-    if (ProductStatus === Status.UNPAID) return <h1 className="flex justify-end text-sm font-bold">Bayar Sebelum</h1>;
-    if (ProductStatus === Status.CANCELED || ProductStatus == Status.CANCEL_REJECTED) return <h1 className="flex justify-end text-sm font-bold text-red-600">Dibatalkan Sistem</h1>; //CANCELED||CANCELED_REJECTED == FAILED
-    if (ProductStatus === Status.AWAITING_CONFIRMATION || ProductStatus === Status.PACKING) return <h1 className="flex justify-end text-sm font-bold">Otomatis Batal</h1>; //PACKING == BEING_PROCESSED
-    if (ProductStatus === Status.REACHED_DESTINATION) return <h1 className="flex justify-end text-sm font-bold">Otomatis Selesai</h1>;
+    if (transaction.status === Status.UNPAID) return <h1 className="flex justify-end text-sm font-bold">Bayar Sebelum</h1>;
+    if (transaction.status === Status.CANCELED || transaction.status == Status.CANCEL_REJECTED) return <h1 className="flex justify-end text-sm font-bold text-red-600">Dibatalkan Sistem</h1>; //CANCELED||CANCELED_REJECTED == FAILED
+    if (transaction.status === Status.AWAITING_CONFIRMATION || transaction.status === Status.PACKING) return <h1 className="flex justify-end text-sm font-bold">Otomatis Batal</h1>; //PACKING == BEING_PROCESSED
+    if (transaction.status === Status.REACHED_DESTINATION) return <h1 className="flex justify-end text-sm font-bold">Otomatis Selesai</h1>;
 
     return <></>;
   }
@@ -86,7 +103,7 @@ const ProductTransaction = ({ ProductStatus}: Props) => { //TODO: readjust backg
 
     //better idea: Create a callback function argument that passes all the handle functions and buttons to render as objects and render them there
 
-    if(ProductStatus === Status.UNPAID){
+    if(transaction.status === Status.UNPAID){
       return (
         <Fragment>
           <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-24 h-8 text-white bg-green-500">
@@ -96,7 +113,7 @@ const ProductTransaction = ({ ProductStatus}: Props) => { //TODO: readjust backg
         </Fragment>
       );
     }
-    else if (ProductStatus === Status.AWAITING_CONFIRMATION){
+    else if (transaction.status === Status.AWAITING_CONFIRMATION){
       return (
         <Fragment>
           <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-28 lg:w-32 h-8 border-2 border-green-500 text-green-500">
@@ -106,20 +123,20 @@ const ProductTransaction = ({ ProductStatus}: Props) => { //TODO: readjust backg
         </Fragment>
       );
     }
-    else if (ProductStatus === Status.FINISHED){ // FINISHED == SUCCESS
+    else if (transaction.status === Status.FINISHED){ // FINISHED == SUCCESS
       return (
         <Fragment>
           <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
             Detail Transaksi
           </button>
-          <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 text-white bg-green-500">
+          <label htmlFor="review-modal" onClick={() => onRateClick(transaction.product.name,transaction.id)} className="flex justify-center items-center text-xs lg:text-base w-32 text-white bg-green-500 hover:cursor-pointer">
             Ulas Produk
-          </button>
+          </label>
           {renderExtraActionDropdown()}
         </Fragment>
       );
     }
-    else if (ProductStatus === Status.CANCELED || ProductStatus === Status.CANCEL_REJECTED){
+    else if (transaction.status === Status.CANCELED || transaction.status === Status.CANCEL_REJECTED){
       return (
         <Fragment>
           <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
@@ -129,7 +146,7 @@ const ProductTransaction = ({ ProductStatus}: Props) => { //TODO: readjust backg
         </Fragment>
       );
     }
-    else if (ProductStatus === Status.PACKING){
+    else if (transaction.status === Status.PACKING){
       return (
         <Fragment>
           <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
@@ -139,20 +156,7 @@ const ProductTransaction = ({ ProductStatus}: Props) => { //TODO: readjust backg
         </Fragment>
       );
     }
-    else if (ProductStatus === Status.AWAITING_COURIER){
-      return (
-        <Fragment>
-          <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
-            Detail Transaksi
-          </button>
-          <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 text-white bg-green-500">
-            Cek Resi
-          </button>
-          {renderExtraActionDropdown()}
-        </Fragment>
-      );
-    }
-    else if (ProductStatus === Status.DELIVERING){
+    else if (transaction.status === Status.AWAITING_COURIER){
       return (
         <Fragment>
           <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
@@ -165,7 +169,20 @@ const ProductTransaction = ({ ProductStatus}: Props) => { //TODO: readjust backg
         </Fragment>
       );
     }
-    else if (ProductStatus === Status.REACHED_DESTINATION){
+    else if (transaction.status === Status.DELIVERING){
+      return (
+        <Fragment>
+          <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
+            Detail Transaksi
+          </button>
+          <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 text-white bg-green-500">
+            Cek Resi
+          </button>
+          {renderExtraActionDropdown()}
+        </Fragment>
+      );
+    }
+    else if (transaction.status === Status.REACHED_DESTINATION){
       return (
         <Fragment>
           <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
@@ -203,19 +220,19 @@ const ProductTransaction = ({ ProductStatus}: Props) => { //TODO: readjust backg
           </div>
           <div id="product-detail" className="flex-1 p-4 flex flex-col justify-center">
             <h1 className="text-xs lg:text-base">Kode Transaksi</h1>
-            <h1 className="text-xs lg:text-base font-bold">Nama Barang</h1>
-            <h1 className="text-xs lg:text-base">Qty</h1>
+            <h1 className="text-xs lg:text-base font-bold">{transaction.product.name.toString()}</h1>
+            <h1 className="text-xs lg:text-base">Jumlah: {transaction.count.toString()}</h1>
             <h1 className="text-xs lg:text-base">+X Produk Lainnya</h1>
           </div>
           <div id="total-details-lower" className="hidden lg:flex lg:flex-col lg:justify-center w-1/3 p-4 space-y-2 border-l-gray-500 border-l-2">
             <h1 className="">Total Belanja</h1>
-            <h1 className="font-bold">Rp Jumlah Harga</h1>
+            <h1 className="font-bold">Rp {transactionTotal.toString()}</h1>
           </div>
         </div>
         <div id="total-section" className="flex flex-row p-2 bg-gray-400">
           <div id="total-details" className="w-1/3 lg:hidden">
             <h1 className="text-xs">Total Belanja</h1>
-            <h1 className="text-xs">Rp Jumlah Harga</h1>
+            <h1 className="text-xs">Rp {transactionTotal.toString()}</h1>
           </div>
           <div id="transaction-actions" className="w-2/3 lg:w-full flex flex-row justify-end space-x-2">
             {renderActionButtons()}

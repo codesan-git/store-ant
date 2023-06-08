@@ -29,22 +29,44 @@ interface Product {
   image: string;
 }
 
+interface Transaction { //TODO: Create model in prisma
+  id: Number;
+  product: Product;
+  count: Number;
+  price: Number;
+  status: Status;
+}
+
 interface CartId {
   id: Number;
 }
 
 export default function Transaction({ cartItems }: CartItems) {
   const router = useRouter();
-
   
-  const [itemsToDisplay, setItemsToDisplay] = useState(cartItems);
+  const [itemsToDisplay, setItemsToDisplay] = useState(cartItems.filter((e) => e.status === Status.UNPAID));
+  const [currentRateProductName, setCurrentRateProductName] = useState<String>("");
+  const [currentCartItemId, setCurrentCartItemId] = useState<Number>();
   
   useEffect(() => {}, [itemsToDisplay]);
 
-  const TransactionDashboardArguments = () => { //Don't ever do this callback function hack again
+  const onRateClick = (productName: String, cartItemId: Number) => {
+    setCurrentRateProductName(productName); 
+    setCurrentCartItemId(cartItemId);
+  }
+
+  const getCurrentSelectedProductForRate = () => {
+    console.log(`returning ${currentRateProductName} and ${currentCartItemId?.toString()}`);
+    return {
+      currentRateProductName,
+      currentCartItemId
+    };
+  };
+
+  const TransactionDashboardArguments = () => { //Don't ever do this callback function hack again - Peter D.
     return {
       cartItems,
-      setItemsToDisplay
+      setItemsToDisplay,
     }
   };
 
@@ -54,7 +76,7 @@ export default function Transaction({ cartItems }: CartItems) {
 
     return (
       <>
-        {itemsToDisplay.map((transaction, i) => <ProductTransaction key={i} ProductStatus={transaction.status}/>)}
+        {itemsToDisplay.map((transaction, i) => <ProductTransaction key={i} transaction={transaction} onRateClick={onRateClick}/>)}
       </>
     );
 
@@ -69,6 +91,7 @@ export default function Transaction({ cartItems }: CartItems) {
           {renderItemsToDisplay()}
         </div>
       </div>
+      <ReviewModal htmlElementId={`review-modal`}  selectProductCallback={getCurrentSelectedProductForRate}/>
       <Footer />
     </div>
   );
