@@ -12,6 +12,8 @@ interface Props {
 
 const ProductTransaction = ({ ProductStatus}: Props) => { //TODO: readjust background colors based on website. the one in the wireframe are just placeholder colors.
 
+  console.log(`Transaction with status ${ProductStatus.toString()}`);
+
   const [extraActionsIsOpen, setExtraActionsIsOpen] = useState<Boolean>(false);
 
   const extraActionsModal = () => {

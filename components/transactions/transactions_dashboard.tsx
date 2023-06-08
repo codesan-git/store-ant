@@ -13,6 +13,7 @@ const TransactionsDashboard = ({TransactionDashboardArguments}: Props) => {
 
   const [berlangsungIsOpen, setBerlangsungIsOpen] = useState<Boolean>(false);
 
+  //I'm losing my mind just to make this work - Peter D.
   const menungguPembayaranOnClick = () => {
     setItemsToDisplay(cartItems.filter((e: any) => e.status === Status.UNPAID));
   }
@@ -59,39 +60,39 @@ const TransactionsDashboard = ({TransactionDashboardArguments}: Props) => {
           <div id="berlangsung-modal-content">
             <ul>
               <li>
-                <Link href={''} className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300">
+                <div onClick={menungguKonfirmasiOnClick} className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300">
                   <div className="flex justify-center items-center text-center lg:pl-6">
                     Menunggu Konfirmasi
                   </div>
-                </Link>
+                </div>
               </li>
               <li>
-                <Link href={''} className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300">
+                <div onClick={pesananDiprosesOnClick} className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300">
                   <div className="flex justify-center items-center text-center lg:pl-6">
                     Pesanan Diproses
                   </div>
-                </Link>
+                </div>
               </li>
               <li>
-                <Link href={''} className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300">
+                <div onClick={menungguKurirOnClick} className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300">
                   <div className="flex justify-center items-center text-center lg:pl-6">
                     Menunggu Kurir
                   </div>
-                </Link>
+                </div>
               </li>
               <li>
-                <Link href={''} className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300">
+                <div onClick={pesananDikirimOnClick} className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300">
                   <div className="flex justify-center items-center text-center lg:pl-6">
                     Pesanan Dikirim
                   </div>
-                </Link>
+                </div>
               </li>
               <li>
-                <Link href={''} className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300">
+                <div onClick={pesananTibaOnClick} className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300">
                   <div className="flex justify-center items-center text-center lg:pl-6">
                     Pesanan Tiba
                   </div>
-                </Link>
+                </div>
               </li>
             </ul>
           </div>
@@ -130,14 +131,14 @@ const TransactionsDashboard = ({TransactionDashboardArguments}: Props) => {
         <div id="transactions-dashboard-navigation" className="">
           <ul className="flex flex-row lg:flex-col lg:h-auto space-x-2 lg:space-x-0 overflow-x-auto lg:overflow-visible ">
             <li>
-              <Link href={''} className="flex justify-center lg:justify-start p-1 lg:p-4 w-32 lg:w-auto h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300"> {/*TODO: reduce centering classnames*/}
+              <div onClick={menungguPembayaranOnClick} className="flex justify-center lg:justify-start p-1 lg:p-4 w-32 lg:w-auto h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300 hover:cursor-pointer"> {/*TODO: reduce centering classnames*/}
                 <span className="flex justify-center items-center text-center">
                   Menungggu Pembayaran
                 </span>
-              </Link>
+              </div>
             </li>
             <li id="berlangsung-mobile-version" className="lg:hidden">
-              <button className="flex justify-center lg:justify-start items-center text-center p-2 lg:p-4 w-32 lg:w-full h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300" onClick={() => setBerlangsungIsOpen(true)}>
+              <button className="flex justify-center lg:justify-start items-center text-center p-2 lg:p-4 w-32 lg:w-full h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300 " onClick={() => setBerlangsungIsOpen(true)}>
                 <span className="flex-1 text-left ml-1 lg:ml-0">
                   Berlangsung
                 </span>
@@ -153,55 +154,55 @@ const TransactionsDashboard = ({TransactionDashboardArguments}: Props) => {
               </button>
               <ul hidden={!berlangsungIsOpen.valueOf()} className="bg-gray-400">
                 <li>
-                  <Link href={''} className="flex justify-center lg:justify-start p-1 lg:p-4 w-32 lg:w-auto h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300">
+                  <div onClick={menungguKonfirmasiOnClick} className="flex justify-center lg:justify-start p-1 lg:p-4 w-32 lg:w-auto h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300 hover:cursor-pointer">
                     <span className="flex justify-center items-center text-center lg:pl-6">
                       Menunggu Konfirmasi
                     </span>
-                  </Link>
+                  </div>
                 </li>
                 <li>
-                  <Link href={''} className="flex justify-center lg:justify-start p-1 lg:p-4 w-32 lg:w-auto h-12 text-sm font-normal rounded-sm lg:rounded-none hover:bg-gray-300 transition duration-300">
+                  <div onClick={pesananDiprosesOnClick} className="flex justify-center lg:justify-start p-1 lg:p-4 w-32 lg:w-auto h-12 text-sm font-normal rounded-sm lg:rounded-none hover:bg-gray-300 transition duration-300 hover:cursor-pointer">
                     <div className="flex justify-center items-center text-center lg:pl-6">
                       Pesanan Diproses
                     </div>
-                  </Link>
+                  </div>
                 </li>
                 <li>
-                  <Link href={''} className="flex justify-center lg:justify-start p-1 lg:p-4 w-32 lg:w-auto h-12 text-sm font-normal rounded-sm lg:rounded-none hover:bg-gray-300 transition duration-300">
+                  <div onClick={menungguKurirOnClick} className="flex justify-center lg:justify-start p-1 lg:p-4 w-32 lg:w-auto h-12 text-sm font-normal rounded-sm lg:rounded-none hover:bg-gray-300 transition duration-300 hover:cursor-pointer">
                     <div className="flex justify-center items-center text-center lg:pl-6">
                       Menunggu Kurir
                     </div>
-                  </Link>
+                  </div>
                 </li>
                 <li>
-                  <Link href={''} className="flex justify-center lg:justify-start p-1 lg:p-4 w-32 lg:w-auto h-12 text-sm font-normal rounded-sm lg:rounded-none hover:bg-gray-300 transition duration-300">
+                  <div onClick={pesananDikirimOnClick} className="flex justify-center lg:justify-start p-1 lg:p-4 w-32 lg:w-auto h-12 text-sm font-normal rounded-sm lg:rounded-none hover:bg-gray-300 transition duration-300 hover:cursor-pointer">
                     <div className="flex justify-center items-center text-center lg:pl-6">
                       Pesanan Dikirim
                     </div>
-                  </Link>
+                  </div>
                 </li>
                 <li>
-                  <Link href={''} className="flex justify-center lg:justify-start p-1 lg:p-4 w-32 lg:w-auto h-12 text-sm font-normal rounded-sm lg:rounded-none hover:bg-gray-300 transition duration-300">
+                  <div onClick={pesananTibaOnClick} className="flex justify-center lg:justify-start p-1 lg:p-4 w-32 lg:w-auto h-12 text-sm font-normal rounded-sm lg:rounded-none hover:bg-gray-300 transition duration-300 hover:cursor-pointer">
                     <div className="flex justify-center items-center text-center lg:pl-6">
                       Pesanan Tiba
                     </div>
-                  </Link>
+                  </div>
                 </li>
               </ul>
             </li>
             <li>
-              <Link href={''} className="flex justify-center lg:justify-start items-center text-center p-1 lg:p-4 w-32 lg:w-full h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300">
+              <div onClick={berhasilOnClick} className="flex justify-center lg:justify-start items-center text-center p-1 lg:p-4 w-32 lg:w-full h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300 hover:cursor-pointer">
                 <span className="flex justify-center items-center text-center">
                   Berhasil
                 </span>
-              </Link>
+              </div>
             </li>
             <li>
-              <Link href={''} className="modal modal-box flex justify-center lg:justify-start items-center text-center p-1 lg:p-4 w-32 lg:w-full h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300">
+              <div onClick={tidakBerhasilOnClick} className="modal modal-box flex justify-center lg:justify-start items-center text-center p-1 lg:p-4 w-32 lg:w-full h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300 hover:cursor-pointer">
                 <span className="flex justify-center items-center text-center">
                   Tidak Berhasil
                 </span>
-              </Link>
+              </div>
             </li>
           </ul>
         </div>

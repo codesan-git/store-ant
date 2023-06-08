@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { getSession, useSession } from "next-auth/react";
@@ -35,8 +35,11 @@ interface CartId {
 
 export default function Transaction({ cartItems }: CartItems) {
   const router = useRouter();
+
   
-  const [itemsToDisplay, setItemsToDisplay] = useState(cartItems.filter((e) => e.status === Status.AWAITING_CONFIRMATION));
+  const [itemsToDisplay, setItemsToDisplay] = useState(cartItems);
+  
+  useEffect(() => {}, [itemsToDisplay]);
 
   const TransactionDashboardArguments = () => { //Don't ever do this callback function hack again
     return {
@@ -45,13 +48,25 @@ export default function Transaction({ cartItems }: CartItems) {
     }
   };
 
+  const renderItemsToDisplay = () => {
+
+    if(itemsToDisplay.length === 0) return <h1 className="h-full flex justify-center items-center">No Items</h1>
+
+    return (
+      <>
+        {itemsToDisplay.map((transaction, i) => <ProductTransaction key={i} ProductStatus={transaction.status}/>)}
+      </>
+    );
+
+  }
+
   return (
     <div>
       <Navbar />
       <div className="flex lg:flex-row flex-col py-4 space-y-2 lg:space-y-0 lg:space-x-2">
         <TransactionsDashboard TransactionDashboardArguments={TransactionDashboardArguments}/>
         <div className="w-full space-y-2 bg-gray-100">
-          {itemsToDisplay.map((transaction, i) => <ProductTransaction key={i} ProductStatus={transaction.status}/>)}
+          {renderItemsToDisplay()}
         </div>
       </div>
       <Footer />
