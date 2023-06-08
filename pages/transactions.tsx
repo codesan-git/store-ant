@@ -10,7 +10,6 @@ import { Status } from "@prisma/client";
 import ReviewModal from "../components/transactions/review_modal";
 import TransactionsDashboard from "@/components/transactions/transactions_dashboard";
 import ProductTransaction from "@/components/transactions/product_transaction";
-import { TRANSACTION_STATUS } from "@/components/transactions/product_transaction";
 
 interface CartItems {
   cartItems: {
@@ -188,14 +187,7 @@ export default function Transaction({ cartItems }: CartItems) {
       <div className="flex lg:flex-row flex-col py-4 space-y-2 lg:space-y-0 lg:space-x-2">
         <TransactionsDashboard />
         <div className="w-full space-y-2 bg-gray-100">
-          <ProductTransaction ProductStatus={TRANSACTION_STATUS.AWAITING_PAYMENT}/>
-          <ProductTransaction ProductStatus={TRANSACTION_STATUS.AWAITING_CONFIRMATION}/>
-          <ProductTransaction ProductStatus={TRANSACTION_STATUS.SUCCESS}/>
-          <ProductTransaction ProductStatus={TRANSACTION_STATUS.FAILED}/>
-          <ProductTransaction ProductStatus={TRANSACTION_STATUS.BEING_PROCESSED}/>
-          <ProductTransaction ProductStatus={TRANSACTION_STATUS.AWAITING_COURIER}/>
-          <ProductTransaction ProductStatus={TRANSACTION_STATUS.DELIVERING}/>
-          <ProductTransaction ProductStatus={TRANSACTION_STATUS.REACHED_DESTINATION}/>
+          
 
         </div>
       </div>
