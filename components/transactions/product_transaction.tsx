@@ -71,17 +71,22 @@ const ProductTransaction = ({ ProductStatus }: Props) => { //TODO: readjust back
 
   const renderActionButtons = () => { //TODO: REFACTOR THIS SWITCH CASE CODE SMELL
 
-    const renderExtraActionDropdown = () => {
+    const renderExtraActionDropdown = () => { //THIS STILL CAUSES A BUG. If you enter web-view mode, and click various extra action buttons consecutively, then enter mobile mode, there will be a stack of extra actions modal
       return(
-        <div className="relative">
-          <button onClick={() => setExtraActionsIsOpen(!extraActionsIsOpen)} className="w-8 h-8 flex justify-center items-center bg-black relative">
+        <div className="">
+          <button onClick={() => setExtraActionsIsOpen(!extraActionsIsOpen)} className="lg:hidden w-8 h-8 flex justify-center items-center bg-black">
             <HiOutlineEllipsisVertical className="text-white"/>
           </button>
-          <ul hidden={!extraActionsIsOpen.valueOf()} className="fixed mt-1 right-10 w-36 bg-white space-y-2">
-            <li className="p-2 rounded-sm hover:bg-gray-100 transition duration-300">Tanya Penjual</li>
-            <li className="p-2 rounded-sm hover:bg-gray-100 transition duration-300">Batalkan</li>
-            <li className="p-2 rounded-sm hover:bg-gray-100 transition duration-300">Pusat Bantuan</li>
-          </ul>
+          <div className="hidden lg:block dropdown dropdown-end">
+            <label onClick={() => setExtraActionsIsOpen(true)} tabIndex={0} className="w-8 h-8 flex justify-center items-center bg-black">
+              <HiOutlineEllipsisVertical className="text-white"/>
+            </label>
+            <ul tabIndex={0} className="mt-1 dropdown-content menu shadow bg-base-100 rounded-sm w-52">
+              <li className="rounded-sm hover:bg-gray-100 transition duration-300"><a>Tanya Penjual</a></li>
+              <li className="rounded-sm hover:bg-gray-100 transition duration-300"><a>Batalkan</a></li>
+              <li className="rounded-sm hover:bg-gray-100 transition duration-300"><a>Pusat Bantuan</a></li>
+            </ul>
+          </div>
         </div>
       );
     }
@@ -122,9 +127,7 @@ const ProductTransaction = ({ ProductStatus }: Props) => { //TODO: readjust back
           <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-28 lg:w-32 h-8 border-2 border-green-500 text-green-500">
             Detail Transaksi
           </button>
-          <button onClick={() => setExtraActionsIsOpen(true)} className="w-8 h-8 flex justify-center items-center bg-black">
-            <HiOutlineEllipsisVertical className="text-white"/>
-          </button>
+          {renderExtraActionDropdown()}
         </Fragment>
       );
     }
@@ -137,9 +140,7 @@ const ProductTransaction = ({ ProductStatus }: Props) => { //TODO: readjust back
           <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 text-white bg-green-500">
             Ulas Produk
           </button>
-          <button onClick={() => setExtraActionsIsOpen(true)} className="w-8 h-8 flex justify-center items-center bg-black">
-            <HiOutlineEllipsisVertical className="text-white"/>
-          </button>
+          {renderExtraActionDropdown()}
         </Fragment>
       );
     }
@@ -149,9 +150,7 @@ const ProductTransaction = ({ ProductStatus }: Props) => { //TODO: readjust back
           <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
             Detail Transaksi
           </button>
-          <button onClick={() => setExtraActionsIsOpen(true)} className="w-8 h-8 flex justify-center items-center bg-black">
-            <HiOutlineEllipsisVertical className="text-white"/>
-          </button>
+          {renderExtraActionDropdown()}
         </Fragment>
       );
     }
@@ -161,9 +160,7 @@ const ProductTransaction = ({ ProductStatus }: Props) => { //TODO: readjust back
           <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
             Detail Transaksi
           </button>
-          <button onClick={() => setExtraActionsIsOpen(true)} className="w-8 h-8 flex justify-center items-center bg-black">
-            <HiOutlineEllipsisVertical className="text-white"/>
-          </button>
+          {renderExtraActionDropdown()}
         </Fragment>
       );
     }
@@ -176,9 +173,7 @@ const ProductTransaction = ({ ProductStatus }: Props) => { //TODO: readjust back
           <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 text-white bg-green-500">
             Cek Resi
           </button>
-          <button onClick={() => setExtraActionsIsOpen(true)} className="w-8 h-8 flex justify-center items-center bg-black">
-            <HiOutlineEllipsisVertical className="text-white"/>
-          </button>
+          {renderExtraActionDropdown()}
         </Fragment>
       );
     }
@@ -191,9 +186,7 @@ const ProductTransaction = ({ ProductStatus }: Props) => { //TODO: readjust back
           <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 text-white bg-green-500">
             Cek Resi
           </button>
-          <button onClick={() => setExtraActionsIsOpen(true)} className="w-8 h-8 flex justify-center items-center bg-black">
-            <HiOutlineEllipsisVertical className="text-white"/>
-          </button>
+          {renderExtraActionDropdown()}
         </Fragment>
       );
     }
@@ -206,9 +199,7 @@ const ProductTransaction = ({ ProductStatus }: Props) => { //TODO: readjust back
           <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 text-white bg-green-500">
             Selesai
           </button>
-          <button onClick={() => setExtraActionsIsOpen(true)} className="w-8 h-8 flex justify-center items-center bg-black">
-            <HiOutlineEllipsisVertical className="text-white"/>
-          </button>
+          {renderExtraActionDropdown()}
         </Fragment>
       );
     }
@@ -216,9 +207,7 @@ const ProductTransaction = ({ ProductStatus }: Props) => { //TODO: readjust back
     return <Fragment>
       {bayarButtonStatuses.includes(ProductStatus) ? bayarButton : null}
       {}
-      <button onClick={() => setExtraActionsIsOpen(true)} className="w-8 h-8 flex justify-center items-center bg-black">
-        <HiOutlineEllipsisVertical className="text-white"/>
-      </button>
+      {renderExtraActionDropdown()}
     </Fragment>;
   }
 
