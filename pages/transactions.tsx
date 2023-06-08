@@ -35,160 +35,23 @@ interface CartId {
 
 export default function Transaction({ cartItems }: CartItems) {
   const router = useRouter();
-  const { data: session } = useSession();
-  let belumBayar = new Array();
-  let dikemas = new Array();
-  let dikirim = new Array();
-  let selesai = new Array();
-  let dibatalkan = new Array();
-  let dikembalikan = new Array();
+  
+  const [itemsToDisplay, setItemsToDisplay] = useState(cartItems.filter((e) => e.status === Status.AWAITING_CONFIRMATION));
 
-  const [openTab, setOpenTab] = React.useState(1);
-  const [open, setOpen] = React.useState(false);
-  const [currentRateProductName, setCurrentRateProductName] = useState<String>("");
-  const [currentCartItemId, setCurrentCartItemId] = useState<Number>();
-
-  if (cartItems) {
-    let i: number;
-    for (i = 0; i < cartItems.length; i++) {
-      if (cartItems[i].status === Status.UNPAID) belumBayar.push(cartItems[i]);
-    }
-    console.log(belumBayar);
-
-    for (i = 0; i < cartItems.length; i++) {
-      if (
-        cartItems[i].status === Status.PACKING ||
-        cartItems[i].status === Status.CANCELING ||
-        cartItems[i].status === Status.CANCEL_REJECTED
-      )
-        dikemas.push(cartItems[i]);
-    }
-    console.log(dikemas);
-
-    for (i = 0; i < cartItems.length; i++) {
-      if (
-        cartItems[i].status === Status.DELIVERING ||
-        cartItems[i].status === Status.RETURNING || 
-        cartItems[i].status === Status.NEED_ADMIN_REVIEW
-      )
-        dikirim.push(cartItems[i]);
-    }
-    console.log(dikirim);
-
-    for (i = 0; i < cartItems.length; i++) {
-      if (
-          cartItems[i].status === Status.FINISHED || 
-          cartItems[i].status === Status.RETURN_REJECTED
-      ) 
-        selesai.push(cartItems[i]);
-    }
-    console.log(selesai);
-
-    for (i = 0; i < cartItems.length; i++) {
-      if (cartItems[i].status === Status.CANCELED)
-        dibatalkan.push(cartItems[i]);
-    }
-    console.log(dibatalkan);
-
-    for (i = 0; i < cartItems.length; i++) {
-      if (cartItems[i].status === Status.RETURNED)
-        dikembalikan.push(cartItems[i]);
-    }
-    console.log(dikembalikan);
-  }
-
-  async function onBayar(id: Number) {
-    const cartId: CartId = { id: id };
-    try {
-      fetch("http://localhost:3000/api/cart/pay", {
-        body: JSON.stringify(cartId),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "PUT",
-      }).then(() => router.reload());
-    } catch (error) {
-      //console.log(error)
-    }
-  }
-
-  async function onCancel(id: Number) {
-    const cartId: CartId = { id: id };
-    try {
-      fetch("http://localhost:3000/api/cart/cancel", {
-        body: JSON.stringify(cartId),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "PUT",
-      }).then(() => router.reload());
-    } catch (error) {
-      //console.log(error)
-    }
-  }
-
-  async function onFinish(id: Number) {
-    const cartId: CartId = { id: id };
-    try {
-      fetch("http://localhost:3000/api/cart/finish", {
-        body: JSON.stringify(cartId),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "PUT",
-      }).then(() => router.reload());
-    } catch (error) {
-      //console.log(error)
-    }
-  }
-
-  async function onReturn(id: Number) {
-    router.push({
-      pathname: "http://localhost:3000/complain/create",
-      query: {id: String(id)}
-    })
-    // const cartId: CartId = { id: id };
-    // try {
-    //   fetch("http://localhost:3000/api/cart/return", {
-    //     body: JSON.stringify(cartId),
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     method: "PUT",
-    //   }).then(() => router.reload());
-    // } catch (error) {
-    //   //console.log(error)
-    // }
-  }
-
-  async function onDetail(id: string) {
-    router.push({
-      pathname: "/complain/detail",
-      query: { id: id },
-    });
-  }
-
-  const onRateClick = (productName: String, cartItemId: Number) => {
-    setCurrentRateProductName(productName); 
-    setCurrentCartItemId(cartItemId);
-  }
-
-  const getCurrentSelectedProductForRate = () => {
-    console.log(`returning ${currentRateProductName} and ${currentCartItemId?.toString()}`);
+  const TransactionDashboardArguments = () => { //Don't ever do this callback function hack again
     return {
-      currentRateProductName,
-      currentCartItemId
-    };
+      cartItems,
+      setItemsToDisplay
+    }
   };
 
   return (
     <div>
       <Navbar />
       <div className="flex lg:flex-row flex-col py-4 space-y-2 lg:space-y-0 lg:space-x-2">
-        <TransactionsDashboard />
+        <TransactionsDashboard TransactionDashboardArguments={TransactionDashboardArguments}/>
         <div className="w-full space-y-2 bg-gray-100">
-          
-
+          {itemsToDisplay.map((transaction, i) => <ProductTransaction key={i} ProductStatus={transaction.status}/>)}
         </div>
       </div>
       <Footer />

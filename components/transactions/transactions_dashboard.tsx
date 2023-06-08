@@ -1,10 +1,49 @@
+import { Status } from "@prisma/client";
 import Link from "next/link";
 import { Fragment, useState } from "react";
 import { HiChevronDown, HiChevronUp } from "react-icons/hi2";
 
-const TransactionsDashboard = () => {
+interface Props {
+  TransactionDashboardArguments: () => any
+}
+
+const TransactionsDashboard = ({TransactionDashboardArguments}: Props) => {
+
+  const {cartItems, setItemsToDisplay} = TransactionDashboardArguments();
 
   const [berlangsungIsOpen, setBerlangsungIsOpen] = useState<Boolean>(false);
+
+  const menungguPembayaranOnClick = () => {
+    setItemsToDisplay(cartItems.filter((e: any) => e.status === Status.UNPAID));
+  }
+  
+  const menungguKonfirmasiOnClick = () => {
+    setItemsToDisplay(cartItems.filter((e: any) => e.status === Status.AWAITING_CONFIRMATION));
+  }
+
+  const pesananDiprosesOnClick = () => {
+    setItemsToDisplay(cartItems.filter((e: any) => e.status === Status.PACKING));
+  }
+
+  const menungguKurirOnClick = () => {
+    setItemsToDisplay(cartItems.filter((e: any) => e.status === Status.AWAITING_COURIER));
+  }
+
+  const pesananDikirimOnClick = () => {
+    setItemsToDisplay(cartItems.filter((e: any) => e.status === Status.DELIVERING));
+  }
+
+  const pesananTibaOnClick = () => {
+    setItemsToDisplay(cartItems.filter((e: any) => e.status === Status.REACHED_DESTINATION));
+  }
+
+  const berhasilOnClick = () => {
+    setItemsToDisplay(cartItems.filter((e: any) => e.status === Status.FINISHED));
+  }
+
+  const tidakBerhasilOnClick = () => {
+    setItemsToDisplay(cartItems.filter((e: any) => (e.status === Status.CANCELED || e.status === Status.CANCEL_REJECTED)));
+  }
 
   const berlangsungBottomModal = () => {
     return(

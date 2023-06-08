@@ -1,15 +1,16 @@
 import { Fragment, useState } from "react";
 import { HiOutlineEllipsisVertical } from "react-icons/hi2";
-import { Status } from "@prisma/client";
+import { Product, ProductInCart, Status } from "@prisma/client";
 import Link from "next/link";
 
 interface Props {
-  ProductStatus: Status,
+  ProductStatus: Status
+  // product: Product
 }
 
 //TODO: Nama toko jadi size sm, yang lain jadi xs
 
-const ProductTransaction = ({ ProductStatus }: Props) => { //TODO: readjust background colors based on website. the one in the wireframe are just placeholder colors.
+const ProductTransaction = ({ ProductStatus}: Props) => { //TODO: readjust background colors based on website. the one in the wireframe are just placeholder colors.
 
   const [extraActionsIsOpen, setExtraActionsIsOpen] = useState<Boolean>(false);
 
