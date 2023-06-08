@@ -4,21 +4,12 @@ import { Status } from "@prisma/client";
 import Link from "next/link";
 
 interface Props {
-  ProductStatus: TRANSACTION_STATUS
-  ProductStatus2: Status,
-}
-
-export enum TRANSACTION_STATUS {
-  
-  
-  
-  
-  
+  ProductStatus: Status,
 }
 
 //TODO: Nama toko jadi size sm, yang lain jadi xs
 
-const ProductTransaction = ({ ProductStatus, ProductStatus2 }: Props) => { //TODO: readjust background colors based on website. the one in the wireframe are just placeholder colors.
+const ProductTransaction = ({ ProductStatus }: Props) => { //TODO: readjust background colors based on website. the one in the wireframe are just placeholder colors.
 
   const [extraActionsIsOpen, setExtraActionsIsOpen] = useState<Boolean>(false);
 
@@ -59,10 +50,10 @@ const ProductTransaction = ({ ProductStatus, ProductStatus2 }: Props) => { //TOD
   }
 
   const renderTransactionStatus = () => {
-    if (ProductStatus2 === Status.UNPAID) return <h1 className="flex justify-end text-sm font-bold">Bayar Sebelum</h1>;
-    if (ProductStatus2 === Status.CANCELED || ProductStatus2 == Status.CANCEL_REJECTED) return <h1 className="flex justify-end text-sm font-bold text-red-600">Dibatalkan Sistem</h1>; //CANCELED||CANCELED_REJECTED == FAILED
-    if (ProductStatus2 === Status.AWAITING_CONFIRMATION || ProductStatus2 === Status.PACKING) return <h1 className="flex justify-end text-sm font-bold">Otomatis Batal</h1>; //PACKING == BEING_PROCESSED
-    if (ProductStatus2 === Status.REACHED_DESTINATION) return <h1 className="flex justify-end text-sm font-bold">Otomatis Selesai</h1>;
+    if (ProductStatus === Status.UNPAID) return <h1 className="flex justify-end text-sm font-bold">Bayar Sebelum</h1>;
+    if (ProductStatus === Status.CANCELED || ProductStatus == Status.CANCEL_REJECTED) return <h1 className="flex justify-end text-sm font-bold text-red-600">Dibatalkan Sistem</h1>; //CANCELED||CANCELED_REJECTED == FAILED
+    if (ProductStatus === Status.AWAITING_CONFIRMATION || ProductStatus === Status.PACKING) return <h1 className="flex justify-end text-sm font-bold">Otomatis Batal</h1>; //PACKING == BEING_PROCESSED
+    if (ProductStatus === Status.REACHED_DESTINATION) return <h1 className="flex justify-end text-sm font-bold">Otomatis Selesai</h1>;
 
     return <></>;
   }
@@ -92,7 +83,7 @@ const ProductTransaction = ({ ProductStatus, ProductStatus2 }: Props) => { //TOD
 
     //better idea: Create a callback function argument that passes all the handle functions and buttons to render as objects and render them there
 
-    if(ProductStatus2 === Status.UNPAID){
+    if(ProductStatus === Status.UNPAID){
       return (
         <Fragment>
           <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-24 h-8 text-white bg-green-500">
@@ -102,7 +93,7 @@ const ProductTransaction = ({ ProductStatus, ProductStatus2 }: Props) => { //TOD
         </Fragment>
       );
     }
-    else if (ProductStatus2 === Status.AWAITING_CONFIRMATION){
+    else if (ProductStatus === Status.AWAITING_CONFIRMATION){
       return (
         <Fragment>
           <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-28 lg:w-32 h-8 border-2 border-green-500 text-green-500">
@@ -112,7 +103,7 @@ const ProductTransaction = ({ ProductStatus, ProductStatus2 }: Props) => { //TOD
         </Fragment>
       );
     }
-    else if (ProductStatus2 === Status.FINISHED){ // FINISHED == SUCCESS
+    else if (ProductStatus === Status.FINISHED){ // FINISHED == SUCCESS
       return (
         <Fragment>
           <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
@@ -125,7 +116,7 @@ const ProductTransaction = ({ ProductStatus, ProductStatus2 }: Props) => { //TOD
         </Fragment>
       );
     }
-    else if (ProductStatus2 === Status.CANCELED || ProductStatus2 === Status.CANCEL_REJECTED){
+    else if (ProductStatus === Status.CANCELED || ProductStatus === Status.CANCEL_REJECTED){
       return (
         <Fragment>
           <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
@@ -135,7 +126,7 @@ const ProductTransaction = ({ ProductStatus, ProductStatus2 }: Props) => { //TOD
         </Fragment>
       );
     }
-    else if (ProductStatus2 === Status.PACKING){
+    else if (ProductStatus === Status.PACKING){
       return (
         <Fragment>
           <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
@@ -145,20 +136,7 @@ const ProductTransaction = ({ ProductStatus, ProductStatus2 }: Props) => { //TOD
         </Fragment>
       );
     }
-    else if (ProductStatus2 === Status.AWAITING_COURIER){
-      return (
-        <Fragment>
-          <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
-            Detail Transaksi
-          </button>
-          <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 text-white bg-green-500">
-            Cek Resi
-          </button>
-          {renderExtraActionDropdown()}
-        </Fragment>
-      );
-    }
-    else if (ProductStatus2 === Status.DELIVERING){
+    else if (ProductStatus === Status.AWAITING_COURIER){
       return (
         <Fragment>
           <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
@@ -171,7 +149,20 @@ const ProductTransaction = ({ ProductStatus, ProductStatus2 }: Props) => { //TOD
         </Fragment>
       );
     }
-    else if (ProductStatus2 === Status.REACHED_DESTINATION){
+    else if (ProductStatus === Status.DELIVERING){
+      return (
+        <Fragment>
+          <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
+            Detail Transaksi
+          </button>
+          <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 text-white bg-green-500">
+            Cek Resi
+          </button>
+          {renderExtraActionDropdown()}
+        </Fragment>
+      );
+    }
+    else if (ProductStatus === Status.REACHED_DESTINATION){
       return (
         <Fragment>
           <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
