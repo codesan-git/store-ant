@@ -11,6 +11,11 @@ interface Props {
 const LoginDropdown = ({session, onLogoutClick}: Props) => {
 
   const [dropdownOpen, setDropdownOpen] = useState<Boolean>(false);
+  
+  const formatter = new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+  });
 
   //TODO: bugfix for dropdown logic. Bug occurs when you enter web-view mode, click on the dropdown, then click anywhere to close dropdown, then change to mobile-view mode
   // The modal is still open even though we close the dropdown in web-view mode. This is because we don't have a handler that would set the Dropdown closed when we click elsewhere
@@ -33,8 +38,8 @@ const LoginDropdown = ({session, onLogoutClick}: Props) => {
           <div id="finance-details" className="px-4 py-2 border-y border-y-gray-400">
             <div className="flex flex-row">
               <h1 className="text-sm">Saldo</h1>
-              <h1 className="text-sm flex-1 text-right">Rp.30.000,00</h1>
-            </div>
+              <h1 className="text-sm flex-1 text-right">{formatter.format(session.user.balance)}</h1>
+              </div>
           </div>
           <li className="mt-1">
             <Link className="justify-between" 
