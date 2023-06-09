@@ -168,7 +168,9 @@ export default function Transaction({ cartItems }: CartItems) {
     <div>
       <Navbar />
       <div className="flex lg:flex-row flex-col py-4 space-y-2 lg:space-y-0 lg:space-x-2">
-        <TransactionsDashboard TransactionDashboardArguments={TransactionDashboardArguments}/>
+        <div id="transactions-dashboard-container" className="lg:w-1/6 lg:h-full lg:sticky lg:top-2">
+          <TransactionsDashboard TransactionDashboardArguments={TransactionDashboardArguments}/>
+        </div>
         <div className="w-full space-y-2 bg-gray-100">
           {renderItemsToDisplay()}
         </div>

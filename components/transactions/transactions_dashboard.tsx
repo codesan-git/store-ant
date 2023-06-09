@@ -124,7 +124,7 @@ const TransactionsDashboard = ({TransactionDashboardArguments}: Props) => {
 
   return ( //TODO: Make the dashboard sticky on the Transactions Page
     <Fragment>
-      <div id="transactions-dashboard" className="lg:shadow-md lg:w-1/6 bg-none lg:bg-gray-400">
+      <div id="transactions-dashboard" className="lg:shadow-md w-full bg-none lg:bg-gray-400">
         <div id="title-container" className="hidden lg:block pt-4 px-4">
           <h1 className="text-3xl">Pembelian</h1>
         </div>
