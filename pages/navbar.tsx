@@ -87,7 +87,7 @@ const Navbar = () => {
   }
 
   return (
-    <>
+    <div className="w-full sticky top-2 z-50">
       {/* New Navbar */}
       <div className="navbar bg-base-100 sm:px-1 lg:px-32 shadow">
         <div className="navbar-start">
@@ -231,7 +231,7 @@ const Navbar = () => {
         </form>
       {/* End New Navbar */}
       
-    </>
+    </div>
   );
 }
 

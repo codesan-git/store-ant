@@ -375,7 +375,7 @@ export default function CreateShop({ product, ratings }: FetchData) {
           id="item-order-section"
           className="hidden lg:block sm:w-1/3 p-2"
         >
-          <div className="p-4 shadow-lg rounded-lg sticky top-2">
+          <div className="p-4 shadow-lg rounded-lg sticky top-24">
             <h1>Stok {renderStockCount(product.stock)}</h1>
             <h1 className="text-4xl my-2">Rp.{product.price.toString()}</h1>
             <div className="custom-number-input h-10 w-32">
