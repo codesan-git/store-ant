@@ -83,11 +83,11 @@ const ProductTransaction = ({ onRateClick, transaction }: Props) => { //TODO: re
     const renderExtraActionDropdown = () => { //THIS STILL CAUSES A BUG. If you enter web-view mode, and click various extra action buttons consecutively, then enter mobile mode, there will be a stack of extra actions modal
       return(
         <div className="">
-          <button onClick={() => setExtraActionsIsOpen(!extraActionsIsOpen)} className="lg:hidden w-8 h-8 flex justify-center items-center bg-black">
+          <button id="extra-actions-mobile" onClick={() => setExtraActionsIsOpen(!extraActionsIsOpen)} className="lg:hidden w-8 h-8 flex justify-center items-center bg-black">
             <HiOutlineEllipsisVertical className="text-white"/>
           </button>
-          <div className="hidden lg:block dropdown dropdown-end">
-            <label onClick={() => setExtraActionsIsOpen(true)} tabIndex={0} className="w-8 h-8 flex justify-center items-center bg-black">
+          <div id="extra-actions-web-view" className="hidden lg:block dropdown dropdown-end">
+            <label onClick={() => setExtraActionsIsOpen(true)} tabIndex={0} className="w-8 h-8 flex justify-center items-center bg-black hover:cursor-pointer">
               <HiOutlineEllipsisVertical className="text-white"/>
             </label>
             <ul tabIndex={0} className="mt-1 dropdown-content menu shadow bg-base-100 rounded-sm w-52">
