@@ -20,6 +20,21 @@ export default async function handler(
         data:{
             status: Status.RETURN_REJECTED
         }
+    })    
+
+    const product = await prisma.product.findFirst({
+      where: {id: productInCart.productId}
+    })
+
+    const shop = await prisma.shop.findFirst({
+      where: {id: product?.shopId}
+    })
+
+    const shopUpdate = await prisma.shop.update({
+      where: {id: shop?.id},
+      data: {
+        balance: Number(shop?.balance) + (productInCart.count * Number(product?.price))
+      }
     })
     res.status(200).json({ message: "Success!" })
   } catch (error) {

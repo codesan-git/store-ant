@@ -154,21 +154,13 @@ export default function Transaction({ cartItems }: CartItems) {
   async function onBayar(id: number, price: number) {
     const params : Params = {id: id, price: price};
     const transactionToken : TransactionToken = (await axios.post(`http://localhost:3000/api/cart/pay`, params)).data;
-    console.log('transaction token: ', transactionToken.token);
-    console.log('redirect url: ', transactionToken.redirectUrl);
     window.open(transactionToken.redirectUrl);
-    // try {
-    //   const response = await fetch("http://localhost:3000/api/cart/pay", {
-    //     body: JSON.stringify(cartId),
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     method: "PUT",
-    //   });
-    //   console.log("response:", response.json());
-    // } catch (error) {
-    //   //console.log(error)
-    // }
+  }
+
+  async function onBayarDenganSaldo(id: number, price: number) {
+    const params : Params = {id: id, price: price};
+    const transactionToken : TransactionToken = (await axios.post(`http://localhost:3000/api/cart/paywithbalance`, params)).data;
+    window.open(transactionToken.redirectUrl);
   }
 
   async function onCancel(id: number) {
@@ -206,18 +198,6 @@ export default function Transaction({ cartItems }: CartItems) {
       pathname: "http://localhost:3000/complain/create",
       query: { id: String(id) },
     });
-    // const cartId: CartId = { id: id };
-    // try {
-    //   fetch("http://localhost:3000/api/cart/return", {
-    //     body: JSON.stringify(cartId),
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     method: "PUT",
-    //   }).then(() => router.reload());
-    // } catch (error) {
-    //   //console.log(error)
-    // }
   }
 
   async function onDetail(id: string) {
@@ -420,13 +400,21 @@ export default function Transaction({ cartItems }: CartItems) {
                                     <p className="disabled">Total Harga</p>
                                     <p>Rp. {cartItem.product.price * cartItem.count}</p>
                                   </div>
+                                </div> 
+                                <div className="flex gap-x-5">                                                                 
+                                  <button
+                                    onClick={() => onBayarDenganSaldo(Number(cartItem.id), (cartItem.product.price * cartItem.count))}
+                                    className="w-48 btn btn-sm btn-primary rounded-md"
+                                  >
+                                    Bayar dengan Saldo
+                                  </button>
+                                  <button
+                                    onClick={() => onBayar(Number(cartItem.id), (cartItem.product.price * cartItem.count))}
+                                    className="w-32 btn btn-sm btn-primary rounded-md"
+                                  >
+                                    Bayar
+                                  </button>
                                 </div>
-                                <button
-                                  onClick={() => onBayar(Number(cartItem.id), (cartItem.product.price * cartItem.count))}
-                                  className="w-32 btn btn-sm btn-primary rounded-md"
-                                >
-                                  Bayar
-                                </button>
                               </div>
                             </div>
                           </div>

@@ -54,6 +54,11 @@ export default function Navbar(){
     fetchCategories
   )
 
+  const formatter = new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+  });
+
   let price = 0;
   if(cartItems){
     let i:number;
@@ -191,7 +196,7 @@ export default function Navbar(){
                   <div id="finance-details" className="px-4 py-2 border-y border-y-gray-400">
                     <div className="flex flex-row">
                       <h1 className="text-sm">Saldo</h1>
-                      <h1 className="text-sm flex-1 text-right">Rp.30.000,00</h1>
+                      <h1 className="text-sm flex-1 text-right">{formatter.format(session.user.balance)}</h1>
                     </div>
                   </div>
                   <li className="mt-1">

@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
 import { prisma } from "../../../../lib/prisma"
-import { Status } from '@prisma/client'
+import { Status, TransactionStatus } from '@prisma/client'
 
 export default async function handler(
   req: NextApiRequest,
@@ -15,16 +15,37 @@ export default async function handler(
       data:{
           status: Status.RETURNED
       }
+  })  
+
+  const product = await prisma.product.findFirst({
+    where:{id: Number(productInCart.productId)}
+  })
+
+  const productUpdate = await prisma.product.update({
+    where:{id: Number(product?.id)},
+    data:{
+      stock: Number(Number(product?.stock) + Number(productInCart.count))
+    }
+  })    
+
+  const returnAmount: number = Number(productInCart?.count) * Number(product?.price);
+  
+  const user = await prisma.user.findFirst({
+      where:{id: session?.user?.id}
+  });
+
+  const userUpdate = await prisma.user.update({
+      where: {id: user?.id},
+      data:{
+          balance: Number(user?.balance) + returnAmount
+      }
+  });
+
+  const transaction = await prisma.transaction.update({
+    where: {productInCartId: Number(id)},
+    data: {
+      status: TransactionStatus.REFUNDED
+    }
   })
   res.status(200).json({ message: "Success!" })
-
-  // try {
-  //   let cart = await prisma.cart.findFirst({
-  //     where: {userId: session?.user.id}
-  //   });
-
-  // } catch (error) {
-  //   //console.log(error)
-  //   res.status(400).json({ message: "Fail" })
-  // }
 }

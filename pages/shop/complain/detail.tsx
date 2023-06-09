@@ -38,17 +38,18 @@ interface CartId {
 
 export default function Detail({ complain }: ComplainData) {
   const router = useRouter();
+  const {id} = router.query;
 
-  async function onReturn(id: Number) {
-    const cartId: CartId = {id: id};
+  async function onReturn() {
+    const cartId: CartId = {id: Number(id)};
     try{
-        fetch('http://localhost:3000/api/shop/rejectreturn', {
+        fetch('http://localhost:3000/api/shop/return', {
             body: JSON.stringify(cartId),
             headers: {
                 'Content-Type' : 'application/json'
             },
             method: 'PUT'
-        }).then(()=> router.reload())
+        }).then(()=> router.push({pathname: 'http://localhost:3000/shop/complain/refund', query: {id: id}}))
       }catch(error){
           //console.log(error)
       }
@@ -73,13 +74,13 @@ export default function Detail({ complain }: ComplainData) {
     <div>
       <div
         className="card bg-base-100 shadow-xl text-md"
-        key={String(complain.id)}
+        key={String(complain?.id)}
       >
         <div>
           <div className="card-body py-5">
-            {complain.image ? (
+            {complain?.image ? (
               <div className="rounded-md h-40 w-40 flex gap-5">
-                {complain.image.split(",").map((image) => (
+                {complain?.image.split(",").map((image) => (
                   <img
                     className="rounded-md w-40 h-40"
                     src={`http://localhost:3000/${image}`}
@@ -98,27 +99,40 @@ export default function Detail({ complain }: ComplainData) {
           <div className="w-full">
             <div className="py-5 px-10 flex w-full">
               <div>
-                <p>Complain By: {complain.productInCart.cart.user.name}</p>
-                <p>Product: {complain.productInCart.product.name}</p>
-                <p>Shop: {complain.productInCart.product.shop.shopName}</p>
-                <p>Deskripsi: {complain.description}</p>
-                <p>
-                  Status:{" "}
-                  {complain.productInCart.status === Status.NEED_ADMIN_REVIEW
-                    ? "Toko menolak pengembalian, menunggu tanggapan admin"
-                    : "Menunggu tanggapan toko"}{" "}
-                </p>
-                <div>
-                  {complain.productInCart.status === Status.RETURNED || complain.productInCart.status === Status.RETURN_REJECTED ? (
+                <p>Complain By: {complain?.productInCart.cart.user.name}</p>
+                <p>Product: {complain?.productInCart.product.name}</p>
+                <p>Shop: {complain?.productInCart.product.shop.shopName}</p>
+                <p>Deskripsi: {complain?.description}</p>
+                {complain?.productInCart.status === Status.NEED_ADMIN_REVIEW ? (
+                    <p>
+                      Status: Toko menolak pengembalian, menunggu tanggapan admin
+                    </p>
+                  ) : (
                     <div>
-                        <p>Persetujuan {complain.productInCart.status === Status.RETURNED ? "Diterima" : "Ditolak"}</p>
+                      {complain?.productInCart.status === Status.RETURNED ? (
+                        <p>
+                          Status: Pengembalian Disetujui
+                        </p>
+                      ) : (
+                        <p>
+                          Status: Menunggu tanggapan toko
+                        </p>
+                      )}
+                    </div>
+                  ) 
+                }
+                
+                <div>
+                  {complain?.productInCart.status === Status.RETURNED || complain?.productInCart.status === Status.RETURN_REJECTED ? (
+                    <div>
+                        <p>Persetujuan {complain?.productInCart.status === Status.RETURNED ? "Diterima" : "Ditolak"}</p>
                     </div>
                   ) : (
                     <div>
-                      {complain.productInCart.status === Status.RETURNING ? (
+                      {complain?.productInCart.status === Status.RETURNING ? (
                         <div  className="card-actions my-2">
                             <button
-                                onClick={() => onReturn(complain.productInCart.id)}
+                                onClick={() => onReturn()}
                                 className="w-32 btn btn-primary"
                             >
                                 Setujui

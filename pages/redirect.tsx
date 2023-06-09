@@ -2,8 +2,8 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import React from "react";
 
-interface CartId {
-    id: number
+interface TransactionId {
+    id: string
 }
   
 export default function Redirect() {
@@ -15,9 +15,9 @@ export default function Redirect() {
   }
 
   async function UpdateStatus() {
-    const cartId:CartId = {id: Number((String(order_id).split("-")[2]))}
-    console.log(cartId);
-    await axios.post(`http://localhost:3000/api/cart/success`, cartId);
+    const transactionId:TransactionId = {id: order_id as string}
+    console.log(transactionId);
+    await axios.post(`http://localhost:3000/api/cart/success`, transactionId);
   }
 
   return (

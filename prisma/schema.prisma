@@ -41,6 +41,18 @@ enum ComplainStatus {
   CLOSED
 }
 
+enum TransactionStatus {
+  UNPAID
+  PAID
+  REFUNDED
+}
+
+enum WithdrawalStatus {
+  REQUESTED
+  ON_PROCESS
+  DONE
+}
+
 model Account {
   id                 String     @id @default(cuid())
   userId             String     @map("user_id")
@@ -79,6 +91,7 @@ model Shop {
   id            Int    @id @default(autoincrement())
   userId        String @unique @map("user_id")
   shopName      String
+  balance       Int    @default(0)
   product       Product[]
   image         String?
   averageRating Float @default(5.00)
@@ -117,11 +130,14 @@ model User {
   email         String?      @unique
   emailVerified DateTime?
   image         String?
+  balance       Int         @default(0)
   accounts      Account[]
   sessions      Session[]
   profile       Profile?  
   shop          Shop?
   cart          Cart?
+  bankAccount   BankAccount?
+  withdrawal    Withdrawal[]
 }
 
 model Product {
@@ -164,6 +180,7 @@ model ProductInCart {
   updatedAt    DateTime @default(now())
   Rating       Rating?
   Complain     Complain?
+  Transaction  Transaction?
 
   cart Cart @relation(fields: [cartId], references: [id], onDelete: Cascade)
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
@@ -206,6 +223,40 @@ model ShopComment {
   description       String
   
   complain Complain @relation(fields: [complainId], references: [id], onDelete: Cascade)
+}
+
+model Transaction {
+  id                String @id @default(cuid())
+  productInCartId   Int @map("productInCart_id") @unique
+  status            TransactionStatus @default(UNPAID)
+
+  productInCart ProductInCart @relation(fields: [productInCartId], references: [id], onDelete: Cascade)
+}
+
+model BankType {
+  id          Int      @id @default(autoincrement())
+  name        String
+  account     BankAccount[]
+}
+
+model BankAccount {
+  id          Int      @id @default(autoincrement())
+  bankTypeId  Int      @map("bankType_id")
+  userId      String   @unique @map("user_id")
+  name        String
+  number      String   @unique
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bank        BankType     @relation(fields: [bankTypeId], references: [id], onDelete: Cascade)
+}
+
+model Withdrawal {
+  id          Int               @id @default(autoincrement())
+  userId      String            @unique @map("user_id")
+  amount      Int
+  status      WithdrawalStatus  @default(REQUESTED)
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model VerificationToken {

@@ -11,12 +11,12 @@ export default async function handler(
   const session = await getSession({req})  
 
   try {
-    let cart = await prisma.cart.findFirst({
-      where: {userId: session?.user.id}
+    let transaction = await prisma.transaction.findFirst({
+      where: {id: id}
     });
 
     const productInCart = await prisma.productInCart.update({
-        where:{id: Number(id)},
+        where:{id: Number(transaction?.productInCartId)},
         data:{
             status: Status.PACKING
         }
