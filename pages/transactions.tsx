@@ -71,11 +71,12 @@ interface TransactionToken {
 export default function Transaction({ cartItems }: CartItems) {
   const router = useRouter();
   
+  const [currentSelectedSection, setCurrentSelectedSection] = useState<String>("Menunggu Pembayaran");
   const [itemsToDisplay, setItemsToDisplay] = useState(cartItems.filter((e) => e.status === Status.UNPAID));
   const [currentRateProductName, setCurrentRateProductName] = useState<String>("");
   const [currentCartItemId, setCurrentCartItemId] = useState<Number>();
   
-  useEffect(() => {}, [itemsToDisplay]);
+  useEffect(() => {}, [itemsToDisplay, currentSelectedSection]);
 
   async function onCommentDetail(id: number) {
     router.push({
@@ -155,18 +156,9 @@ export default function Transaction({ cartItems }: CartItems) {
     return {
       cartItems,
       setItemsToDisplay,
+      setCurrentSelectedSection,
     }
   };
-
-  // const ProductTransactionCallbacks = () => {
-  //   return {
-  //     onBayar,
-  //     onCancel,
-  //     onFinish,
-  //     onReturn,
-  //     onDetail,
-  //   }
-  // }
 
   const renderItemsToDisplay = () => {
 
@@ -200,7 +192,10 @@ export default function Transaction({ cartItems }: CartItems) {
         <div id="transactions-dashboard-container" className="lg:w-1/6 lg:h-full lg:sticky lg:top-2">
           <TransactionsDashboard TransactionDashboardArguments={TransactionDashboardArguments}/>
         </div>
-        <div className="w-full space-y-2 bg-gray-100">
+        <div className="w-full p-2 space-y-2 bg-gray-100">
+          <div className="w-full p-2 text-3xl">
+            <h1>{currentSelectedSection}</h1>
+          </div>
           {renderItemsToDisplay()}
         </div>
       </div>
