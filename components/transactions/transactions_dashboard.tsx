@@ -198,7 +198,7 @@ const TransactionsDashboard = ({TransactionDashboardArguments}: Props) => {
               </div>
             </li>
             <li>
-              <div onClick={tidakBerhasilOnClick} className="modal modal-box flex justify-center lg:justify-start items-center text-center p-1 lg:p-4 w-32 lg:w-full h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300 hover:cursor-pointer">
+              <div onClick={tidakBerhasilOnClick} className="flex justify-center lg:justify-start items-center text-center p-1 lg:p-4 w-32 lg:w-full h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300 hover:cursor-pointer">
                 <span className="flex justify-center items-center text-center">
                   Tidak Berhasil
                 </span>

@@ -20,14 +20,16 @@ interface Transaction {
 }
 
 interface Props {
-  transaction: Transaction
-  onRateClick: (productName: String, cartItemId: Number) => void
-
+  transaction: Transaction,
+  onBayar: (id: Number) => Promise<void>,
+  onCancel: (id: Number) => Promise<void>,
+  onFinish: (id: Number) => Promise<void>,
+  onReturn: (id: Number) => Promise<void>,
+  onDetail: (id: string) => Promise<void>,
+  onRate: (productName: String, cartItemId: Number) => void,
 }
 
-//TODO: Nama toko jadi size sm, yang lain jadi xs
-
-const ProductTransaction = ({ onRateClick, transaction }: Props) => { //TODO: readjust background colors based on website. the one in the wireframe are just placeholder colors.
+const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCancel, onFinish, onReturn, onDetail }: Props) => { //TODO: re-adjust background colors based on website. the one in the wireframe are just placeholder colors.
 
   const transactionTotal = transaction.count.valueOf() * transaction.product.price.valueOf();
 
@@ -46,21 +48,21 @@ const ProductTransaction = ({ onRateClick, transaction }: Props) => { //TODO: re
           <div id="berlangsung-modal-content">
             <ul>
               <li>
-                <Link href={''} className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300">
+                <div className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300">
                   <div className="flex justify-center items-center text-center lg:pl-6">
                     Tanya Penjual
                   </div>
-                </Link>
-                <Link href={''} className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300">
+                </div>
+                <div onClick={() => onCancel(Number(transaction.id))} className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300">
                   <div className="flex justify-center items-center text-center lg:pl-6">
                     Batalkan
                   </div>
-                </Link>
-                <Link href={''} className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300">
+                </div>
+                <div className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300">
                   <div className="flex justify-center items-center text-center lg:pl-6">
                     Pusat Bantuan
                   </div>
-                </Link>
+                </div>
               </li>
             </ul>
           </div>
@@ -92,7 +94,11 @@ const ProductTransaction = ({ onRateClick, transaction }: Props) => { //TODO: re
             </label>
             <ul tabIndex={0} className="mt-1 dropdown-content menu shadow bg-base-100 rounded-sm w-52">
               <li className="rounded-sm hover:bg-gray-100 transition duration-300"><a>Tanya Penjual</a></li>
-              <li className="rounded-sm hover:bg-gray-100 transition duration-300"><a>Batalkan</a></li>
+              { //I really need to refactor this entire module
+                (transaction.status === Status.UNPAID||transaction.status === Status.AWAITING_CONFIRMATION || transaction.status === Status.PACKING) 
+                ? <li className="rounded-sm hover:bg-gray-100 transition duration-300"><div onClick={() => onCancel(transaction.id)}>Batalkan</div></li>
+                : <li className="rounded-sm hover:bg-gray-100 transition duration-300"><div>Ajukan Komplain</div></li>
+              }
               <li className="rounded-sm hover:bg-gray-100 transition duration-300"><a>Pusat Bantuan</a></li>
             </ul>
           </div>
@@ -100,13 +106,12 @@ const ProductTransaction = ({ onRateClick, transaction }: Props) => { //TODO: re
       );
     }
 
-
     //better idea: Create a callback function argument that passes all the handle functions and buttons to render as objects and render them there
 
     if(transaction.status === Status.UNPAID){
       return (
         <Fragment>
-          <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-24 h-8 text-white bg-green-500">
+          <button onClick={() => onBayar(Number(transaction.id))} className="text-xs lg:text-base w-24 h-8 text-white bg-green-500">
             Bayar
           </button>
           {renderExtraActionDropdown()}
@@ -116,7 +121,7 @@ const ProductTransaction = ({ onRateClick, transaction }: Props) => { //TODO: re
     else if (transaction.status === Status.AWAITING_CONFIRMATION){
       return (
         <Fragment>
-          <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-28 lg:w-32 h-8 border-2 border-green-500 text-green-500">
+          <button onClick={() => onDetail(transaction.id.toString())} className="text-xs lg:text-base w-28 lg:w-32 h-8 border-2 border-green-500 text-green-500">
             Detail Transaksi
           </button>
           {renderExtraActionDropdown()}
@@ -126,7 +131,7 @@ const ProductTransaction = ({ onRateClick, transaction }: Props) => { //TODO: re
     else if (transaction.status === Status.FINISHED){ // FINISHED == SUCCESS
       return (
         <Fragment>
-          <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
+          <button onClick={() => onDetail(transaction.id.toString())} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
             Detail Transaksi
           </button>
           <label htmlFor="review-modal" onClick={() => onRateClick(transaction.product.name,transaction.id)} className="flex justify-center items-center text-xs lg:text-base w-32 text-white bg-green-500 hover:cursor-pointer">
@@ -139,7 +144,7 @@ const ProductTransaction = ({ onRateClick, transaction }: Props) => { //TODO: re
     else if (transaction.status === Status.CANCELED || transaction.status === Status.CANCEL_REJECTED){
       return (
         <Fragment>
-          <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
+          <button onClick={() => onDetail(transaction.id.toString())} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
             Detail Transaksi
           </button>
           {renderExtraActionDropdown()}
@@ -149,7 +154,7 @@ const ProductTransaction = ({ onRateClick, transaction }: Props) => { //TODO: re
     else if (transaction.status === Status.PACKING){
       return (
         <Fragment>
-          <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
+          <button onClick={() => onDetail(transaction.id.toString())} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
             Detail Transaksi
           </button>
           {renderExtraActionDropdown()}
@@ -159,7 +164,7 @@ const ProductTransaction = ({ onRateClick, transaction }: Props) => { //TODO: re
     else if (transaction.status === Status.AWAITING_COURIER){
       return (
         <Fragment>
-          <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
+          <button onClick={() => onDetail(transaction.id.toString())} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
             Detail Transaksi
           </button>
           <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 text-white bg-green-500">
@@ -172,7 +177,7 @@ const ProductTransaction = ({ onRateClick, transaction }: Props) => { //TODO: re
     else if (transaction.status === Status.DELIVERING){
       return (
         <Fragment>
-          <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
+          <button onClick={() => onDetail(transaction.id.toString())} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
             Detail Transaksi
           </button>
           <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 text-white bg-green-500">
@@ -185,10 +190,10 @@ const ProductTransaction = ({ onRateClick, transaction }: Props) => { //TODO: re
     else if (transaction.status === Status.REACHED_DESTINATION){
       return (
         <Fragment>
-          <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
+          <button onClick={() => onDetail(transaction.id.toString())} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
             Detail Transaksi
           </button>
-          <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 text-white bg-green-500">
+          <button onClick={() => onFinish(transaction.id)} className="text-xs lg:text-base w-32 text-white bg-green-500">
             Selesai
           </button>
           {renderExtraActionDropdown()}

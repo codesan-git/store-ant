@@ -63,6 +63,65 @@ export default function Transaction({ cartItems }: CartItems) {
     };
   };
 
+  const onBayar = async (id: Number) => {
+    const cartId: CartId = { id: id };
+    try {
+      fetch("http://localhost:3000/api/cart/pay", {
+        body: JSON.stringify(cartId),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "PUT",
+      }).then(() => router.reload());
+    } catch (error) {
+      //console.log(error)
+    }
+  }
+
+  const onCancel = async (id: Number) => {
+    const cartId: CartId = { id: id };
+    try {
+      fetch("http://localhost:3000/api/cart/cancel", {
+        body: JSON.stringify(cartId),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "PUT",
+      }).then(() => router.reload());
+    } catch (error) {
+      //console.log(error)
+    }
+  }
+
+  const onFinish = async (id: Number) => {
+    const cartId: CartId = { id: id };
+    try {
+      fetch("http://localhost:3000/api/cart/finish", {
+        body: JSON.stringify(cartId),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "PUT",
+      }).then(() => router.reload());
+    } catch (error) {
+      //console.log(error)
+    }
+  }
+
+  const onReturn = async (id: Number) => {
+    router.push({
+      pathname: "http://localhost:3000/complain/create",
+      query: {id: String(id)}
+    })
+  }
+
+  const onDetail = async (id: string) => {
+    router.push({
+      pathname: "/complain/detail",
+      query: { id: id },
+    });
+  }
+
   const TransactionDashboardArguments = () => { //Don't ever do this callback function hack again - Peter D.
     return {
       cartItems,
@@ -70,13 +129,36 @@ export default function Transaction({ cartItems }: CartItems) {
     }
   };
 
+  // const ProductTransactionCallbacks = () => {
+  //   return {
+  //     onBayar,
+  //     onCancel,
+  //     onFinish,
+  //     onReturn,
+  //     onDetail,
+  //   }
+  // }
+
   const renderItemsToDisplay = () => {
 
     if(itemsToDisplay.length === 0) return <h1 className="h-full flex justify-center items-center">No Items</h1>
 
     return (
       <>
-        {itemsToDisplay.map((transaction, i) => <ProductTransaction key={i} transaction={transaction} onRateClick={onRateClick}/>)}
+        {
+          itemsToDisplay.map(
+            (transaction, i) => <ProductTransaction 
+              key={i} 
+              transaction={transaction} 
+              onBayar={onBayar}
+              onCancel={onCancel}
+              onFinish={onFinish}
+              onReturn={onReturn}
+              onDetail={onDetail}
+              onRate={onRateClick}
+            />
+          )
+        }
       </>
     );
 
