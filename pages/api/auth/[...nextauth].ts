@@ -98,6 +98,7 @@ const authOptions : NextAuthOptions = {
         }
         session.user.emailVerified = userData?.emailVerified!;
         session.user.role = userData?.Role!;
+        session.user.balance = userData?.balance!;
         return session;
       }
     },

@@ -12,19 +12,19 @@ interface Product {
 }
 
 interface Transaction {
-  id: Number;
+  id: number;
   product: Product;
-  count: Number;
-  price: Number;
+  count: number;
+  price: number;
   status: Status;
 }
 
 interface Props {
   transaction: Transaction,
   onBayar: (id: number,  price: number) => Promise<void>,
-  onCancel: (id: Number) => Promise<void>,
-  onFinish: (id: Number) => Promise<void>,
-  onReturn: (id: Number) => Promise<void>,
+  onCancel: (id: number) => Promise<void>,
+  onFinish: (id: number) => Promise<void>,
+  onReturn: (id: number) => Promise<void>,
   onDetail: (id: string) => Promise<void>,
   onRate: (productName: String, cartItemId: Number) => void,
 }

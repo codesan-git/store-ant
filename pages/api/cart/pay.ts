@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
 import { prisma } from "../../../lib/prisma"
-import { Status } from '@prisma/client'
+import { Status, TransactionStatus } from '@prisma/client'
 
 export default async function handler(
   req: NextApiRequest,
@@ -10,7 +10,14 @@ export default async function handler(
   const {id, price} = req.body
   const session = await getSession({req})  
 
-  console.log("price: ", price);
+  
+  let transaction = await prisma.transaction.create({
+    data:{
+      productInCartId: Number(id),
+      status: TransactionStatus.PAID
+    }
+  });
+  
   const midtransClient = require("midtrans-client");
   // Create Snap API instance
   let snap = new midtransClient.Snap({
@@ -20,20 +27,18 @@ export default async function handler(
   });
 
   let parameter = {
-    transaction_details: {
-      order_id: "transcation-order-" + id,
-      gross_amount: price,
+    "payment_type": "gopay",
+    "transaction_details": {
+        "order_id": transaction.id,
+        "gross_amount": price
     },
-    credit_card: {
-      secure: true,
-    },
-    callbacks: {
-      finish: "http://localhost:3000/redirect"
+    "callbacks": {
+      "finish": "http://localhost:3000/redirect"
     }
   };
 
   snap.createTransaction(parameter)
-    .then((transaction)=>{
+    .then((transaction : any)=>{
         // transaction token
         let transactionToken = transaction.token;
         console.log('transactionToken:',transactionToken);
@@ -42,17 +47,6 @@ export default async function handler(
   })
 
   // try {
-  //   let cart = await prisma.cart.findFirst({
-  //     where: {userId: session?.user.id}
-  //   });
-
-  //   const productInCart = await prisma.productInCart.update({
-  //       where:{id: Number(id)},
-  //       data:{
-  //           status: Status.PACKING
-  //       }
-  //   })
-  //   res.status(200).json({ message: "Success!" })
   // } catch (error) {
   //   //console.log(error)
   //   res.status(400).json({ message: "Fail" })

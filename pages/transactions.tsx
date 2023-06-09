@@ -76,6 +76,61 @@ export default function Transaction({ cartItems }: CartItems) {
   const [currentCartItemId, setCurrentCartItemId] = useState<Number>();
   
   useEffect(() => {}, [itemsToDisplay]);
+  async function onBayar(id: number, price: number) {
+    const params : Params = {id: id, price: price};
+    const transactionToken : TransactionToken = (await axios.post(`http://localhost:3000/api/cart/pay`, params)).data;
+    window.open(transactionToken.redirectUrl);
+  }
+
+  async function onBayarDenganSaldo(id: number, price: number) {
+    const params : Params = {id: id, price: price};
+    const transactionToken : TransactionToken = (await axios.post(`http://localhost:3000/api/cart/paywithbalance`, params)).data;
+    window.open(transactionToken.redirectUrl);
+  }
+
+  async function onCancel(id: number) {
+    const cartId: CartId = { id: id };
+    try {
+      fetch("http://localhost:3000/api/cart/cancel", {
+        body: JSON.stringify(cartId),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "PUT",
+      }).then(() => router.reload());
+    } catch (error) {
+      //console.log(error)
+    }
+  }
+
+  async function onFinish(id: number) {
+    const cartId: CartId = { id: id };
+    try {
+      fetch("http://localhost:3000/api/cart/finish", {
+        body: JSON.stringify(cartId),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "PUT",
+      }).then(() => router.reload());
+    } catch (error) {
+      //console.log(error)
+    }
+  }
+
+  async function onReturn(id: Number) {
+    router.push({
+      pathname: "http://localhost:3000/complain/create",
+      query: { id: String(id) },
+    });
+  }
+
+  async function onDetail(id: string) {
+    router.push({
+      pathname: "/complain/detail",
+      query: { id: id },
+    });
+  }
 
   async function onCommentDetail(id: number) {
     router.push({
@@ -98,58 +153,6 @@ export default function Transaction({ cartItems }: CartItems) {
       currentCartItemId,
     };
   };
-
-  const onBayar = async (id: number, price: number) => {
-    const params : Params = {id: id, price: price};
-    const transactionToken : TransactionToken = (await axios.post(`http://localhost:3000/api/cart/pay`, params)).data;
-    console.log('transaction token: ', transactionToken.token);
-    console.log('redirect url: ', transactionToken.redirectUrl);
-    window.open(transactionToken.redirectUrl);
-  }
-
-  const onCancel = async (id: Number) => {
-    const cartId: CartId = { id: id };
-    try {
-      fetch("http://localhost:3000/api/cart/cancel", {
-        body: JSON.stringify(cartId),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "PUT",
-      }).then(() => router.reload());
-    } catch (error) {
-      //console.log(error)
-    }
-  }
-
-  const onFinish = async (id: Number) => {
-    const cartId: CartId = { id: id };
-    try {
-      fetch("http://localhost:3000/api/cart/finish", {
-        body: JSON.stringify(cartId),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "PUT",
-      }).then(() => router.reload());
-    } catch (error) {
-      //console.log(error)
-    }
-  }
-
-  const onReturn = async (id: Number) => {
-    router.push({
-      pathname: "http://localhost:3000/complain/create",
-      query: {id: String(id)}
-    })
-  }
-
-  const onDetail = async (id: string) => {
-    router.push({
-      pathname: "/complain/detail",
-      query: { id: id },
-    });
-  }
 
   const TransactionDashboardArguments = () => { //Don't ever do this callback function hack again - Peter D.
     return {
