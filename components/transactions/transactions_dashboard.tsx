@@ -9,41 +9,49 @@ interface Props {
 
 const TransactionsDashboard = ({TransactionDashboardArguments}: Props) => {
 
-  const {cartItems, setItemsToDisplay} = TransactionDashboardArguments();
+  const {cartItems, setItemsToDisplay, setCurrentSelectedSection} = TransactionDashboardArguments();
 
   const [berlangsungIsOpen, setBerlangsungIsOpen] = useState<Boolean>(false);
 
   //I'm losing my mind just to make this work - Peter D.
   const menungguPembayaranOnClick = () => {
     setItemsToDisplay(cartItems.filter((e: any) => e.status === Status.UNPAID));
+    setCurrentSelectedSection("Menunggu Pembayaran");
   }
   
   const menungguKonfirmasiOnClick = () => {
     setItemsToDisplay(cartItems.filter((e: any) => e.status === Status.AWAITING_CONFIRMATION));
+    setCurrentSelectedSection("Menunggu Konfirmasi");
   }
 
   const pesananDiprosesOnClick = () => {
     setItemsToDisplay(cartItems.filter((e: any) => e.status === Status.PACKING));
+    setCurrentSelectedSection("Pesanan Diproses");
   }
 
   const menungguKurirOnClick = () => {
     setItemsToDisplay(cartItems.filter((e: any) => e.status === Status.AWAITING_COURIER));
+    setCurrentSelectedSection("Menunggu Kurir");
   }
 
   const pesananDikirimOnClick = () => {
     setItemsToDisplay(cartItems.filter((e: any) => e.status === Status.DELIVERING));
+    setCurrentSelectedSection("Pesanan Dikirim");
   }
 
   const pesananTibaOnClick = () => {
     setItemsToDisplay(cartItems.filter((e: any) => e.status === Status.REACHED_DESTINATION));
+    setCurrentSelectedSection("Pesanan Tiba");
   }
 
   const berhasilOnClick = () => {
     setItemsToDisplay(cartItems.filter((e: any) => e.status === Status.FINISHED));
+    setCurrentSelectedSection("Berhasil");
   }
 
   const tidakBerhasilOnClick = () => {
     setItemsToDisplay(cartItems.filter((e: any) => (e.status === Status.CANCELED || e.status === Status.CANCEL_REJECTED)));
+    setCurrentSelectedSection("Tidak Berhasil");
   }
 
   const berlangsungBottomModal = () => {

@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { Category } from "@prisma/client";
 import useSWR from 'swr';
 import { InferGetServerSidePropsType } from "next";
-import LoginDropdown from "@/__test__/components/navbar/login_dropdown";
+import LoginDropdown from "@/components/navbar/login_dropdown";
 
 interface CartItems {
   id: Number;
