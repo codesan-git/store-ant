@@ -54,19 +54,18 @@ export default function Detail({ complain }: ComplainData) {
       }
   }
 
-  async function onReject(id: Number) {
-    const cartId: CartId = {id: id};
-    try{
-        fetch('http://localhost:3000/api/shop/rejectreturn', {
-            body: JSON.stringify(cartId),
-            headers: {
-                'Content-Type' : 'application/json'
-            },
-            method: 'PUT'
-        }).then(()=> router.reload())
-      }catch(error){
-          //console.log(error)
-      }
+  async function onReject() {
+    router.push({
+      pathname: "http://localhost:3000/shop/complain/response/create",
+      query: {id: complain.id}
+    })
+  }
+  
+  async function onCommentDetail() {
+    router.push({
+      pathname: "http://localhost:3000/shop/complain/response/detail",
+      query: {id: complain.id}
+    })
   }
 
   console.log(complain);
@@ -115,29 +114,32 @@ export default function Detail({ complain }: ComplainData) {
                         <p>Persetujuan {complain.productInCart.status === Status.RETURNED ? "Diterima" : "Ditolak"}</p>
                     </div>
                   ) : (
-                    <div  className="card-actions my-2">
-                        <button
-                            onClick={() => onReturn(complain.productInCart.id)}
-                            className="w-32 btn btn-primary"
-                            disabled={
-                            complain.productInCart.status == Status.NEED_ADMIN_REVIEW
-                                ? false
-                                : true
-                            }
-                        >
-                            Setujui
-                        </button>
-                        <button
-                            onClick={() => onReject(complain.id)}
-                            className="w-32 btn btn-primary"
-                            disabled={
-                            complain.productInCart.status == Status.NEED_ADMIN_REVIEW
-                                ? false
-                                : true
-                            }
-                        >
-                            Tolak
-                        </button>
+                    <div>
+                      {complain.productInCart.status === Status.RETURNING ? (
+                        <div  className="card-actions my-2">
+                            <button
+                                onClick={() => onReturn(complain.productInCart.id)}
+                                className="w-32 btn btn-primary"
+                            >
+                                Setujui
+                            </button>
+                            <button
+                                onClick={() => onReject()}
+                                className="w-32 btn btn-primary"
+                            >
+                                Tolak
+                            </button>
+                        </div>
+                      ) : (
+                        <div  className="card-actions my-2">
+                            <button
+                                onClick={() => onCommentDetail()}
+                                className="w-64 btn btn-primary"
+                            >
+                                Lihat Komentar Toko
+                            </button>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -153,7 +155,9 @@ export default function Detail({ complain }: ComplainData) {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { id } = context.query;
   const complain = await prisma.complain.findFirst({
-    where: { id: Number(id) },
+    where: { 
+      productInCart: {id: Number(id)}
+     },
     select: {
       id: true,
       image: true,

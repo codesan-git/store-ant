@@ -406,7 +406,7 @@ export default function CreateShop({ product, ratings }: FetchData) {
             <h1>Subtotal: Rp.{Subtotal}</h1>
             <div id="button-group" className="mt-4 w-auto space-x-4">
               <button
-                onClick={() => checkout(1)}
+                onClick={() => checkout(count)}
                 disabled={count === 0 ? true : false}
                 className="w-20 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent"
               >

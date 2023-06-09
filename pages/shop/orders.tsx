@@ -4,7 +4,6 @@ import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import { getSession, useSession } from 'next-auth/react'
 import { prisma } from "../../lib/prisma"
 import Link from 'next/link'
-import ProductCard from '@/components/product_card'
 import Navbar from '../navbar'
 import Footer from '../footer'
 import { Status } from '@prisma/client'
@@ -119,34 +118,11 @@ export default function Orders({ cartItems, shop }: InferGetServerSidePropsType<
       }
   }
 
-  async function onReturn(id: Number) {
-    const cartId: CartId = {id: id};
-    try{
-        fetch('http://localhost:3000/api/shop/return', {
-            body: JSON.stringify(cartId),
-            headers: {
-                'Content-Type' : 'application/json'
-            },
-            method: 'PUT'
-        }).then(()=> router.reload())
-      }catch(error){
-          //console.log(error)
-      }
-  }
-
-  async function onFinish(id: Number) {
-    const cartId: CartId = {id: id};
-    try{
-        fetch('http://localhost:3000/api/shop/finish', {
-            body: JSON.stringify(cartId),
-            headers: {
-                'Content-Type' : 'application/json'
-            },
-            method: 'PUT'
-        }).then(()=> router.reload())
-      }catch(error){
-          //console.log(error)
-      }
+  async function onDetail(id: string) {
+    router.push({
+        pathname: "http://localhost:3000/shop/complain/detail",
+        query: {id: id}
+    })
   }
 
   return (
@@ -238,9 +214,8 @@ export default function Orders({ cartItems, shop }: InferGetServerSidePropsType<
                                             <p>{cartItem.count}</p>
                                             <p>{cartItem.status}</p>                                                                                      
                                             {cartItem.status === Status.RETURNING ? (    
-                                                <div className="flex gap-x-2">                                                
-                                                    <button onClick={() => onReturn(Number(cartItem.id))} className="w-16 btn btn-primary">Setuju</button>
-                                                    <button onClick={() => onFinish(Number(cartItem.id))} className="w-16 btn btn-primary">Tolak</button>                                               
+                                                <div className="flex gap-x-2">     
+                                                    <button onClick={() => onDetail(cartItem.id)} className="w-16 btn btn-primary">Lihat</button>                                               
                                                 </div>            
                                             ) : (
                                                 <div>

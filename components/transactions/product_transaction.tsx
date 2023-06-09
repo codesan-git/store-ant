@@ -21,7 +21,7 @@ interface Transaction {
 
 interface Props {
   transaction: Transaction,
-  onBayar: (id: Number) => Promise<void>,
+  onBayar: (id: number,  price: number) => Promise<void>,
   onCancel: (id: Number) => Promise<void>,
   onFinish: (id: Number) => Promise<void>,
   onReturn: (id: Number) => Promise<void>,
@@ -111,7 +111,7 @@ const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCance
     if(transaction.status === Status.UNPAID){
       return (
         <Fragment>
-          <button onClick={() => onBayar(Number(transaction.id))} className="text-xs lg:text-base w-24 h-8 text-white bg-green-500">
+          <button onClick={() => onBayar(transaction.id.valueOf(), transactionTotal)} className="text-xs lg:text-base w-24 h-8 text-white bg-green-500">
             Bayar
           </button>
           {renderExtraActionDropdown()}

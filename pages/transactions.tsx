@@ -10,13 +10,30 @@ import { Status } from "@prisma/client";
 import ReviewModal from "../components/transactions/review_modal";
 import TransactionsDashboard from "@/components/transactions/transactions_dashboard";
 import ProductTransaction from "@/components/transactions/product_transaction";
+import type { TabsStylesType } from "@material-tailwind/react";
+
+// TABS
+import {
+  Tabs,
+  TabsHeader,
+  TabsBody,
+  Tab,
+  TabPanel,
+} from "@material-tailwind/react";
+import {
+  Square3Stack3DIcon,
+  UserCircleIcon,
+  Cog6ToothIcon,
+} from "@heroicons/react/24/solid";
+import axios from "axios";
+// END TABS
 
 interface CartItems {
   cartItems: {
-    id: Number;
+    id: number;
     product: Product;
-    count: Number;
-    price: Number;
+    count: number;
+    price: number;
     status: Status;
   }[];
 }
@@ -41,6 +58,16 @@ interface CartId {
   id: Number;
 }
 
+interface Params {
+  id: number;
+  price: number
+}
+
+interface TransactionToken {
+  token: string;
+  redirectUrl: string;
+}
+
 export default function Transaction({ cartItems }: CartItems) {
   const router = useRouter();
   
@@ -50,32 +77,34 @@ export default function Transaction({ cartItems }: CartItems) {
   
   useEffect(() => {}, [itemsToDisplay]);
 
-  const onRateClick = (productName: String, cartItemId: Number) => {
-    setCurrentRateProductName(productName); 
-    setCurrentCartItemId(cartItemId);
+  async function onCommentDetail(id: number) {
+    router.push({
+      pathname: "http://localhost:3000/complain/response/",
+      query: { id: id },
+    });
   }
 
+  const onRateClick = (productName: String, cartItemId: Number) => {
+    setCurrentRateProductName(productName);
+    setCurrentCartItemId(cartItemId);
+  };
+
   const getCurrentSelectedProductForRate = () => {
-    console.log(`returning ${currentRateProductName} and ${currentCartItemId?.toString()}`);
+    console.log(
+      `returning ${currentRateProductName} and ${currentCartItemId?.toString()}`
+    );
     return {
       currentRateProductName,
-      currentCartItemId
+      currentCartItemId,
     };
   };
 
-  const onBayar = async (id: Number) => {
-    const cartId: CartId = { id: id };
-    try {
-      fetch("http://localhost:3000/api/cart/pay", {
-        body: JSON.stringify(cartId),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "PUT",
-      }).then(() => router.reload());
-    } catch (error) {
-      //console.log(error)
-    }
+  const onBayar = async (id: number, price: number) => {
+    const params : Params = {id: id, price: price};
+    const transactionToken : TransactionToken = (await axios.post(`http://localhost:3000/api/cart/pay`, params)).data;
+    console.log('transaction token: ', transactionToken.token);
+    console.log('redirect url: ', transactionToken.redirectUrl);
+    window.open(transactionToken.redirectUrl);
   }
 
   const onCancel = async (id: Number) => {
