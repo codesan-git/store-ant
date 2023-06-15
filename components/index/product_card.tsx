@@ -23,13 +23,12 @@ interface Category{
 }
 
 const ProductCard = ( {product, onClick , onEdit, onDelete} : Props ) => {
-    console.log(`rating: ${product.averageRating}`);
     const onCardClick = () => {
       if(onClick != null) onClick();
     }
 
     return (
-      <div id="card" data-theme="garden" className='card glass w-30 h-96 lg:h-auto lg:w-auto hover:cursor-pointer' onClick={onCardClick}>  {/*Find a way to style cursor pointer if onClick is not null*/}
+      <div data-testid="card" id="card" data-theme="garden" className='card glass w-30 h-96 lg:h-auto lg:w-auto hover:cursor-pointer' onClick={onCardClick}>  {/*Find a way to style cursor pointer if onClick is not null*/}
         {product.image? (
           <img 
             src={product.image.split(",")[0]} 
@@ -58,8 +57,8 @@ const ProductCard = ( {product, onClick , onEdit, onDelete} : Props ) => {
           {
             (onEdit && onDelete) 
             ? <div data-testid="product-action-buttons-container" className="card-actions justify-end my-2">
-                <button onClick={() => onEdit(product.id.toString())} className="w-16 btn btn-primary">Edit</button>
-                <button onClick={() => onDelete(product.id.toString())} className="w-16 btn bg-red-500">Delete</button>
+                <button data-testid="edit-button" onClick={() => onEdit(product.id.toString())} className="w-16 btn btn-primary">Edit</button>
+                <button data-testid="delete-button" onClick={() => onDelete(product.id.toString())} className="w-16 btn bg-red-500">Delete</button>
               </div>
             : null
           }
