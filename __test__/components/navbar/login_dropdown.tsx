@@ -36,9 +36,9 @@ const LoginDropdown = ({session, onLogoutClick}: Props) => {
             <h1 className="text-sm text-center">{session.user.name}</h1>
           </div>
           <div id="finance-details" className="px-4 py-2 border-y border-y-gray-400">
-            <div className="flex flex-row">
-              <h1 className="text-sm">Saldo</h1>
-              <h1 className="text-sm flex-1 text-right">{formatter.format(session.user.balance)}</h1>
+            <div className="flex flex-row gap-x-2">
+              <h1 className="text-sm">Saldo </h1>
+              <h1 className="text-sm flex-1 text-right"> {formatter.format(session.user.balance)}</h1>
               </div>
           </div>
           <li className="mt-1">

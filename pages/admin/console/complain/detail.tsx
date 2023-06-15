@@ -117,30 +117,36 @@ export default function Detail({ complain }: ComplainData) {
                         <p>Persetujuan {complain.productInCart.status === Status.RETURNED ? "Diterima" : "Ditolak"}</p>
                     </div>
                   ) : (
-                    <div  className="card-actions my-2">
-                        <button
-                            onClick={() => onReturn(complain.productInCart.id)}
-                            className="w-32 btn btn-primary"
-                            disabled={
-                            complain.productInCart.status == Status.NEED_ADMIN_REVIEW
-                                ? false
-                                : true
-                            }
-                        >
-                            Setujui
-                        </button>
-                        <button
-                            onClick={() => onRejectReturn(complain.id)}
-                            className="w-32 btn btn-primary"
-                            disabled={
-                            complain.productInCart.status == Status.NEED_ADMIN_REVIEW
-                                ? false
-                                : true
-                            }
-                        >
-                            Tolak
-                        </button>
-                    </div>
+                    <>
+                      {complain.productInCart.status === Status.NEED_ADMIN_REVIEW? (
+                        <div  className="card-actions my-2">
+                          <button
+                              onClick={() => onReturn(complain.productInCart.id)}
+                              className="w-32 btn btn-primary"
+                              disabled={
+                              complain.productInCart.status == Status.NEED_ADMIN_REVIEW
+                                  ? false
+                                  : true
+                              }
+                          >
+                              Setujui
+                          </button>
+                          <button
+                              onClick={() => onRejectReturn(complain.id)}
+                              className="w-32 btn btn-primary"
+                              disabled={
+                              complain.productInCart.status == Status.NEED_ADMIN_REVIEW
+                                  ? false
+                                  : true
+                              }
+                          >
+                              Tolak
+                          </button>
+                      </div>
+                      ) : (
+                        <></>
+                      )}
+                    </>
                   )}
                 </div>
               </div>

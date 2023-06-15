@@ -23,7 +23,7 @@ const TransactionsDashboard = ({TransactionDashboardArguments}: Props) => {
   }
 
   const pesananDiprosesOnClick = () => {
-    setItemsToDisplay(cartItems.filter((e: any) => e.status === Status.PACKING));
+    setItemsToDisplay(cartItems.filter((e: any) => e.status === Status.PACKING || e.status === Status.CANCELING));
   }
 
   const menungguKurirOnClick = () => {
@@ -31,7 +31,7 @@ const TransactionsDashboard = ({TransactionDashboardArguments}: Props) => {
   }
 
   const pesananDikirimOnClick = () => {
-    setItemsToDisplay(cartItems.filter((e: any) => e.status === Status.DELIVERING));
+    setItemsToDisplay(cartItems.filter((e: any) => e.status === Status.DELIVERING || e.status === Status.RETURNING));
   }
 
   const pesananTibaOnClick = () => {
@@ -39,11 +39,11 @@ const TransactionsDashboard = ({TransactionDashboardArguments}: Props) => {
   }
 
   const berhasilOnClick = () => {
-    setItemsToDisplay(cartItems.filter((e: any) => e.status === Status.FINISHED));
+    setItemsToDisplay(cartItems.filter((e: any) => e.status === Status.FINISHED || e.status === Status.CANCEL_REJECTED || e.status === Status.RETURN_REJECTED));
   }
 
   const tidakBerhasilOnClick = () => {
-    setItemsToDisplay(cartItems.filter((e: any) => (e.status === Status.CANCELED || e.status === Status.CANCEL_REJECTED)));
+    setItemsToDisplay(cartItems.filter((e: any) => (e.status === Status.CANCELED || e.status === Status.RETURNED)));
   }
 
   const berlangsungBottomModal = () => {

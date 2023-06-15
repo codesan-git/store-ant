@@ -9,8 +9,8 @@ export default async function handler(
 ) {
   const {id, price} = req.body
   const session = await getSession({req})  
+  console.log(id);
 
-  
   let transaction = await prisma.transaction.create({
     data:{
       productInCartId: Number(id),

@@ -9,21 +9,42 @@ export default async function handler(
 ) {
   const {id} = req.body
   const session = await getSession({req})
-
   
-  let cart = await prisma.cart.findFirst({
-    where: {userId: session?.user.id}
-  });
+  const oldProductInCart = await prisma.productInCart.findFirst({
+    where: {id: Number(id)}
+  })
+  
+  const product = await prisma.product.findFirst({
+    where:{id: Number(oldProductInCart?.productId)}
+  })
+
+  if(oldProductInCart?.status != Status.UNPAID){
+    const returnAmount: number = Number(oldProductInCart?.count) * Number(product?.price);
+      
+    const user = await prisma.user.findFirst({
+        where:{id: session?.user?.id}
+    });
+
+    const userUpdate = await prisma.user.update({
+        where: {id: user?.id},
+        data:{
+            balance: Number(user?.balance) + returnAmount
+        }
+    });
+
+    const transaction = await prisma.transaction.update({
+      where: {productInCartId: Number(id)},
+      data: {
+        status: TransactionStatus.REFUNDED
+      }
+    })
+  }
 
   const productInCart = await prisma.productInCart.update({
       where:{id: Number(id)},
       data:{
           status: Status.CANCELED
       }
-  })
-  
-  const product = await prisma.product.findFirst({
-    where:{id: Number(productInCart.productId)}
   })
 
   const productUpdate = await prisma.product.update({
@@ -33,24 +54,5 @@ export default async function handler(
     }
   })   
 
-  const returnAmount: number = Number(productInCart?.count) * Number(product?.price);
-    
-  const user = await prisma.user.findFirst({
-      where:{id: session?.user?.id}
-  });
-
-  const userUpdate = await prisma.user.update({
-      where: {id: user?.id},
-      data:{
-          balance: Number(user?.balance) + returnAmount
-      }
-  });
-
-  const transaction = await prisma.transaction.update({
-    where: {productInCartId: Number(id)},
-    data: {
-      status: TransactionStatus.REFUNDED
-    }
-  })
   res.status(200).json({ message: "Success!" })
 }

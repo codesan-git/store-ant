@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/router'
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import { getSession, useSession } from 'next-auth/react'
@@ -8,17 +8,28 @@ import Navbar from '../navbar'
 import Footer from '../footer'
 import { Status } from '@prisma/client'
 import ShopDashboard from '../../components/shop/shop_dashboard'
+import SellerCancelAlert from '@/components/transactions/seller_cancel_alert'
 
 interface CartItems {
-  cartItems: {
-    id: Number;
-    product: Product;
-    count: Number;
-    price: Number;
-    status: Status;
-  }[];
+  cartItems: CartItemObject[];
 }
 
+interface CartItemObject {
+    id: number;
+    product: Product;
+    count: number;
+    price: number;
+    status: Status;
+}
+  
+  interface Product {
+    id: string;
+    name: string;
+    price: number;
+    stock: number;
+    image: string;
+}
+  
 interface Product {
   id: string;
   name: string;
@@ -33,12 +44,29 @@ interface CartId {
 
 export default function Orders({ cartItems, shop }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
+  const [selectedTransaction, setSelectedTransaction] = useState<CartItemObject>();
+  const [isCancelling, setIsCancelling] = useState<boolean>();
   const{data:session} = useSession();
   let dikemas = new Array();
   let dikirim = new Array();
   let selesai = new Array();
   let dibatalkan = new Array();
   let dikembalikan = new Array();
+  
+  async function onSelect(transaction: CartItemObject, isCancelling: boolean) {
+    setSelectedTransaction(transaction);
+    setIsCancelling(isCancelling);
+  }
+
+  const getTransactionDetail = () => {
+    console.log(
+      `returning ${selectedTransaction?.product.name}`
+    );
+    return {
+      selectedTransaction,
+      isCancelling
+    };
+  };
 
   if(cartItems){
     let i: number;
@@ -163,8 +191,8 @@ export default function Orders({ cartItems, shop }: InferGetServerSidePropsType<
                                             <p>{cartItem.status}</p>                                                                                                                                  
                                             {cartItem.status === Status.CANCELING ? (    
                                                 <div className="flex gap-x-2">                                                
-                                                    <button onClick={() => onCancel(Number(cartItem.id))} className="w-16 btn btn-primary">Setuju</button>
-                                                    <button onClick={() => onReject(Number(cartItem.id))} className="w-16 btn btn-primary">Tolak</button>                                               
+                                                    <label htmlFor={`refund-alert`} onClick={() => onSelect(cartItem, true)} className="w-16 btn btn-primary">Setuju</label>
+                                                    <label htmlFor={`refund-alert`} onClick={() => onSelect(cartItem, false)} className="w-16 btn btn-primary">Tolak</label>                                               
                                                 </div>            
                                             ) : (
                                                 <div className="flex gap-x-2">
@@ -364,7 +392,8 @@ export default function Orders({ cartItems, shop }: InferGetServerSidePropsType<
                     <p>No on going transaction</p>
                 )}
             </div>
-          </div>
+          </div>          
+          <SellerCancelAlert htmlElementId={`refund-alert`} selectProductCallback={getTransactionDetail}/>
       </div>
       <Footer />
     </>

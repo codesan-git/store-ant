@@ -40,7 +40,7 @@ interface FormData{
     price: string,
     stock: string,
     description: string,
-    categoryId: string
+    categoryId: string,
 }
 
 export default function CreateShop({product} : FetchData) {    
@@ -193,11 +193,11 @@ const [form, setForm] = useState<FormData>({name: product.name, price: String(pr
             </div>
             <div className='flex flex-col space-y-1 w-full'>
               <label htmlFor="product-category-input" className='font-bold'>Category</label>
-              <select name="product-category" id="product-category-input" className='p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white'
+              <select value={form?.categoryId} name="product-category" id="product-category-input" className='p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white'
                 onChange={e => {e.preventDefault(); setForm({...form, categoryId: e.target.value})}} 
               >
                 {data.categories.map(category =>(
-                        <option value={category.id} key={category.id}>{category.category}</option>
+                  <option value={category.id} key={category.id}>{category.category}</option>
                 ))}
               </select>
             </div>
