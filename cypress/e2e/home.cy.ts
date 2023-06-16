@@ -5,7 +5,7 @@ describe('Home Page Test', () => {
   });
 
   it('visits the home page', () => {
-    cy.screenshot();
+    // cy.screenshot(); //This actually screenshots the page and stores the result in the screenshot folder
 
   });
 
