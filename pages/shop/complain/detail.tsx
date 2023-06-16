@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from 'react'
 import { GetServerSideProps } from "next";
 import { prisma } from "@/lib/prisma";
 import { useRouter } from "next/router";
 import { User, Shop, Status } from "@prisma/client";
+import RefundAlert from "@/components/transactions/refund_alert";
 
 interface ComplainData {
   complain: {
@@ -18,6 +19,7 @@ interface ProductInCart {
   cart: Cart;
   product: Product;
   status: Status;
+  count: Number;
 }
 
 interface Cart {
@@ -37,31 +39,23 @@ interface CartId {
 }
 
 export default function Detail({ complain }: ComplainData) {
+  const [isApproving, setIsApproving] = useState<boolean>();
   const router = useRouter();
-  const {id} = router.query;
 
-  async function onReturn() {
-    const cartId: CartId = {id: Number(id)};
-    try{
-        fetch('http://localhost:3000/api/shop/return', {
-            body: JSON.stringify(cartId),
-            headers: {
-                'Content-Type' : 'application/json'
-            },
-            method: 'PUT'
-        }).then(()=> router.push({pathname: 'http://localhost:3000/shop/complain/refund', query: {id: id}}))
-      }catch(error){
-          //console.log(error)
-      }
+  async function onClick(isApproving: boolean) {
+    setIsApproving(isApproving);
   }
 
-  async function onReject() {
-    router.push({
-      pathname: "http://localhost:3000/shop/complain/response/create",
-      query: {id: complain.id}
-    })
-  }
-  
+  const getTransactionDetail = () => {
+    console.log(
+      `returning ${complain?.productInCart.product.name}`
+    );
+    return {
+      complain,
+      isApproving
+    };
+  };
+
   async function onCommentDetail() {
     router.push({
       pathname: "http://localhost:3000/shop/complain/response/detail",
@@ -131,18 +125,20 @@ export default function Detail({ complain }: ComplainData) {
                     <div>
                       {complain?.productInCart.status === Status.RETURNING ? (
                         <div  className="card-actions my-2">
-                            <button
-                                onClick={() => onReturn()}
+                            <label
+                                onClick={() => onClick(true)}
                                 className="w-32 btn btn-primary"
+                                htmlFor="refund-alert"
                             >
                                 Setujui
-                            </button>
-                            <button
-                                onClick={() => onReject()}
+                            </label>
+                            <label
+                                onClick={() => onClick(false)}
                                 className="w-32 btn btn-primary"
+                                htmlFor="refund-alert"
                             >
                                 Tolak
-                            </button>
+                            </label>
                         </div>
                       ) : (
                         <div  className="card-actions my-2">
@@ -162,6 +158,7 @@ export default function Detail({ complain }: ComplainData) {
           </div>
         </div>
       </div>
+      <RefundAlert htmlElementId={`refund-alert`} selectProductCallback={getTransactionDetail}/>
     </div>
   );
 }
@@ -193,7 +190,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             },
           },
           status: true,
-          id: true
+          id: true,
+          count: true
         },
       },
     },

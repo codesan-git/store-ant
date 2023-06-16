@@ -30,12 +30,19 @@ export default async function handler(
         "payment_type": "gopay",
         "transaction_details": {
             "order_id": transaction.id,
-            "gross_amount": price
+            "gross_amount": Number(price) - Number(session?.user?.balance!)
         },
         "callbacks": {
             "finish": "http://localhost:3000/redirect"
         }
     };
+    
+    const user = await prisma.user.update({
+      where: {id: session?.user.id!},
+      data:{
+          balance: 0
+      }
+    })
 
     snap.createTransaction(parameter)
         .then((transaction : any)=>{
@@ -46,7 +53,7 @@ export default async function handler(
             res.status(200).json({ token: transactionToken, redirectUrl: transaction.redirect_url })
     })
   } else {
-    const currentBalance = session?.user?.balance! - price;
+    const currentBalance = session?.user?.balance! - Number(price);
     const user = await prisma.user.update({
         where: {id: session?.user.id!},
         data:{

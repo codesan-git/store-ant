@@ -18,7 +18,7 @@ export default async function handler(
     const productInCart = await prisma.productInCart.update({
         where:{id: Number(transaction?.productInCartId)},
         data:{
-            status: Status.PACKING
+            status: Status.AWAITING_CONFIRMATION
         }
     })
     res.status(200).json({ message: "Success!" })

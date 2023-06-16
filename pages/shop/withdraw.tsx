@@ -1,4 +1,4 @@
-import { BankType } from "@prisma/client";
+import { BankType, Shop } from "@prisma/client";
 import axios from "axios";
 import { useRouter } from "next/router";
 import React from "react";
@@ -12,8 +12,9 @@ interface FormData {
   isUserBalance: boolean;
 }
 
-interface BankData {
+interface Data {
   bank: BankAccount;
+  shop: Shop;
 }
 
 interface BankAccount {
@@ -23,11 +24,10 @@ interface BankAccount {
   bank: BankType;
 }
 
-export default function Withdraw({bank} : BankData) {
-  const { data: session } = useSession();
+export default function Withdraw({bank, shop} : Data) {
   const [form, setForm] = useState<FormData>({
     amount: "",
-    isUserBalance: true
+    isUserBalance: false
   });
   const router = useRouter();
   
@@ -85,8 +85,8 @@ export default function Withdraw({bank} : BankData) {
                 onChange={(e) => setForm({ ...form, amount: e.target.value })}
               />
             </div>
-            <button disabled={Number(form.amount) > Number(session?.user.balance) ? true : false} className="h-10 btn lg:w-36 rounded text-white bg-indigo-700">
-              {Number(form.amount) > Number(session?.user.balance) ? "Saldo tidak mencukupi" : "Submit"}
+            <button disabled={Number(form.amount) > Number(shop.balance) ? true : false} className="h-10 btn lg:w-36 rounded text-white bg-indigo-700">
+              {Number(form.amount) > Number(shop.balance) ? "Saldo tidak mencukupi" : "Submit"}
             </button>
           </div>
         </section>
@@ -108,9 +108,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
   });
 
+  const shop = await prisma.shop.findFirst({
+    where: {userId: session?.user.id}
+  })
+
   return {
     props: {
       bank: JSON.parse(JSON.stringify(bank)),
+      shop: shop
     },
   };
 };

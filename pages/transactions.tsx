@@ -26,16 +26,20 @@ import {
   Cog6ToothIcon,
 } from "@heroicons/react/24/solid";
 import axios from "axios";
+import PaymentModal from "@/components/transactions/payment_modal";
+import CancelAlert from "@/components/transactions/user_cancel_alert";
 // END TABS
 
 interface CartItems {
-  cartItems: {
-    id: number;
-    product: Product;
-    count: number;
-    price: number;
-    status: Status;
-  }[];
+  cartItems: CartItemObject[];
+}
+
+interface CartItemObject {
+  id: number;
+  product: Product;
+  count: number;
+  price: number;
+  status: Status;
 }
 
 interface Product {
@@ -46,7 +50,7 @@ interface Product {
   image: string;
 }
 
-interface Transaction { //TODO: Create model in prisma
+interface Transaction { //TODO: Create model in prisma //note bila: done
   id: Number;
   product: Product;
   count: Number;
@@ -58,16 +62,6 @@ interface CartId {
   id: Number;
 }
 
-interface Params {
-  id: number;
-  price: number
-}
-
-interface TransactionToken {
-  token: string;
-  redirectUrl: string;
-}
-
 export default function Transaction({ cartItems }: CartItems) {
   const router = useRouter();
   
@@ -75,34 +69,11 @@ export default function Transaction({ cartItems }: CartItems) {
   const [itemsToDisplay, setItemsToDisplay] = useState(cartItems.filter((e) => e.status === Status.UNPAID));
   const [currentRateProductName, setCurrentRateProductName] = useState<String>("");
   const [currentCartItemId, setCurrentCartItemId] = useState<Number>();
+  const [selectedTransaction, setSelectedTransaction] = useState<CartItemObject>();
   
-  useEffect(() => {}, [itemsToDisplay, currentSelectedSection]);
-  
-  async function onBayar(id: number, price: number) {
-    const params : Params = {id: id, price: price};
-    const transactionToken : TransactionToken = (await axios.post(`http://localhost:3000/api/cart/pay`, params)).data;
-    window.open(transactionToken.redirectUrl);
-  }
-
-  async function onBayarDenganSaldo(id: number, price: number) {
-    const params : Params = {id: id, price: price};
-    const transactionToken : TransactionToken = (await axios.post(`http://localhost:3000/api/cart/paywithbalance`, params)).data;
-    window.open(transactionToken.redirectUrl);
-  }
-
-  async function onCancel(id: number) {
-    const cartId: CartId = { id: id };
-    try {
-      fetch("http://localhost:3000/api/cart/cancel", {
-        body: JSON.stringify(cartId),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "PUT",
-      }).then(() => router.reload());
-    } catch (error) {
-      //console.log(error)
-    }
+  useEffect(() => {}, [itemsToDisplay]);
+  async function onSelect(transaction: CartItemObject) {
+    setSelectedTransaction(transaction);
   }
 
   async function onFinish(id: number) {
@@ -145,6 +116,15 @@ export default function Transaction({ cartItems }: CartItems) {
     setCurrentRateProductName(productName);
     setCurrentCartItemId(cartItemId);
   };
+  
+  const getTransactionDetail = () => {
+    console.log(
+      `returning ${selectedTransaction?.product.name}`
+    );
+    return {
+      selectedTransaction
+    };
+  };
 
   const getCurrentSelectedProductForRate = () => {
     console.log(
@@ -156,7 +136,7 @@ export default function Transaction({ cartItems }: CartItems) {
     };
   };
 
-  const TransactionDashboardArguments = () => { //Don't ever do this callback function hack again - Peter D.
+  const TransactionDashboardArguments = () => { //Don't ever do this callback function hack again - Peter D. Luffy
     return {
       cartItems,
       setItemsToDisplay,
@@ -175,8 +155,8 @@ export default function Transaction({ cartItems }: CartItems) {
             (transaction, i) => <ProductTransaction 
               key={i} 
               transaction={transaction} 
-              onBayar={onBayar}
-              onCancel={onCancel}
+              onBayar={onSelect}
+              onCancel={onSelect}
               onFinish={onFinish}
               onReturn={onReturn}
               onDetail={onDetail}
@@ -204,6 +184,8 @@ export default function Transaction({ cartItems }: CartItems) {
         </div>
       </div>
       <ReviewModal htmlElementId={`review-modal`}  selectProductCallback={getCurrentSelectedProductForRate}/>
+      <PaymentModal htmlElementId={`payment-modal`} selectProductCallback={getTransactionDetail}/>
+      <CancelAlert htmlElementId={`cancel-alert`} selectProductCallback={getTransactionDetail}/>
       <Footer />
     </div>
   );

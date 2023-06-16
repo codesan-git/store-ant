@@ -13,7 +13,8 @@ interface Props{
     shop:{
         id: Number,
         shopName: string,
-        averageRating: Number
+        averageRating: Number,
+        balance: number
     }
     products:{
       id: string,
@@ -35,7 +36,6 @@ export default function Profile({shop, products} : Props) {
 
   const router = useRouter()
   const{data:session} = useSession();
-
   
   if(!shop){
     router.push('/shop/register')
@@ -62,7 +62,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         select:{
             id: true,
             shopName: true,
-            averageRating: true
+            averageRating: true,
+            balance: true
         }
     })
     const products = await prisma.product.findMany({

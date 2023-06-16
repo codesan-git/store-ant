@@ -13,7 +13,8 @@ interface Props{
   shop:{
       id: Number,
       shopName: string,
-      averageRating: Number
+      averageRating: Number,
+      balance: number
   }
   products:{
     id: string,
@@ -118,7 +119,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       select:{
           id: true,
           shopName: true,
-          averageRating: true
+          averageRating: true,
+          balance: true
       }
   })
   const products = await prisma.product.findMany({
