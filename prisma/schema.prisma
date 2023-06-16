@@ -20,6 +20,11 @@ enum Role {
   ADMIN 
 }
 
+enum BalanceType {
+  USER
+  SHOP
+}
+
 enum Status {
   INCART
   UNPAID
@@ -255,8 +260,9 @@ model BankAccount {
 
 model Withdrawal {
   id          Int               @id @default(autoincrement())
-  userId      String            @unique @map("user_id")
+  userId      String            @map("user_id")
   amount      Int
+  BalanceType BalanceType       @default(USER)
   status      WithdrawalStatus  @default(REQUESTED)
 
   user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)

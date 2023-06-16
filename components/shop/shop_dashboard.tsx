@@ -12,7 +12,8 @@ interface Props {
   shop:{
     id: Number,
     shopName: string,
-    averageRating: Number
+    averageRating: Number,
+    balance: number
   }
 }
 
@@ -21,6 +22,11 @@ const ShopDashboard = ({ shop }: Props) => {
   const {data: session} = useSession();
   
   const [isSalesDropdownClosed, setIsSalesDropdownClosed] = useState<Boolean>(true);
+
+  const formatter = new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+  });
 
   return(
     <div id='shop-dashboard' className="lg:shadow-md lg:w-1/6"> {/*Try to use drawer here*/}
@@ -39,7 +45,7 @@ const ShopDashboard = ({ shop }: Props) => {
         </button>
       </div>
       <div id="shop-stats" className="py-2 px-4 border border-y-gray-600">
-        <h1>Kas: Rp.30.000,00</h1>
+        <h1>Kas: {formatter.format(shop.balance)}</h1>
       </div>
       <div id="shop-dashboard-navigation" className="p-2">
         <ul className="">
