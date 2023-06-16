@@ -19,10 +19,18 @@ interface Transaction {
   status: Status;
 }
 
+interface CartItemObject {
+  id: number;
+  product: Product;
+  count: number;
+  price: number;
+  status: Status;
+}
+
 interface Props {
   transaction: Transaction,
-  onBayar: (id: number,  price: number) => Promise<void>,
-  onCancel: (id: number) => Promise<void>,
+  onBayar: (transaction: CartItemObject) => Promise<void>,
+  onCancel: (transaction: CartItemObject) => Promise<void>,
   onFinish: (id: number) => Promise<void>,
   onReturn: (id: number) => Promise<void>,
   onDetail: (id: string) => Promise<void>,
@@ -53,10 +61,10 @@ const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCance
                     Tanya Penjual
                   </div>
                 </div>
-                <div onClick={() => onCancel(Number(transaction.id))} className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300">
-                  <div className="flex justify-center items-center text-center lg:pl-6">
+                <div className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300">
+                  <label onClick={() => onCancel(transaction)} htmlFor="cancel-alert" className="flex justify-center items-center text-center lg:pl-6">
                     Batalkan
-                  </div>
+                  </label>
                 </div>
                 <div className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300">
                   <div className="flex justify-center items-center text-center lg:pl-6">
@@ -73,7 +81,12 @@ const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCance
 
   const renderTransactionStatus = () => {
     if (transaction.status === Status.UNPAID) return <h1 className="flex justify-end text-sm font-bold">Bayar Sebelum</h1>;
-    if (transaction.status === Status.CANCELED || transaction.status == Status.CANCEL_REJECTED) return <h1 className="flex justify-end text-sm font-bold text-red-600">Dibatalkan Sistem</h1>; //CANCELED||CANCELED_REJECTED == FAILED
+    if (transaction.status === Status.CANCELING) return <h1 className="flex justify-end text-sm font-bold text-yellow-600">Pembatalan Diajukan</h1>;
+    if (transaction.status === Status.RETURNING) return <h1 className="flex justify-end text-sm font-bold text-yellow-600">Pengembalian Diajukan</h1>;
+    if (transaction.status === Status.CANCELED) return <h1 className="flex justify-end text-sm font-bold text-red-600">Dibatalkan Sistem</h1>; //CANCELED||CANCELED_REJECTED == FAILED
+    if (transaction.status === Status.RETURNED) return <h1 className="flex justify-end text-sm font-bold text-red-600">Pesanan Dikembalikan</h1>;
+    if (transaction.status === Status.RETURN_REJECTED) return <h1 className="flex justify-end text-sm font-bold text-blue-900">Pengembalian Ditolak</h1>;
+    if (transaction.status === Status.CANCEL_REJECTED) return <h1 className="flex justify-end text-sm font-bold text-blue-900">Pembatalan Ditolak</h1>;
     if (transaction.status === Status.AWAITING_CONFIRMATION || transaction.status === Status.PACKING) return <h1 className="flex justify-end text-sm font-bold">Otomatis Batal</h1>; //PACKING == BEING_PROCESSED
     if (transaction.status === Status.REACHED_DESTINATION) return <h1 className="flex justify-end text-sm font-bold">Otomatis Selesai</h1>;
 
@@ -96,8 +109,12 @@ const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCance
               <li className="rounded-sm hover:bg-gray-100 transition duration-300"><a>Tanya Penjual</a></li>
               { //I really need to refactor this entire module
                 (transaction.status === Status.UNPAID||transaction.status === Status.AWAITING_CONFIRMATION || transaction.status === Status.PACKING) 
-                ? <li className="rounded-sm hover:bg-gray-100 transition duration-300"><div onClick={() => onCancel(transaction.id)}>Batalkan</div></li>
-                : <li className="rounded-sm hover:bg-gray-100 transition duration-300"><div>Ajukan Komplain</div></li>
+                ? <li className="rounded-sm hover:bg-gray-100 transition duration-300">
+                    <label onClick={() => onCancel(transaction)} htmlFor="cancel-alert">
+                    Batalkan
+                    </label>
+                  </li>
+                : <li className="rounded-sm hover:bg-gray-100 transition duration-300"><div onClick={()=>onReturn(transaction.id)}>Ajukan Komplain</div></li>
               }
               <li className="rounded-sm hover:bg-gray-100 transition duration-300"><a>Pusat Bantuan</a></li>
             </ul>
@@ -111,9 +128,9 @@ const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCance
     if(transaction.status === Status.UNPAID){
       return (
         <Fragment>
-          <button onClick={() => onBayar(transaction.id.valueOf(), transactionTotal)} className="text-xs lg:text-base w-24 h-8 text-white bg-green-500">
+          <label htmlFor="payment-modal" onClick={() => onBayar(transaction)} className="text-xs lg:text-base w-24 h-8 text-white bg-green-500">
             Bayar
-          </button>
+          </label>
           {renderExtraActionDropdown()}
         </Fragment>
       );
@@ -221,7 +238,14 @@ const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCance
       <div id="lower-detail">
         <div id="product-details" className="flex flex-row p-2 bg-gray-300">
           <div id="product-detail-img-container" className=" flex justify-center items-center">
-            <img className="w-36 h-36 object-cover" src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"/>
+            <img className="w-36 h-36 object-cover" 
+                 src={`http://localhost:3000/${transaction.product.image.split(",")[0]}`}
+                 onError={({ currentTarget }) => {
+                    currentTarget.onerror = null; // prevents looping
+                    currentTarget.src = "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
+                 }}
+                 alt=''
+            />
           </div>
           <div id="product-detail" className="flex-1 p-4 flex flex-col justify-center">
             <h1 className="text-xs lg:text-base">Kode Transaksi</h1>

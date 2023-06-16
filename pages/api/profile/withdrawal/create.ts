@@ -1,29 +1,46 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 import { prisma } from "../../../../lib/prisma";
+import { BalanceType } from "@prisma/client";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { amount } = req.body;
+  const { amount, isUserBalance } = req.body;
 
   try {
     const session = await getSession({ req });
 
+    const balanceType = isUserBalance ? BalanceType.USER : BalanceType.SHOP;
+
     const withdrawal = await prisma.withdrawal.create({
       data:{
         userId: session?.user.id!,
-        amount: Number(amount)
+        amount: Number(amount),
+        BalanceType: balanceType
       }
     })
 
-    const user = await prisma.user.update({
-      where: {id: session?.user.id!},
-      data:{
-        balance: Number(session?.user.balance) - Number(amount)
-      }
-    })
+    if(isUserBalance){
+      const user = await prisma.user.update({
+        where: {id: session?.user.id!},
+        data:{
+          balance: Number(session?.user.balance) - Number(amount)
+        }
+      })
+    } else {
+      const shop = await prisma.shop.findFirst({
+        where: { userId: session?.user.id!}
+      });
+
+      const shopUpdate = await prisma.shop.update({
+        where: { userId: session?.user.id!},
+        data:{
+          balance: Number(shop?.balance) - Number(amount)
+        }
+      });
+    }
     
     res.status(200).json({bankAccount: withdrawal});
   } catch (error) {
