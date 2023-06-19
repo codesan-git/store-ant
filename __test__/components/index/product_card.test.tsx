@@ -4,6 +4,7 @@ import "@testing-library/jest-dom";
 import ProductCard from "@/components/index/product_card";
 import { Category } from "@prisma/client";
 
+
 interface Product {
   id: string | number,
   name: string
