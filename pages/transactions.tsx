@@ -11,6 +11,9 @@ import ReviewModal from "../components/transactions/review_modal";
 import TransactionsDashboard from "@/components/transactions/transactions_dashboard";
 import ProductTransaction from "@/components/transactions/product_transaction";
 import type { TabsStylesType } from "@material-tailwind/react";
+import PaymentModal from "@/components/transactions/payment_modal";
+import CancelAlert from "@/components/transactions/user_cancel_alert";
+import DetailTransaksiModal from "@/components/transactions/detail_transaksi_modal";
 
 // TABS
 import {
@@ -26,8 +29,7 @@ import {
   Cog6ToothIcon,
 } from "@heroicons/react/24/solid";
 import axios from "axios";
-import PaymentModal from "@/components/transactions/payment_modal";
-import CancelAlert from "@/components/transactions/user_cancel_alert";
+
 // END TABS
 
 interface CartItems {
@@ -186,6 +188,7 @@ export default function Transaction({ cartItems }: CartItems) {
       <ReviewModal htmlElementId={`review-modal`}  selectProductCallback={getCurrentSelectedProductForRate}/>
       <PaymentModal htmlElementId={`payment-modal`} selectProductCallback={getTransactionDetail}/>
       <CancelAlert htmlElementId={`cancel-alert`} selectProductCallback={getTransactionDetail}/>
+      <DetailTransaksiModal htmlElementId={`detail-transaction-modal`}/>
       <Footer />
     </div>
   );

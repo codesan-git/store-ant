@@ -1,5 +1,6 @@
 import { Fragment, useState } from "react";
 import { HiOutlineEllipsisVertical } from "react-icons/hi2";
+import {} from "react-icons/bi";
 import { ProductInCart, Status } from "@prisma/client";
 import Link from "next/link";
 
@@ -95,6 +96,14 @@ const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCance
 
   const renderActionButtons = () => { //TODO: REFACTOR THIS SWITCH CASE CODE SMELL
 
+    const detailTransaksiButton = () => {
+      return (
+        <label htmlFor="detail-transaction-modal" className="flex justify-center items-center text-xs lg:text-base w-28 lg:w-32 h-8 border-2 border-green-500 text-green-500">
+          Detail Transaksi
+        </label>
+      );
+    }
+
     const renderExtraActionDropdown = () => { //THIS STILL CAUSES A BUG. If you enter web-view mode, and click various extra action buttons consecutively, then enter mobile mode, there will be a stack of extra actions modal
       return(
         <div className="">
@@ -128,7 +137,7 @@ const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCance
     if(transaction.status === Status.UNPAID){
       return (
         <Fragment>
-          <label htmlFor="payment-modal" onClick={() => onBayar(transaction)} className="text-xs lg:text-base w-24 h-8 text-white bg-green-500">
+          <label htmlFor="payment-modal" onClick={() => onBayar(transaction)} className="text-xs lg:text-base flex justify-center items-center w-24 h-8 text-white bg-green-500 hover:cursor-pointer">
             Bayar
           </label>
           {renderExtraActionDropdown()}
@@ -138,9 +147,7 @@ const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCance
     else if (transaction.status === Status.AWAITING_CONFIRMATION){
       return (
         <Fragment>
-          <button onClick={() => onDetail(transaction.id.toString())} className="text-xs lg:text-base w-28 lg:w-32 h-8 border-2 border-green-500 text-green-500">
-            Detail Transaksi
-          </button>
+          {detailTransaksiButton()}
           {renderExtraActionDropdown()}
         </Fragment>
       );
@@ -148,9 +155,7 @@ const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCance
     else if (transaction.status === Status.FINISHED){ // FINISHED == SUCCESS
       return (
         <Fragment>
-          <button onClick={() => onDetail(transaction.id.toString())} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
-            Detail Transaksi
-          </button>
+          {detailTransaksiButton()}
           <label htmlFor="review-modal" onClick={() => onRateClick(transaction.product.name,transaction.id)} className="flex justify-center items-center text-xs lg:text-base w-32 text-white bg-green-500 hover:cursor-pointer">
             Ulas Produk
           </label>
@@ -161,9 +166,7 @@ const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCance
     else if (transaction.status === Status.CANCELED || transaction.status === Status.CANCEL_REJECTED){
       return (
         <Fragment>
-          <button onClick={() => onDetail(transaction.id.toString())} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
-            Detail Transaksi
-          </button>
+          {detailTransaksiButton()}
           {renderExtraActionDropdown()}
         </Fragment>
       );
@@ -171,9 +174,7 @@ const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCance
     else if (transaction.status === Status.PACKING){
       return (
         <Fragment>
-          <button onClick={() => onDetail(transaction.id.toString())} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
-            Detail Transaksi
-          </button>
+          {detailTransaksiButton()}
           {renderExtraActionDropdown()}
         </Fragment>
       );
@@ -181,9 +182,7 @@ const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCance
     else if (transaction.status === Status.AWAITING_COURIER){
       return (
         <Fragment>
-          <button onClick={() => onDetail(transaction.id.toString())} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
-            Detail Transaksi
-          </button>
+          P{detailTransaksiButton()}
           <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 text-white bg-green-500">
             Cek Resi
           </button>
@@ -194,9 +193,7 @@ const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCance
     else if (transaction.status === Status.DELIVERING){
       return (
         <Fragment>
-          <button onClick={() => onDetail(transaction.id.toString())} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
-            Detail Transaksi
-          </button>
+          {detailTransaksiButton()}
           <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 text-white bg-green-500">
             Cek Resi
           </button>
@@ -207,9 +204,7 @@ const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCance
     else if (transaction.status === Status.REACHED_DESTINATION){
       return (
         <Fragment>
-          <button onClick={() => onDetail(transaction.id.toString())} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
-            Detail Transaksi
-          </button>
+          {detailTransaksiButton()}
           <button onClick={() => onFinish(transaction.id)} className="text-xs lg:text-base w-32 text-white bg-green-500">
             Selesai
           </button>
