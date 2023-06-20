@@ -6,6 +6,9 @@ interface Props {
 }
 
 const DetailTransaksiModal = ( {  }: Props) => {
+
+	//TODO: create callback function to get modalOpenState from Transactions page
+
   return (
 		<Fragment>
 			<div id="new-modal-custom" className=" align-bottom bg-gray-900 bg-opacity-75 fixed h-full w-full top-0 left-0 z-50 pointer-events-auto">
