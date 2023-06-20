@@ -188,7 +188,7 @@ export default function Transaction({ cartItems }: CartItems) {
       <ReviewModal htmlElementId={`review-modal`}  selectProductCallback={getCurrentSelectedProductForRate}/>
       <PaymentModal htmlElementId={`payment-modal`} selectProductCallback={getTransactionDetail}/>
       <CancelAlert htmlElementId={`cancel-alert`} selectProductCallback={getTransactionDetail}/>
-      <DetailTransaksiModal htmlElementId={`detail-transaction-modal`}/>
+      <DetailTransaksiModal/>
       <Footer />
     </div>
   );

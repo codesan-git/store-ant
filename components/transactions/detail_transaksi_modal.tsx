@@ -2,25 +2,23 @@ import { Fragment } from "react";
 import { BiStoreAlt } from "react-icons/bi";
 
 interface Props {
-  htmlElementId: string,
   // selectProductCallback: () => any;
 }
 
-const DetailTransaksiModal = ( { htmlElementId: id }: Props) => {
+const DetailTransaksiModal = ( {  }: Props) => {
   return (
 		<Fragment>
-			<input type="checkbox" id={id} className="modal-toggle"/>
-			<div id={id} className="modal modal-bottom sm:modal-middle">
-				<div className="modal-box space-y-2">
-					<div id="detail-transaksi-modal-top" className="flex flex-row">
+			<div id="new-modal-custom" className="lg:hidden align-bottom bg-gray-900 bg-opacity-75 fixed h-screen w-screen top-0 right-0 left-0 bottom-0 z-50 pointer-events-auto">
+				<div id="detail-transaksi-modal-box" className="py-4 bg-white h-full w-full rounded-lg">
+					<div id="detail-transaksi-modal-top" className="h-12 flex flex-row px-4">
 						<div className="w-3/4">
 							<h1 className="text-3xl">Detail Transaksi</h1>
 						</div>
 						<div className="w-1/4 flex justify-end">
-							<label htmlFor={id} className="text-lg font-bold hover:cursor-pointer">✕</label>
+							<label className="text-lg font-bold hover:cursor-pointer">✕</label>
 						</div>
 					</div>
-					<div id="contents" className="space-y-4 overflow-y-auto">
+					<div id="contents" className="px-4 h-5/6 space-y-4 overflow-y-auto">
 						<div id="status-details">
 							<h1 className="text-xl font-bold">Status</h1>
 							<p className=""><span className="text-orange-800">Diproses</span> | Batal Otomatis: 26 Juni 2023, 10:30 WIB</p>
@@ -49,7 +47,7 @@ const DetailTransaksiModal = ( { htmlElementId: id }: Props) => {
 									:
 								</div>
 								<div className="w-full">
-									Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ea, aliquam optio adipisci cum debitis blanditiis accusamus dolorum fugiat voluptates, exercitationem dicta. Quisquam vero, nam repudiandae aliquid cum voluptate saepe nobis.
+									Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore culpa in, iure nobis amet deleniti facere molestiae atque delectus et laboriosam ratione tempora. Nemo minus earum, culpa modi rerum laboriosam! 
 								</div>
 							</div>
 							<div id="address-details" className="flex flex-row space-x-2">
@@ -60,7 +58,7 @@ const DetailTransaksiModal = ( { htmlElementId: id }: Props) => {
 									:
 								</div>
 								<div className="w-full">
-									Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ea, aliquam optio adipisci cum debitis blanditiis accusamus dolorum fugiat voluptates, exercitationem dicta. Quisquam vero, nam repudiandae aliquid cum voluptate saepe nobis.
+									Lorem ipsum dolor, sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ad magni obcaecati ea distinctio quaerat impedit mollitia dolorem quisquam nesciunt, vitae inventore quae. Optio laborum tempora officiis iste, suscipit eaque perferendis!
 								</div>
 							</div>
 						</div>
@@ -113,6 +111,12 @@ const DetailTransaksiModal = ( { htmlElementId: id }: Props) => {
 							</div>
 						</div>
 					</div>
+				</div>
+			</div>
+			<input type="checkbox" className="modal-toggle"/>
+			<div className="modal modal-bottom sm:modal-middle">
+				<div className="modal-box space-y-2">
+					
 				</div>
 			</div>
 		</Fragment>
