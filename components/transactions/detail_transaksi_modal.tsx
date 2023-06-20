@@ -8,8 +8,8 @@ interface Props {
 const DetailTransaksiModal = ( {  }: Props) => {
   return (
 		<Fragment>
-			<div id="new-modal-custom" className="lg:hidden align-bottom bg-gray-900 bg-opacity-75 fixed h-screen w-screen top-0 right-0 left-0 bottom-0 z-50 pointer-events-auto">
-				<div id="detail-transaksi-modal-box" className="py-4 bg-white h-full w-full rounded-lg">
+			<div id="new-modal-custom" className=" align-bottom bg-gray-900 bg-opacity-75 fixed h-full w-full top-0 left-0 z-50 pointer-events-auto">
+				<div id="detail-transaksi-modal-box" className="py-4 bg-white h-full w-full rounded-lg pointer-events-auto">
 					<div id="detail-transaksi-modal-top" className="h-12 flex flex-row px-4">
 						<div className="w-3/4">
 							<h1 className="text-3xl">Detail Transaksi</h1>
@@ -18,7 +18,7 @@ const DetailTransaksiModal = ( {  }: Props) => {
 							<label className="text-lg font-bold hover:cursor-pointer">✕</label>
 						</div>
 					</div>
-					<div id="contents" className="px-4 h-5/6 space-y-4 overflow-y-auto">
+					<div id="contents" className="px-4 pb-14 h-full space-y-4 overflow-y-auto">
 						<div id="status-details">
 							<h1 className="text-xl font-bold">Status</h1>
 							<p className=""><span className="text-orange-800">Diproses</span> | Batal Otomatis: 26 Juni 2023, 10:30 WIB</p>
@@ -111,12 +111,6 @@ const DetailTransaksiModal = ( {  }: Props) => {
 							</div>
 						</div>
 					</div>
-				</div>
-			</div>
-			<input type="checkbox" className="modal-toggle"/>
-			<div className="modal modal-bottom sm:modal-middle">
-				<div className="modal-box space-y-2">
-					
 				</div>
 			</div>
 		</Fragment>
