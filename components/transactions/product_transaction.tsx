@@ -97,7 +97,7 @@ const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCance
 
     const detailTransaksiButton = () => {
       return (
-        <label htmlFor="detail-transaction-modal" className="flex justify-center items-center text-xs lg:text-base w-28 lg:w-32 h-8 border-2 border-green-500 text-green-500 hover:cursor-pointer">
+        <label htmlFor="detail-transaction-modal" className="flex justify-center items-center text-xs lg:text-base w-28 lg:w-32 h-8 border-2 border-green-500 text-green-500">
           Detail Transaksi
         </label>
       );

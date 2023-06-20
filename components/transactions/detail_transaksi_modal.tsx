@@ -99,6 +99,18 @@ const DetailTransaksiModal = ( { htmlElementId: id }: Props) => {
 									Rp 0
 								</div>
 							</div>
+							<hr className="h-px my-2 bg-black border-0"/>
+							<div id="delivery-expense" className="flex flex-row">
+								<div className="w-1/2">
+									Harga Total
+								</div>
+								<div className="w-2">
+									:
+								</div>
+								<div className="">
+									Rp 123,456
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
