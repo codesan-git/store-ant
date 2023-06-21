@@ -75,6 +75,7 @@ export default function Transaction({ cartItems }: CartItems) {
   const [transactionModalIsHidden, setTransactionModalIsHidden] = useState<Boolean>(true);
   
   useEffect(() => {}, [itemsToDisplay]);
+
   async function onSelect(transaction: CartItemObject) {
     setSelectedTransaction(transaction);
   }
@@ -101,11 +102,9 @@ export default function Transaction({ cartItems }: CartItems) {
     });
   }
 
-  async function onDetail(id: string) {
-    router.push({
-      pathname: "/complain/detail",
-      query: { id: id },
-    });
+  const onDetail = (transaction: CartItemObject) => {
+    setSelectedTransaction(transaction)
+    setTransactionModalIsHidden(false);
   }
 
   async function onCommentDetail(id: number) {
@@ -150,7 +149,8 @@ export default function Transaction({ cartItems }: CartItems) {
   const detailTransactionModalArguments = () => {
     return {
       transactionModalIsHidden,
-      setTransactionModalIsHidden: () => setTransactionModalIsHidden(true)
+      setTransactionModalIsHidden: () => setTransactionModalIsHidden(true),
+      getTransactionDetail
     }
   }
 
@@ -169,7 +169,7 @@ export default function Transaction({ cartItems }: CartItems) {
               onCancel={onSelect}
               onFinish={onFinish}
               onReturn={onReturn}
-              onDetail={() => setTransactionModalIsHidden(false)}
+              onDetail={onDetail}
               onRate={onRateClick}
             />
           )
@@ -223,6 +223,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       product: true,
       count: true,
       status: true,
+      // createdAt: true, // Cannot be converted to JSON, causes issues
+      // updatedAt: true,
+      // Transaction: true
     },
   });
   return {

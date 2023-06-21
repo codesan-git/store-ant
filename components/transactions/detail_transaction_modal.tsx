@@ -1,3 +1,4 @@
+import { ProductInCart } from "@prisma/client";
 import { Fragment } from "react";
 import { BiStoreAlt } from "react-icons/bi";
 
@@ -9,7 +10,15 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
 
 	//TODO: create callback function to get modalOpenState from Transactions page
 
-	const { transactionModalIsHidden, setTransactionModalIsHidden } = detailTransactionModalArguments();
+	const { 
+		transactionModalIsHidden, 
+		setTransactionModalIsHidden,
+		getTransactionDetail
+	} = detailTransactionModalArguments();
+
+	const { selectedTransaction: transaction } : { selectedTransaction: ProductInCart | undefined} = getTransactionDetail(); //this is pretty cursed lol -
+	console.log(`selectedTransaction: `);
+	console.log(transaction);
 
 	const productItem = () => {
 		return (
@@ -21,7 +30,7 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
 						</div>
 					</div>
 					<div className="p-2 flex items-center">
-						<h1>1x</h1>
+						<h1>{transaction?.count}x</h1>
 					</div>
 					<div className="flex-1">
 						<div className=" p-0.5">
@@ -51,7 +60,7 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
 					<div id="contents" className="px-4 pb-14 h-full space-y-4 overflow-y-auto">
 						<div id="status-details">
 							<h1 className="text-xl font-bold">Status</h1>
-							<p className=""><span className="text-orange-800">Diproses</span> | Batal Otomatis: 26 Juni 2023, 10:30 WIB</p>
+							<p className=""><span className="text-orange-800">{transaction?.status}</span> | Batal Otomatis: 26 Juni 2023, 10:30 WIB</p>
 						</div>
 						<div id="invoice-details">
 							<h1 className="text-xl font-bold">No. Invoice</h1>
@@ -59,7 +68,7 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
 						</div>
 						<div id="purchase-date-details">
 							<h1 className="text-xl font-bold">Tanggal Pembelian</h1>
-							<p>24 Juni 2023, 10:30 WIB</p>
+							<p>26 Juni 2023, 10:30 WIB</p>
 						</div>
 						<div id="detail-produk" className="w-full border-2 rounded-lg p-4 border-black">
 							<div className="flex flex-row space-x-1">

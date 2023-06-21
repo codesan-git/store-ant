@@ -237,6 +237,8 @@ model Transaction {
   id                String @id @default(cuid())
   productInCartId   Int @map("productInCart_id") @unique
   status            TransactionStatus @default(UNPAID)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @default(now())
 
   productInCart ProductInCart @relation(fields: [productInCartId], references: [id], onDelete: Cascade)
 }
