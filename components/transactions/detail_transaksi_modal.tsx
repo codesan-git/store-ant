@@ -2,23 +2,25 @@ import { Fragment } from "react";
 import { BiStoreAlt } from "react-icons/bi";
 
 interface Props {
-  // selectProductCallback: () => any;
+  detailTransactionModalArguments: () => any;
 }
 
-const DetailTransaksiModal = ( {  }: Props) => {
+const DetailTransaksiModal = ( { detailTransactionModalArguments }: Props) => {
 
 	//TODO: create callback function to get modalOpenState from Transactions page
 
+	const { transactionModalIsHidden, setTransactionModalIsHidden } = detailTransactionModalArguments();
+
   return (
 		<Fragment>
-			<div id="new-modal-custom" className=" align-bottom bg-gray-900 bg-opacity-75 fixed h-full w-full top-0 left-0 z-50 pointer-events-auto">
+			<div hidden={transactionModalIsHidden} id="new-modal-custom" className=" align-bottom bg-gray-900 bg-opacity-75 fixed h-full w-full top-0 left-0 z-50 pointer-events-auto">
 				<div id="detail-transaksi-modal-box" className="py-4 bg-white h-full w-full rounded-lg pointer-events-auto">
 					<div id="detail-transaksi-modal-top" className="h-12 flex flex-row px-4">
 						<div className="w-3/4">
 							<h1 className="text-3xl">Detail Transaksi</h1>
 						</div>
 						<div className="w-1/4 flex justify-end">
-							<label className="text-lg font-bold hover:cursor-pointer">✕</label>
+							<button onClick={setTransactionModalIsHidden} className="text-lg font-bold hover:cursor-pointer">✕</button>
 						</div>
 					</div>
 					<div id="contents" className="px-4 pb-14 h-full space-y-4 overflow-y-auto">

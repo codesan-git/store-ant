@@ -72,6 +72,7 @@ export default function Transaction({ cartItems }: CartItems) {
   const [currentRateProductName, setCurrentRateProductName] = useState<String>("");
   const [currentCartItemId, setCurrentCartItemId] = useState<Number>();
   const [selectedTransaction, setSelectedTransaction] = useState<CartItemObject>();
+  const [transactionModalIsHidden, setTransactionModalIsHidden] = useState<Boolean>(true);
   
   useEffect(() => {}, [itemsToDisplay]);
   async function onSelect(transaction: CartItemObject) {
@@ -146,6 +147,13 @@ export default function Transaction({ cartItems }: CartItems) {
     }
   };
 
+  const detailTransactionModalArguments = () => {
+    return {
+      transactionModalIsHidden,
+      setTransactionModalIsHidden: () => setTransactionModalIsHidden(true)
+    }
+  }
+
   const renderItemsToDisplay = () => {
 
     if(itemsToDisplay.length === 0) return <h1 className="h-full flex justify-center items-center">No Items</h1>
@@ -161,7 +169,7 @@ export default function Transaction({ cartItems }: CartItems) {
               onCancel={onSelect}
               onFinish={onFinish}
               onReturn={onReturn}
-              onDetail={onDetail}
+              onDetail={() => setTransactionModalIsHidden(false)}
               onRate={onRateClick}
             />
           )
@@ -188,7 +196,7 @@ export default function Transaction({ cartItems }: CartItems) {
       <ReviewModal htmlElementId={`review-modal`}  selectProductCallback={getCurrentSelectedProductForRate}/>
       <PaymentModal htmlElementId={`payment-modal`} selectProductCallback={getTransactionDetail}/>
       <CancelAlert htmlElementId={`cancel-alert`} selectProductCallback={getTransactionDetail}/>
-      <DetailTransaksiModal/>
+      <DetailTransaksiModal detailTransactionModalArguments={detailTransactionModalArguments}/>
       <Footer />
     </div>
   );
