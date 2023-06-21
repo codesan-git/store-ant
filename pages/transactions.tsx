@@ -13,7 +13,7 @@ import ProductTransaction from "@/components/transactions/product_transaction";
 import type { TabsStylesType } from "@material-tailwind/react";
 import PaymentModal from "@/components/transactions/payment_modal";
 import CancelAlert from "@/components/transactions/user_cancel_alert";
-import DetailTransaksiModal from "@/components/transactions/detail_transaksi_modal";
+import DetailTransactionModal from "@/components/transactions/detail_transaction_modal";
 
 // TABS
 import {
@@ -196,7 +196,7 @@ export default function Transaction({ cartItems }: CartItems) {
       <ReviewModal htmlElementId={`review-modal`}  selectProductCallback={getCurrentSelectedProductForRate}/>
       <PaymentModal htmlElementId={`payment-modal`} selectProductCallback={getTransactionDetail}/>
       <CancelAlert htmlElementId={`cancel-alert`} selectProductCallback={getTransactionDetail}/>
-      <DetailTransaksiModal detailTransactionModalArguments={detailTransactionModalArguments}/>
+      <DetailTransactionModal detailTransactionModalArguments={detailTransactionModalArguments}/>
       <Footer />
     </div>
   );

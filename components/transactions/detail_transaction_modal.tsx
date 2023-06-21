@@ -5,11 +5,36 @@ interface Props {
   detailTransactionModalArguments: () => any;
 }
 
-const DetailTransaksiModal = ( { detailTransactionModalArguments }: Props) => {
+const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => {
 
 	//TODO: create callback function to get modalOpenState from Transactions page
 
 	const { transactionModalIsHidden, setTransactionModalIsHidden } = detailTransactionModalArguments();
+
+	const productItem = () => {
+		return (
+			<Fragment>
+				<div className="flex flex-row mt-2 space-x-1">
+					<div id="image-placeholder" className="p-1 flex items-center">
+						<div className="w-14 h-14 bg-green-900">
+
+						</div>
+					</div>
+					<div className="p-2 flex items-center">
+						<h1>1x</h1>
+					</div>
+					<div className="flex-1">
+						<div className=" p-0.5">
+							Nama Item
+						</div>
+						<div className=" p-0.5">
+							Rp. 123,000
+						</div>
+					</div>
+				</div>
+			</Fragment>
+		);
+	}
 
   return (
 		<Fragment>
@@ -17,10 +42,10 @@ const DetailTransaksiModal = ( { detailTransactionModalArguments }: Props) => {
 				<div id="detail-transaksi-modal-box" className="py-4 bg-white h-full w-full rounded-lg pointer-events-auto">
 					<div id="detail-transaksi-modal-top" className="h-12 flex flex-row px-4">
 						<div className="w-3/4">
-							<h1 className="text-3xl">Detail Transaksi</h1>
+							<h1 className="text-3xl font-bold">Detail Transaksi</h1>
 						</div>
 						<div className="w-1/4 flex justify-end">
-							<button onClick={setTransactionModalIsHidden} className="text-lg font-bold hover:cursor-pointer">✕</button>
+							<button onClick={setTransactionModalIsHidden} className="text-3xl font-bold hover:cursor-pointer">✕</button>
 						</div>
 					</div>
 					<div id="contents" className="px-4 pb-14 h-full space-y-4 overflow-y-auto">
@@ -41,6 +66,15 @@ const DetailTransaksiModal = ( { detailTransactionModalArguments }: Props) => {
 								<BiStoreAlt className="h-6 w-6"/>
 								<h1 className="font-bold">Toko Ageng Bagus</h1>
 							</div>
+							<div  id="purchased-products-list">
+								{productItem()}
+								{productItem()}
+								{productItem()}
+								{productItem()}
+							</div>
+							<div className="">
+								<h1 className="font-bold flex justify-end">Total Belanja: Rp 123,456</h1>
+							</div>
 						</div>
 						<div id="delivery-details">
 							<h1 className="text-xl font-bold">Pengiriman</h1>
@@ -52,18 +86,21 @@ const DetailTransaksiModal = ( { detailTransactionModalArguments }: Props) => {
 									:
 								</div>
 								<div className="w-full">
-									Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore culpa in, iure nobis amet deleniti facere molestiae atque delectus et laboriosam ratione tempora. Nemo minus earum, culpa modi rerum laboriosam! 
+									<p>StoreAnt Aja - Reguler</p>
+									<p className="italic">{`(Estimasi Tiba: 30 Juni 2023)`}</p>
 								</div>
 							</div>
 							<div id="address-details" className="flex flex-row space-x-2">
-							<div className="w-1/3">
+								<div className="w-1/3">
 									Alamat
 								</div>
 								<div className="w-2">
 									:
 								</div>
 								<div className="w-full">
-									Lorem ipsum dolor, sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ad magni obcaecati ea distinctio quaerat impedit mollitia dolorem quisquam nesciunt, vitae inventore quae. Optio laborum tempora officiis iste, suscipit eaque perferendis!
+									<p className="font-bold">Ageng Bagus</p>
+									<p>081234567890</p>
+									<p className="mt-2">Jalan Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque esse minus necessitatibus adipisci qua</p>
 								</div>
 							</div>
 						</div>
@@ -103,7 +140,7 @@ const DetailTransaksiModal = ( { detailTransactionModalArguments }: Props) => {
 								</div>
 							</div>
 							<hr className="h-px my-2 bg-black border-0"/>
-							<div id="delivery-expense" className="flex flex-row">
+							<div id="delivery-expense" className="flex flex-row font-bold">
 								<div className="w-1/2">
 									Harga Total
 								</div>
@@ -122,4 +159,4 @@ const DetailTransaksiModal = ( { detailTransactionModalArguments }: Props) => {
 	);
 }
 
-export default DetailTransaksiModal;
+export default DetailTransactionModal;
