@@ -9,7 +9,11 @@ interface Props {
 
 const TransactionsDashboard = ({TransactionDashboardArguments}: Props) => {
 
-  const {cartItems, setItemsToDisplay, setCurrentSelectedSection} = TransactionDashboardArguments();
+  const {
+    cartItems, 
+    setItemsToDisplay, 
+    setCurrentSelectedSection
+  } = TransactionDashboardArguments();
 
   const [berlangsungIsOpen, setBerlangsungIsOpen] = useState<Boolean>(false);
 
