@@ -98,7 +98,7 @@ const Navbar = () => {
               <span className="text-secondary-focus">ant</span>
             </Link>
             {/* Dropdown */}
-            <div className="modal modal-bottom sm:dropdown sm:dropdown-hover sm:mr-4">
+            <div className="dropdown dropdown-hover sm:mr-4">
               <label
                 tabIndex={0}
                 className="mx-2 btn btn-link no-underline text-accent-content hidden xl:flex"

@@ -11,6 +11,9 @@ import ReviewModal from "../components/transactions/review_modal";
 import TransactionsDashboard from "@/components/transactions/transactions_dashboard";
 import ProductTransaction from "@/components/transactions/product_transaction";
 import type { TabsStylesType } from "@material-tailwind/react";
+import PaymentModal from "@/components/transactions/payment_modal";
+import CancelAlert from "@/components/transactions/user_cancel_alert";
+import DetailTransactionModal from "@/components/transactions/detail_transaction_modal";
 
 // TABS
 import {
@@ -26,8 +29,7 @@ import {
   Cog6ToothIcon,
 } from "@heroicons/react/24/solid";
 import axios from "axios";
-import PaymentModal from "@/components/transactions/payment_modal";
-import CancelAlert from "@/components/transactions/user_cancel_alert";
+
 // END TABS
 
 interface CartItems {
@@ -70,8 +72,10 @@ export default function Transaction({ cartItems }: CartItems) {
   const [currentRateProductName, setCurrentRateProductName] = useState<String>("");
   const [currentCartItemId, setCurrentCartItemId] = useState<Number>();
   const [selectedTransaction, setSelectedTransaction] = useState<CartItemObject>();
+  const [transactionModalIsHidden, setTransactionModalIsHidden] = useState<Boolean>(true);
   
   useEffect(() => {}, [itemsToDisplay]);
+
   async function onSelect(transaction: CartItemObject) {
     setSelectedTransaction(transaction);
   }
@@ -98,11 +102,9 @@ export default function Transaction({ cartItems }: CartItems) {
     });
   }
 
-  async function onDetail(id: string) {
-    router.push({
-      pathname: "/complain/detail",
-      query: { id: id },
-    });
+  const onDetail = (transaction: CartItemObject) => {
+    setSelectedTransaction(transaction)
+    setTransactionModalIsHidden(false);
   }
 
   async function onCommentDetail(id: number) {
@@ -118,18 +120,12 @@ export default function Transaction({ cartItems }: CartItems) {
   };
   
   const getTransactionDetail = () => {
-    console.log(
-      `returning ${selectedTransaction?.product.name}`
-    );
     return {
       selectedTransaction
     };
   };
 
   const getCurrentSelectedProductForRate = () => {
-    console.log(
-      `returning ${currentRateProductName} and ${currentCartItemId?.toString()}`
-    );
     return {
       currentRateProductName,
       currentCartItemId,
@@ -143,6 +139,14 @@ export default function Transaction({ cartItems }: CartItems) {
       setCurrentSelectedSection,
     }
   };
+
+  const detailTransactionModalArguments = () => {
+    return {
+      transactionModalIsHidden,
+      setTransactionModalIsHidden: () => setTransactionModalIsHidden(true),
+      getTransactionDetail
+    }
+  }
 
   const renderItemsToDisplay = () => {
 
@@ -186,6 +190,7 @@ export default function Transaction({ cartItems }: CartItems) {
       <ReviewModal htmlElementId={`review-modal`}  selectProductCallback={getCurrentSelectedProductForRate}/>
       <PaymentModal htmlElementId={`payment-modal`} selectProductCallback={getTransactionDetail}/>
       <CancelAlert htmlElementId={`cancel-alert`} selectProductCallback={getTransactionDetail}/>
+      <DetailTransactionModal detailTransactionModalArguments={detailTransactionModalArguments}/>
       <Footer />
     </div>
   );
@@ -212,6 +217,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       product: true,
       count: true,
       status: true,
+      // createdAt: true, // Cannot be converted to JSON, causes issues
+      // updatedAt: true,
+      // Transaction: true
     },
   });
   return {
