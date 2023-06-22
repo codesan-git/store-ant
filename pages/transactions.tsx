@@ -120,18 +120,12 @@ export default function Transaction({ cartItems }: CartItems) {
   };
   
   const getTransactionDetail = () => {
-    console.log(
-      `returning ${selectedTransaction?.product.name}`
-    );
     return {
       selectedTransaction
     };
   };
 
   const getCurrentSelectedProductForRate = () => {
-    console.log(
-      `returning ${currentRateProductName} and ${currentCartItemId?.toString()}`
-    );
     return {
       currentRateProductName,
       currentCartItemId,
