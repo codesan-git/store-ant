@@ -1,9 +1,19 @@
-import { ProductInCart } from "@prisma/client";
-import { Fragment } from "react";
+import { Product, ProductInCart, Status } from "@prisma/client";
+import { Fragment, useEffect } from "react";
 import { BiStoreAlt } from "react-icons/bi";
+import useSWR from 'swr';
+
 
 interface Props {
   detailTransactionModalArguments: () => any;
+}
+
+interface CartItemObject {
+  id: number;
+  product: Product;
+  count: number;
+  price: number;
+  status: Status;
 }
 
 const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => {
@@ -16,9 +26,37 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
 		getTransactionDetail
 	} = detailTransactionModalArguments();
 
-	const { selectedTransaction: transaction } : { selectedTransaction: ProductInCart | undefined} = getTransactionDetail(); //this is pretty cursed lol -
-	console.log(`selectedTransaction: `);
-	console.log(transaction);
+	const { selectedTransaction: transaction } : { selectedTransaction: CartItemObject | undefined} = getTransactionDetail(); //this is pretty cursed lol -
+
+	// const fetchProduct = async (url: string) => {
+	// 	console.log(`fetching from ${url}`)
+	// 	const response = await fetch(url);
+
+	// 	if(!response.ok) throw new Error("Failed to fetch Categories for Navbar");
+	// 	console.log('responsejson: ')
+	// 	console.log(response.json());
+	// 	return response.json();
+	// }
+
+	// const {data: product} = useSWR<Product>(
+	// 	`http://localhost:3000/api/product/{${transaction?.productId}}`,
+	// 	fetchProduct
+	// );
+
+	// useEffect(() => {},[transaction]);
+
+	const productTotal = () => {
+		if(transaction){
+			console.log(`product total function ${transaction.product.name}`)
+			console.log(`product total function ${transaction.count}`)
+			console.log(`detail transaction, transaction price: ${transaction.price}`)
+
+			const total = transaction.count * transaction.product.price;
+			return `Rp. ${total.toString()}`;
+		}
+
+		return "0";
+	}
 
 	const productItem = () => {
 		return (
@@ -34,15 +72,27 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
 					</div>
 					<div className="flex-1">
 						<div className=" p-0.5">
-							Nama Item
+							{transaction?.product.name}
 						</div>
 						<div className=" p-0.5">
-							Rp. 123,000
+							{productTotal()}
 						</div>
 					</div>
 				</div>
 			</Fragment>
 		);
+	}
+
+	const renderTransactionStatus = () => {
+		if(transaction?.status == Status.CANCELED || transaction?.status == Status.CANCEL_REJECTED){
+			return <p className=""><span className="text-red-600">{transaction?.status}</span> | Dibatalkan Sistem</p>;
+		}
+		else if (transaction?.status == Status.FINISHED){
+			return <p className=""><span className="text-blue-900">{transaction?.status}</span></p>
+		}
+		else {
+			return <p className=""><span className="text-orange-800">{transaction?.status}</span> | Batal Otomatis: 26 Juni 2023, 10:30 WIB</p>
+		}
 	}
 
   return (
@@ -60,7 +110,7 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
 					<div id="contents" className="px-4 pb-14 h-full space-y-4 overflow-y-auto">
 						<div id="status-details">
 							<h1 className="text-xl font-bold">Status</h1>
-							<p className=""><span className="text-orange-800">{transaction?.status}</span> | Batal Otomatis: 26 Juni 2023, 10:30 WIB</p>
+							{renderTransactionStatus()}
 						</div>
 						<div id="invoice-details">
 							<h1 className="text-xl font-bold">No. Invoice</h1>
@@ -77,12 +127,9 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
 							</div>
 							<div  id="purchased-products-list">
 								{productItem()}
-								{productItem()}
-								{productItem()}
-								{productItem()}
 							</div>
 							<div className="">
-								<h1 className="font-bold flex justify-end">Total Belanja: Rp 123,456</h1>
+								<h1 className="font-bold flex justify-end">Total Belanja: {productTotal()}</h1>
 							</div>
 						</div>
 						<div id="delivery-details">
@@ -134,7 +181,7 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
 									:
 								</div>
 								<div className="">
-									Rp 123,456
+									{productTotal()}
 								</div>
 							</div>
 							<div id="delivery-expense" className="flex flex-row">
