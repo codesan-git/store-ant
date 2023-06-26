@@ -1,7 +1,6 @@
 import { Fragment, useState } from "react";
 import { HiOutlineEllipsisVertical } from "react-icons/hi2";
-import { ProductInCart, TransactionStatus } from "@prisma/client";
-import Link from "next/link";
+import { Order, ProductInCart, Transaction, TransactionStatus } from "@prisma/client";
 
 interface Product {
   id: string;
@@ -11,35 +10,30 @@ interface Product {
   image: string;
 }
 
-interface Transaction {
-  id: number;
-  product: Product;
-  count: number;
-  price: number;
-  status: TransactionStatus;
-}
-
-interface CartItemObject {
-  id: number;
-  product: Product;
-  count: number;
-  price: number;
-  status: TransactionStatus;
-}
-
 interface Props {
   transaction: Transaction,
-  onBayar: (transaction: CartItemObject) => Promise<void>,
-  onCancel: (transaction: CartItemObject) => Promise<void>,
+  onBayar: (transaction: Transaction) => Promise<void>,
+  onCancel: (transaction: Transaction) => Promise<void>,
   onFinish: (id: number) => Promise<void>,
   onReturn: (id: number) => Promise<void>,
-  onDetail: (transaction: CartItemObject) => void,
+  onDetail: (transaction: Transaction) => void,
   onRate: (productName: String, cartItemId: Number) => void,
 }
 
-const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCancel, onFinish, onReturn, onDetail }: Props) => { //TODO: re-adjust background colors based on website. the one in the wireframe are just placeholder colors.
+const TransactionItem = ({  transaction, onRate: onRateClick, onBayar, onCancel, onFinish, onReturn, onDetail }: Props) => { //TODO: re-adjust background colors based on website. the one in the wireframe are just placeholder colors.
 
-  const transactionTotal = transaction.count.valueOf() * transaction.product.price.valueOf();
+  const calculateTransactionTotal = ( orders: Order[] ) : Number => {
+
+    let total = 0;
+
+    orders.forEach((order) => {
+      // total += (order.)
+    });
+
+    return 3;
+  }
+
+  const transactionTotal = 3;
 
   const [extraActionsIsOpen, setExtraActionsIsOpen] = useState<Boolean>(false);
 
@@ -122,7 +116,8 @@ const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCance
                     Batalkan
                     </label>
                   </li>
-                : <li className="rounded-sm hover:bg-gray-100 transition duration-300"><div onClick={()=>onReturn(transaction.id)}>Ajukan Komplain</div></li>
+                // : <li className="rounded-sm hover:bg-gray-100 transition duration-300"><div onClick={()=>onReturn(transaction.id)}>Ajukan Komplain</div></li>
+                : <li className="rounded-sm hover:bg-gray-100 transition duration-300"><div>Ajukan Komplain</div></li>
               }
               <li className="rounded-sm hover:bg-gray-100 transition duration-300"><a>Pusat Bantuan</a></li>
             </ul>
@@ -155,9 +150,9 @@ const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCance
       return (
         <Fragment>
           {detailTransaksiButton()}
-          <label htmlFor="review-modal" onClick={() => onRateClick(transaction.product.name,transaction.id)} className="flex justify-center items-center text-xs lg:text-base w-32 text-white bg-green-500 hover:cursor-pointer">
+          {/* <label htmlFor="review-modal" onClick={() => onRateClick(transaction.product.name,transaction.id)} className="flex justify-center items-center text-xs lg:text-base w-32 text-white bg-green-500 hover:cursor-pointer">
             Ulas Produk
-          </label>
+          </label> */}
           {renderExtraActionDropdown()}
         </Fragment>
       );
@@ -236,19 +231,19 @@ const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCance
       <div id="lower-detail">
         <div id="product-details" className="flex flex-row p-2 bg-gray-300">
           <div id="product-detail-img-container" className=" flex justify-center items-center">
-            <img className="w-36 h-36 object-cover" 
+            {/* <img className="w-36 h-36 object-cover" 
                  src={`http://localhost:3000/${transaction.product.image.split(",")[0]}`}
                  onError={({ currentTarget }) => {
                     currentTarget.onerror = null; // prevents looping
                     currentTarget.src = "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
                  }}
                  alt=''
-            />
+            /> */}
           </div>
           <div id="product-detail" className="flex-1 p-4 flex flex-col justify-center">
             <h1 className="text-xs lg:text-base">Kode Transaksi</h1>
-            <h1 className="text-xs lg:text-base font-bold">{transaction.product.name.toString()}</h1>
-            <h1 className="text-xs lg:text-base">Jumlah: {transaction.count.toString()}</h1>
+            {/* <h1 className="text-xs lg:text-base font-bold">{transaction.product.name.toString()}</h1> */}
+            {/* <h1 className="text-xs lg:text-base">Jumlah: {transaction.count.toString()}</h1> */}
             <h1 className="text-xs lg:text-base">+X Produk Lainnya</h1>
           </div>
           <div id="total-details-lower" className="hidden lg:flex lg:flex-col lg:justify-center w-1/3 p-4 space-y-2 border-l-gray-500 border-l-2">
@@ -272,4 +267,4 @@ const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCance
   );
 }
 
-export default ProductTransaction;
+export default TransactionItem;
