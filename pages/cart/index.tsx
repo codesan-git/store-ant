@@ -5,7 +5,6 @@ import { getSession } from "next-auth/react";
 import { useState } from 'react';
 import Navbar from "../navbar";
 import { useRouter } from 'next/router'
-import { Status } from '@prisma/client'
 
 interface CartItems {
   cartItems: {
@@ -129,8 +128,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const cartItems = await prisma.productInCart.findMany({
     where: { 
       AND: [
-        { cartId: cart?.id },
-        { status: Status.INCART }
+        { cartId: cart?.id }
       ] 
     },
     select: {

@@ -1,4 +1,4 @@
-import { Product, ProductInCart, Shop, Status } from "@prisma/client";
+import { Product, ProductInCart, Shop, TransactionStatus } from "@prisma/client";
 import axios from "axios";
 import { Fragment, useEffect, useState } from "react";
 import { BiStoreAlt } from "react-icons/bi";
@@ -14,7 +14,7 @@ interface CartItemObject {
   product: Product;
   count: number;
   price: number;
-  status: Status;
+  status: TransactionStatus;
 }
 
 const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => {
@@ -111,10 +111,10 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
 	}
 
 	const renderTransactionStatus = () => {
-		if(transaction?.status == Status.CANCELED || transaction?.status == Status.CANCEL_REJECTED){
+		if(transaction?.status == TransactionStatus.CANCELED || transaction?.status == TransactionStatus.CANCEL_REJECTED){
 			return <p className=""><span className="text-red-600">{transaction?.status}</span> | Dibatalkan Sistem</p>;
 		}
-		else if (transaction?.status == Status.FINISHED){
+		else if (transaction?.status == TransactionStatus.FINISHED){
 			return <p className=""><span className="text-blue-900">{transaction?.status}</span></p>
 		}
 		else {
