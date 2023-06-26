@@ -22,21 +22,15 @@ export default async function handler(
     }
   })
 
-  let transaction = await prisma.transaction.create({
+  const transaction = await prisma.transaction.updateMany({
+    where:{ shopId: productInCart?.product.shop.id! },
     data:{
-      userId: session?.user.id!,
-      shopId: productInCart?.product.shop.id!,
-      paymentMethod: "",
       status: TransactionStatus.PAID
     }
   });
-  
-  const order = await prisma.order.create({
-    data:{
-      transactionId: transaction.id!,
-      productId: productInCart?.productId!,
-      count: productInCart?.count!,
-    }
+
+  const transactionData = await prisma.transaction.findFirst({
+    where: {shopId: productInCart?.product.shop.id!}
   })
 
   const midtransClient = require("midtrans-client");
@@ -50,7 +44,7 @@ export default async function handler(
   let parameter = {
     "payment_type": "gopay",
     "transaction_details": {
-        "order_id": transaction.id,
+        "order_id": transactionData?.id!,
         "gross_amount": price
     },
     "callbacks": {
