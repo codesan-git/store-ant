@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
 import { prisma } from "../../../lib/prisma"
-import { Status, TransactionStatus } from '@prisma/client'
+import { TransactionStatus } from '@prisma/client'
 
 export default async function handler(
   req: NextApiRequest,
@@ -11,13 +11,34 @@ export default async function handler(
   const session = await getSession({req})  
   console.log(id);
 
+  const productInCart = await prisma.productInCart.findFirst({
+    where: { id: Number(id) },
+    select: {
+      productId: true,
+      count: true,
+      product: {
+        select: { shop: true}
+      }
+    }
+  })
+
   let transaction = await prisma.transaction.create({
     data:{
-      productInCartId: Number(id),
+      userId: session?.user.id!,
+      shopId: productInCart?.product.shop.id!,
+      paymentMethod: "",
       status: TransactionStatus.PAID
     }
   });
   
+  const order = await prisma.order.create({
+    data:{
+      transactionId: transaction.id!,
+      productId: productInCart?.productId!,
+      count: productInCart?.count!,
+    }
+  })
+
   const midtransClient = require("midtrans-client");
   // Create Snap API instance
   let snap = new midtransClient.Snap({

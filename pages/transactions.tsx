@@ -6,7 +6,6 @@ import { prisma } from "../lib/prisma";
 import Link from "next/link";
 import Navbar from "./navbar";
 import Footer from "./footer";
-import { Status } from "@prisma/client";
 import ReviewModal from "../components/transactions/review_modal";
 import TransactionsDashboard from "@/components/transactions/transactions_dashboard";
 import ProductTransaction from "@/components/transactions/product_transaction";
@@ -29,7 +28,7 @@ import {
   Cog6ToothIcon,
 } from "@heroicons/react/24/solid";
 import axios from "axios";
-
+import { TransactionStatus } from "@prisma/client";
 // END TABS
 
 interface CartItems {
@@ -41,7 +40,7 @@ interface CartItemObject {
   product: Product;
   count: number;
   price: number;
-  status: Status;
+  status: TransactionStatus;
 }
 
 interface Product {
@@ -57,7 +56,7 @@ interface Transaction { //TODO: Create model in prisma //note bila: done
   product: Product;
   count: Number;
   price: Number;
-  status: Status;
+  status: TransactionStatus;
 }
 
 interface CartId {
@@ -68,7 +67,7 @@ export default function Transaction({ cartItems }: CartItems) {
   const router = useRouter();
   
   const [currentSelectedSection, setCurrentSelectedSection] = useState<String>("Menunggu Pembayaran");
-  const [itemsToDisplay, setItemsToDisplay] = useState(cartItems.filter((e) => e.status === Status.UNPAID));
+  const [itemsToDisplay, setItemsToDisplay] = useState(cartItems);
   const [currentRateProductName, setCurrentRateProductName] = useState<String>("");
   const [currentCartItemId, setCurrentCartItemId] = useState<Number>();
   const [selectedTransaction, setSelectedTransaction] = useState<CartItemObject>();
@@ -150,12 +149,12 @@ export default function Transaction({ cartItems }: CartItems) {
 
   const renderItemsToDisplay = () => {
 
-    if(itemsToDisplay.length === 0) return <h1 className="h-full flex justify-center items-center">No Items</h1>
+    if(itemsToDisplay?.length === 0) return <h1 className="h-full flex justify-center items-center">No Items</h1>
 
     return (
       <>
         {
-          itemsToDisplay.map(
+          itemsToDisplay?.map(
             (transaction, i) => <ProductTransaction 
               key={i} 
               transaction={transaction} 
@@ -210,16 +209,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const cartItems = await prisma.productInCart.findMany({
     where: {
-      AND: [{ cartId: cart?.id }, { status: { not: Status.INCART } }],
+      cartId: cart?.id
     },
     select: {
       id: true,
       product: true,
       count: true,
-      status: true,
-      // createdAt: true, // Cannot be converted to JSON, causes issues
-      // updatedAt: true,
-      // Transaction: true
     },
   });
   return {

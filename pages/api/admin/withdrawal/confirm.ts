@@ -1,20 +1,19 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
-import { prisma } from "../../../lib/prisma"
-import { TransactionStatus } from '@prisma/client'
+import { prisma } from "../../../../lib/prisma"
+import { WithdrawalStatus } from '@prisma/client'
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   const {id} = req.body
-  const session = await getSession({req})  
 
   try {
-    const transaction = await prisma.transaction.update({
-        where:{id: id!},
+    const productInCart = await prisma.withdrawal.update({
+        where:{id: Number(id)},
         data:{
-            status: TransactionStatus.AWAITING_CONFIRMATION
+            status: WithdrawalStatus.DONE
         }
     })
     res.status(200).json({ message: "Success!" })

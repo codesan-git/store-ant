@@ -68,7 +68,7 @@ export default function Home({ events }: EventData) {
   const [products, setProducts] = useState<any[]>([]);
   const [submitted, setSubmitted] = useState(false);
   const [index, setIndex] = useState(0);
-  const [selectedImage, setSelectedImage] = useState(events[0].image);
+  const [selectedImage, setSelectedImage] = useState(events[0]?.image);
 
   const search = useSearchParams();
   const searchQuery = search.get("_sort");
@@ -156,7 +156,7 @@ export default function Home({ events }: EventData) {
       i = 0;
     if(i < 0)
       i = events.length - 1;
-    setSelectedImage(events[i].image);
+    setSelectedImage(events[i]?.image);
     setIndex(i);
   }
 
@@ -180,7 +180,7 @@ export default function Home({ events }: EventData) {
                 <img
                   src={`http://localhost:3000/${selectedImage}`}
                   className="w-full object-cover"
-                  onClick={() => window.open(events[index].eventPath)}                                        
+                  onClick={() => window.open(events[index]?.eventPath)}                                        
                   onError={({ currentTarget }) => {
                     currentTarget.onerror = null; // prevents looping
                     currentTarget.src =
