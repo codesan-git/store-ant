@@ -28,18 +28,8 @@ const TransactionsDashboard = ({TransactionDashboardArguments}: Props) => {
     setItemsToDisplay(cartItems.filter((e: any) => e.status === Status.PACKING || e.status === Status.CANCELING));
   }
 
-  const menungguKurirOnClick = () => {
-    setItemsToDisplay(cartItems.filter((e: any) => e.status === Status.AWAITING_COURIER));
-    setCurrentSelectedSection("Menunggu Kurir");
-  }
-
   const pesananDikirimOnClick = () => {
     setItemsToDisplay(cartItems.filter((e: any) => e.status === Status.DELIVERING || e.status === Status.RETURNING));
-  }
-
-  const pesananTibaOnClick = () => {
-    setItemsToDisplay(cartItems.filter((e: any) => e.status === Status.REACHED_DESTINATION));
-    setCurrentSelectedSection("Pesanan Tiba");
   }
 
   const berhasilOnClick = () => {
@@ -78,23 +68,9 @@ const TransactionsDashboard = ({TransactionDashboardArguments}: Props) => {
                 </div>
               </li>
               <li>
-                <div onClick={menungguKurirOnClick} className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300">
-                  <div className="flex justify-center items-center text-center lg:pl-6">
-                    Menunggu Kurir
-                  </div>
-                </div>
-              </li>
-              <li>
                 <div onClick={pesananDikirimOnClick} className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300">
                   <div className="flex justify-center items-center text-center lg:pl-6">
                     Pesanan Dikirim
-                  </div>
-                </div>
-              </li>
-              <li>
-                <div onClick={pesananTibaOnClick} className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300">
-                  <div className="flex justify-center items-center text-center lg:pl-6">
-                    Pesanan Tiba
                   </div>
                 </div>
               </li>
@@ -172,23 +148,9 @@ const TransactionsDashboard = ({TransactionDashboardArguments}: Props) => {
                   </div>
                 </li>
                 <li>
-                  <div onClick={menungguKurirOnClick} className="flex justify-center lg:justify-start p-1 lg:p-4 w-32 lg:w-auto h-12 text-sm font-normal rounded-sm lg:rounded-none hover:bg-gray-300 transition duration-300 hover:cursor-pointer">
-                    <div className="flex justify-center items-center text-center lg:pl-6">
-                      Menunggu Kurir
-                    </div>
-                  </div>
-                </li>
-                <li>
                   <div onClick={pesananDikirimOnClick} className="flex justify-center lg:justify-start p-1 lg:p-4 w-32 lg:w-auto h-12 text-sm font-normal rounded-sm lg:rounded-none hover:bg-gray-300 transition duration-300 hover:cursor-pointer">
                     <div className="flex justify-center items-center text-center lg:pl-6">
                       Pesanan Dikirim
-                    </div>
-                  </div>
-                </li>
-                <li>
-                  <div onClick={pesananTibaOnClick} className="flex justify-center lg:justify-start p-1 lg:p-4 w-32 lg:w-auto h-12 text-sm font-normal rounded-sm lg:rounded-none hover:bg-gray-300 transition duration-300 hover:cursor-pointer">
-                    <div className="flex justify-center items-center text-center lg:pl-6">
-                      Pesanan Tiba
                     </div>
                   </div>
                 </li>

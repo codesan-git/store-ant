@@ -6,7 +6,7 @@ import { prisma } from "../lib/prisma";
 import Link from "next/link";
 import Navbar from "./navbar";
 import Footer from "./footer";
-import { Status } from "@prisma/client";
+import { Shop, Status } from "@prisma/client";
 import ReviewModal from "../components/transactions/review_modal";
 import TransactionsDashboard from "@/components/transactions/transactions_dashboard";
 import ProductTransaction from "@/components/transactions/product_transaction";
@@ -48,6 +48,7 @@ interface Product {
   price: number;
   stock: number;
   image: string;
+  shop: Shop;
 }
 
 interface Transaction { //TODO: Create model in prisma //note bila: done
@@ -209,7 +210,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     },
     select: {
       id: true,
-      product: true,
+      product:{
+        select:{
+          id: true,
+          name: true,
+          price: true,
+          stock: true,
+          image: true,
+          shop: true
+        }
+      },
       count: true,
       status: true,
     },

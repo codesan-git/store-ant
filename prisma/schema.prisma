@@ -130,20 +130,22 @@ model Session {
 }
 
 model User {
-  id            String       @id @default(cuid())
-  Role          Role         @default(USER)
-  name          String?
-  email         String?      @unique
-  emailVerified DateTime?
-  image         String?
-  balance       Int         @default(0)
-  accounts      Account[]
-  sessions      Session[]
-  profile       Profile?  
-  shop          Shop?
-  cart          Cart?
-  bankAccount   BankAccount?
-  withdrawal    Withdrawal[]
+  id              String       @id @default(cuid())
+  Role            Role         @default(USER)
+  name            String?
+  email           String?      @unique
+  emailVerified   DateTime?
+  image           String?
+  balance         Int         @default(0)
+  accounts        Account[]
+  sessions        Session[]
+  profile         Profile?  
+  shop            Shop?
+  cart            Cart?
+  bankAccount     BankAccount?
+  withdrawal      Withdrawal[]
+  SentMessage     Message[]   @relation("sender")
+  ReceivedMessage Message[]   @relation("recipient")
 }
 
 model Product {
@@ -235,6 +237,8 @@ model Transaction {
   id                String @id @default(cuid())
   productInCartId   Int @map("productInCart_id") @unique
   status            TransactionStatus @default(UNPAID)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @default(now())
 
   productInCart ProductInCart @relation(fields: [productInCartId], references: [id], onDelete: Cascade)
 }
@@ -264,6 +268,27 @@ model Withdrawal {
   status      WithdrawalStatus  @default(REQUESTED)
 
   user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Conversation {
+  id          Int @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  messages    Message[]
+}
+
+model Message {
+  id              Int @id @default(autoincrement())
+  conversationId  Int?
+  message         String
+  senderId        String 
+  sender          User? @relation("sender", fields: [senderId], references: [id], onDelete: Cascade)
+  recipientId     String 
+  recipient       User? @relation("recipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  createdAt       DateTime @default(now())
+  isSeen          Boolean @default(false)
+  image           String?
+  
+  conversation    Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 }
 
 model VerificationToken {

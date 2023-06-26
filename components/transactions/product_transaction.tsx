@@ -1,7 +1,8 @@
 import { Fragment, useState } from "react";
 import { HiOutlineEllipsisVertical } from "react-icons/hi2";
-import { ProductInCart, Status } from "@prisma/client";
+import { ProductInCart, Shop, Status } from "@prisma/client";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 interface Product {
   id: string;
@@ -9,6 +10,7 @@ interface Product {
   price: number;
   stock: number;
   image: string;
+  shop: Shop;
 }
 
 interface Transaction {
@@ -43,6 +45,8 @@ const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCance
 
   const [extraActionsIsOpen, setExtraActionsIsOpen] = useState<Boolean>(false);
 
+  const router = useRouter();
+
   const extraActionsModal = () => {
     return(
       <div id="berlangsung-bottom-modal" hidden={!extraActionsIsOpen.valueOf()} className="lg:hidden align-bottom bg-gray-900 bg-opacity-75 fixed w-full h-full -top-2 right-0 left-0 bottom-0 z-50">
@@ -57,7 +61,7 @@ const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCance
             <ul>
               <li>
                 <div className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300">
-                  <div className="flex justify-center items-center text-center lg:pl-6">
+                  <div onClick={()=> { router.push({pathname: "/chat", query: {id: transaction.product.shop.userId}})}} className="flex justify-center items-center text-center lg:pl-6">
                     Tanya Penjual
                   </div>
                 </div>
@@ -88,7 +92,6 @@ const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCance
     if (transaction.status === Status.RETURN_REJECTED) return <h1 className="flex justify-end text-sm font-bold text-blue-900">Pengembalian Ditolak</h1>;
     if (transaction.status === Status.CANCEL_REJECTED) return <h1 className="flex justify-end text-sm font-bold text-blue-900">Pembatalan Ditolak</h1>;
     if (transaction.status === Status.AWAITING_CONFIRMATION || transaction.status === Status.PACKING) return <h1 className="flex justify-end text-sm font-bold">Otomatis Batal</h1>; //PACKING == BEING_PROCESSED
-    if (transaction.status === Status.REACHED_DESTINATION) return <h1 className="flex justify-end text-sm font-bold">Otomatis Selesai</h1>;
 
     return <></>;
   }
@@ -106,7 +109,7 @@ const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCance
               <HiOutlineEllipsisVertical className="text-white"/>
             </label>
             <ul tabIndex={0} className="mt-1 dropdown-content menu shadow bg-base-100 rounded-sm w-52">
-              <li className="rounded-sm hover:bg-gray-100 transition duration-300"><a>Tanya Penjual</a></li>
+              <li className="rounded-sm hover:bg-gray-100 transition duration-300"><a onClick={()=> { router.push({pathname: "/chat", query: {id: transaction.product.shop.userId}})}}>Tanya Penjual</a></li>
               { //I really need to refactor this entire module
                 (transaction.status === Status.UNPAID||transaction.status === Status.AWAITING_CONFIRMATION || transaction.status === Status.PACKING) 
                 ? <li className="rounded-sm hover:bg-gray-100 transition duration-300">
@@ -178,19 +181,6 @@ const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCance
         </Fragment>
       );
     }
-    else if (transaction.status === Status.AWAITING_COURIER){
-      return (
-        <Fragment>
-          <button onClick={() => onDetail(transaction.id.toString())} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
-            Detail Transaksi
-          </button>
-          <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 text-white bg-green-500">
-            Cek Resi
-          </button>
-          {renderExtraActionDropdown()}
-        </Fragment>
-      );
-    }
     else if (transaction.status === Status.DELIVERING){
       return (
         <Fragment>
@@ -199,19 +189,6 @@ const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCance
           </button>
           <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 text-white bg-green-500">
             Cek Resi
-          </button>
-          {renderExtraActionDropdown()}
-        </Fragment>
-      );
-    }
-    else if (transaction.status === Status.REACHED_DESTINATION){
-      return (
-        <Fragment>
-          <button onClick={() => onDetail(transaction.id.toString())} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
-            Detail Transaksi
-          </button>
-          <button onClick={() => onFinish(transaction.id)} className="text-xs lg:text-base w-32 text-white bg-green-500">
-            Selesai
           </button>
           {renderExtraActionDropdown()}
         </Fragment>
