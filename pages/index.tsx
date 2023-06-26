@@ -68,7 +68,7 @@ export default function Home({ events }: EventData) {
   const [products, setProducts] = useState<any[]>([]);
   const [submitted, setSubmitted] = useState(false);
   const [index, setIndex] = useState(0);
-  const [selectedImage, setSelectedImage] = useState(events[0].image);
+  const [selectedImage, setSelectedImage] = useState(events[0]?.image);
 
   const search = useSearchParams();
   const searchQuery = search.get("_sort");
