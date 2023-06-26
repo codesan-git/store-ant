@@ -25,7 +25,7 @@ enum BalanceType {
   SHOP
 }
 
-enum Status {
+enum OrderStatus {
   INCART
   UNPAID
   PAID
@@ -48,8 +48,20 @@ enum ComplainStatus {
 }
 
 enum TransactionStatus {
+  INCART
   UNPAID
   PAID
+  AWAITING_CONFIRMATION
+  PACKING
+  DELIVERING
+  FINISHED
+  RETURNING
+  NEED_ADMIN_REVIEW 
+  RETURNED
+  RETURN_REJECTED
+  CANCELING
+  CANCELED
+  CANCEL_REJECTED
   REFUNDED
 }
 
@@ -99,6 +111,7 @@ model Shop {
   shopName      String
   balance       Int    @default(0)
   product       Product[]
+  transaction   Transaction[]
   image         String?
   averageRating Float @default(5.00)
 
@@ -130,20 +143,23 @@ model Session {
 }
 
 model User {
-  id            String       @id @default(cuid())
-  Role          Role         @default(USER)
-  name          String?
-  email         String?      @unique
-  emailVerified DateTime?
-  image         String?
-  balance       Int         @default(0)
-  accounts      Account[]
-  sessions      Session[]
-  profile       Profile?  
-  shop          Shop?
-  cart          Cart?
-  bankAccount   BankAccount?
-  withdrawal    Withdrawal[]
+  id              String       @id @default(cuid())
+  Role            Role         @default(USER)
+  name            String?
+  email           String?      @unique
+  emailVerified   DateTime?
+  image           String?
+  balance         Int         @default(0)
+  accounts        Account[]
+  sessions        Session[]
+  profile         Profile?  
+  shop            Shop?
+  cart            Cart?
+  bankAccount     BankAccount?
+  withdrawal      Withdrawal[]
+  Transaction     Transaction[]
+  SentMessage     Message[]   @relation("sender")
+  ReceivedMessage Message[]   @relation("recipient")
 }
 
 model Product {
@@ -155,6 +171,7 @@ model Product {
   description   String?
   price         Int
   stock         Int
+  order         Order[]
   productInCart ProductInCart[]
   averageRating Float @default(5.00)
 
@@ -181,25 +198,49 @@ model ProductInCart {
   cartId       Int @map("cart_id")
   productId    Int @map("product_id")
   count        Int
-  status       Status @default(INCART)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @default(now())
-  Rating       Rating?
-  Complain     Complain?
-  Transaction  Transaction?
 
   cart Cart @relation(fields: [cartId], references: [id], onDelete: Cascade)
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
+model Transaction {
+  id                String @id @default(cuid())
+  userId            String @map("user_id")
+  shopId            Int @map("shop_id")
+  status            TransactionStatus @default(PAID)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @default(now())
+  paymentMethod     String
+  order             Order[]
+
+  user              User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  shop              Shop @relation(fields: [shopId], references: [id], onDelete: Cascade)
+}
+
+model Order {
+  id              Int @id @default(autoincrement())
+  transactionId   String @map("transaction_id")
+  productId       Int @map("product_id")
+  count           Int
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now())
+  Rating          Rating?
+  Complain        Complain?
+  
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  transaction Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+}
+
 model Rating {
   id              Int @id @default(autoincrement())
-  productInCartId Int @map("productInCart_id") @unique
+  oderId          Int @map("order_id") @unique
   rate            Int
   comment         String?
   image           String?
   
-  productInCart ProductInCart @relation(fields: [productInCartId], references: [id], onDelete: Cascade)
+  order           Order @relation(fields: [oderId], references: [id], onDelete: Cascade)
 }
 
 model Event {
@@ -213,13 +254,13 @@ model Event {
 
 model Complain {
   id                Int @id @default(autoincrement())
-  productInCartId   Int @map("productInCart_id") @unique
+  oderId            Int @map("order_id") @unique
   image             String
   description       String
   status            ComplainStatus @default(OPEN)
   ShopComment       ShopComment?
 
-  productInCart ProductInCart @relation(fields: [productInCartId], references: [id], onDelete: Cascade)
+  order           Order @relation(fields: [oderId], references: [id], onDelete: Cascade)
 }
 
 model ShopComment {
@@ -229,14 +270,6 @@ model ShopComment {
   description       String
   
   complain Complain @relation(fields: [complainId], references: [id], onDelete: Cascade)
-}
-
-model Transaction {
-  id                String @id @default(cuid())
-  productInCartId   Int @map("productInCart_id") @unique
-  status            TransactionStatus @default(UNPAID)
-
-  productInCart ProductInCart @relation(fields: [productInCartId], references: [id], onDelete: Cascade)
 }
 
 model BankType {
@@ -264,6 +297,27 @@ model Withdrawal {
   status      WithdrawalStatus  @default(REQUESTED)
 
   user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Conversation {
+  id          Int @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  messages    Message[]
+}
+
+model Message {
+  id              Int @id @default(autoincrement())
+  conversationId  Int?
+  message         String
+  senderId        String 
+  sender          User? @relation("sender", fields: [senderId], references: [id], onDelete: Cascade)
+  recipientId     String 
+  recipient       User? @relation("recipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  createdAt       DateTime @default(now())
+  isSeen          Boolean @default(false)
+  image           String?
+  
+  conversation    Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 }
 
 model VerificationToken {

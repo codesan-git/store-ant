@@ -472,7 +472,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   console.log("product: ", product);
   const ratings = await prisma.rating.findMany({
     where: {
-      productInCart: {
+      order: {
         productId: product?.id,
       },
     },
@@ -481,9 +481,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       rate: true,
       comment: true,
       image: true,
-      productInCart: {
+      order: {
         select: {
-          cart: {
+          transaction: {
             select: {
               user: true,
             },

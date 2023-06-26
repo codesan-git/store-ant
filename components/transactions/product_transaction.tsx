@@ -1,6 +1,6 @@
 import { Fragment, useState } from "react";
 import { HiOutlineEllipsisVertical } from "react-icons/hi2";
-import { ProductInCart, Status } from "@prisma/client";
+import { ProductInCart, TransactionStatus } from "@prisma/client";
 import Link from "next/link";
 
 interface Product {
@@ -16,7 +16,7 @@ interface Transaction {
   product: Product;
   count: number;
   price: number;
-  status: Status;
+  status: TransactionStatus;
 }
 
 interface CartItemObject {
@@ -24,7 +24,7 @@ interface CartItemObject {
   product: Product;
   count: number;
   price: number;
-  status: Status;
+  status: TransactionStatus;
 }
 
 interface Props {
@@ -80,15 +80,15 @@ const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCance
   }
 
   const renderTransactionStatus = () => {
-    if (transaction.status === Status.UNPAID) return <h1 className="flex justify-end text-sm font-bold">Bayar Sebelum</h1>;
-    if (transaction.status === Status.CANCELING) return <h1 className="flex justify-end text-sm font-bold text-yellow-600">Pembatalan Diajukan</h1>;
-    if (transaction.status === Status.RETURNING) return <h1 className="flex justify-end text-sm font-bold text-yellow-600">Pengembalian Diajukan</h1>;
-    if (transaction.status === Status.CANCELED) return <h1 className="flex justify-end text-sm font-bold text-red-600">Dibatalkan Sistem</h1>; //CANCELED||CANCELED_REJECTED == FAILED
-    if (transaction.status === Status.RETURNED) return <h1 className="flex justify-end text-sm font-bold text-red-600">Pesanan Dikembalikan</h1>;
-    if (transaction.status === Status.RETURN_REJECTED) return <h1 className="flex justify-end text-sm font-bold text-blue-900">Pengembalian Ditolak</h1>;
-    if (transaction.status === Status.CANCEL_REJECTED) return <h1 className="flex justify-end text-sm font-bold text-blue-900">Pembatalan Ditolak</h1>;
-    if (transaction.status === Status.AWAITING_CONFIRMATION || transaction.status === Status.PACKING) return <h1 className="flex justify-end text-sm font-bold">Otomatis Batal</h1>; //PACKING == BEING_PROCESSED
-    if (transaction.status === Status.REACHED_DESTINATION) return <h1 className="flex justify-end text-sm font-bold">Otomatis Selesai</h1>;
+    if (transaction.status === TransactionStatus.UNPAID) return <h1 className="flex justify-end text-sm font-bold">Bayar Sebelum</h1>;
+    if (transaction.status === TransactionStatus.CANCELING) return <h1 className="flex justify-end text-sm font-bold text-yellow-600">Pembatalan Diajukan</h1>;
+    if (transaction.status === TransactionStatus.RETURNING) return <h1 className="flex justify-end text-sm font-bold text-yellow-600">Pengembalian Diajukan</h1>;
+    if (transaction.status === TransactionStatus.CANCELED) return <h1 className="flex justify-end text-sm font-bold text-red-600">Dibatalkan Sistem</h1>; //CANCELED||CANCELED_REJECTED == FAILED
+    if (transaction.status === TransactionStatus.RETURNED) return <h1 className="flex justify-end text-sm font-bold text-red-600">Pesanan Dikembalikan</h1>;
+    if (transaction.status === TransactionStatus.RETURN_REJECTED) return <h1 className="flex justify-end text-sm font-bold text-blue-900">Pengembalian Ditolak</h1>;
+    if (transaction.status === TransactionStatus.CANCEL_REJECTED) return <h1 className="flex justify-end text-sm font-bold text-blue-900">Pembatalan Ditolak</h1>;
+    if (transaction.status === TransactionStatus.AWAITING_CONFIRMATION || transaction.status === TransactionStatus.PACKING) return <h1 className="flex justify-end text-sm font-bold">Otomatis Batal</h1>; //PACKING == BEING_PROCESSED
+    //if (transaction.status === TransactionStatus.REACHED_DESTINATION) return <h1 className="flex justify-end text-sm font-bold">Otomatis Selesai</h1>;
 
     return <></>;
   }
@@ -108,7 +108,7 @@ const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCance
             <ul tabIndex={0} className="mt-1 dropdown-content menu shadow bg-base-100 rounded-sm w-52">
               <li className="rounded-sm hover:bg-gray-100 transition duration-300"><a>Tanya Penjual</a></li>
               { //I really need to refactor this entire module
-                (transaction.status === Status.UNPAID||transaction.status === Status.AWAITING_CONFIRMATION || transaction.status === Status.PACKING) 
+                (transaction.status === TransactionStatus.UNPAID||transaction.status === TransactionStatus.AWAITING_CONFIRMATION || transaction.status === TransactionStatus.PACKING) 
                 ? <li className="rounded-sm hover:bg-gray-100 transition duration-300">
                     <label onClick={() => onCancel(transaction)} htmlFor="cancel-alert">
                     Batalkan
@@ -125,7 +125,7 @@ const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCance
 
     //better idea: Create a callback function argument that passes all the handle functions and buttons to render as objects and render them there
 
-    if(transaction.status === Status.UNPAID){
+    //if(transaction.status === TransactionStatus.UNPAID){
       return (
         <Fragment>
           <label htmlFor="payment-modal" onClick={() => onBayar(transaction)} className="text-xs lg:text-base w-24 h-8 text-white bg-green-500">
@@ -134,8 +134,8 @@ const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCance
           {renderExtraActionDropdown()}
         </Fragment>
       );
-    }
-    else if (transaction.status === Status.AWAITING_CONFIRMATION){
+    //}
+    if (transaction.status === TransactionStatus.AWAITING_CONFIRMATION){
       return (
         <Fragment>
           <button onClick={() => onDetail(transaction.id.toString())} className="text-xs lg:text-base w-28 lg:w-32 h-8 border-2 border-green-500 text-green-500">
@@ -145,7 +145,7 @@ const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCance
         </Fragment>
       );
     }
-    else if (transaction.status === Status.FINISHED){ // FINISHED == SUCCESS
+    else if (transaction.status === TransactionStatus.FINISHED){ // FINISHED == SUCCESS
       return (
         <Fragment>
           <button onClick={() => onDetail(transaction.id.toString())} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
@@ -158,7 +158,7 @@ const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCance
         </Fragment>
       );
     }
-    else if (transaction.status === Status.CANCELED || transaction.status === Status.CANCEL_REJECTED){
+    else if (transaction.status === TransactionStatus.CANCELED || transaction.status === TransactionStatus.CANCEL_REJECTED){
       return (
         <Fragment>
           <button onClick={() => onDetail(transaction.id.toString())} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
@@ -168,7 +168,7 @@ const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCance
         </Fragment>
       );
     }
-    else if (transaction.status === Status.PACKING){
+    else if (transaction.status === TransactionStatus.PACKING){
       return (
         <Fragment>
           <button onClick={() => onDetail(transaction.id.toString())} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
@@ -178,7 +178,20 @@ const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCance
         </Fragment>
       );
     }
-    else if (transaction.status === Status.AWAITING_COURIER){
+    // else if (transaction.status === TransactionStatus.AWAITING_COURIER){
+    //   return (
+    //     <Fragment>
+    //       <button onClick={() => onDetail(transaction.id.toString())} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
+    //         Detail Transaksi
+    //       </button>
+    //       <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 text-white bg-green-500">
+    //         Cek Resi
+    //       </button>
+    //       {renderExtraActionDropdown()}
+    //     </Fragment>
+    //   );
+    // }
+    else if (transaction.status === TransactionStatus.DELIVERING){
       return (
         <Fragment>
           <button onClick={() => onDetail(transaction.id.toString())} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
@@ -191,32 +204,19 @@ const ProductTransaction = ({ onRate: onRateClick, transaction, onBayar, onCance
         </Fragment>
       );
     }
-    else if (transaction.status === Status.DELIVERING){
-      return (
-        <Fragment>
-          <button onClick={() => onDetail(transaction.id.toString())} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
-            Detail Transaksi
-          </button>
-          <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 text-white bg-green-500">
-            Cek Resi
-          </button>
-          {renderExtraActionDropdown()}
-        </Fragment>
-      );
-    }
-    else if (transaction.status === Status.REACHED_DESTINATION){
-      return (
-        <Fragment>
-          <button onClick={() => onDetail(transaction.id.toString())} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
-            Detail Transaksi
-          </button>
-          <button onClick={() => onFinish(transaction.id)} className="text-xs lg:text-base w-32 text-white bg-green-500">
-            Selesai
-          </button>
-          {renderExtraActionDropdown()}
-        </Fragment>
-      );
-    }
+    // else if (transaction.status === TransactionStatus.REACHED_DESTINATION){
+    //   return (
+    //     <Fragment>
+    //       <button onClick={() => onDetail(transaction.id.toString())} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
+    //         Detail Transaksi
+    //       </button>
+    //       <button onClick={() => onFinish(transaction.id)} className="text-xs lg:text-base w-32 text-white bg-green-500">
+    //         Selesai
+    //       </button>
+    //       {renderExtraActionDropdown()}
+    //     </Fragment>
+    //   );
+    // }
 
     return <Fragment>
       {renderExtraActionDropdown()}
