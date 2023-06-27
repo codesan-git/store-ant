@@ -37,7 +37,10 @@ interface Transaction {
   createdAt: Date,
   updatedAt: Date,
   paymentMethod: string,
-  order: Order[]
+  order: Order[],
+  shop: {
+    shopName: string
+  } 
 }
 
 const Transactions = ({ transactions } : { transactions: Transaction[]}) => {
@@ -206,6 +209,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
               price: true,
             }
           }
+        }
+      },
+      shop: {
+        select: {
+          shopName: true
         }
       }
     }

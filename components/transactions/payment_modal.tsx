@@ -7,27 +7,6 @@ interface Props {
   htmlElementId: string,
   selectProductCallback: () => any;
 }
-
-interface Order {
-  id: number,
-  transactionId: number,
-  productId: number,
-  count: number,
-  createdAt: Date,
-  updatedAt: Date,
-  product: Product
-}
-
-interface Transaction {
-  id: number,
-  userId: number,
-  shopId: number,
-  status: TransactionStatus,
-  createdAt: Date,
-  updatedAt: Date,
-  paymentMethod: string,
-  order: Order[]
-}
   
 interface Params {
     id: number;

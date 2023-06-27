@@ -20,7 +20,10 @@ interface Transaction {
   createdAt: Date,
   updatedAt: Date,
   paymentMethod: string,
-  order: Order[]
+  order: Order[],
+  shop: {
+    shopName: string
+  } 
 }
 
 interface Props {
@@ -234,7 +237,7 @@ const TransactionItem = ({  transaction, onRate: onRateClick, onBayar, onCancel,
     <div className="">
       <div id="upper-detail" className="flex flex-row p-2 bg-gray-400">
         <div className="w-1/2 flex justify-start items-center ">
-          <h1 className="text-sm lg:text-xl font-bold">Nama Toko</h1>
+          <h1 className="text-sm lg:text-xl font-bold">{transaction.shop.shopName}</h1>
         </div>
         <div className="w-1/2 flex flex-col lg:flex-row lg:items-center lg:space-x-2 justify-end">
           {renderTransactionStatus()}
@@ -245,7 +248,7 @@ const TransactionItem = ({  transaction, onRate: onRateClick, onBayar, onCancel,
         <div id="product-details" className="flex flex-row p-2 bg-gray-300">
           <div id="product-detail-img-container" className=" flex justify-center items-center">
             <img className="w-36 h-36 object-cover" 
-                 src={`http://localhost:3000/${transaction.order.at(0)?.product.image.split(",")[0]}`}
+                 src={`http://localhost:3000/${transaction?.order?.at(0)?.product?.image?.split(",")[0]}`}
                  onError={({ currentTarget }) => {
                     currentTarget.onerror = null; // prevents looping
                     currentTarget.src = "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
@@ -257,7 +260,7 @@ const TransactionItem = ({  transaction, onRate: onRateClick, onBayar, onCancel,
             <h1 className="text-xs lg:text-base">Kode Transaksi: {transaction.id}</h1>
             <h1 className="text-xs lg:text-base font-bold">{transaction.order.at(0)?.product.name.toString()}</h1>
             <h1 className="text-xs lg:text-base">Jumlah: {transaction.order.at(0)?.count.toString()}</h1>
-            <h1 className="text-xs lg:text-base">+X Produk Lainnya</h1>
+            <h1 className="text-xs lg:text-base">+{transaction.order.length - 1} Produk Lainnya</h1>
           </div>
           <div id="total-details-lower" className="hidden lg:flex lg:flex-col lg:justify-center w-1/3 p-4 space-y-2 border-l-gray-500 border-l-2">
             <h1 className="">Total Belanja</h1>
