@@ -6,7 +6,7 @@ import { prisma } from "../../lib/prisma"
 import Link from 'next/link'
 import Navbar from '../navbar'
 import Footer from '../footer'
-import { Status } from '@prisma/client'
+import { Transaction } from '@prisma/client'
 import ShopDashboard from '../../components/shop/shop_dashboard'
 import SellerCancelAlert from '@/components/transactions/seller_cancel_alert'
 
@@ -19,7 +19,7 @@ interface CartItemObject {
     product: Product;
     count: number;
     price: number;
-    status: Status;
+    status: Transaction;
 }
   
   interface Product {
@@ -75,7 +75,6 @@ export default function Orders({ cartItems, shop }: InferGetServerSidePropsType<
         dikemas.push(cartItems[i]);
     }
     console.log(dikemas);
-    
     for(i = 0; i < cartItems.length; i++){
         if(cartItems[i].status === Status.DELIVERING || cartItems[i].status === Status.RETURNING || cartItems[i].status === Status.NEED_ADMIN_REVIEW)
             dikirim.push(cartItems[i]);
@@ -407,16 +406,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     where:{userId: session?.user?.id!}
   })
 
-  const cartItems = await prisma.productInCart.findMany({
+  const cartItems = await prisma.productInCart?.findMany({
     where:{
         product: {shopId: shop?.id!},
-        status: {not: Status.UNPAID}
+        // status: {not: Status.UNPAID}
     },
     select:{
         id: true,
         product: true,
         count: true,
-        status: true
+        // status: true
     }
   })
   return {
