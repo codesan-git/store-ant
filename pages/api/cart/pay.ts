@@ -11,26 +11,26 @@ export default async function handler(
   const session = await getSession({req})  
   console.log(id);
 
-  const productInCart = await prisma.productInCart.findFirst({
-    where: { id: Number(id) },
-    select: {
-      productId: true,
-      count: true,
-      product: {
-        select: { shop: true}
-      }
-    }
-  })
+  // const productInCart = await prisma.productInCart.findFirst({
+  //   where: { id: Number(id) },
+  //   select: {
+  //     productId: true,
+  //     count: true,
+  //     product: {
+  //       select: { shop: true}
+  //     }
+  //   }
+  // })
 
   const transaction = await prisma.transaction.updateMany({
-    where:{ shopId: productInCart?.product.shop.id! },
+    where:{ id: id! },
     data:{
       status: TransactionStatus.PAID
     }
   });
 
   const transactionData = await prisma.transaction.findFirst({
-    where: {shopId: productInCart?.product.shop.id!}
+    where: {id: id!}
   })
 
   const midtransClient = require("midtrans-client");

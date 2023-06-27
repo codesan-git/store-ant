@@ -66,10 +66,11 @@ const RefundAlert = ({htmlElementId: id, selectProductCallback} : Props) => {
                 <label htmlFor={id} className="text-lg font-bold">✕</label>
             </div>
           </div>
-          <div id="product-box" className="p-2 space-x-2 flex flex-row">
+          {selectedTransaction?.order.map((order)=> (
+            <div id="product-box" className="p-2 space-x-2 flex flex-row">
             <div id="product-detail-img-container" className=" flex justify-center items-center">
                 <img className="w-20 h-20 object-cover" 
-                    src={`http://localhost:3000/${complain?.productInCart.product.image.split(",")[0]}`}
+                    src={`http://localhost:3000/${order?.product.image.split(",")[0]}`}
                     onError={({ currentTarget }) => {
                         currentTarget.onerror = null; // prevents looping
                         currentTarget.src = "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
@@ -78,11 +79,12 @@ const RefundAlert = ({htmlElementId: id, selectProductCallback} : Props) => {
                 />
             </div>
             <div className="mx-5">                
-                <h1 className="text-lg font-bold">{complain?.productInCart.product.name}</h1>
-                <p>{formatter.format(complain?.productInCart.product.price)}</p>
-                <p>Qty. {complain?.productInCart.count}</p>
+                <h1 className="text-lg font-bold">{order?.product.name}</h1>
+                <p>{formatter.format(order?.product.price)}</p>
+                <p>Qty. {order?.count}</p>
             </div>
           </div>
+          ))}
           {Boolean(isApproving) ? (
             <h1 className="text-md">Mengembalikan dana sebesar {formatter.format(complain?.productInCart.product.price * complain?.productInCart.count)}?</h1>
           ) : (
