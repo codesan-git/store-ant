@@ -10,7 +10,6 @@ const handler = async (
 
   if(req.method === 'GET'){
     try{
-      console.log('ENTER SHOP GET');
       const shop = await prisma?.shop.findFirst({
         where: {
           id: Number(id)

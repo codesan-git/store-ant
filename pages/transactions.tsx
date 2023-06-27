@@ -1,81 +1,67 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { getSession, useSession } from "next-auth/react";
+import { getSession } from "next-auth/react";
 import { prisma } from "../lib/prisma";
-import Link from "next/link";
 import Navbar from "./navbar";
 import Footer from "./footer";
 import ReviewModal from "../components/transactions/review_modal";
 import TransactionsDashboard from "@/components/transactions/transactions_dashboard";
-import ProductTransaction from "@/components/transactions/product_transaction";
-import type { TabsStylesType } from "@material-tailwind/react";
+import TransactionItem from "@/components/transactions/transaction_item";
 import PaymentModal from "@/components/transactions/payment_modal";
 import CancelAlert from "@/components/transactions/user_cancel_alert";
 import DetailTransactionModal from "@/components/transactions/detail_transaction_modal";
-
-// TABS
-import {
-  Tabs,
-  TabsHeader,
-  TabsBody,
-  Tab,
-  TabPanel,
-} from "@material-tailwind/react";
-import {
-  Square3Stack3DIcon,
-  UserCircleIcon,
-  Cog6ToothIcon,
-} from "@heroicons/react/24/solid";
 import axios from "axios";
-import { TransactionStatus } from "@prisma/client";
-// END TABS
+import { Product, Order as PrismaOrder, Transaction as PrismaTransaction, TransactionStatus } from "@prisma/client";
 
-interface CartItems {
-  cartItems: CartItemObject[];
-}
-
-interface CartItemObject {
-  id: number;
-  product: Product;
-  count: number;
-  price: number;
-  status: TransactionStatus;
-}
-
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  stock: number;
-  image: string;
-}
-
-interface Transaction { //TODO: Create model in prisma //note bila: done
-  id: Number;
-  product: Product;
-  count: Number;
-  price: Number;
-  status: TransactionStatus;
-}
 
 interface CartId {
   id: Number;
 }
 
-export default function Transaction({ cartItems }: CartItems) {
+interface Order {
+  id: number,
+  transactionId: number,
+  productId: number,
+  count: number,
+  createdAt: Date,
+  updatedAt: Date,
+  product: Product
+}
+
+interface Transaction {
+  id: number,
+  userId: number,
+  shopId: number,
+  status: TransactionStatus,
+  createdAt: Date,
+  updatedAt: Date,
+  paymentMethod: string,
+  order: Order[],
+  shop: {
+    shopName: string
+  } 
+}
+
+const Transactions = ({ transactions } : { transactions: Transaction[]}) => {
   const router = useRouter();
   
   const [currentSelectedSection, setCurrentSelectedSection] = useState<String>("Menunggu Pembayaran");
-  const [itemsToDisplay, setItemsToDisplay] = useState(cartItems);
+
+  const [allTransactions, setAllTransactions] = useState<Transaction[]>(transactions);
+
+  const [itemsToDisplay, setItemsToDisplay] = useState(transactions);
   const [currentRateProductName, setCurrentRateProductName] = useState<String>("");
   const [currentCartItemId, setCurrentCartItemId] = useState<Number>();
-  const [selectedTransaction, setSelectedTransaction] = useState<CartItemObject>();
+  const [selectedTransaction, setSelectedTransaction] = useState<Transaction>();
   const [transactionModalIsHidden, setTransactionModalIsHidden] = useState<Boolean>(true);
+
+  console.log(`allTransactions: ${allTransactions.at(0)?.id}`);
+  console.log(`${allTransactions.at(0)?.toString()}`);
   
   useEffect(() => {}, [itemsToDisplay]);
 
-  async function onSelect(transaction: CartItemObject) {
+  async function onSelect(transaction: Transaction) {
     setSelectedTransaction(transaction);
   }
 
@@ -101,7 +87,7 @@ export default function Transaction({ cartItems }: CartItems) {
     });
   }
 
-  const onDetail = (transaction: CartItemObject) => {
+  const onDetail = (transaction: Transaction) => {
     setSelectedTransaction(transaction)
     setTransactionModalIsHidden(false);
   }
@@ -133,7 +119,7 @@ export default function Transaction({ cartItems }: CartItems) {
 
   const TransactionDashboardArguments = () => { //Don't ever do this callback function hack again - Peter D. Luffy
     return {
-      cartItems,
+      transactions,
       setItemsToDisplay,
       setCurrentSelectedSection,
     }
@@ -149,13 +135,13 @@ export default function Transaction({ cartItems }: CartItems) {
 
   const renderItemsToDisplay = () => {
 
-    if(itemsToDisplay?.length === 0) return <h1 className="h-full flex justify-center items-center">No Items</h1>
+    if(itemsToDisplay?.length === 0 || !itemsToDisplay) return <h1 className="h-full flex justify-center items-center">No Items</h1>
 
     return (
       <>
         {
           itemsToDisplay?.map(
-            (transaction, i) => <ProductTransaction 
+            (transaction, i) => <TransactionItem 
               key={i} 
               transaction={transaction} 
               onBayar={onSelect}
@@ -195,31 +181,50 @@ export default function Transaction({ cartItems }: CartItems) {
   );
 }
 
+export default Transactions;
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context);
-  const cart = await prisma.cart.findFirst({
-    where: { userId: session?.user.id },
-  });
 
-  if (!cart) {
-    return {
-      props: {},
-    };
-  }
-
-  const cartItems = await prisma.productInCart.findMany({
+  const transactions = await prisma.transaction.findMany({
     where: {
-      cartId: cart?.id
+      userId: session?.user.id
     },
     select: {
       id: true,
-      product: true,
-      count: true,
-    },
+      userId: true,
+      shopId: true,
+      status: true,
+      createdAt: true,
+      updatedAt: true,
+      paymentMethod: true,
+      order: {
+        include: {
+          product: {
+            select: {
+              id: true,
+              name: true,
+              image: true,
+              description: true,
+              price: true,
+            }
+          }
+        }
+      },
+      shop: {
+        select: {
+          shopName: true
+        }
+      }
+    }
+    
   });
+
+  console.log(JSON.parse(JSON.stringify(transactions)));
+
   return {
     props: {
-      cartItems,
+      transactions: JSON.parse(JSON.stringify(transactions)),
     },
   };
 };

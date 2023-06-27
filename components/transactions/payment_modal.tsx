@@ -1,4 +1,4 @@
-import { Product, Status } from "@prisma/client";
+import { Product, TransactionStatus } from "@prisma/client";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -6,14 +6,6 @@ import { useState } from "react";
 interface Props {
   htmlElementId: string,
   selectProductCallback: () => any;
-}
-
-interface CartItemObject {
-    id: number;
-    product: Product;
-    count: number;
-    price: number;
-    status: Status;
 }
   
 interface Params {
@@ -27,7 +19,12 @@ interface TransactionToken {
 }
   
 const PaymentModal = ({htmlElementId: id, selectProductCallback} : Props) => {
-  const {selectedTransaction} = selectProductCallback();
+  const {
+    selectedTransaction
+  } : 
+  { 
+    selectedTransaction: Transaction
+  } = selectProductCallback();
   const [isUsingBalance, setUsingBalance] = useState<boolean>(false);
   const router = useRouter();
     
