@@ -21,7 +21,7 @@ export default async function handler(
             id: true,
             productId: true,
             count: true,
-            status: true
+            // status: true
         }
     })
 
