@@ -11,7 +11,7 @@ export default async function handler(
   const session = await getSession({req})
 
   try {
-    const productInCart = await prisma.productInCart.update({
+    const transaction = await prisma.transaction.update({
         where:{id: Number(id)},
         data:{
             status: Status.FINISHED
@@ -19,11 +19,11 @@ export default async function handler(
     })
 
     const product = await prisma.product.findFirst({
-      where: {id: productInCart.productId}
+      where: {id: transaction.productId}
     })
 
     const shop = await prisma.shop.findFirst({
-      where: {id: product?.shopId}
+      where: {id: transaction?.shopId}
     })
 
     const shopUpdate = await prisma.shop.update({
