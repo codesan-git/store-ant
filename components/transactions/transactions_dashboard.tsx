@@ -16,7 +16,7 @@ const TransactionsDashboard = ({TransactionDashboardArguments}: Props) => {
 
   const [berlangsungIsOpen, setBerlangsungIsOpen] = useState<Boolean>(false);
 
-  //I'm losing my mind just to make this work - Peter D.
+  //I'm losing my mind just to make this work - Peter D. //((semangat))
   const menungguPembayaranOnClick = () => {
     setItemsToDisplay(cartItems?.filter((e: any) => e.status === TransactionStatus.UNPAID));
     setCurrentSelectedSection("Menunggu Pembayaran");

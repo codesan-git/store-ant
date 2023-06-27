@@ -26,8 +26,16 @@ interface FetchData {
     rate: Number;
     comment: string;
     image: string;
-    productInCart: ProductInCart;
+    order: Order;
   }[];
+}
+
+interface Order {
+  transaction: Transaction
+}
+
+interface Transaction {
+  user: User;
 }
 
 interface ProductInCart{
@@ -312,10 +320,10 @@ export default function CreateShop({ product, ratings }: FetchData) {
                   >
                       <div className="flex">
                         <div id='rating-profile-picture-container' className='mx-5 w-1/3 flex sm:w-auto'>
-                        {rating.productInCart.cart.user.image ? (
+                        {rating?.order?.transaction?.user?.image ? (
                             <img
                               className='mt-5 object-cover rounded-full w-16 h-16 sm:h-16 border-2 border-gray-600'
-                              src={`${rating.productInCart.cart.user.image}`}                              
+                              src={`${rating?.oder?.transaction?.user.image}`}                              
                               onError={({ currentTarget }) => {
                                 currentTarget.onerror = null; // prevents looping
                                 currentTarget.src =
@@ -333,10 +341,10 @@ export default function CreateShop({ product, ratings }: FetchData) {
                         <div className="py-5 flex w-full">
                           <div>
                             <h2 className="card-title">
-                              {rating.productInCart.cart.user?.name}
+                              {rating?.order?.transaction?.user?.name}
                             </h2>
                             {renderRatingStars(rating.rate)}
-                            <p>{rating.comment}</p>
+                            <p>{rating?.comment}</p>
                             {rating.image ? (
                                 <div className="flex gap-x-2">
                                   {rating.image.split(",").map((image, i) => (
