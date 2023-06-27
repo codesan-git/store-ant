@@ -10,9 +10,10 @@ export default async function handler(
   const {id} = req.body
   const session = await getSession({req})
 
+  console.log("checkout: ", id);
   try {
     const productInCart = await prisma.productInCart.findFirst({
-      where: { id: Number(id) },
+      where: { id: Number(id[0]) },
       select: {
         productId: true,
         count: true,
@@ -33,7 +34,7 @@ export default async function handler(
 
     let i: number;
     for(i=0; i < id.length; i++){
-        const productInCart = await prisma.productInCart.findFirst({
+        let productInCart = await prisma.productInCart.findFirst({
             where:{id: Number(id[i])},
             select: {
               productId: true,
@@ -50,6 +51,10 @@ export default async function handler(
             productId: productInCart?.productId!,
             count: productInCart?.count!,
           }
+        })
+
+        await prisma.productInCart.delete({
+          where: {id: Number(id[i])}
         })
     }
     res.status(200).json({ message: "Success!" })
