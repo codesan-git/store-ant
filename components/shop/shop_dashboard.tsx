@@ -13,7 +13,7 @@ interface Props {
     id: Number,
     shopName: string,
     averageRating: Number,
-    balance: number
+    balance: number,
   }
 }
 
