@@ -62,12 +62,6 @@ const ShopDashboard = ({ shop }: Props) => {
             </Link>
           </li>
           <li>
-            <Link href={'/shop/products'} className="flex p-2 text-base font-normal rounded-lg transition duration-200 hover:bg-gray-300">
-              <HiShoppingBag className="h-6 w-6"/>
-              <span className="ml-3">Products</span>
-            </Link>
-          </li>
-          <li>
             <button type="button" onClick={() => setIsSalesDropdownClosed(false)} className="flex items-center whitespace-nowrap w-full p-2 text-base font-normal rounded-lg hover:bg-gray-300" >
               <HiCurrencyDollar className="h-6 w-6"/>
               <span className="flex-1 ml-3 text-left">Sales</span>
@@ -95,6 +89,12 @@ const ShopDashboard = ({ shop }: Props) => {
             <Link href={''} className="flex p-2 text-base font-normal rounded-lg transition duration-200 hover:bg-gray-300">
               <HiChartPie className="h-6 w-6"/>
               <span className="ml-3">Stats</span>
+            </Link>
+          </li>
+          <li>
+            <Link href={'/shop/withdrawals'} className="flex p-2 text-base font-normal rounded-lg transition duration-200 hover:bg-gray-300">
+              <HiChatBubbleBottomCenterText className="h-6 w-6"/>
+              <span className="ml-3">Withdraw</span>
             </Link>
           </li>
         </ul>

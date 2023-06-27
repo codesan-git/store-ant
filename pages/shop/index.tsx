@@ -8,6 +8,7 @@ import ProductCard from '@/components/index/product_card';
 import Navbar from '../navbar'
 import Footer from '../footer'
 import ShopDashboard from '../../components/shop/shop_dashboard'
+import ProductItem from '@/components/shop/product_item'
 
 interface Props{
     shop:{
@@ -45,8 +46,17 @@ export default function Profile({shop, products} : Props) {
         <Navbar />
         <div className='flex flex-row py-4 space-x-2'>
           <ShopDashboard shop={shop}/>
-          <div id='product-list' className='w-full bg-gray-100 py-5'>
-              
+          <div id='dashboard-content' className='w-full bg-gray-100 p-5 space-y-2'>
+            <h1 className='text-2xl'>Seller Home</h1>
+            <div id='new-item-input' className='border-dashed border-2 border-black p-2 w-1/4 h-10 flex justify-center items-center'>
+              <h1>{'(+) New Item'}</h1>
+            </div>
+            <div id='product-list' className='flex flex-row overflow-y-auto space-x-2 lg:grid lg:grid-cols-5 w-full'>
+              <ProductItem/>
+              <ProductItem/>
+              <ProductItem/>
+              <ProductItem/>
+            </div>
           </div>
         </div>
         <Footer />
