@@ -1,5 +1,4 @@
 import { TransactionStatus } from "@prisma/client";
-import Link from "next/link";
 import { Fragment, useState } from "react";
 import { HiChevronDown, HiChevronUp } from "react-icons/hi2";
 

@@ -12,14 +12,35 @@ import PaymentModal from "@/components/transactions/payment_modal";
 import CancelAlert from "@/components/transactions/user_cancel_alert";
 import DetailTransactionModal from "@/components/transactions/detail_transaction_modal";
 import axios from "axios";
-import { Transaction, TransactionStatus } from "@prisma/client";
+import { Product, Order as PrismaOrder, Transaction as PrismaTransaction, TransactionStatus } from "@prisma/client";
 
 
 interface CartId {
   id: Number;
 }
 
-const Transactions = ({ transactions }: { transactions: Transaction[]}) => {
+interface Order {
+  id: number,
+  transactionId: number,
+  productId: number,
+  count: number,
+  createdAt: Date,
+  updatedAt: Date,
+  product: Product
+}
+
+interface Transaction {
+  id: number,
+  userId: number,
+  shopId: number,
+  status: TransactionStatus,
+  createdAt: Date,
+  updatedAt: Date,
+  paymentMethod: string,
+  order: Order[]
+}
+
+const Transactions = ({ transactions } : { transactions: Transaction[]}) => {
   const router = useRouter();
   
   const [currentSelectedSection, setCurrentSelectedSection] = useState<String>("Menunggu Pembayaran");
@@ -32,7 +53,8 @@ const Transactions = ({ transactions }: { transactions: Transaction[]}) => {
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction>();
   const [transactionModalIsHidden, setTransactionModalIsHidden] = useState<Boolean>(true);
 
-  console.log(`allTransactions: ${transactions.toString()}`);
+  console.log(`allTransactions: ${allTransactions.at(0)?.id}`);
+  console.log(`${allTransactions.at(0)?.toString()}`);
   
   useEffect(() => {}, [itemsToDisplay]);
 
@@ -175,16 +197,26 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       paymentMethod: true,
       order: {
         include: {
-          product: true
+          product: {
+            select: {
+              id: true,
+              name: true,
+              image: true,
+              description: true,
+              price: true,
+            }
+          }
         }
       }
     }
     
   });
 
+  console.log(JSON.parse(JSON.stringify(transactions)));
+
   return {
     props: {
-      transactions,
+      transactions: JSON.parse(JSON.stringify(transactions)),
     },
   };
 };

@@ -1,13 +1,26 @@
 import { Fragment, useState } from "react";
 import { HiOutlineEllipsisVertical } from "react-icons/hi2";
-import { Order, ProductInCart, Transaction, TransactionStatus } from "@prisma/client";
+import { Product, Order as PrismaOrder, ProductInCart, Transaction as PrismaTransaction, TransactionStatus } from "@prisma/client";
 
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  stock: number;
-  image: string;
+interface Order {
+  id: number,
+  transactionId: number,
+  productId: number,
+  count: number,
+  createdAt: Date,
+  updatedAt: Date,
+  product: Product
+}
+
+interface Transaction {
+  id: number,
+  userId: number,
+  shopId: number,
+  status: TransactionStatus,
+  createdAt: Date,
+  updatedAt: Date,
+  paymentMethod: string,
+  order: Order[]
 }
 
 interface Props {
@@ -22,18 +35,18 @@ interface Props {
 
 const TransactionItem = ({  transaction, onRate: onRateClick, onBayar, onCancel, onFinish, onReturn, onDetail }: Props) => { //TODO: re-adjust background colors based on website. the one in the wireframe are just placeholder colors.
 
-  const calculateTransactionTotal = ( orders: Order[] ) : Number => {
+  const calculateTransactionTotal = ( ) : Number => {
 
+    const orders = transaction.order
+    
     let total = 0;
 
-    orders.forEach((order) => {
-      // total += (order.)
+    orders?.forEach((order) => {
+      total += (order.product.price)
     });
 
-    return 3;
+    return total;
   }
-
-  const transactionTotal = 3;
 
   const [extraActionsIsOpen, setExtraActionsIsOpen] = useState<Boolean>(false);
 
@@ -231,30 +244,30 @@ const TransactionItem = ({  transaction, onRate: onRateClick, onBayar, onCancel,
       <div id="lower-detail">
         <div id="product-details" className="flex flex-row p-2 bg-gray-300">
           <div id="product-detail-img-container" className=" flex justify-center items-center">
-            {/* <img className="w-36 h-36 object-cover" 
-                 src={`http://localhost:3000/${transaction.product.image.split(",")[0]}`}
+            <img className="w-36 h-36 object-cover" 
+                 src={`http://localhost:3000/${transaction.order.at(0)?.product.image.split(",")[0]}`}
                  onError={({ currentTarget }) => {
                     currentTarget.onerror = null; // prevents looping
                     currentTarget.src = "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
                  }}
                  alt=''
-            /> */}
+            />
           </div>
           <div id="product-detail" className="flex-1 p-4 flex flex-col justify-center">
-            <h1 className="text-xs lg:text-base">Kode Transaksi</h1>
-            {/* <h1 className="text-xs lg:text-base font-bold">{transaction.product.name.toString()}</h1> */}
-            {/* <h1 className="text-xs lg:text-base">Jumlah: {transaction.count.toString()}</h1> */}
+            <h1 className="text-xs lg:text-base">Kode Transaksi: {transaction.id}</h1>
+            <h1 className="text-xs lg:text-base font-bold">{transaction.order.at(0)?.product.name.toString()}</h1>
+            <h1 className="text-xs lg:text-base">Jumlah: {transaction.order.at(0)?.count.toString()}</h1>
             <h1 className="text-xs lg:text-base">+X Produk Lainnya</h1>
           </div>
           <div id="total-details-lower" className="hidden lg:flex lg:flex-col lg:justify-center w-1/3 p-4 space-y-2 border-l-gray-500 border-l-2">
             <h1 className="">Total Belanja</h1>
-            <h1 className="font-bold">Rp {transactionTotal.toString()}</h1>
+            <h1 className="font-bold">Rp {calculateTransactionTotal().toString()}</h1>
           </div>
         </div>
         <div id="total-section" className="flex flex-row p-2 bg-gray-400">
           <div id="total-details" className="w-1/3 lg:hidden">
             <h1 className="text-xs">Total Belanja</h1>
-            <h1 className="text-xs">Rp {transactionTotal.toString()}</h1>
+            <h1 className="text-xs">Rp {calculateTransactionTotal().toString()}</h1>
           </div>
           <div id="transaction-actions" className="w-2/3 lg:w-full flex flex-row justify-end space-x-2">
             {renderActionButtons()}
