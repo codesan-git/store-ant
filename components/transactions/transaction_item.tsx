@@ -263,6 +263,7 @@ const TransactionItem = ({  transaction, onRate: onRateClick, onBayar, onCancel,
             <h1 className="text-xs lg:text-base">+{transaction.order.length - 1} Produk Lainnya</h1>
           </div>
           <div id="total-details-lower" className="hidden lg:flex lg:flex-col lg:justify-center w-1/3 p-4 space-y-2 border-l-gray-500 border-l-2">
+            <h1>STATUS {transaction.status.toString()}</h1>
             <h1 className="">Total Belanja</h1>
             <h1 className="font-bold">Rp {calculateTransactionTotal().toString()}</h1>
           </div>
