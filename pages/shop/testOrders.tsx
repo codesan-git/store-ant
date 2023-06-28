@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/router'
 import { GetServerSideProps } from 'next'
 import { getSession, useSession } from 'next-auth/react'
@@ -9,19 +9,6 @@ import Navbar from '../navbar'
 import Footer from '../footer'
 import ShopDashboard from '../../components/shop/shop_dashboard'
 
-
-// interface Props {
-//   shop:{
-//     id: Number,
-//     shopName: string,
-//     averageRating: Number,
-//     balance: number,
-//   }
-//   shop2:{
-//     id: Number,
-
-//   }
-// }
 interface Props {
   shop: {
     id: number,
@@ -30,38 +17,12 @@ interface Props {
     balance: number
     transaction: Transaction[]
   }
-  // transaction: {
-  //   id: number,
-  //   userId: number,
-  //   shopId: number,
-  //   status: string,
-  //   paymentMethod: string,
-  //   order: Order
-  // }
-  // order: {
-  //   id: number,
-  //   transactionId: number,
-  //   productId: number,
-  //   count: number,
-  //   rating: Rating,
-  //   complain: Complain
-  // }
-  // rating: {
-  //   id: number,
-  //   orderId: true,
-  //   comment: true,
-  //   rate: true,
-  //   image: true
-  // }
-  // complain: {
-  //   id: number,
-  //   orderId: number,
-  //   status: string,
-  //   description: string,
-  //   ShopComment: string,
-  //   image: string
-  // }
 }
+
+interface SellerTransactions {
+  sellerTransactions: Shop
+}
+
 interface Shop {
   id: Number,
   shopName: string,
@@ -76,13 +37,24 @@ interface Transaction {
   shopId: number,
   status: string,
   paymentMethod: string,
-  order: Order[]
+  order: Order[],
+  user: User
 }
 
-// interface Category{
-//   id: Number,
-//   category: string
-// }
+interface User {
+  id: number,
+  name: string,
+  email: string,
+  image: string,
+  profile: Profile
+}
+
+interface Profile {
+  id: number,
+  userId: number,
+  username: string,
+  phoneNumber: string
+}
 
 interface Order {
   id: number,
@@ -111,30 +83,83 @@ interface Complain {
 }
 
 export default function Profile({ shop }: Props) {
-  // export default function Profile({ id }: Shop) {
 
   const router = useRouter()
   const { data: session } = useSession();
+
+  const [selectedTransaction, setSelectedTransaction] = useState<SellerTransactions>();
+  const [isCancelling, setIsCancelling] = useState<boolean>();
+
+
+  const statusMap: Record<string, Array<any>> = {
+    UNPAID: [],  // Inisialisasi array kosong untuk status "UNPAID"
+    PAID: [],  // Inisialisasi array kosong untuk status "PAID"
+    REFUNDED: [],  // Inisialisasi array kosong untuk status "REFUNDED"
+    INCART: [],  // Inisialisasi array kosong untuk status "INCART"
+    AWAITING_CONFIRMATION: [],  // Inisialisasi array kosong untuk status "AWAITING_CONFIRMATION"
+    PACKING: [],  // Inisialisasi array kosong untuk status "PACKING"
+    DELIVERING: [],  // Inisialisasi array kosong untuk status "DELIVERING"
+    FINISHED: [],  // Inisialisasi array kosong untuk status "FINISHED"
+    RETURNING: [],  // Inisialisasi array kosong untuk status "RETURNING"
+    NEED_ADMIN_REVIEW: [],  // Inisialisasi array kosong untuk status "NEED_ADMIN_REVIEW"
+    RETURNED: [],  // Inisialisasi array kosong untuk status "RETURNED"
+    RETURN_REJECTED: [],  // Inisialisasi array kosong untuk status "RETURN_REJECTED"
+    CANCELING: [],  // Inisialisasi array kosong untuk status "CANCELING"
+    CANCELED: [],  // Inisialisasi array kosong untuk status "CANCELED"
+    CANCEL_REJECTED: [],  // Inisialisasi array kosong untuk status "CANCEL_REJECTED"
+  };
+
+  const [selectedStatus, setSelectedStatus] = useState("")
+
+  const sellList = shop.transaction;  // Mendapatkan nilai `sellList` dari `shop.transaction`
+
+  if (sellList) {  // Memeriksa apakah `sellList` tidak null atau undefined
+
+    sellList.forEach((item) => {  // Melakukan iterasi pada setiap item dalam `sellList`
+      if (item.status in statusMap) {  // Memeriksa apakah status item ada dalam `statusMap`
+        statusMap[item.status].push(item);  // Menambahkan item ke array yang berkorespondensi dengan status tersebut
+      }
+    });
+
+    Object.values(statusMap).forEach((statusArray) => {  // Melakukan iterasi pada setiap array status dalam `statusMap`
+      console.log(statusArray);  // Mencetak setiap array status menggunakan `console.log`
+    });
+  }
 
   if (!shop) {
     router.push('/shop/register')
   } else {
     console.log(`shop`, shop)
+    console.log(`statusMap`, statusMap.PAID)
     return (
       <div>
         <Navbar />
         <div className='flex flex-row py-4 space-x-2'>
           <ShopDashboard shop={shop} />
           <div id='product-list' className='w-full bg-gray-100 py-5'>
-            {shop.transaction.map((kodok) => (
+            <h1 className='text-black'>PAID</h1>
+            {
+              statusMap.PAID.map((kodok) => (
+                <>
+                  <div>
+                    <div className='border-4 bg-blue-gray-400'>
+                      <h2>Nama Pembeli: {kodok.user.profile?.username ? kodok.user.profile?.username! : kodok.user.name}</h2>
+                    </div>
+                    <div className='grid-rows-4'>
+
+                    </div>
+                    <p>{kodok.id}</p>
+                  </div>
+                </>
+              ))
+            }
+            {/* {shop.transaction.map((kodok) => (
               <>
-                <div className='text-red-500'>
-                  {kodok.id}
-                </div>
+
                 <h2>
                   {kodok.status}
                 </h2>
-                {kodok.order.map((mantep)=>(
+                {kodok.order.map((mantep) => (
                   <>
                     <p>
                       {mantep.id}
@@ -145,7 +170,7 @@ export default function Profile({ shop }: Props) {
                   </>
                 ))}
               </>
-            ))}
+            ))} */}
           </div>
         </div>
         <Footer />
@@ -194,6 +219,22 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                   description: true,
                   ShopComment: true,
                   image: true
+                }
+              }
+            }
+          },
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              image: true,
+              profile: {
+                select: {
+                  id: true,
+                  userId: true,
+                  username: true,
+                  phoneNumber: true
                 }
               }
             }
