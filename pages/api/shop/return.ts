@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
 import { prisma } from "../../../lib/prisma"
-import { Status, TransactionStatus } from '@prisma/client'
+import { TransactionStatus } from '@prisma/client'
 
 export default async function handler(
   req: NextApiRequest,
@@ -11,10 +11,10 @@ export default async function handler(
   const session = await getSession({req})
 
   try {
-    const productInCart = await prisma.productInCart.update({
+    const transaction = await prisma.transaction.update({
         where:{id: Number(id)},
         data:{
-            status: Status.RETURNED
+            status: transaction.RETURNED
         }
     })
 
