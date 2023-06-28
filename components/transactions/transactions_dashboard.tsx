@@ -35,14 +35,17 @@ const TransactionsDashboard = ({TransactionDashboardArguments}: Props) => {
 
   const pesananDikirimOnClick = () => {
     setItemsToDisplay(allTransactions?.filter((e: any) => e.status === TransactionStatus.DELIVERING || e.status === TransactionStatus.RETURNING));
+    setCurrentSelectedSection("Pesanan Dikirim");
   }
 
   const berhasilOnClick = () => {
     setItemsToDisplay(allTransactions?.filter((e: any) => e.status === TransactionStatus.FINISHED || e.status === TransactionStatus.CANCEL_REJECTED || e.status === TransactionStatus.RETURN_REJECTED));
+    setCurrentSelectedSection("Berhasil");
   }
 
   const tidakBerhasilOnClick = () => {
     setItemsToDisplay(allTransactions?.filter((e: any) => (e.status === TransactionStatus.CANCELED || e.status === TransactionStatus.RETURNED)));
+    setCurrentSelectedSection("Tidak Berhasil");
   }
 
   const berlangsungBottomModal = () => {
