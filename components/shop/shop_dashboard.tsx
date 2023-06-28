@@ -29,20 +29,22 @@ const ShopDashboard = ({ shop }: Props) => {
   });
 
   return(
-    <div id='shop-dashboard' className="lg:shadow-md lg:w-1/6"> {/*Try to use drawer here*/}
-      <div id="shop-profile" className="flex flex-col justify-center items-center px-2 py-4 space-y-2">
+    <div id='shop-dashboard' className="lg:shadow-md lg:w-1/6 bg-gray-300"> {/*Try to use drawer here*/}
+      <div id="shop-profile" className="flex flex-row lg:flex-col justify-start lg:justify-center items-center px-2 py-4 space-y-2">
         <div id="profile-photo-container" className="avatar">
-          <div className="w-24 rounded-full border border-black">
+          <div className="w-12 lg:w-24 rounded-full border border-black">
             <img src={session?.user.image!} alt="" />
           </div>
         </div>
-        <h1 className="font-bold">{shop.shopName}</h1>
-        <h1 className="font-bold">Rating: {shop.averageRating.toString()}/5</h1>
-        <button className="rounded-md bg-green-500 hover:bg-green-400 transition duration-200 p-1 w-24 text-white">
-          <Link href={'/shop/profile'} className="flex justify-center items-center">
-            Edit Toko
-          </Link>
-        </button>
+        <div id="shop-details-container" className="">
+          <h1 className="font-bold">{shop.shopName}</h1>
+          <h1 className="font-bold">Rating: {shop.averageRating.toString()}/5</h1>
+          <button className="hidden lg:block rounded-md bg-green-500 hover:bg-green-400 transition duration-200 p-1 w-24 text-white">
+            <Link href={'/shop/profile'} className="flex justify-center items-center">
+              Edit Toko
+            </Link>
+          </button>
+        </div>
       </div>
       <div id="shop-stats" className="py-2 px-4 border border-y-gray-600">
         <h1>Kas: {formatter.format(shop.balance)}</h1>

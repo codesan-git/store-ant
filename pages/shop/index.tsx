@@ -44,7 +44,7 @@ export default function Profile({shop, products} : Props) {
     return (
       <div>
         <Navbar />
-        <div className='flex flex-row py-4 space-x-2'>
+        <div className='lg:flex lg:flex-row py-4 space-x-2'>
           <ShopDashboard shop={shop}/>
           <div id='dashboard-content' className='w-full bg-gray-100 p-5 space-y-2'>
             <h1 className='text-2xl'>Seller Home</h1>
