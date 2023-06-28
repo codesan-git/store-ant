@@ -4,22 +4,35 @@ import { Fragment, useEffect, useState } from "react";
 import { BiStoreAlt } from "react-icons/bi";
 import useSWR from 'swr';
 
-
 interface Props {
   detailTransactionModalArguments: () => any;
 }
 
-interface CartItemObject {
-  id: number;
-  product: Product;
-  count: number;
-  price: number;
-  status: TransactionStatus;
+interface Order {
+  id: number,
+  transactionId: number,
+  productId: number,
+  count: number,
+  createdAt: Date,
+  updatedAt: Date,
+  product: Product
+}
+
+interface Transaction {
+  id: number,
+  userId: number,
+  shopId: number,
+  status: TransactionStatus,
+  createdAt: Date,
+  updatedAt: Date,
+  paymentMethod: string,
+  order: Order[],
+  shop: {
+    shopName: string
+  } 
 }
 
 const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => {
-
-	//TODO: create callback function to get modalOpenState from Transactions page
 
 	const { 
 		transactionModalIsHidden, 
@@ -27,35 +40,12 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
 		getTransactionDetail
 	} = detailTransactionModalArguments();
 
-	const { selectedTransaction: transaction } : { selectedTransaction: CartItemObject | undefined} = getTransactionDetail(); //this is pretty cursed lol -
+	const { selectedTransaction: transaction } : { selectedTransaction: Transaction | undefined} = getTransactionDetail(); //this is pretty cursed lol -
 	const [shop, setShop] = useState<Shop>();
-	// const fetchProduct = async (url: string) => {
-	// 	console.log(`fetching from ${url}`)
-	// 	const response = await fetch(url);
-
-	// 	if(!response.ok) throw new Error("Failed to fetch Categories for Navbar");
-	// 	console.log('responsejson: ')
-	// 	console.log(response.json());
-	// 	return response.json();
-	// }
-
-	// const {data: product} = useSWR<Product>(
-	// 	`http://localhost:3000/api/product/${transaction?.productId}`,
-	// 	fetchProduct
-	// );
-
-	// const fetchShop = async (url: string) => {
-	// 	const response = await fetch(url);
-	// 	console.log(`fetch shop response: ${response.json()}`)
-
-	// 	if(!response.ok) throw new Error("Failed to fetch Categories for Navbar");
-
-	// 	return response.json();
-	// }
 
 	const fetchShop = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/api/shop/${transaction?.product.shopId}`, {
+      const response = await axios.get(`http://localhost:3000/api/shop/${transaction?.shopId}`, {
         params: {
         },
       });
@@ -67,25 +57,18 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
     }
   };
 
-	// const {data: shop, isLoading} = useSWR<Shop>(
-	// 	`http://localhost:3000/api/shop/${transaction?.product.shopId}`,
-	// 	fetchShop
-	// );
-
 	useEffect(() => {
 		fetchShop()
 	},[]);
 
-	const productTotal = () => {
-		if(transaction){
-			const total = transaction.count * transaction.product.price;
-			return `Rp ${total}`;
-		}
 
-		return "0";
-	}
+	
 
-	const productItem = () => {
+	const productItem = (order: Order) => {
+
+		let total = 0;
+		total = order.count * order.product.price
+
 		return (
 			<Fragment>
 				<div className="flex flex-row mt-2 space-x-1">
@@ -95,14 +78,14 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
 						</div>
 					</div>
 					<div className="p-2 flex items-center">
-						<h1>{transaction?.count}x</h1>
+						<h1>{order?.count}x</h1>
 					</div>
 					<div className="flex-1">
 						<div className=" p-0.5">
-							{transaction?.product.name}
+							{order?.product.name}
 						</div>
 						<div className=" p-0.5">
-							{productTotal()}
+							{total.toString()}
 						</div>
 					</div>
 				</div>
@@ -154,10 +137,10 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
 									<h1 className="font-bold">{shop?.shopName}</h1>
 								</div>
 								<div  id="purchased-products-list">
-									{productItem()}
+									3333
 								</div>
 								<div className="">
-									<h1 className="font-bold flex justify-end">Total Belanja: {productTotal()}</h1>
+									<h1 className="font-bold flex justify-end">Total Belanja: 333333</h1>
 								</div>
 							</div>
 							<div id="delivery-details">
@@ -209,7 +192,7 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
 										:
 									</div>
 									<div className="">
-										{productTotal()}
+										3333
 									</div>
 								</div>
 								<div id="delivery-expense" className="flex flex-row">

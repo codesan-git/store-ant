@@ -172,7 +172,7 @@ const Transactions = ({ transactions } : { transactions: Transaction[]}) => {
       <ReviewModal htmlElementId={`review-modal`}  selectProductCallback={getCurrentSelectedProductForRate}/>
       <PaymentModal htmlElementId={`payment-modal`} selectProductCallback={getTransactionDetail}/>
       <CancelAlert htmlElementId={`cancel-alert`} selectProductCallback={getTransactionDetail}/>
-      {/* <DetailTransactionModal detailTransactionModalArguments={detailTransactionModalArguments}/> */}
+      <DetailTransactionModal detailTransactionModalArguments={detailTransactionModalArguments}/>
       <Footer />
     </div>
   );
