@@ -8,6 +8,7 @@ import ProductCard from '@/components/index/product_card';
 import Navbar from '../navbar'
 import Footer from '../footer'
 import ShopDashboard from '../../components/shop/shop_dashboard'
+import Image from 'next/image'
 
 interface Props {
   shop: {
@@ -63,6 +64,7 @@ interface Order {
   count: number,
   rating: Rating,
   complain: Complain
+  product: Product
 }
 
 interface Rating {
@@ -80,6 +82,17 @@ interface Complain {
   description: string,
   ShopComment: string,
   image: string
+}
+
+interface Product {
+  id: number,
+  shopId: number,
+  categoryId: number,
+  name: string,
+  image: string,
+  description: string,
+  price: number,
+  stock: number
 }
 
 export default function Profile({ shop }: Props) {
@@ -145,32 +158,49 @@ export default function Profile({ shop }: Props) {
                     <div className='border-4 bg-blue-gray-400'>
                       <h2>Nama Pembeli: {kodok.user.profile?.username ? kodok.user.profile?.username! : kodok.user.name}</h2>
                     </div>
-                    <div className='grid-rows-4'>
+                    <div className='grid grid-cols-4'>
+                      <div className='col-span-3'>
+                        <div className='grid grid-cols-5'>
+                          <div className='col-span-1'>
+                            {
+                              kodok.order.map((kecoa: any) =>
+                                <>
+                                  <Image
+                                    alt={`Product ${kecoa.product.name}`}
+                                    src={`http://localhost:3000/${kecoa.product.image.split(",")[0]}`}
+                                    width={800}
+                                    height={400}
+                                    quality={70}
+                                    // style={{width:"1200px"}}
+                                    className='w-full sm:p-2 lg:p-6'
+                                  />
+                                </>
+                              )
+                            }
+                          </div>
 
+                          <div className='col-span-4 sm:py-2 lg:py-6'>
+                            {
+                              kodok.order.map((kerang:any) =>
+                                <>
+                                  <p>{kerang.transactionId}</p>
+                                  <p><b>{kerang.product.name}</b></p>
+                                  <p>Qty: {kerang.count}</p>
+                                </>
+                              )
+                            }
+                          </div>
+
+                        </div>
+                      </div>
+                      <div>
+                        <p>komen bang</p>
+                      </div>
                     </div>
-                    <p>{kodok.id}</p>
                   </div>
                 </>
               ))
             }
-            {/* {shop.transaction.map((kodok) => (
-              <>
-
-                <h2>
-                  {kodok.status}
-                </h2>
-                {kodok.order.map((mantep) => (
-                  <>
-                    <p>
-                      {mantep.id}
-                    </p>
-                    <p className='text-blue-800'>
-                      {mantep.productId}
-                    </p>
-                  </>
-                ))}
-              </>
-            ))} */}
           </div>
         </div>
         <Footer />
@@ -219,6 +249,18 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                   description: true,
                   ShopComment: true,
                   image: true
+                }
+              },
+              product: {
+                select: {
+                  id: true,
+                  shopId: true,
+                  categoryId: true,
+                  name: true,
+                  image: true,
+                  description: true,
+                  price: true,
+                  stock: true
                 }
               }
             }
