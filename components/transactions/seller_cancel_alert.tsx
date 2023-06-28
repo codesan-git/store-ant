@@ -16,6 +16,11 @@ const SellerCancelAlert = ({htmlElementId: id, selectProductCallback} : Props) =
   const router = useRouter();
   const {selectedTransaction, isCancelling} = selectProductCallback();
     
+  let i, totalPrice = 0;
+  for(i = 0; i < selectedTransaction?.order.length; i++){
+    totalPrice += (selectedTransaction?.order[i].product.price * selectedTransaction?.order[i].count);
+  }
+
   const onClose = () => {
     console.log("close"); 
     console.log("transaction modal ", selectedTransaction);
@@ -74,10 +79,11 @@ const SellerCancelAlert = ({htmlElementId: id, selectProductCallback} : Props) =
                 <label htmlFor={id} className="text-lg font-bold">✕</label>
             </div>
           </div>
-          <div id="product-box" className="p-2 space-x-2 flex flex-row">
+          {selectedTransaction?.order.map((order)=> (
+            <div id="product-box" className="p-2 space-x-2 flex flex-row">
             <div id="product-detail-img-container" className=" flex justify-center items-center">
                 <img className="w-20 h-20 object-cover" 
-                    src={`http://localhost:3000/${selectedTransaction?.product.image.split(",")[0]}`}
+                    src={`http://localhost:3000/${order?.product.image.split(",")[0]}`}
                     onError={({ currentTarget }) => {
                         currentTarget.onerror = null; // prevents looping
                         currentTarget.src = "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
@@ -86,13 +92,14 @@ const SellerCancelAlert = ({htmlElementId: id, selectProductCallback} : Props) =
                 />
             </div>
             <div className="mx-5">                
-                <h1 className="text-lg font-bold">{selectedTransaction?.product.name}</h1>
-                <p>{formatter.format(selectedTransaction?.product.price)}</p>
-                <p>Qty. {selectedTransaction?.count}</p>
+                <h1 className="text-lg font-bold">{order?.product.name}</h1>
+                <p>{formatter.format(order?.product.price)}</p>
+                <p>Qty. {order?.count}</p>
             </div>
           </div>
+          ))}
           {Boolean(isCancelling) ? (
-            <h1 className="text-md">Mengembalikan dana sebesar {formatter.format(selectedTransaction?.product.price * selectedTransaction.count)}?</h1>
+            <h1 className="text-md">Membatalkan transaksi senilai {formatter.format(totalPrice)}?</h1>
           ) : (
             <h1 className="text-md">Tolak Pembatalan?</h1>
           )}

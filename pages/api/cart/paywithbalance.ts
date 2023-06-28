@@ -10,13 +10,24 @@ export default async function handler(
   const {id, price} = req.body
   const session = await getSession({req})  
   
-  let transaction = await prisma.transaction.create({
+  // let transaction = await prisma.transaction.create({
+  //   data:{
+  //     productInCartId: Number(id),
+  //     status: TransactionStatus.PAID
+  //   }
+  // });
+  
+  const transaction = await prisma.transaction.updateMany({
+    where:{ id: id! },
     data:{
-      productInCartId: Number(id),
       status: TransactionStatus.PAID
     }
   });
-  
+
+  const transactionData = await prisma.transaction.findFirst({
+    where: {id: id!}
+  })
+
   if(price > session?.user?.balance!){
     const midtransClient = require("midtrans-client");
     // Create Snap API instance
@@ -29,7 +40,7 @@ export default async function handler(
     let parameter = {
         "payment_type": "gopay",
         "transaction_details": {
-            "order_id": transaction.id,
+            "order_id": transactionData.id,
             "gross_amount": Number(price) - Number(session?.user?.balance!)
         },
         "callbacks": {

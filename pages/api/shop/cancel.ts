@@ -10,16 +10,16 @@ export default async function handler(
   const {id} = req.body
   const session = await getSession({req})
   
-  const oldProductInCart = await prisma.productInCart.findFirst({
+  const oldTransaction = await prisma.transaction.findFirst({
     where: {id: Number(id)}
   })
   
   const product = await prisma.product.findFirst({
-    where:{id: Number(oldProductInCart?.productId)}
+    where:{id: Number(oldTransaction?.productId)}
   })
 
-  if(oldProductInCart?.status != Status.UNPAID){
-    const returnAmount: number = Number(oldProductInCart?.count) * Number(product?.price);
+  if(oldTransaction?.status != Status.UNPAID){
+    const returnAmount: number = Number(oldTransaction?.count) * Number(product?.price);
       
     const user = await prisma.user.findFirst({
         where:{id: session?.user?.id}
@@ -39,13 +39,6 @@ export default async function handler(
       }
     })
   }
-
-  const productInCart = await prisma.productInCart.update({
-      where:{id: Number(id)},
-      data:{
-          status: Status.CANCELED
-      }
-  })
 
   const productUpdate = await prisma.product.update({
     where:{id: Number(product?.id)},

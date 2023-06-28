@@ -13,15 +13,15 @@ export default async function handler(
         where:{userId: session?.user?.id!}
     })
     
-    const productInCart = await prisma.productInCart.findMany({
+    const transaction = await prisma.transaction.findMany({
         where:{
-            product: {shopId: shop?.id!},
+            shopId: shop?.id!,
         },
         select:{
             id: true,
             productId: true,
             count: true,
-            status: true
+            // status: true
         }
     })
 

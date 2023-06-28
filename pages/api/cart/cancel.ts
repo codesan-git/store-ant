@@ -11,12 +11,8 @@ export default async function handler(
   const session = await getSession({req})
 
   try {
-    let cart = await prisma.cart.findFirst({
-      where: {userId: session?.user.id}
-    });
-
-    const productInCart = await prisma.productInCart.update({
-        where:{id: Number(id)},
+    const transaction = await prisma.transaction.update({
+        where:{id: Number(id), userId: Number(session.user.id)},
         data:{
             status: Status.CANCELING
         }

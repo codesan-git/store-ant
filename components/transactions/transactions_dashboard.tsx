@@ -9,48 +9,43 @@ interface Props {
 const TransactionsDashboard = ({TransactionDashboardArguments}: Props) => {
 
   const {
-    cartItems, 
+    allTransactions, 
     setItemsToDisplay, 
     setCurrentSelectedSection
   } = TransactionDashboardArguments();
 
   const [berlangsungIsOpen, setBerlangsungIsOpen] = useState<Boolean>(false);
 
-  //I'm losing my mind just to make this work - Peter D.
+  //I'm losing my mind just to make this work - Peter D. //((semangat))
   const menungguPembayaranOnClick = () => {
-    setItemsToDisplay(cartItems?.filter((e: any) => e.status === TransactionStatus.UNPAID));
+    setItemsToDisplay(allTransactions?.filter((e: any) => e.status === TransactionStatus.UNPAID));
     setCurrentSelectedSection("Menunggu Pembayaran");
   }
   
   const menungguKonfirmasiOnClick = () => {
-    setItemsToDisplay(cartItems?.filter((e: any) => e.status === TransactionStatus.AWAITING_CONFIRMATION));
+    setItemsToDisplay(allTransactions?.filter((e: any) => e.status === TransactionStatus.AWAITING_CONFIRMATION));
     setCurrentSelectedSection("Menunggu Konfirmasi");
   }
 
   const pesananDiprosesOnClick = () => {
-    setItemsToDisplay(cartItems?.filter((e: any) => e.status === TransactionStatus.PACKING || e.status === TransactionStatus.CANCELING));
-  }
+    setItemsToDisplay(allTransactions?.filter((e: any) => e.status === TransactionStatus.PACKING || e.status === TransactionStatus.CANCELING));
+    setCurrentSelectedSection("Pesanan Diproses");
 
-  const menungguKurirOnClick = () => {
-    setItemsToDisplay(cartItems?.filter((e: any) => e.status === TransactionStatus.AWAITING_COURIER));
-    setCurrentSelectedSection("Menunggu Kurir");
   }
 
   const pesananDikirimOnClick = () => {
-    setItemsToDisplay(cartItems?.filter((e: any) => e.status === TransactionStatus.DELIVERING || e.status === TransactionStatus.RETURNING));
-  }
-
-  const pesananTibaOnClick = () => {
-    setItemsToDisplay(cartItems?.filter((e: any) => e.status === TransactionStatus.REACHED_DESTINATION));
-    setCurrentSelectedSection("Pesanan Tiba");
+    setItemsToDisplay(allTransactions?.filter((e: any) => e.status === TransactionStatus.DELIVERING || e.status === TransactionStatus.RETURNING));
+    setCurrentSelectedSection("Pesanan Dikirim");
   }
 
   const berhasilOnClick = () => {
-    setItemsToDisplay(cartItems?.filter((e: any) => e.status === TransactionStatus.FINISHED || e.status === TransactionStatus.CANCEL_REJECTED || e.status === TransactionStatus.RETURN_REJECTED));
+    setItemsToDisplay(allTransactions?.filter((e: any) => e.status === TransactionStatus.FINISHED || e.status === TransactionStatus.CANCEL_REJECTED || e.status === TransactionStatus.RETURN_REJECTED));
+    setCurrentSelectedSection("Berhasil");
   }
 
   const tidakBerhasilOnClick = () => {
-    setItemsToDisplay(cartItems?.filter((e: any) => (e.status === TransactionStatus.CANCELED || e.status === TransactionStatus.RETURNED)));
+    setItemsToDisplay(allTransactions?.filter((e: any) => (e.status === TransactionStatus.CANCELED || e.status === TransactionStatus.RETURNED)));
+    setCurrentSelectedSection("Tidak Berhasil");
   }
 
   const berlangsungBottomModal = () => {
@@ -81,23 +76,9 @@ const TransactionsDashboard = ({TransactionDashboardArguments}: Props) => {
                 </div>
               </li>
               <li>
-                <div onClick={menungguKurirOnClick} className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300">
-                  <div className="flex justify-center items-center text-center lg:pl-6">
-                    Menunggu Kurir
-                  </div>
-                </div>
-              </li>
-              <li>
                 <div onClick={pesananDikirimOnClick} className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300">
                   <div className="flex justify-center items-center text-center lg:pl-6">
                     Pesanan Dikirim
-                  </div>
-                </div>
-              </li>
-              <li>
-                <div onClick={pesananTibaOnClick} className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300">
-                  <div className="flex justify-center items-center text-center lg:pl-6">
-                    Pesanan Tiba
                   </div>
                 </div>
               </li>
@@ -175,23 +156,9 @@ const TransactionsDashboard = ({TransactionDashboardArguments}: Props) => {
                   </div>
                 </li>
                 <li>
-                  <div onClick={menungguKurirOnClick} className="flex justify-center lg:justify-start p-1 lg:p-4 w-32 lg:w-auto h-12 text-sm font-normal rounded-sm lg:rounded-none hover:bg-gray-300 transition duration-300 hover:cursor-pointer">
-                    <div className="flex justify-center items-center text-center lg:pl-6">
-                      Menunggu Kurir
-                    </div>
-                  </div>
-                </li>
-                <li>
                   <div onClick={pesananDikirimOnClick} className="flex justify-center lg:justify-start p-1 lg:p-4 w-32 lg:w-auto h-12 text-sm font-normal rounded-sm lg:rounded-none hover:bg-gray-300 transition duration-300 hover:cursor-pointer">
                     <div className="flex justify-center items-center text-center lg:pl-6">
                       Pesanan Dikirim
-                    </div>
-                  </div>
-                </li>
-                <li>
-                  <div onClick={pesananTibaOnClick} className="flex justify-center lg:justify-start p-1 lg:p-4 w-32 lg:w-auto h-12 text-sm font-normal rounded-sm lg:rounded-none hover:bg-gray-300 transition duration-300 hover:cursor-pointer">
-                    <div className="flex justify-center items-center text-center lg:pl-6">
-                      Pesanan Tiba
                     </div>
                   </div>
                 </li>

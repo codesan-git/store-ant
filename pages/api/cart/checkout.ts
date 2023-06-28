@@ -28,7 +28,7 @@ export default async function handler(
         userId: session?.user.id!,
         shopId: productInCart?.product.shop.id!,
         paymentMethod: "",
-        status: TransactionStatus.PAID
+        status: TransactionStatus.UNPAID
       }
     });
 

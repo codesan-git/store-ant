@@ -50,14 +50,11 @@ const Transactions = ({ transactions } : { transactions: Transaction[]}) => {
 
   const [allTransactions, setAllTransactions] = useState<Transaction[]>(transactions);
 
-  const [itemsToDisplay, setItemsToDisplay] = useState(transactions);
+  const [itemsToDisplay, setItemsToDisplay] = useState<Transaction[]>(transactions.filter((transaction) =>  transaction.status === TransactionStatus.UNPAID));
   const [currentRateProductName, setCurrentRateProductName] = useState<String>("");
   const [currentCartItemId, setCurrentCartItemId] = useState<Number>();
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction>();
   const [transactionModalIsHidden, setTransactionModalIsHidden] = useState<Boolean>(true);
-
-  console.log(`allTransactions: ${allTransactions.at(0)?.id}`);
-  console.log(`${allTransactions.at(0)?.toString()}`);
   
   useEffect(() => {}, [itemsToDisplay]);
 
@@ -119,7 +116,7 @@ const Transactions = ({ transactions } : { transactions: Transaction[]}) => {
 
   const TransactionDashboardArguments = () => { //Don't ever do this callback function hack again - Peter D. Luffy
     return {
-      transactions,
+      allTransactions,
       setItemsToDisplay,
       setCurrentSelectedSection,
     }

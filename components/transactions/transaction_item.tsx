@@ -1,5 +1,5 @@
 import { Fragment, useState } from "react";
-import { HiOutlineEllipsisVertical } from "react-icons/hi2";
+import { HiOutlineEllipsisVertical, HiShoppingCart } from "react-icons/hi2";
 import { Product, Order as PrismaOrder, ProductInCart, Transaction as PrismaTransaction, TransactionStatus } from "@prisma/client";
 
 interface Order {
@@ -37,6 +37,28 @@ interface Props {
 }
 
 const TransactionItem = ({  transaction, onRate: onRateClick, onBayar, onCancel, onFinish, onReturn, onDetail }: Props) => { //TODO: re-adjust background colors based on website. the one in the wireframe are just placeholder colors.
+
+  const transactionCreatedDate = new Date(transaction.createdAt);
+  const transactionLastUpdate = new Date(transaction.updatedAt);
+
+  const renderTransactionDate = () => { //TODO: try using locale format function next time
+    return (
+      <Fragment>
+        <h1>{transactionCreatedDate.toDateString()}</h1>
+      </Fragment>
+    );
+  }
+
+  const renderExtraItems = () => {
+
+    if(transaction.order.length === 1) return <></>;
+    
+    return (
+      <Fragment>
+        <h1 className="text-xs lg:text-base">+{transaction.order.length - 1} Produk Lainnya</h1>
+      </Fragment>  
+    );
+  }
 
   const calculateTransactionTotal = ( ) : Number => {
 
@@ -91,6 +113,7 @@ const TransactionItem = ({  transaction, onRate: onRateClick, onBayar, onCancel,
 
   const renderTransactionStatus = () => {
     if (transaction.status === TransactionStatus.UNPAID) return <h1 className="flex justify-end text-sm font-bold">Bayar Sebelum</h1>;
+    if (transaction.status === TransactionStatus.DELIVERING) return <h1 className="flex justify-end text-sm font-bold">Sedang Dikirim</h1>;
     if (transaction.status === TransactionStatus.CANCELING) return <h1 className="flex justify-end text-sm font-bold text-yellow-600">Pembatalan Diajukan</h1>;
     if (transaction.status === TransactionStatus.RETURNING) return <h1 className="flex justify-end text-sm font-bold text-yellow-600">Pengembalian Diajukan</h1>;
     if (transaction.status === TransactionStatus.CANCELED) return <h1 className="flex justify-end text-sm font-bold text-red-600">Dibatalkan Sistem</h1>; //CANCELED||CANCELED_REJECTED == FAILED
@@ -98,7 +121,6 @@ const TransactionItem = ({  transaction, onRate: onRateClick, onBayar, onCancel,
     if (transaction.status === TransactionStatus.RETURN_REJECTED) return <h1 className="flex justify-end text-sm font-bold text-blue-900">Pengembalian Ditolak</h1>;
     if (transaction.status === TransactionStatus.CANCEL_REJECTED) return <h1 className="flex justify-end text-sm font-bold text-blue-900">Pembatalan Ditolak</h1>;
     if (transaction.status === TransactionStatus.AWAITING_CONFIRMATION || transaction.status === TransactionStatus.PACKING) return <h1 className="flex justify-end text-sm font-bold">Otomatis Batal</h1>; //PACKING == BEING_PROCESSED
-    //if (transaction.status === TransactionStatus.REACHED_DESTINATION) return <h1 className="flex justify-end text-sm font-bold">Otomatis Selesai</h1>;
 
     return <></>;
   }
@@ -144,7 +166,7 @@ const TransactionItem = ({  transaction, onRate: onRateClick, onBayar, onCancel,
 
     //better idea: Create a callback function argument that passes all the handle functions and buttons to render as objects and render them there
 
-    //if(transaction.status === TransactionStatus.UNPAID){
+    if(transaction.status === TransactionStatus.UNPAID){
       return (
         <Fragment>
           <label htmlFor="payment-modal" onClick={() => onBayar(transaction)} className="text-xs lg:text-base flex justify-center items-center w-24 h-8 text-white bg-green-500 hover:cursor-pointer">
@@ -153,7 +175,7 @@ const TransactionItem = ({  transaction, onRate: onRateClick, onBayar, onCancel,
           {renderExtraActionDropdown()}
         </Fragment>
       );
-    //}
+    }
     if (transaction.status === TransactionStatus.AWAITING_CONFIRMATION){
       return (
         <Fragment>
@@ -166,9 +188,12 @@ const TransactionItem = ({  transaction, onRate: onRateClick, onBayar, onCancel,
       return (
         <Fragment>
           {detailTransaksiButton()}
-          {/* <label htmlFor="review-modal" onClick={() => onRateClick(transaction.product.name,transaction.id)} className="flex justify-center items-center text-xs lg:text-base w-32 text-white bg-green-500 hover:cursor-pointer">
+          {/* <label htmlFor="review-modal" onClick={onRateClick} className="flex justify-center items-center text-xs lg:text-base w-32 text-white bg-green-500 hover:cursor-pointer">
             Ulas Produk
           </label> */}
+          <div className="flex justify-center items-center text-xs lg:text-base w-32 text-white bg-green-500 hover:cursor-pointer">
+            Ulas Produk
+          </div>
           {renderExtraActionDropdown()}
         </Fragment>
       );
@@ -189,43 +214,17 @@ const TransactionItem = ({  transaction, onRate: onRateClick, onBayar, onCancel,
         </Fragment>
       );
     }
-    // else if (transaction.status === TransactionStatus.AWAITING_COURIER){
-    //   return (
-    //     <Fragment>
-    //       <button onClick={() => onDetail(transaction.id.toString())} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
-    //         Detail Transaksi
-    //       </button>
-    //       <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 text-white bg-green-500">
-    //         Cek Resi
-    //       </button>
-    //       {renderExtraActionDropdown()}
-    //     </Fragment>
-    //   );
-    // }
     else if (transaction.status === TransactionStatus.DELIVERING){
       return (
         <Fragment>
-          P{detailTransaksiButton()}
+          {detailTransaksiButton()}
           <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 text-white bg-green-500">
-            Cek Resi
+            Lacak
           </button>
           {renderExtraActionDropdown()}
         </Fragment>
       );
     }
-    // else if (transaction.status === TransactionStatus.REACHED_DESTINATION){
-    //   return (
-    //     <Fragment>
-    //       <button onClick={() => onDetail(transaction.id.toString())} className="text-xs lg:text-base w-32 border-2 border-green-500 text-green-500">
-    //         Detail Transaksi
-    //       </button>
-    //       <button onClick={() => onFinish(transaction.id)} className="text-xs lg:text-base w-32 text-white bg-green-500">
-    //         Selesai
-    //       </button>
-    //       {renderExtraActionDropdown()}
-    //     </Fragment>
-    //   );
-    // }
 
     return <Fragment>
       {renderExtraActionDropdown()}
@@ -241,7 +240,10 @@ const TransactionItem = ({  transaction, onRate: onRateClick, onBayar, onCancel,
         </div>
         <div className="w-1/2 flex flex-col lg:flex-row lg:items-center lg:space-x-2 justify-end">
           {renderTransactionStatus()}
-          <h1 className="flex justify-end text-xs lg:text-sm">29 Mei 2023, 15:00</h1>
+          {(transaction.status === TransactionStatus.DELIVERING) 
+            ? <></> 
+            : <h1 className="flex justify-end text-xs lg:text-sm">{transactionLastUpdate.toDateString()}</h1>
+          }
         </div>
       </div>
       <div id="lower-detail">
@@ -260,7 +262,7 @@ const TransactionItem = ({  transaction, onRate: onRateClick, onBayar, onCancel,
             <h1 className="text-xs lg:text-base">Kode Transaksi: {transaction.id}</h1>
             <h1 className="text-xs lg:text-base font-bold">{transaction.order.at(0)?.product.name.toString()}</h1>
             <h1 className="text-xs lg:text-base">Jumlah: {transaction.order.at(0)?.count.toString()}</h1>
-            <h1 className="text-xs lg:text-base">+{transaction.order.length - 1} Produk Lainnya</h1>
+            {renderExtraItems()}
           </div>
           <div id="total-details-lower" className="hidden lg:flex lg:flex-col lg:justify-center w-1/3 p-4 space-y-2 border-l-gray-500 border-l-2">
             <h1 className="">Total Belanja</h1>
@@ -271,6 +273,10 @@ const TransactionItem = ({  transaction, onRate: onRateClick, onBayar, onCancel,
           <div id="total-details" className="w-1/3 lg:hidden">
             <h1 className="text-xs">Total Belanja</h1>
             <h1 className="text-xs">Rp {calculateTransactionTotal().toString()}</h1>
+          </div>
+          <div className="w-1/3 hidden lg:flex lg:flex-row lg:justify-start lg:items-center">
+            <HiShoppingCart className="mr-1"/>
+            {renderTransactionDate()}
           </div>
           <div id="transaction-actions" className="w-2/3 lg:w-full flex flex-row justify-end space-x-2">
             {renderActionButtons()}
