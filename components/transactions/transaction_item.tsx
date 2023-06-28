@@ -38,8 +38,6 @@ interface Props {
 
 const TransactionItem = ({  transaction, onRate: onRateClick, onBayar, onCancel, onFinish, onReturn, onDetail }: Props) => { //TODO: re-adjust background colors based on website. the one in the wireframe are just placeholder colors.
 
-  console.log(`transaction created at: ${transaction.createdAt}`);
-
   const transactionCreatedDate = new Date(transaction.createdAt);
   const transactionLastUpdate = new Date(transaction.updatedAt);
 
