@@ -5,7 +5,8 @@ import { Fragment, useState } from "react";
 import { 
   HiHome, HiChartPie, HiChatBubbleBottomCenterText, 
   HiShoppingBag, HiCurrencyDollar, HiChevronDown,
-  HiChevronUp
+  HiChevronUp,
+  HiPencilSquare
 } from "react-icons/hi2";
 
 interface Props {
@@ -88,21 +89,26 @@ const ShopDashboard = ({ shop }: Props) => {
   return(
     <Fragment>
       <div id='shop-dashboard' className="bg-transparent lg:bg-gray-300 lg:shadow-md lg:w-1/6 "> {/*Try to use drawer here*/}
-        <div id="shop-profile" className="bg-gray-300 flex flex-row lg:flex-col justify-start lg:justify-center items-center px-4 lg:px-2 py-4 lg:space-y-2 space-x-4 lg:space-x-0">
-          <div id="profile-photo-container" className="">
-            <div className="w-16 lg:w-24 rounded-full border border-black">
-              <img src={session?.user.image!} alt="" className="rounded-full" />
+        <div id="shop-profile" className="bg-gray-300 flex flex-row lg:flex-col justify-start lg:justify-center">
+          <div id="photo-and-details-container" className="flex flex-row lg:flex-col justify-start lg:justify-center px-4 lg:px-2 py-4 lg:space-y-2 space-x-4 lg:space-x-0">
+            <div id="profile-photo-container" className="">
+              <div className="w-16 lg:w-24 rounded-full border border-black">
+                <img src={session?.user.image!} alt="" className="rounded-full" />
+              </div>
+            </div>
+            <div id="shop-details-container" className="flex-1 flex-col items-start lg:items-center lg:space-y-1">
+              <h1 className="font-bold">{shop.shopName}</h1>
+              <h1 className="font-bold">Rating: {shop.averageRating.toString()}/5</h1>
+              <button className="hidden lg:block rounded-md bg-green-500 hover:bg-green-400 transition duration-200 p-1 w-24 text-white">
+                <Link href={'/shop/profile'} className="flex justify-center items-center">
+                  Edit Toko
+                </Link>
+              </button>
+              <h1 className="text-sm lg:hidden">Kas: {formatKas()}</h1>
             </div>
           </div>
-          <div id="shop-details-container" className="flex flex-col items-start lg:items-center lg:space-y-1">
-            <h1 className="font-bold">{shop.shopName}</h1>
-            <h1 className="font-bold">Rating: {shop.averageRating.toString()}/5</h1>
-            <button className="hidden lg:block rounded-md bg-green-500 hover:bg-green-400 transition duration-200 p-1 w-24 text-white">
-              <Link href={'/shop/profile'} className="flex justify-center items-center">
-                Edit Toko
-              </Link>
-            </button>
-            <h1 className="text-sm lg:hidden">Kas: {formatKas()}</h1>
+          <div id="edit-profile-button-mobile" className="lg:hidden bg-deep-orange-800 h-full">
+            <HiPencilSquare className="h-6 w-6"/>
           </div>
         </div>
         <div id="shop-stats" className="bg-gray-300 invisible lg:visible lg:py-2 lg:px-4 h-2 lg:h-auto border border-y-gray-600">
