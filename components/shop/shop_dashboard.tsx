@@ -52,21 +52,21 @@ const ShopDashboard = ({ shop }: Props) => {
       <div id="shop-stats" className="bg-gray-300 invisible lg:visible py-2 px-4 h-4 lg:h-auto border border-y-gray-600">
         <h1 className="">Kas: {formatKas()}</h1>
       </div>
-      <div id="shop-dashboard-navigation" className="bg-gray-300 p-2">
-        <ul className="">
-          <li>
+      <div id="shop-dashboard-navigation" className="p-2  lg:bg-gray-300">
+        <ul className="flex flex-row overflow-y-auto space-x-2 lg:space-x-0 lg:flex-col">
+          <li className="bg-gray-300 lg:bg-none">
             <Link href={'/shop'} className="flex p-2 text-base font-normal rounded-lg transition duration-200 hover:bg-gray-300">
               <HiHome className="h-6 w-6"/>
               <span className="ml-3">Home</span>
             </Link>
           </li>
-          <li>
+          <li className="bg-gray-300 lg:bg-none">
             <Link href={''} className="flex p-2 text-base font-normal rounded-lg transition duration-200 hover:bg-gray-300">
               <HiChatBubbleBottomCenterText className="h-6 w-6"/>
               <span className="ml-3">Chat</span>
             </Link>
           </li>
-          <li>
+          <li className="bg-gray-300 lg:bg-none">
             <button type="button" onClick={() => setIsSalesDropdownClosed(!isSalesDropdownClosed)} className="flex items-center whitespace-nowrap w-full p-2 text-base font-normal rounded-lg hover:bg-gray-300" >
               <HiCurrencyDollar className="h-6 w-6"/>
               <span className="flex-1 ml-3 text-left">Sales</span>
@@ -90,13 +90,13 @@ const ShopDashboard = ({ shop }: Props) => {
               </li>
             </ul>
           </li>
-          <li>
+          <li className="bg-gray-300 lg:bg-none">
             <Link href={''} className="flex p-2 text-base font-normal rounded-lg transition duration-200 hover:bg-gray-300">
               <HiChartPie className="h-6 w-6"/>
               <span className="ml-3">Stats</span>
             </Link>
           </li>
-          <li>
+          <li className="bg-gray-300 lg:bg-none"> 
             <Link href={'/shop/withdrawals'} className="flex p-2 text-base font-normal rounded-lg transition duration-200 hover:bg-gray-300">
               <HiChatBubbleBottomCenterText className="h-6 w-6"/>
               <span className="ml-3">Withdraw</span>
