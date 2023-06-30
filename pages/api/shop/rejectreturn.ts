@@ -4,7 +4,7 @@ import { prisma } from "../../../lib/prisma";
 import formidable from "formidable";
 import path from "path";
 import fs from "fs/promises";
-import { TransactionStatus } from "@prisma/client";
+import { OrderStatus } from "@prisma/client";
 
 export const config = {
   api: {
@@ -77,10 +77,10 @@ export default async function handler(
       }
     })
 
-    const transaction = await prisma.transaction.update({
-      where: { id: complain?.productInCartId },
+    const order = await prisma.order.update({
+      where: { id: complain?.orderId },
       data: {
-        status: TransactionStatus.NEED_ADMIN_REVIEW,
+        status: OrderStatus.NEED_ADMIN_REVIEW,
       },
     });
     res.status(200).json({ message: "Success!" });

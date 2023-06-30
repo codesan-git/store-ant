@@ -4,7 +4,7 @@ import { prisma } from "../../../lib/prisma"
 import formidable from 'formidable';
 import path from 'path';
 import fs from "fs/promises"
-import { Status } from '@prisma/client';
+import { OrderStatus } from '@prisma/client';
 
 export const config = {
     api: {
@@ -43,15 +43,15 @@ export default async function handler(
     } 
 
     const { fields, files } = await readFile(req, true);
-    const {productInCartId, description} = fields;
+    const {orderId, description} = fields;
     const session = await getSession({req})
     console.log("ID = ", productInCartId);
-    const productInCart = await prisma.productInCart.update({
+    const order = await prisma.order.update({
         where: {
-            id: Number(productInCartId as string)
+            id: Number(orderId as string)
         },
         data:{
-            status: Status.RETURNING
+            status: OrderStatus.RETURNING
         }
     })
    
@@ -75,7 +75,7 @@ export default async function handler(
         // // // CREATE
         const complain = await prisma.complain.create({
             data: {
-                productInCartId: productInCart?.id!,
+                orderId: orderId!,
                 description: description as string,
                 image: imageUrl.join(",")
             }

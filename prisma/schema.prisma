@@ -26,20 +26,12 @@ enum BalanceType {
 }
 
 enum OrderStatus {
-  INCART
-  UNPAID
-  PAID
-  AWAITING_CONFIRMATION
-  PACKING
-  DELIVERING
-  FINISHED
+  ONGOING
   RETURNING
   NEED_ADMIN_REVIEW 
   RETURNED
   RETURN_REJECTED
   CANCELING
-  CANCELED
-  CANCEL_REJECTED
 }
 
 enum ComplainStatus {
@@ -124,7 +116,9 @@ model Address {
   address       String  
   region        String
   city          String
+  cityId        String
   province      String
+  provinceId    String
   postcode      String
   contact       String
   isMainAddress Boolean @default(false)
@@ -226,6 +220,7 @@ model Order {
   count           Int
   createdAt       DateTime @default(now())
   updatedAt       DateTime @default(now())
+  OrderStatus     OrderStatus @default(ONGOING)
   Rating          Rating?
   Complain        Complain?
   
@@ -260,7 +255,7 @@ model Complain {
   status            ComplainStatus @default(OPEN)
   ShopComment       ShopComment?
 
-  order           Order @relation(fields: [oderId], references: [id], onDelete: Cascade)
+  order             Order @relation(fields: [oderId], references: [id], onDelete: Cascade)
 }
 
 model ShopComment {
