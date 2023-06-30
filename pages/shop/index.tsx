@@ -17,15 +17,17 @@ interface Props{
         averageRating: Number,
         balance: number
     }
-    products:{
-      id: string,
-      name: string,
-      price: number,
-      stock: number,
-      category: Category,
-      image: string,
-      averageRating: number
-    }[]
+    products: Product[]
+}
+
+interface Product {
+  id: string,
+  name: string,
+  price: number,
+  stock: number,
+  category: Category,
+  image: string,
+  averageRating: number
 }
 
 interface Category{
@@ -54,12 +56,7 @@ export default function Profile({shop, products} : Props) {
               </div>
             </div>
             <div id='product-list' className='flex flex-row overflow-y-auto space-x-4 lg:space-x-0 lg:grid lg:grid-cols-5 lg:gap-y-10 w-full'>
-              <ProductItem/>
-              <ProductItem/>
-              <ProductItem/>
-              <ProductItem/>
-              <ProductItem/>
-              <ProductItem/>
+              {products.map((product, i) => <ProductItem key={i} product={product}/>)}
             </div>
           </div>
         </div>
