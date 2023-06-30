@@ -49,7 +49,7 @@ const ShopDashboard = ({ shop }: Props) => {
           <h1 className="text-sm lg:hidden">Kas: {formatKas()}</h1>
         </div>
       </div>
-      <div id="shop-stats" className="bg-gray-300 invisible lg:visible py-2 px-4 h-4 lg:h-auto border border-y-gray-600">
+      <div id="shop-stats" className="bg-gray-300 invisible lg:visible lg:py-2 lg:px-4 h-1 lg:h-auto border border-y-gray-600">
         <h1 className="">Kas: {formatKas()}</h1>
       </div>
       <div id="shop-dashboard-navigation" className="p-2  lg:bg-gray-300">
