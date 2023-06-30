@@ -44,12 +44,12 @@ export default function Profile({shop, products} : Props) {
     return (
       <div>
         <Navbar />
-        <div className='lg:flex lg:flex-row py-4 space-x-2'>
+        <div className='lg:flex lg:flex-row py-4 lg:space-x-2'>
           <ShopDashboard shop={shop}/>
-          <div id='dashboard-content' className='w-full bg-gray-100 p-5 space-y-2'>
+          <div id='dashboard-content' className='w-full bg-gray-100 lg:p-5 space-y-2'>
             <h1 className='hidden lg:block text-2xl'>Seller Home</h1>
             <div  id='new-item-input-container'className='lg:grid lg:grid-cols-5 w-full' >
-              <div id='new-item-input' className='border-dashed border-2 border-black p-2 w-5/6 h-10 flex justify-center items-center'>
+              <div id='new-item-input' className='border-dashed border-2 border-black p-2 w-full lg:w-5/6 h-10 flex justify-center items-center'>
                 <h1>{'(+) New Item'}</h1>
               </div>
             </div>
