@@ -29,7 +29,7 @@ const ProductItem = ({ product } : Props) => {
         <img 
           src={`http://localhost:3000/${product.image.split(",")[0]}`} 
           alt="no image available" 
-          className="w-64 lg:w-auto h-1/2 object-cover rounded-t-2xl"
+          className="w-full h-1/2 object-cover rounded-t-2xl"
         />
         <div id="card-body" className="w-64 lg:w-auto rounded-b-lg p-4 h-1/2 space-y-2 bg-gray-300">
           <p className="truncate overflow-hidden">{product.name}</p>
