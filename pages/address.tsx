@@ -43,10 +43,12 @@ export default function Address({cityData, provinceData} : Data) {
     contact: ''
   });
   const router = useRouter()
-  
-  console.log("city: ", cityData);
-  console.log("province: ", provinceData);
+
   async function create(data:FormData) {
+    if(data.city == '')
+        data.city = cityData.filter((x) => x.province_id == provinceId)[0].city_name;
+    if(data.cityId == '')
+        data.cityId = cityData.filter((x) => x.province_id == provinceId)[0].city_id;
     try{
         fetch('http://localhost:3000/api/address/create', {
             body: JSON.stringify(data),
@@ -60,15 +62,8 @@ export default function Address({cityData, provinceData} : Data) {
     }
   }
 
-  function setDefaultCity(provinceId: string){
-    let defaultCityId = cityData.filter((x) => x.province_id == provinceId)[0].city_id;
-    setForm({...form, cityId: defaultCityId})
-
-    let defaultCity = cityData.filter((x) => x.province_id == provinceId)[0].city_name;
-    setForm({...form, city: defaultCity})
-  }
-
   function setCityid(city: string){
+    console.log("prov:", form.province );
     let chosenCity = cityData.filter((x) => x.city_name == city);
     setForm({...form, cityId: chosenCity[0].city_id})
     console.log(chosenCity[0].city_name, chosenCity[0].city_id)
@@ -97,7 +92,7 @@ export default function Address({cityData, provinceData} : Data) {
                 <div className='flex flex-col space-y-1 w-full'>
                     <label htmlFor="province-input" className='font-bold'>Province</label>
                     <select name="province" id="province-input" className='p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white'
-                        onChange={e => {e.preventDefault(); setForm({...form, provinceId: String(e.target.selectedIndex + 1), province: e.target.value}); setDefaultCity(String(e.target.selectedIndex + 1))}} 
+                        onChange={e => {e.preventDefault(); setForm({...form, provinceId: String(e.target.selectedIndex + 1), province: e.target.value});}} 
                     >
                         {provinceData?.map(province =>(
                             <option value={province.province} key={province.province_id}>{province.province}</option>
