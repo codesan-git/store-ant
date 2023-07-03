@@ -24,16 +24,16 @@ interface Props {
 const ProductItem = ({ product } : Props) => {
   return (
     <Fragment>
-      <div id="card" className="w-5/6 bg-white h-96 rounded-lg">
+      <div id="card" className="w-64 lg:w-5/6 bg-white h-96 rounded-lg">
         {/* <div id="product-image-container" className="object-cover rounded-t-lg bg-green-500 h-1/2"></div> */}
         <img 
           src={`http://localhost:3000/${product.image.split(",")[0]}`} 
           alt="no image available" 
-          className="w-full h-1/2 object-cover rounded-t-2xl"
+          className="w-64 lg:w-auto h-1/2 object-cover rounded-t-2xl"
         />
-        <div id="card-body" className="w-auto rounded-b-lg p-4 h-1/2 space-y-2 bg-gray-300">
+        <div id="card-body" className="w-64 lg:w-auto rounded-b-lg p-4 h-1/2 space-y-2 bg-gray-300">
           <p className="truncate overflow-hidden">{product.name}</p>
-          <h1 className="text-xl font-bold w-full">
+          <h1 className="text-xl font-bold">
             Rp {product.price}
           </h1>
           <h1 className="text-sm">
