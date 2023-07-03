@@ -7,14 +7,15 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const {id} = req.body
+  const {id, paymentType} = req.body
   const session = await getSession({req})  
 
   try {
     const transaction = await prisma.transaction.update({
         where:{id: id!},
         data:{
-            status: TransactionStatus.AWAITING_CONFIRMATION
+            status: TransactionStatus.AWAITING_CONFIRMATION,
+            paymentMethod: String(paymentType)
         }
     })
     res.status(200).json({ message: "Success!" })
