@@ -30,7 +30,6 @@ const TransactionsDashboard = ({TransactionDashboardArguments}: Props) => {
   const pesananDiprosesOnClick = () => {
     setItemsToDisplay(allTransactions?.filter((e: any) => e.status === TransactionStatus.PACKING || e.status === TransactionStatus.CANCELING));
     setCurrentSelectedSection("Pesanan Diproses");
-
   }
 
   const pesananDikirimOnClick = () => {
