@@ -1,4 +1,3 @@
-import { User } from "next-auth";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { Fragment, useState } from "react";
@@ -88,7 +87,7 @@ const ShopDashboard = ({ shop }: Props) => {
 
   return(
     <Fragment>
-      <div id='shop-dashboard' className="bg-transparent lg:bg-gray-300 lg:shadow-md lg:w-1/6 "> {/*Try to use drawer here*/}
+      <div id='shop-dashboard' className="bg-transparent lg:bg-gray-300 lg:shadow-md lg:w-1/6 h-min lg:sticky lg:top-24"> {/*Try to use drawer here*/}
         <div id="shop-profile" className="bg-gray-300 flex flex-row lg:flex-col">
           <div id="photo-and-details-container" className="bg-gray-300 flex flex-row lg:flex-col justify-start lg:justify-center items-center px-4 lg:px-2 py-4 lg:space-y-2 space-x-4 lg:space-x-0">
             <div id="profile-photo-container" className="">
