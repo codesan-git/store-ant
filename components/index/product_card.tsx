@@ -45,7 +45,7 @@ const ProductCard = ( {product, onClick , onEdit, onDelete} : Props ) => {
           <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"/>
         )}
         <div className=" card-body p-4">
-          <h1 data-testid="product-title" className="card-title text-lg">{product.name}</h1>
+          <h1 data-testid="product-title" className="truncate font-bold text-lg">{product.name}</h1>
           <h1 data-testid="product-category" className='text-sm lg:text-md '>{product.category?.category}</h1>
           <h1 data-testid="product-price" className="text-sm lg:text-md ">Rp. {product.price}</h1>
           <h1 data-testid="product-stock" className="text-sm lg:text-md ">Qty. {product.stock}</h1>
