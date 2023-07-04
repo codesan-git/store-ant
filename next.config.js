@@ -33,8 +33,13 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'cdn-icons-png.flaticon.com'
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost:3000'
       }
-    ]
+    ],
+    domains:['localhost']
   }
 }
 
