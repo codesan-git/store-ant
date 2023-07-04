@@ -12,6 +12,7 @@ import PaymentModal from "@/components/transactions/payment_modal";
 import CancelAlert from "@/components/transactions/user_cancel_alert";
 import DetailTransactionModal from "@/components/transactions/detail_transaction_modal";
 import { Product, Order as PrismaOrder, Transaction as PrismaTransaction, TransactionStatus } from "@prisma/client";
+import Chat from "../components/transactions/chat";
 
 
 interface CartId {
@@ -54,6 +55,8 @@ const Transactions = ({ transactions } : { transactions: Transaction[]}) => {
   const [currentCartItemId, setCurrentCartItemId] = useState<Number>();
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction>();
   const [transactionModalIsHidden, setTransactionModalIsHidden] = useState<Boolean>(true);
+
+  const [chatIsHidden, setChatIsHidden] = useState<boolean>(true);
   
   useEffect(() => {}, [itemsToDisplay]);
 
@@ -118,6 +121,8 @@ const Transactions = ({ transactions } : { transactions: Transaction[]}) => {
       allTransactions,
       setItemsToDisplay,
       setCurrentSelectedSection,
+      chatIsHidden,
+      setChatIsHidden,
     }
   };
 
@@ -131,12 +136,14 @@ const Transactions = ({ transactions } : { transactions: Transaction[]}) => {
 
   const renderItemsToDisplay = () => {
 
-    if(itemsToDisplay?.length === 0 || !itemsToDisplay) return <h1 className="h-full flex justify-center items-center">No Items</h1>
+    // if(itemsToDisplay?.length === 0 || !itemsToDisplay) return <h1 hidden={chatIsHidden} className="h-full flex justify-center items-center">No Items</h1>;
 
     return (
-      <>
+      <div hidden={!chatIsHidden} className="w-full space-y-2">
         {
-          itemsToDisplay?.map(
+          (itemsToDisplay?.length === 0 || !itemsToDisplay) ?
+            <h1 hidden={chatIsHidden} className="flex justify-center items-center">No Items</h1>
+          :itemsToDisplay?.map(
             (transaction, i) => <TransactionItem 
               key={i} 
               transaction={transaction} 
@@ -149,7 +156,7 @@ const Transactions = ({ transactions } : { transactions: Transaction[]}) => {
             />
           )
         }
-      </>
+      </div>
     );
 
   }
@@ -166,6 +173,7 @@ const Transactions = ({ transactions } : { transactions: Transaction[]}) => {
             <h1>{currentSelectedSection}</h1>
           </div>
           {renderItemsToDisplay()}
+          <Chat hidden={chatIsHidden}/>
         </div>
       </div>
       <ReviewModal htmlElementId={`review-modal`}  selectProductCallback={getCurrentSelectedProductForRate}/>

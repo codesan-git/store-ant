@@ -11,7 +11,9 @@ const TransactionsDashboard = ({TransactionDashboardArguments}: Props) => {
   const {
     allTransactions, 
     setItemsToDisplay, 
-    setCurrentSelectedSection
+    setCurrentSelectedSection,
+    chatIsHidden,
+    setChatIsHidden
   } = TransactionDashboardArguments();
 
   const [berlangsungIsOpen, setBerlangsungIsOpen] = useState<Boolean>(false);
@@ -20,31 +22,42 @@ const TransactionsDashboard = ({TransactionDashboardArguments}: Props) => {
   const menungguPembayaranOnClick = () => {
     setItemsToDisplay(allTransactions?.filter((e: any) => e.status === TransactionStatus.UNPAID));
     setCurrentSelectedSection("Menunggu Pembayaran");
+    setChatIsHidden(true);
   }
   
   const menungguKonfirmasiOnClick = () => {
     setItemsToDisplay(allTransactions?.filter((e: any) => e.status === TransactionStatus.AWAITING_CONFIRMATION));
     setCurrentSelectedSection("Menunggu Konfirmasi");
+    setChatIsHidden(true);
   }
 
   const pesananDiprosesOnClick = () => {
     setItemsToDisplay(allTransactions?.filter((e: any) => e.status === TransactionStatus.PACKING || e.status === TransactionStatus.CANCELING));
     setCurrentSelectedSection("Pesanan Diproses");
+    setChatIsHidden(true);
   }
 
   const pesananDikirimOnClick = () => {
     setItemsToDisplay(allTransactions?.filter((e: any) => e.status === TransactionStatus.DELIVERING || e.status === TransactionStatus.RETURNING));
     setCurrentSelectedSection("Pesanan Dikirim");
+    setChatIsHidden(true);
   }
 
   const berhasilOnClick = () => {
     setItemsToDisplay(allTransactions?.filter((e: any) => e.status === TransactionStatus.FINISHED || e.status === TransactionStatus.CANCEL_REJECTED || e.status === TransactionStatus.RETURN_REJECTED));
     setCurrentSelectedSection("Berhasil");
+    setChatIsHidden(true);
   }
 
   const tidakBerhasilOnClick = () => {
     setItemsToDisplay(allTransactions?.filter((e: any) => (e.status === TransactionStatus.CANCELED || e.status === TransactionStatus.RETURNED)));
     setCurrentSelectedSection("Tidak Berhasil");
+    setChatIsHidden(true);
+  }
+
+  const onChatClick = ()  => {
+    setChatIsHidden(false);
+    setCurrentSelectedSection("Chat");
   }
 
   const berlangsungBottomModal = () => {
@@ -178,6 +191,11 @@ const TransactionsDashboard = ({TransactionDashboardArguments}: Props) => {
               </div>
             </li>
           </ul>
+          <div className=" border-t-2 border-gray-600">
+            <button onClick={onChatClick} className="flex justify-center lg:justify-start items-center text-center p-1 lg:p-4 w-32 lg:w-full h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300 hover:cursor-pointer">
+              Chat
+            </button>
+          </div>
         </div>
       </div>
       {berlangsungBottomModal()}
