@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
 import { prisma } from "../../../../lib/prisma"
-import { Status, TransactionStatus } from '@prisma/client'
+import { OrderStatus, TransactionStatus } from '@prisma/client'
 
 export default async function handler(
   req: NextApiRequest,
@@ -10,25 +10,29 @@ export default async function handler(
   const {id} = req.body
   const session = await getSession({req})
 
-  const productInCart = await prisma.productInCart.update({
+  const orderData = await prisma.order.update({
+      where:{id: Number(id)}
+  })  
+
+  const order = await prisma.order.update({
       where:{id: Number(id)},
       data:{
-          status: Status.RETURNED
+          status: OrderStatus.RETURNED
       }
   })  
 
   const product = await prisma.product.findFirst({
-    where:{id: Number(productInCart.productId)}
+    where:{id: Number(orderData.productId)}
   })
 
   const productUpdate = await prisma.product.update({
     where:{id: Number(product?.id)},
     data:{
-      stock: Number(Number(product?.stock) + Number(productInCart.count))
+      stock: Number(Number(product?.stock) + Number(orderData.count))
     }
   })    
 
-  const returnAmount: number = Number(productInCart?.count) * Number(product?.price);
+  const returnAmount: number = Number(orderData?.count) * Number(product?.price);
   
   const user = await prisma.user.findFirst({
       where:{id: session?.user?.id}
@@ -42,7 +46,7 @@ export default async function handler(
   });
 
   const transaction = await prisma.transaction.update({
-    where: {productInCartId: Number(id)},
+    where: {id: orderData?.transactionId!},
     data: {
       status: TransactionStatus.REFUNDED
     }

@@ -114,6 +114,14 @@ export default function Profile({ profile, address }: InferGetServerSidePropsTyp
     }
   }
 
+  function onSetMainAddress(){
+
+  }
+
+  function onSetShopAddress(){
+
+  }
+
   const changePhoto = async () => {
     try {
       if (!selectedFile) return;
@@ -573,8 +581,11 @@ export default function Profile({ profile, address }: InferGetServerSidePropsTyp
                         <div className="flex gap-3">
                           <a className="text-primary-focus">Ubah Alamat</a>
                           <p className="text-primary">|</p>
-                          <a className="text-primary-focus">
+                          <a className="text-primary-focus cursor-pointer" onClick={() => onSetMainAddress()}>
                             Jadikan Alamat Utama
+                          </a>
+                          <a className="text-primary-focus cursor-pointer" onClick={() => onSetShopAddress()}>
+                            Jadikan Alamat Toko
                           </a>
                           <p className="text-primary">|</p>
                           <a className="text-primary-focus">Hapus</a>

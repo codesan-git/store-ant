@@ -10,7 +10,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const {address, region, city, province, postcode, contact } = req.body
+  const {address, region, cityId, city, provinceId, province, postcode, contact } = req.body
   const session = await getSession({req})
   const profile = await prisma.profile.findUnique({
     where: {
@@ -24,7 +24,9 @@ export default async function handler(
         profileId: profile?.id!,
         address: address,
         region: region,
+        cityId: cityId,
         city: city,
+        provinceId: provinceId,
         province: province,
         postcode: postcode,
         contact: contact

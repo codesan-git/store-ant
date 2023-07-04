@@ -10,33 +10,56 @@ export default async function handler(
   const {id} = req.body
   const session = await getSession({req})
 
-  console.log("checkout: ", id);
-  try {
-    const productInCart = await prisma.productInCart.findFirst({
-      where: { id: Number(id[0]) },
-      select: {
-        productId: true,
-        count: true,
-        product: {
-          select: { shop: true}
-        }
+  let shops = new Array();
+  let transactionDetails = new Array();
+  let transactions = new Array();
+  const productInCart = await prisma.productInCart.findFirst({
+    where: { id: Number(id[0]) },
+    select: {
+      productId: true,
+      count: true,
+      product: {
+        select: { shop: true}
       }
-    })
+    }
+  });
 
+  let i: number;
+  let j: number;
+  for(i=0; i < id.length; i++){
+      let productInCart = await prisma.productInCart.findFirst({
+          where:{id: Number(id[i])},
+          select: {
+            productId: true,
+            count: true,
+            product: {
+              select: { name: true, shop: true}
+            }
+          }
+      })
+
+      if(!shops.includes(productInCart?.product?.shop)){
+        shops.push(productInCart?.product?.shop);
+        transactionDetails.push(new Array());
+      }
+  }
+
+  for(i = 0; i < shops.length; i++){   
     let transaction = await prisma.transaction.create({
       data:{
         userId: session?.user.id!,
-        shopId: productInCart?.product.shop.id!,
+        shopId: shops[i]?.id!,
         paymentMethod: "",
         status: TransactionStatus.UNPAID
       }
     });
+    transactions.push(transaction);
 
-    let i: number;
-    for(i=0; i < id.length; i++){
+    for(j=0; j < id.length; j++){
         let productInCart = await prisma.productInCart.findFirst({
-            where:{id: Number(id[i])},
+            where:{id: Number(id[j])},
             select: {
+              id: true,
               productId: true,
               count: true,
               product: {
@@ -44,22 +67,34 @@ export default async function handler(
               }
             }
         })
-    
-        let order = await prisma.order.create({
-          data:{
-            transactionId: transaction.id!,
-            productId: productInCart?.productId!,
-            count: productInCart?.count!,
-          }
-        })
 
-        await prisma.productInCart.delete({
-          where: {id: Number(id[i])}
-        })
+        if(productInCart?.product?.shop.id == shops[i].id){
+          transactionDetails[i].push(productInCart);
+        }
     }
-    res.status(200).json({ message: "Success!" })
-  } catch (error) {
-    //console.log(error)
-    res.status(400).json({ message: "Fail" })
   }
+
+  for(i = 0; i < transactionDetails.length; i++){
+    for(j = 0; j < transactionDetails[i].length; j++){
+      let order = await prisma.order.create({
+        data:{
+          transactionId: transactions[i].id!,
+          productId: transactionDetails[i][j].productId!,
+          count: transactionDetails[i][j].count!,
+        }
+      });
+  
+      await prisma.productInCart.delete({
+        where: {id: Number(transactionDetails[i][j].id)}
+      });
+    }
+  }
+
+  res.status(200).json({ message: "Success!" })
+  // try {
+    
+  // } catch (error) {
+  //   //console.log(error)
+  //   res.status(400).json({ message: "Fail" })
+  // }
 }
