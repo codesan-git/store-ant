@@ -168,6 +168,7 @@ model Product {
   order         Order[]
   productInCart ProductInCart[]
   averageRating Float @default(5.00)
+  weight        Int @default(100)
 
   category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   shop Shop @relation(fields: [shopId], references: [id], onDelete: Cascade)

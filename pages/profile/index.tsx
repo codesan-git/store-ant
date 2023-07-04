@@ -37,17 +37,21 @@ interface Props {
     phoneNumber: string;
   };
 
-  address: {
-    id: Number;
-    address: string;
-    region: string;
-    city: string;
-    province: string;
-    postcode: string;
-  }[];
+  address: Address[];
 }
 
-export default function Profile({ profile, address }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+interface Address {
+  id: number;
+  address: string;
+  region: string;
+  city: string;
+  province: string;
+  postcode: string;
+  isMainAddress: boolean;
+  isShopAddress: boolean
+}
+
+export default function Profile({ profile, address }: Props) {
   const [form, setForm] = useState<FormData>({
     username: profile?.username,
     phonenumber: profile?.phoneNumber,
@@ -114,12 +118,38 @@ export default function Profile({ profile, address }: InferGetServerSidePropsTyp
     }
   }
 
-  function onSetMainAddress(){
-
+  function onSetMainAddress(id: number){
+    const addressId = {id: id};
+    try {
+      fetch("http://localhost:3000/api/address/setmain", {
+        body: JSON.stringify(addressId),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+      }).then(() => {
+        router.push(router.asPath);
+      });
+    } catch (error) {
+      //console.log(error);
+    }
   }
 
-  function onSetShopAddress(){
-
+  function onSetShopAddress(id: number){
+    const addressId = {id: id};
+    try {
+      fetch("http://localhost:3000/api/address/setshop", {
+        body: JSON.stringify(addressId),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+      }).then(() => {
+        router.push(router.asPath);
+      });
+    } catch (error) {
+      //console.log(error);
+    }
   }
 
   const changePhoto = async () => {
@@ -581,12 +611,25 @@ export default function Profile({ profile, address }: InferGetServerSidePropsTyp
                         <div className="flex gap-3">
                           <a className="text-primary-focus">Ubah Alamat</a>
                           <p className="text-primary">|</p>
-                          <a className="text-primary-focus cursor-pointer" onClick={() => onSetMainAddress()}>
-                            Jadikan Alamat Utama
-                          </a>
-                          <a className="text-primary-focus cursor-pointer" onClick={() => onSetShopAddress()}>
-                            Jadikan Alamat Toko
-                          </a>
+                          <div>
+                            {address.isMainAddress ? (
+                              <a>Alamat Utama</a>
+                            ) : (
+                              <a className="text-primary-focus cursor-pointer" onClick={() => onSetMainAddress(address.id)}>
+                                Jadikan Alamat Utama
+                              </a>
+                            )}
+                          </div>
+                          <p className="text-primary">|</p>
+                          <div>
+                            {address.isShopAddress ? (
+                              <a>Alamat Toko</a>
+                            ) : (
+                              <a className="text-primary-focus cursor-pointer" onClick={() => onSetShopAddress(address.id)}>
+                                Jadikan Alamat Toko
+                              </a>
+                            )}
+                          </div>
                           <p className="text-primary">|</p>
                           <a className="text-primary-focus">Hapus</a>
                         </div>
@@ -750,6 +793,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         city: true,
         province: true,
         postcode: true,
+        isMainAddress: true,
+        isShopAddress: true
       },
     });
   }

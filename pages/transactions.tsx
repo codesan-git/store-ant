@@ -204,6 +204,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
               image: true,
               description: true,
               price: true,
+              weight: true
             }
           }
         }
