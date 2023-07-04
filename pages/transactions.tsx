@@ -11,7 +11,6 @@ import TransactionItem from "@/components/transactions/transaction_item";
 import PaymentModal from "@/components/transactions/payment_modal";
 import CancelAlert from "@/components/transactions/user_cancel_alert";
 import DetailTransactionModal from "@/components/transactions/detail_transaction_modal";
-import axios from "axios";
 import { Product, Order as PrismaOrder, Transaction as PrismaTransaction, TransactionStatus } from "@prisma/client";
 
 
