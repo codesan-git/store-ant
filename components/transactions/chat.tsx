@@ -28,10 +28,10 @@ const Chat = ({ hidden } : Props) => {
   const messageElement = (isSender: boolean) => {
 
     const userMessageContainerStyle = "w-full px-4 py-2 flex justify-end";
-    const userMessageBoxStyle = "rounded-lg w-2/3 p-4 bg-green-400"
+    const userMessageBoxStyle = "rounded-lg w-2/3 p-4 bg-green-400 shadow-xl"
 
     const recieverMessageContainerStyle = "w-full px-4 py-2";
-    const recieverMessageBoxStyle = "rounded-lg w-2/3 p-4 bg-gray-400";
+    const recieverMessageBoxStyle = "rounded-lg w-2/3 p-4 bg-gray-400 shadow-xl";
     
     return (
       <div id="message-container" className={(isSender) ? userMessageContainerStyle : recieverMessageContainerStyle}>
@@ -51,7 +51,7 @@ const Chat = ({ hidden } : Props) => {
   return (
     <Fragment>  
       <div hidden={hidden} className="">
-        <div className=" h-96 flex flex-row">
+        <div className="h-96 flex flex-row">
           <section hidden={hidden} id="chatlist-web" className="w-1/4">
             <div id="search-container" className="bg-gray-500 h-1/6 flex justify-center items-center">
               <div className="w-5/6 relative">
@@ -101,7 +101,7 @@ const Chat = ({ hidden } : Props) => {
             </div>
             <div className="h-1/6 flex flex-row bg-gray-400">
               <div className="w-full flex flex-row justify-center items-center p-2 relative">
-                <input type="text" className="w-full h-full items-start" />
+                <textarea name="" id="" className="w-full h-full items-start" ></textarea>
                 <GrAttachment className="absolute right-6"/>
               </div>
               <div className="flex justify-center items-center w-24">
