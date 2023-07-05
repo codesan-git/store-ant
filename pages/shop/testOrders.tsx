@@ -23,7 +23,8 @@ import transactions from '../transactions'
 import {
   HiHome, HiChartPie, HiChatBubbleBottomCenterText,
   HiShoppingBag, HiCurrencyDollar, HiChevronDown,
-  HiChevronUp
+  HiChevronUp,
+  HiShoppingCart
 } from "react-icons/hi2";
 
 interface Props {
@@ -36,6 +37,13 @@ interface Props {
   },
   transaction: {
     status: string
+  },
+  price: {
+    id: Number,
+    shopName: string,
+    averageRating: Number,
+    balance: number
+    transaction: Transaction[]
   }
 }
 
@@ -77,6 +85,8 @@ interface Profile {
 }
 
 interface Order {
+  length: number
+  forEach(arg0: (order: any) => void): any
   id: number,
   transactionId: number,
   productId: number,
@@ -114,10 +124,11 @@ interface Product {
   stock: number
 }
 
-export default function Profile({ shop }: { shop: Shop }, { transaction }: Props) {
+export default function Profile({ shop }: { shop: Shop }, { transaction, price }: Props) {
 
   const router = useRouter()
   const { data: session } = useSession();
+  let count = 0;
 
   const statusMap: Record<string, Array<any>> = {
     UNPAID: [],  // Inisialisasi array kosong untuk status "UNPAID"
@@ -153,6 +164,40 @@ export default function Profile({ shop }: { shop: Shop }, { transaction }: Props
     setActiveTab(status);
     setIsSalesDropdownClosed(true)
   };
+
+  let priceMap = shop.transaction.map((trans) => (
+    trans.order.map((oor) => (
+      oor.product.price
+    ))
+  ))
+
+  let total = 0
+  const ngitung = () => {
+    priceMap.forEach((totalPrice) => {
+      for (let val = 0; val < totalPrice.length; val++) {
+        total += totalPrice[val];
+      }
+    })
+    return total
+  }
+
+  const renderExtraItems = () => {
+    // let mapping = {statusMap[status].length > 0}
+    let count = 0
+    shop.transaction.forEach((trans) => {
+      trans.order.forEach((orders) => {
+        count += Number(orders.length)
+      })
+      if (count === 1) {
+        return <></>
+      } else {
+        return <>
+          <h1 className="text-xs lg:text-base">+{count - 1} Produk Lainnya</h1>
+        </>
+      }
+    })
+  }
+
 
   const renderSalesModal = () => {
     return (
@@ -242,16 +287,19 @@ export default function Profile({ shop }: { shop: Shop }, { transaction }: Props
     // console.log(`statusMap`, statusMap.PAID)
     // console.log(`displaynya`, selectedStatus.status)
     // console.log(`statusmap.paid`, statusMap.PAID[0].status)
-    console.log(`active`, activeTab)
-
-
-
-
+    // console.log(`active`, activeTab)
+    // console.log(`price`, price)
+    // console.log(`apaan nih`, priceMap)
+    // console.log(`calculated`, ngitung())
+    console.log(`extraItems`, shop.transaction.map((gg) => (
+      gg.order.length as number
+    )))
     return (
       <div className='-m-4'>
         <div className='hidden lg:block'>
           <Navbar />
         </div>
+        {/* <h1 className="text-xs">Rp {calculateTransactionTotal().toString()}</h1> */}
         <div className='lg:flex lg:flex-row py-4 space-x-2'>
           {/* <ShopDashboard shop={transaction.status} /> */}
           <div id='product-list' className=' w-full bg-gray-100 py-5'>
@@ -384,6 +432,8 @@ export default function Profile({ shop }: { shop: Shop }, { transaction }: Props
                   </div>
                 </div> */}
 
+
+
                 <div id='shop-dashboard' className="lg:sticky lg:top-0 hidden lg:block lg:shadow-md lg:w-1/5 ">
                   <div id="shop-profile" className="flex flex-col justify-center items-center px-2 py-4 space-y-2">
                     <div id="profile-photo-container" className="avatar">
@@ -451,51 +501,129 @@ export default function Profile({ shop }: { shop: Shop }, { transaction }: Props
                 </div>
 
                 <div className='w-full'>
-                  
+
                   {Object.keys(statusMap).map((status) => (
                     <div key={status} className={`${activeTab === status ? '' : 'hidden'}`}>
                       {statusMap[status].length > 0 ? (
                         <>
-                          <h1>{activeTab}</h1>
+
+
                           {statusMap[status].map((kodok) => (
-                            <div key={kodok.id}>
-                              <div className='border-4 bg-blue-gray-400'>
-                                <h2>Nama Pembeli: {kodok.user.profile?.username ? kodok.user.profile?.username! : kodok.user.name}</h2>
+
+                            <div key={kodok.id} className="my-4">
+                              <div id="upper-detail" className="flex flex-row p-2 bg-gray-400">
+                                <div className="w-1/2 flex justify-start items-center ">
+                                  <h1 className="text-sm lg:text-xl font-bold">{kodok.user.profile?.username ? kodok.user.profile?.username! : kodok.user.name}</h1>
+                                </div>
+                                <div className="w-1/2 flex flex-col lg:flex-row lg:items-center lg:space-x-2 justify-end">
+                                  <h1>{activeTab}</h1>
+                                  {/* {renderTransactionStatus()} */}
+                                  {/* {(transaction.status === TransactionStatus.DELIVERING) 
+            ? <></> 
+            : <h1 className="flex justify-end text-xs lg:text-sm">ini Last Update</h1>
+          } */}
+                                </div>
                               </div>
-                              <div className='grid grid-cols-4'>
-                                <div className='col-span-3'>
-                                  <div className='grid grid-cols-5'>
-                                    <div className='col-span-1'>
-                                      {kodok.order.map((kecoa: any) => (
-                                        <Image
-                                          key={kecoa.id}
-                                          alt={`Product ${kecoa.product.name}`}
-                                          src={`http://localhost:3000/${kecoa.product.image.split(",")[0]}`}
-                                          width={800}
-                                          height={400}
-                                          quality={70}
-                                          className='w-full sm:p-2 lg:p-6'
-                                        />
-                                      ))}
-                                    </div>
-                                    <div className='col-span-4 sm:py-2 lg:py-6'>
-                                      {kodok.order.map((kerang: any) => (
-                                        <div key={kerang.id}>
-                                          <p>Kode Transaksi: {kerang.transactionId}</p>
-                                          <p>
-                                            <b>{kerang.product.name}</b>
-                                          </p>
-                                          <p>Qty: {kerang.count}</p>
-                                        </div>
-                                      ))}
-                                    </div>
+                              <div id="lower-detail">
+                                <div id="product-details" className="flex flex-row p-2 bg-gray-300">
+                                  <div id="product-detail-img-container" className=" flex justify-center items-center">
+                                    {kodok.order.map((kecoa: any) => (
+                                      <Image
+                                        key={kecoa.id}
+                                        alt={`Product ${kecoa.product.name}`}
+                                        src={`http://localhost:3000/${kecoa.product.image.split(",")[0]}`}
+                                        width={800}
+                                        height={400}
+                                        quality={70}
+                                        className='w-36 h-36'
+                                      />
+                                    ))}
+                                    {/* <img className="w-36 h-36 object-cover" 
+                 src={`http://localhost:3000/${transaction?.order?.at(0)?.product?.image?.split(",")[0]}`}
+                 onError={({ currentTarget }) => {
+                    currentTarget.onerror = null; // prevents looping
+                    currentTarget.src = "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
+                 }}
+                 alt=''
+            /> */}
+                                  </div>
+                                  <div id="product-detail" className="flex-1 p-4 flex flex-col justify-center">
+                                    <h1 className="text-xs lg:text-base">Kode Transaksi: {kodok.id} </h1>
+                                    {kodok.order.map((kerang: any) => (
+                                      <div key={kerang.id}>
+                                        <h1 className="text-xs lg:text-base font-bold">
+                                          {kerang.product.name}
+                                        </h1>
+                                        <h1 className="text-xs lg:text-base">Jumlah: {kerang.count}</h1>
+                                        {/* {if (kerang.length === 1) {
+                                          <></>
+                                        }else{
+                                          <h1 className="text-xs lg:text-base">{kerang.length - 1} Produk lainnya</h1>
+                                        }} */}
+                                      </div>
+                                    ))}
+                                    {(kodok.order.length as number === 1 ? <></> : <h1 className="text-xs lg:text-base">{kodok.order.length as number - 1} Produk lainnya</h1>)}
+                                    {/* {renderExtraItems()} */}
+                                  </div>
+                                  <div id="total-details-lower" className="hidden lg:flex lg:flex-col lg:justify-center w-1/3 p-4 space-y-2 border-l-gray-500 border-l-2">
+                                    <h1 className="">Total Belanja</h1>
+                                    <h1 className="font-bold">Rp 10000</h1>
                                   </div>
                                 </div>
-                                <div>
-                                  <p>komen bang</p>
+                                <div id="total-section" className="flex flex-row p-2 bg-gray-400">
+                                  <div id="total-details" className="w-1/3 lg:hidden">
+                                    <h1 className="text-xs">Total Belanja</h1>
+                                    <h1 className="text-xs">Rp 10000</h1>
+                                  </div>
+                                  <div className="w-1/3 hidden lg:flex lg:flex-row lg:justify-start lg:items-center">
+                                    <HiShoppingCart className="mr-1" />
+                                    {/* {renderTransactionDate()} */}
+                                  </div>
+                                  <div id="transaction-actions" className="w-2/3 lg:w-full flex flex-row justify-end space-x-2">
+                                    {/* {renderActionButtons()} */}
+                                  </div>
                                 </div>
                               </div>
                             </div>
+
+                            // <div key={kodok.id}>
+                            //   <div className='border-4 bg-blue-gray-400'>
+                            //     <h2>Nama Pembeli: {kodok.user.profile?.username ? kodok.user.profile?.username! : kodok.user.name}</h2>
+                            //   </div>
+                            //   <div className='grid grid-cols-4'>
+                            //     <div className='col-span-3'>
+                            //       <div className='grid grid-cols-5'>
+                            //         <div className='col-span-1'>
+                            //           {kodok.order.map((kecoa: any) => (
+                            //             <Image
+                            //               key={kecoa.id}
+                            //               alt={`Product ${kecoa.product.name}`}
+                            //               src={`http://localhost:3000/${kecoa.product.image.split(",")[0]}`}
+                            //               width={800}
+                            //               height={400}
+                            //               quality={70}
+                            //               className='w-full sm:p-2 lg:p-6'
+                            //             />
+                            //           ))}
+                            //         </div>
+                            //         <div className='col-span-4 sm:py-2 lg:py-6'>
+                            //           {kodok.order.map((kerang: any) => (
+                            //             <div key={kerang.id}>
+                            //               <p>Kode Transaksi: {kerang.transactionId}</p>
+                            //               <p>
+                            //                 <b>{kerang.product.name}</b>
+                            //               </p>
+                            //               <p>Qty: {kerang.count}</p>
+                            //             </div>
+                            //           ))}
+                            //         </div>
+                            //       </div>
+                            //     </div>
+                            //     <div>
+                            //       <p>komen bang</p>
+                            //     </div>
+                            //   </div>
+                            // </div>
                           ))}
                         </>
                       ) : (
@@ -604,6 +732,27 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       }
     }
   })
+  const priceList = await prisma.shop.findMany({
+    where: {
+      userId: session?.user?.id
+    },
+    select: {
+      transaction: {
+        select: {
+          order: {
+            select: {
+              count: true,
+              product: {
+                select: {
+                  price: true,
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  })
 
   // const dateMap = shop.map((asw)=> ({
   //   ...asw,
@@ -622,7 +771,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
       shop: JSON.parse(JSON.stringify(shop2)),
-      transaction: JSON.parse(JSON.stringify(transactionList))
+      transaction: JSON.parse(JSON.stringify(transactionList)),
+      price: JSON.parse(JSON.stringify(priceList))
     },
   }
   // finishedOrders: JSON.parse(JSON.stringify(finishedOrders))
