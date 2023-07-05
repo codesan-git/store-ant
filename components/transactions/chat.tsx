@@ -113,10 +113,15 @@ const Chat = ({ hidden } : Props) => {
           </section>
         </div>
       </div>
-      <div id="chat-chatlist-mobile" className="">
+      <div hidden id="chat-chatlist-mobile" className="">
         <div id="chat-chatlist-modal" className="lg:hidden bg-gray-900 bg-opacity-75 fixed h-full w-full top-0 left-0 bottom-0 right-0 z-50">
           <div id="chat-chatlist-box" className="h-full w-full bg-white">
+            <div>
+              <h1>Chat</h1>
+            </div>
+            <div id="chatlist">
 
+            </div>
           </div>
         </div>
       </div>
