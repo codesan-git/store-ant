@@ -1,5 +1,7 @@
 import { HiEllipsisVertical, HiMagnifyingGlass } from "react-icons/hi2";
-import { BsCheck2 } from "react-icons/bs"
+import { BsCheck2, BsCheck2All } from "react-icons/bs"
+import { AiOutlineSend } from "react-icons/ai";
+import { GrAttachment }  from "react-icons/gr"
 import { Fragment } from "react";
 
 interface Props {
@@ -25,18 +27,20 @@ const Chat = ({ hidden } : Props) => {
 
   const messageElement = (isSender: boolean) => {
 
-    const userMessageStyle = "w-full px-4 py-2 flex justify-end";
+    const userMessageContainerStyle = "w-full px-4 py-2 flex justify-end";
+    const userMessageBoxStyle = "rounded-lg w-2/3 p-4 bg-green-400"
 
-    const recieverMessageStyle = "w-full px-4 py-2";
+    const recieverMessageContainerStyle = "w-full px-4 py-2";
+    const recieverMessageBoxStyle = "rounded-lg w-2/3 p-4 bg-gray-400";
     
     return (
-      <div id="message-container" className={(isSender) ? userMessageStyle : recieverMessageStyle}>
-        <div id="message-box" className="rounded-lg w-2/3 p-4 bg-gray-400">
+      <div id="message-container" className={(isSender) ? userMessageContainerStyle : recieverMessageContainerStyle}>
+        <div id="message-box" className={(isSender) ? userMessageBoxStyle : recieverMessageBoxStyle}>
           <div id="message-text-container" className="">
             <p>Lorem ipsum dolor sit amet consectetur aaaaaaa adipisicing elit. Accusantium officiis sunt aliquid totam! Soluta nesciunt beatae magnam incidunt officiis non saepe, commodi similique molestias facilis libero voluptates, sapiente pariatur quibusdam.</p>
           </div>
-          <div id="message-date" className="flex justify-end ">
-            <BsCheck2 />
+          <div id="message-date" className="flex justify-end items-center space-x-2">
+            <BsCheck2 className="w-6 h-6"/>
             <h1>2 July 2023, 10:30 WIB</h1>
           </div>
         </div>
@@ -46,55 +50,68 @@ const Chat = ({ hidden } : Props) => {
   
   return (
     <Fragment>  
-      <div hidden={hidden} className="h-96 flex flex-row">
-        <section hidden={hidden} id="chatlist-web" className="h-96 w-1/4">
-          <div id="search-container" className="bg-gray-500 h-1/6 flex justify-center items-center">
-            <div className="w-5/6 relative">
-              <div className="absolute top-1 bottom-1 left-1">
-                <HiMagnifyingGlass />
-              </div>
-              <input type="text" className=""/>
-            </div>
-          </div>
-          <div id="chatroom-list" className="h-5/6 overflow-y-auto">
-            {chatroomItem()}
-            {chatroomItem()}
-            {chatroomItem()}
-            {chatroomItem()}
-            {chatroomItem()}
-            {chatroomItem()}
-            {chatroomItem()}
-          </div>
-        </section>
-        <section hidden={hidden} id="chatroom-web" className="w-3/4">
-          <div id="chat-chatroom-details" className="h-1/6 p-2 bg-gray-400 flex flex-row space-x-4">
-            <div className="w-16 flex justify-center items-center">
-              <div className="w-10 h-10 rounded-full bg-purple-300">
-              </div>  
-            </div>
-            <div id="recepient-and-status" className="flex flex-col items-start w-1/2">
-              <h1 className="text-xl">TokoAgung</h1>
-              <div className="flex flex-row justify-center items-center space-x-1">
-                <div className="w-2 h-2 rounded-full bg-green-600"></div>
-                <h1 className="text-xs">Online</h1>
+      <div hidden={hidden} className="">
+        <div className=" h-96 flex flex-row">
+          <section hidden={hidden} id="chatlist-web" className="w-1/4">
+            <div id="search-container" className="bg-gray-500 h-1/6 flex justify-center items-center">
+              <div className="w-5/6 relative">
+                <div className="absolute top-1 bottom-1 left-1">
+                  <HiMagnifyingGlass />
+                </div>
+                <input type="text" className="w-full pl-6"/>
               </div>
             </div>
-            <div className="w-full flex items-center justify-end">
-              <HiEllipsisVertical className="w-6 h-6 hover:cursor-pointer"/>
+            <div id="chatroom-list" className="h-5/6 flex flex-col overflow-y-auto">
+              {chatroomItem()}
+              {chatroomItem()}
+              {chatroomItem()}
+              {chatroomItem()}
+              {chatroomItem()}
+              {chatroomItem()}
+              {chatroomItem()}
             </div>
-          </div>
-          <div className="h-5/6 overflow-y-auto">
-            {messageElement(true)}
-            {messageElement(false)}
-            {messageElement(true)}
-            {messageElement(false)}
-            {messageElement(true)}
-            {messageElement(false)}
-            {messageElement(true)}
-            {messageElement(true)}
-            {messageElement(false)}
-          </div>
-        </section>
+          </section>
+          <section hidden={hidden} id="chatroom-web" className="w-3/4">
+            <div id="chat-chatroom-details" className="h-1/6 p-2 bg-gray-400 flex flex-row space-x-4">
+              <div className="w-16 flex justify-center items-center">
+                <div className="w-10 h-10 rounded-full bg-purple-300">
+                </div>  
+              </div>
+              <div id="recepient-and-status" className="flex flex-col items-start w-1/2">
+                <h1 className="text-xl">TokoAgung</h1>
+                <div className="flex flex-row justify-center items-center space-x-1">
+                  <div className="w-2 h-2 rounded-full bg-green-600"></div>
+                  <h1 className="text-xs">Online</h1>
+                </div>
+              </div>
+              <div className="w-full flex items-center justify-end">
+                <HiEllipsisVertical className="w-6 h-6 hover:cursor-pointer"/>
+              </div>
+            </div>
+            <div className="h-4/6 overflow-y-auto flex flex-col-reverse">
+              {messageElement(true)}
+              {messageElement(false)}
+              {messageElement(true)}
+              {messageElement(false)}
+              {messageElement(true)}
+              {messageElement(false)}
+              {messageElement(true)}
+              {messageElement(true)}
+              {messageElement(false)}
+            </div>
+            <div className="h-1/6 flex flex-row bg-gray-400">
+              <div className="w-full flex flex-row justify-center items-center p-2 relative">
+                <input type="text" className="w-full h-full items-start" />
+                <GrAttachment className="absolute right-6"/>
+              </div>
+              <div className="flex justify-center items-center w-24">
+                <button className="bg-green-500 rounded-full w-12 h-12 flex justify-center items-center">
+                  <AiOutlineSend className="w-6 h-6 fill-white"/>
+                </button>
+              </div>
+            </div>
+          </section>
+        </div>
       </div>
       <div id="chat-chatlist-mobile"></div>
       <div id="chat-chatroom-mobile"></div>

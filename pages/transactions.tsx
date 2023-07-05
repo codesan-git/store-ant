@@ -175,6 +175,7 @@ const Transactions = ({ transactions } : { transactions: Transaction[]}) => {
           {renderItemsToDisplay()}
           <Chat hidden={chatIsHidden}/>
         </div>
+        {/* <Chat hidden={chatIsHidden}/> */}
       </div>
       <ReviewModal htmlElementId={`review-modal`}  selectProductCallback={getCurrentSelectedProductForRate}/>
       <PaymentModal htmlElementId={`payment-modal`} selectProductCallback={getTransactionDetail}/>
