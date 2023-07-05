@@ -1,4 +1,5 @@
 import { HiEllipsisVertical, HiMagnifyingGlass } from "react-icons/hi2";
+import { BsCheck2 } from "react-icons/bs"
 import { Fragment } from "react";
 
 interface Props {
@@ -17,6 +18,27 @@ const Chat = ({ hidden } : Props) => {
         <div id="chatroom-item-details" className="w-3/4 p-4 flex flex-col items-start">
           <h1>TokoAgung</h1>
           <p id="last-message" className="truncate w-64 h-48">Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit minima vero saepe assumenda illum nostrum voluptate ex, est itaque dolores enim maiores laborum odit porro ratione animi, nam corporis similique.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const messageElement = (isSender: boolean) => {
+
+    const userMessageStyle = "w-full px-4 py-2 flex justify-end";
+
+    const recieverMessageStyle = "w-full px-4 py-2";
+    
+    return (
+      <div id="message-container" className={(isSender) ? userMessageStyle : recieverMessageStyle}>
+        <div id="message-box" className="rounded-lg w-2/3 p-4 bg-gray-400">
+          <div id="message-text-container" className="">
+            <p>Lorem ipsum dolor sit amet consectetur aaaaaaa adipisicing elit. Accusantium officiis sunt aliquid totam! Soluta nesciunt beatae magnam incidunt officiis non saepe, commodi similique molestias facilis libero voluptates, sapiente pariatur quibusdam.</p>
+          </div>
+          <div id="message-date" className="flex justify-end ">
+            <BsCheck2 />
+            <h1>2 July 2023, 10:30 WIB</h1>
+          </div>
         </div>
       </div>
     );
@@ -62,10 +84,15 @@ const Chat = ({ hidden } : Props) => {
             </div>
           </div>
           <div className="h-5/6 overflow-y-auto">
-            <h1>hello</h1>
-            <h1>hello</h1>
-            <h1>hello</h1>
-            <h1>hello</h1>
+            {messageElement(true)}
+            {messageElement(false)}
+            {messageElement(true)}
+            {messageElement(false)}
+            {messageElement(true)}
+            {messageElement(false)}
+            {messageElement(true)}
+            {messageElement(true)}
+            {messageElement(false)}
           </div>
         </section>
       </div>
