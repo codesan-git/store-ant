@@ -35,8 +35,8 @@ export default function Address({cityData, provinceData} : Data) {
   const [form, setForm] = useState<FormData>({
     address: '', 
     region: '', 
-    cityId: cityData.filter((x) => x.province_id == provinceData[0].province_id)[0].city_id, 
-    city: cityData.filter((x) => x.province_id == provinceData[0].province_id)[0].city_name, 
+    cityId:'',
+    city: '', 
     provinceId: provinceData[0].province_id, 
     province: provinceData[0].province, 
     postcode: '', 
@@ -44,14 +44,14 @@ export default function Address({cityData, provinceData} : Data) {
   });
   const router = useRouter()
 
-  async function create(data:FormData) {
-    if(data.city == '')
-        data.city = cityData.filter((x) => x.province_id == provinceId)[0].city_name;
-    if(data.cityId == '')
-        data.cityId = cityData.filter((x) => x.province_id == provinceId)[0].city_id;
+  async function create(){
+    if(form.city == '')
+        form.city = cityData.filter((x) => x.province_id == form.provinceId)[0].city_name;
+    if(form.cityId == '')
+        form.cityId = cityData.filter((x) => x.province_id == form.provinceId)[0].city_id;
     try{
         fetch('http://localhost:3000/api/address/create', {
-            body: JSON.stringify(data),
+            body: JSON.stringify(form),
             headers: {
                 'Content-Type' : 'application/json'
             },
@@ -65,16 +65,8 @@ export default function Address({cityData, provinceData} : Data) {
   function setCityid(city: string){
     console.log("prov:", form.province );
     let chosenCity = cityData.filter((x) => x.city_name == city);
-    setForm({...form, cityId: chosenCity[0].city_id})
+    setForm({...form, cityId: chosenCity[0].city_id, city: chosenCity[0].city_name});
     console.log(chosenCity[0].city_name, chosenCity[0].city_id)
-  }
-
-  const handleSubmit = async(data: FormData) => {
-    try{
-        create(data)
-    }catch(error){
-        //console.log(error)
-    }
   }
 
   return (
@@ -85,7 +77,7 @@ export default function Address({cityData, provinceData} : Data) {
                 <p className="mx-auto text-gray-400">Input address details</p>
             </div>
 
-            <form onSubmit={e=>{e.preventDefault(); handleSubmit(form)}} className="flex flex-col gap-5">
+            <form onSubmit={e=>{e.preventDefault(); create()}} className="flex flex-col gap-5">
                 <div>
                     <input type="text" name="address" placeholder="Address" className={styles.input_text} value={form?.address} onChange={e => setForm({...form, address: e.target.value})}/>
                 </div>                

@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
 import { prisma } from "../../../lib/prisma"
-import { Status } from '@prisma/client'
+import { TransactionStatus } from '@prisma/client'
 
 export default async function handler(
   req: NextApiRequest,
@@ -12,24 +12,39 @@ export default async function handler(
 
   try {
     const transaction = await prisma.transaction.update({
-        where:{id: Number(id)},
+        where:{id: String(id)},
         data:{
-            status: Status.FINISHED
+            status: TransactionStatus.FINISHED
         }
-    })
-
-    const product = await prisma.product.findFirst({
-      where: {id: transaction.productId}
     })
 
     const shop = await prisma.shop.findFirst({
       where: {id: transaction?.shopId}
     })
 
+    const transactionData = await prisma.transaction.findFirst({
+      where: {id: id!},
+      select: {
+        order:{
+          select:{
+            product: true,
+            count: true
+          }
+        }
+      }
+    });
+
+    let totalPrice = 0;
+    let i: number;
+
+    for(i = 0; i < transactionData?.order?.length!; i++){
+      totalPrice += (transactionData?.order[i]?.product?.price! * transactionData?.order[i]?.count!);
+    }
+
     const shopUpdate = await prisma.shop.update({
       where: {id: shop?.id},
       data: {
-        balance: Number(shop?.balance) + (productInCart.count * Number(product?.price))
+        balance: Number(shop?.balance) + Number(totalPrice)
       }
     })
 

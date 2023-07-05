@@ -1,7 +1,7 @@
 import { Product, TransactionStatus } from "@prisma/client";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface Props {
   htmlElementId: string,
@@ -17,15 +17,21 @@ interface TransactionToken {
     token: string;
     redirectUrl: string;
 }
+
+interface Cost {
+  cost:{
+    etd: string,
+    value: number
+  }[],
+  service: string
+}
   
 const PaymentModal = ({htmlElementId: id, selectProductCallback} : Props) => {
   const {
     selectedTransaction
-  } : 
-  { 
-    selectedTransaction: Transaction
   } = selectProductCallback();
   const [isUsingBalance, setUsingBalance] = useState<boolean>(false);
+  const [cost, setCost] = useState<Cost>();
   const router = useRouter();
 
   let i, totalPrice = 0;
@@ -67,6 +73,29 @@ const PaymentModal = ({htmlElementId: id, selectProductCallback} : Props) => {
         onBayar();
   }
 
+  const getCost = async () => {
+    let totalWeight = 0;
+    let i: number;
+    for(i = 0; i < selectedTransaction?.order.length; i++){
+      totalWeight += selectedTransaction?.order[i].product.weight;
+    }
+
+    const data = {shopId: selectedTransaction?.shopId, totalWeight: totalWeight};
+    console.log(data);
+    try {
+			const response = await axios.post(`http://localhost:3000/api/cart/shipping`, data);
+			const { cost: costData } =  response.data;
+      console.log("cost: ", costData);
+      setCost(costData);
+    } catch (error) {
+			
+    }
+  };
+
+  useEffect(() => {
+    getCost();
+  });
+
   return (
     <>
       <input type="checkbox" id={id} className="modal-toggle"/>
@@ -78,7 +107,7 @@ const PaymentModal = ({htmlElementId: id, selectProductCallback} : Props) => {
                 <label htmlFor={id} className="text-lg font-bold">✕</label>
             </div>
           </div>
-          {selectedTransaction?.order.map((order)=> (
+          {selectedTransaction?.order.map((order: any)=> (
             <div id="product-box" className="p-2 space-x-2 flex flex-row">
             <div id="product-detail-img-container" className=" flex justify-center items-center">
                 <img className="w-20 h-20 object-cover" 
@@ -97,7 +126,12 @@ const PaymentModal = ({htmlElementId: id, selectProductCallback} : Props) => {
             </div>
           </div>
           ))}
-          <h1 className="text-md">Total: {formatter.format(totalPrice)}</h1>
+          <p className="text-lg font-bold">Detail Pengiriman</p>
+          <p>Kurir: JNE</p>
+          <p>Layanan: {cost?.service}</p>
+          <p>Estimasi Pengiriman: {cost?.cost[0].etd} hari</p>
+          <p>Biaya: {formatter.format(cost?.cost[0].value!)}</p>
+          <h1 className="text-md">Total: {formatter.format(totalPrice + cost?.cost[0].value!)}</h1>
           <form id="review-form" action="" className="py-1 space-y-1">
             <label>
                 <input type="checkbox" checked={isUsingBalance} onChange={handleChange}/>
