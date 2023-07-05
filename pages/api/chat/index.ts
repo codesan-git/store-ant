@@ -7,39 +7,70 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { recipientId, Message } = req.body
   const session = await getSession({req})
 
-  let convoId;
-  try {
-    const conversation = await prisma.conversation.findFirst({
-      where: { 
-        OR: [
-          {
-            AND: [
-              {recipientId: session?.user?.id},
-              {senderId: String(recipientId)}
-            ]
-          },
-          {
-            AND: [
-              {senderId: session?.user?.id},
-              {recipientId: String(recipientId)}
-            ]
-          }
-        ]
-      }
-    });
-
-    const messages = await prisma.message.findMany({
-        where: { conversationId: conversation?.id },
-        select: {
-          message: true
-        },
+  if(req.method === 'GET'){
+    let convoId = new Array<number>();
+    try {
+      const conversation = await prisma.conversation.findMany({
+        include:{
+          messages: true
+        }
       });
-    res.status(200).json({ messages: messages })
-  } catch (error) {
-    //console.log(error)
-    res.status(400).json({ message: "Fail" })
+    
+      if(conversation){
+        conversation.forEach(conversation => {
+          conversation.messages.every(message => {
+            if(message.senderId == session?.user.id || message.recipientId == session?.user.id){
+              convoId.push(conversation.id);
+              return false;
+            }
+            return true;
+          })
+        });
+      }
+
+      const data = await prisma.conversation.findMany({
+          where: { 
+            id: {
+              in: convoId 
+            }
+           },
+          include: {
+            messages: {
+              include:{
+                sender: {
+                  select: {
+                    name: true,
+                    image: true,
+                    shop: {
+                      select: {
+                        shopName: true,
+                        image: true
+                      }
+                    }
+                  }
+                },
+                recipient: {
+                  select: {
+                    name: true,
+                    image: true,
+                    shop:{
+                      select:{
+                        shopName: true,
+                        image: true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        });
+      res.status(200).json({ conversations: data })
+    } catch (error) {
+      //console.log(error)
+      res.status(400).json({ message: "Fail" })
+    }
   }
 }
