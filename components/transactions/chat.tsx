@@ -25,6 +25,21 @@ const Chat = ({ hidden } : Props) => {
     );
   }
 
+  const chatroomItemForModal = () => {
+    return (
+      <div className="flex flex-row h-24 bg-gray-300 hover:bg-gray-500 transition">
+        <div id="recepient-image-container" className="w-1/4 flex justify-center items-center">
+          <div className="w-14 h-14 rounded-full bg-purple-300">
+          </div>
+        </div>
+        <div id="chatroom-item-details" className="w-3/4 p-4 flex flex-col items-start">
+          <h1>TokoAgung</h1>
+          <p id="last-message" className="truncate w-64 h-48">Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit minima vero saepe assumenda illum nostrum voluptate ex, est itaque dolores enim maiores laborum odit porro ratione animi, nam corporis similique.</p>
+        </div>
+      </div>
+    );
+  }
+
   const messageElement = (isSender: boolean) => {
 
     const userMessageContainerStyle = "w-full px-4 py-2 flex justify-end";
@@ -113,14 +128,30 @@ const Chat = ({ hidden } : Props) => {
           </section>
         </div>
       </div>
-      <div hidden id="chat-chatlist-mobile" className="">
-        <div id="chat-chatlist-modal" className="lg:hidden bg-gray-900 bg-opacity-75 fixed h-full w-full top-0 left-0 bottom-0 right-0 z-50">
+      <div id="chat-chatlist-mobile" className="">
+        <div id="chat-chatlist-modal" className="lg:hidden bg-gray-900 bg-opacity-75 fixed h-full w-full top-0 left-0 bottom-0 right-0 z-50 pointer-events-auto">
           <div id="chat-chatlist-box" className="h-full w-full bg-white">
-            <div>
-              <h1>Chat</h1>
+            <div className="flex flex-row w-full bg-gray-400 h-16">
+              <div id="chat-chatlist-modal-title-container" className="flex justify-start items-center w-full p-4">
+                <h1 className="font-bold text-xl">Chat</h1>
+              </div>
+              <div id="actions-container" className="flex flex-row items-center p-4">
+                <HiMagnifyingGlass />
+                <HiEllipsisVertical className="w-6 h-6 hover:cursor-pointer"/>
+              </div>
             </div>
-            <div id="chatlist">
-
+            
+            <div id="chatlist" className="h-5/6 flex flex-col overflow-y-auto">
+              {chatroomItemForModal()}
+              {chatroomItemForModal()}
+              {chatroomItemForModal()}
+              {chatroomItemForModal()}
+              {chatroomItemForModal()}
+              {chatroomItemForModal()}
+              {chatroomItemForModal()}
+              {chatroomItemForModal()}
+              {chatroomItemForModal()}
+              {chatroomItemForModal()}
             </div>
           </div>
         </div>
