@@ -134,6 +134,10 @@ const Transactions = ({ transactions } : { transactions: Transaction[]}) => {
     }
   }
 
+  const chatOnClose = () => {
+    setChatIsHidden(true);
+  }
+
   const renderItemsToDisplay = () => {
 
     // if(itemsToDisplay?.length === 0 || !itemsToDisplay) return <h1 hidden={chatIsHidden} className="h-full flex justify-center items-center">No Items</h1>;
@@ -173,7 +177,7 @@ const Transactions = ({ transactions } : { transactions: Transaction[]}) => {
             <h1>{currentSelectedSection}</h1>
           </div>
           {renderItemsToDisplay()}
-          <Chat hidden={chatIsHidden}/>
+          <Chat hidden={chatIsHidden} onClose={() => setChatIsHidden(true)}/>
         </div>
         {/* <Chat hidden={chatIsHidden}/> */}
       </div>

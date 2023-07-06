@@ -3,17 +3,24 @@ import { BsCheck2, BsCheck2All } from "react-icons/bs"
 import { AiOutlineSend } from "react-icons/ai";
 import { GrAttachment }  from "react-icons/gr"
 import { MdArrowBack } from "react-icons/md"
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 
 interface Props {
   hidden: boolean;
+  onClose: () => any
 }
 
-const Chat = ({ hidden } : Props) => {
+const Chat = ({ hidden, onClose } : Props) => {
+
+  const [chatroomModalIsHidden, setChatroomModalIsHidden] = useState<boolean>(true);
+
+  const chatroomItemOnClick = () => {
+    setChatroomModalIsHidden(false);
+  }
 
   const chatroomItem = () => {
     return (
-      <div className="flex flex-row h-24 bg-gray-300 hover:bg-gray-500 transition">
+      <div onClick={chatroomItemOnClick} className="flex flex-row h-24 bg-gray-300 hover:bg-gray-500 transition hover:cursor-pointer">
         <div id="recepient-image-container" className="w-1/4 flex justify-center items-center">
           <div className="w-14 h-14 rounded-full bg-purple-300">
           </div>
@@ -28,14 +35,19 @@ const Chat = ({ hidden } : Props) => {
 
   const chatroomItemForModal = () => {
     return (
-      <div className="flex flex-row h-24 bg-gray-300 hover:bg-gray-500 transition">
+      <div onClick={chatroomItemOnClick} className="flex flex-row h-24 bg-gray-300 hover:bg-gray-500 transition hover:cursor-pointer">
         <div id="recepient-image-container" className="w-1/4 flex justify-center items-center">
           <div className="w-14 h-14 rounded-full bg-purple-300">
           </div>
         </div>
         <div id="chatroom-item-details" className="w-3/4 p-4 flex flex-col items-start">
-          <h1>TokoAgung</h1>
-          <p id="last-message" className="truncate w-64 h-48">Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit minima vero saepe assumenda illum nostrum voluptate ex, est itaque dolores enim maiores laborum odit porro ratione animi, nam corporis similique.</p>
+          <div className="w-full flex flex-row">
+            <h1 className="font-bold">TokoAgung</h1>
+            <div className="w-full flex justify-end items-center">
+              <h1 className="text-sm">2/6/2023</h1>
+            </div>
+          </div>
+          <p id="last-message" className="text-sm truncate w-60 h-48">Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit minima vero saepe assumenda illum nostrum voluptate ex, est itaque dolores enim maiores laborum odit porro ratione animi, nam corporis similique.</p>
         </div>
       </div>
     );
@@ -129,7 +141,7 @@ const Chat = ({ hidden } : Props) => {
           </section>
         </div>
       </div>
-      <div id="chat-chatlist-mobile" className="">
+      <div hidden={hidden} id="chat-chatlist-mobile" className="">
         <div id="chat-chatlist-modal" className="lg:hidden bg-gray-900 bg-opacity-75 fixed h-full w-full top-0 left-0 bottom-0 right-0 z-50 pointer-events-auto">
           <div id="chat-chatlist-box" className="h-full w-full bg-white">
             <div className="flex flex-row w-full bg-gray-400 h-16">
@@ -141,7 +153,7 @@ const Chat = ({ hidden } : Props) => {
               </div>
               <div id="actions-container" className="flex flex-row items-center p-4 space-x-4">
                 <HiMagnifyingGlass />
-								<button className="text-2xl font-bold float-right">✕</button>
+								<button onClick={onClose} className="text-2xl font-bold float-right">✕</button>
               </div>
             </div>
             <div id="chatlist" className="h-5/6 flex flex-col overflow-y-auto">
@@ -159,19 +171,22 @@ const Chat = ({ hidden } : Props) => {
           </div>
         </div>
       </div>
-      <div id="chat-chatroom-mobile">
+      <div hidden={chatroomModalIsHidden} id="chat-chatroom-mobile">
         <div id="chat-chatroom-modal" className="lg:hidden bg-gray-900 bg-opacity-75 fixed h-full w-full top-0 left-0 bottom-0 right-0 z-50 pointer-events-auto">
           <div id="chat-chatlist-box" className="h-full w-full bg-white">
             <div className="flex flex-row p-2 w-full bg-gray-400 h-16 space-x-2">
-              <div className="flex justify-center items-center">
+              <button onClick={() => setChatroomModalIsHidden(true)} className="flex justify-center items-center">
                 <MdArrowBack className="w-6 h-6"/>
-              </div>
+              </button>
               <div className="w-16 flex justify-center items-center">
                 <div className="w-10 h-10 rounded-full bg-purple-300">
                 </div>  
               </div>
               <div id="recepient-and-status" className="flex flex-col items-start w-1/2">
-                <h1 className="text-xl">TokoAgung</h1>
+                <div>
+                  <h1 className="text-xl font-bold">TokoAgung</h1>
+
+                </div>
                 <div className="flex flex-row justify-center items-center space-x-1">
                   <div className="w-2 h-2 rounded-full bg-green-600"></div>
                   <h1 className="text-xs">Online</h1>
