@@ -3,7 +3,34 @@ import { BsCheck2, BsCheck2All } from "react-icons/bs"
 import { AiOutlineSend } from "react-icons/ai";
 import { GrAttachment }  from "react-icons/gr"
 import { MdArrowBack } from "react-icons/md"
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
+import axios from 'axios';
+import { useSession } from "next-auth/react";
+
+interface Conversation {
+  id: number;
+  messages: Message[];
+}
+
+interface Message {
+  id: number;
+  message: string;
+  senderId: string;
+  recipientId: string;
+  sender: User;
+  recipient: User;
+}
+
+interface User {
+  name: string;
+  image: string;
+  shop: Shop;
+}
+
+interface Shop {
+  name: string;
+  image: string;
+}
 
 interface Props {
   hidden: boolean;
@@ -12,22 +39,46 @@ interface Props {
 
 const Chat = ({ hidden, onClose } : Props) => {
 
+  const {data: session} = useSession();
+
+  const [conversations, setConversations] = useState<Conversation[]>();
   const [chatroomModalIsHidden, setChatroomModalIsHidden] = useState<boolean>(true);
+
+  const fetchConversations = async () =>{
+    const res = await axios.get("/api/chat");
+    setConversations(res.data.conversations);
+  }
+  
+  useEffect(() => {
+    fetchConversations();
+  });
+
 
   const chatroomItemOnClick = () => {
     setChatroomModalIsHidden(false);
   }
 
-  const chatroomItem = () => {
+
+  const chatroomItem = (conversation: Conversation) => {
+
+    let recepient; //TODO: create user names variable in Conversation Model
+
+    const latestMessage = conversation.messages.at(conversation.messages.length-1);
+
+    if(latestMessage?.recipientId === session?.user.id) recepient = latestMessage?.sender;
+    else recepient = latestMessage?.recipient;
+
     return (
       <div onClick={chatroomItemOnClick} className="flex flex-row h-24 bg-gray-300 hover:bg-gray-500 transition hover:cursor-pointer">
         <div id="recepient-image-container" className="w-1/4 flex justify-center items-center">
-          <div className="w-14 h-14 rounded-full bg-purple-300">
-          </div>
+          <img
+            src={recepient?.image} 
+            className="w-14 h-14 rounded-full bg-purple-300"
+          />
         </div>
         <div id="chatroom-item-details" className="w-3/4 p-4 flex flex-col items-start">
-          <h1>TokoAgung</h1>
-          <p id="last-message" className="truncate w-64 h-48">Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit minima vero saepe assumenda illum nostrum voluptate ex, est itaque dolores enim maiores laborum odit porro ratione animi, nam corporis similique.</p>
+          <h1 className="font-bold">{recepient?.name.toString()}</h1>
+          <p id="last-message" className="truncate w-64 h-48">{latestMessage?.message.toString()}</p>
         </div>
       </div>
     );
@@ -90,13 +141,7 @@ const Chat = ({ hidden, onClose } : Props) => {
               </div>
             </div>
             <div id="chatroom-list" className="h-5/6 flex flex-col overflow-y-auto">
-              {chatroomItem()}
-              {chatroomItem()}
-              {chatroomItem()}
-              {chatroomItem()}
-              {chatroomItem()}
-              {chatroomItem()}
-              {chatroomItem()}
+              {conversations?.map((c)=> chatroomItem(c))}
             </div>
           </section>
           <section hidden={hidden} id="chatroom-web" className="w-3/4">
