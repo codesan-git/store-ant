@@ -21,13 +21,11 @@ export default async function handler(
   });
 
   if(conversation){
-    conversation.every(conversation => {
+    conversation.forEach(conversation => {
       conversation.messages.forEach(message => {
         if((message.senderId == session?.user.id && message.recipientId == recipientId) || (message.recipientId == session?.user.id && message.senderId == recipientId)){
           convoId = conversation.id;
-          return false;
         }
-        return true;
       })
     });
   }
