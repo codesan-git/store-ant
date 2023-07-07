@@ -22,7 +22,10 @@ interface Transaction {
   paymentMethod: string,
   order: Order[],
   shop: {
-    shopName: string
+    shopName: string,
+    balance: number ,
+    image: string,
+    averageRating: number
   },
   user:{
     name:string
