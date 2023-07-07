@@ -31,23 +31,40 @@ export default function Chat({messages, recipient} : Messages) {
 
   useEffect(() => {
     socketInitializer();
+  }, [])
+
+  useEffect(() => {
+    if(socket)
+      connect();
+  },[])
+
+  useEffect(() => {
+    if(socket)
+      listen();
   })
 
   async function socketInitializer() {
     await fetch("/api/socket");
 
     socket = io('ws://localhost:3000', {transports: ['websocket']});
+  }
 
+  async function connect() {    
+    socket.emit("connect-user", session?.user.id);
+    console.log("init socket");
+  }
+
+  async function listen(){    
     socket.on("receive-message", (data : MessageForm) => {
       console.log(data);
-      if(data.recipientId == session?.user?.id)
+      //if(data.recipientId == session?.user?.id)
         setAllMessage([...allMessage, data]);
-    })
+    });
   }
 
   function handleSubmit(e : FormEvent){
     e.preventDefault();
-    socket.emit("send-message", messageForm)
+    socket.emit("send-message", messageForm);
     setMessageForm({...messageForm, message: ""});
     setAllMessage([...allMessage, messageForm]);
     try{

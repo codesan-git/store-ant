@@ -118,7 +118,7 @@ export default async function handler(
 
     ratings = await prisma.rating.findMany({
         where:{
-            productInCart:{
+            order:{
                 productId: product?.id
              }
         }
