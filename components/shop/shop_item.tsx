@@ -24,6 +24,9 @@ interface Transaction {
   shop: {
     shopName: string
   },
+  user:{
+    name:string
+  }
 }
 
 interface Props {
@@ -36,7 +39,7 @@ interface Props {
   onRate: (productName: String, cartItemId: Number) => void,
 }
 
-const TransactionItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinish, onReturn, onDetail }: Props) => { //TODO: re-adjust background colors based on website. the one in the wireframe are just placeholder colors.
+const ShopItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinish, onReturn, onDetail }: Props) => { //TODO: re-adjust background colors based on website. the one in the wireframe are just placeholder colors.
 
   const transactionCreatedDate = new Date(transaction.createdAt);
   const transactionLastUpdate = new Date(transaction.updatedAt);
@@ -289,4 +292,4 @@ const TransactionItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, 
   );
 }
 
-export default TransactionItem;
+export default ShopItem;
