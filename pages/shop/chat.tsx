@@ -36,11 +36,6 @@ export default function Chat({messages, recipient, shop} : Messages) {
 
   useEffect(() => {
     if(socket)
-      connect();
-  },[])
-
-  useEffect(() => {
-    if(socket)
       listen();
   })
 
@@ -48,11 +43,7 @@ export default function Chat({messages, recipient, shop} : Messages) {
     await fetch("/api/socket");
 
     socket = io('ws://localhost:3000', {transports: ['websocket']});
-  }
-
-  async function connect() {    
     socket.emit("connect-user", session?.user.id);
-    console.log("init socket");
   }
 
   async function listen(){    
