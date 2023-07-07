@@ -186,9 +186,16 @@ const Chat = ({ hidden, onClose } : Props) => {
       </div>
     );
   }
-  
-  const chatroom = () => {
+
+  const renderMessages = () => {
+    const cloneMessages = selectedConversation?.messages.slice();
+    const reversedMessages = cloneMessages?.reverse();
     
+    return (
+      <>
+        {reversedMessages?.map((m) => messageElement(m))}
+      </>
+    );
   }
   
   return (
@@ -227,10 +234,10 @@ const Chat = ({ hidden, onClose } : Props) => {
                 <HiEllipsisVertical className="w-6 h-6 hover:cursor-pointer"/>
               </div>
             </div>
-            <div className="h-4/6 overflow-y-auto flex flex-col-reverse">
+            <div className="h-4/6 overflow-y-auto flex flex-col-reverse"> {/*I need to put justify-end so that it renders from the top but if I do so it will break the UI */}
               {
                 (selectedConversation) 
-                ? selectedConversation.messages.map((m) => messageElement(m)) 
+                ? renderMessages() 
                 : <div>No Conversation</div>
               }
             </div>
@@ -296,10 +303,10 @@ const Chat = ({ hidden, onClose } : Props) => {
                 <HiEllipsisVertical className="w-6 h-6 hover:cursor-pointer"/>
               </div>
             </div>
-            <div id="chatlist" className="h-5/6 flex flex-col overflow-y-auto">
+            <div id="chatlist" className="h-5/6 flex flex-col-reverse justify-end overflow-y-auto">
               {
                 (selectedConversation) 
-                ? selectedConversation.messages.map((m) => messageElement(m)) 
+                ? renderMessages() 
                 : <div>No Conversation</div>
               }
             </div>
