@@ -3,9 +3,10 @@ import { BsCheck2, BsCheck2All } from "react-icons/bs"
 import { AiOutlineSend } from "react-icons/ai";
 import { GrAttachment }  from "react-icons/gr"
 import { MdArrowBack } from "react-icons/md"
-import { Fragment, useEffect, useState } from "react";
+import { FormEvent, Fragment, useEffect, useState } from "react";
 import axios from 'axios';
 import { useSession } from "next-auth/react";
+import { Socket, io } from 'socket.io-client'
 
 interface Conversation {
   id: number;
@@ -34,10 +35,19 @@ interface Shop {
   image: string;
 }
 
+interface MessageForm {
+  senderId: string;
+  recipientId: string;
+  message: string;
+}
+
+let socket : Socket;
+
 interface Props {
   hidden: boolean;
   onClose: () => any
 }
+
 
 const Chat = ({ hidden, onClose } : Props) => {
 
@@ -52,6 +62,24 @@ const Chat = ({ hidden, onClose } : Props) => {
     const res = await axios.get("/api/chat");
     setConversations(res.data.conversations);
   }
+
+  // const handleSubmitMessage = (e: FormEvent) => {
+  //   e.preventDefault();
+  //   socket.emit("send-message", messageForm)
+  //   setMessageForm({...messageForm, message: ""});
+  //   setAllMessage([...allMessage, messageForm]);
+  //   try{
+  //       fetch('http://localhost:3000/api/chat/send', {
+  //           body: JSON.stringify(messageForm),
+  //           headers: {
+  //               'Content-Type' : 'application/json'
+  //           },
+  //           method: 'POST'
+  //       })
+  //   }catch(error){
+  //       //console.log(error)
+  //   }
+  // }
   
   useEffect(() => {
     fetchConversations();
