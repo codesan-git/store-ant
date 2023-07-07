@@ -56,13 +56,34 @@ const Chat = ({ hidden, onClose } : Props) => {
   const [conversations, setConversations] = useState<Conversation[]>();
   const [chatroomModalIsHidden, setChatroomModalIsHidden] = useState<boolean>(true);
   const [selectedConversation, setSelectedConversation] = useState<Conversation>();
+  const [currentChatroomMessages, setChatroomMessages] = useState<Message[]>();
+
+  
   const [selectedRecepient, setSelectedRecepient] = useState<User>();
+
+  // const socketInitializer = async () => {
+  //   await fetch("/api/socket");
+
+  //   socket = io('ws://localhost:3000', {transports: ['websocket']});
+
+  //   socket.on("receive-message", (data : Message) => {
+  //     console.log(data);
+  //     if(data.recipientId == session?.user.id)
+  //       setChatroomMessages([...currentChatroomMessages!, data]);
+  //   })
+  // }
 
   const fetchConversations = async () => {
     const res = await axios.get("/api/chat");
     setConversations(res.data.conversations);
   }
 
+  
+  useEffect(() => {
+    // socketInitializer();
+    fetchConversations();
+  });
+  
   // const handleSubmitMessage = (e: FormEvent) => {
   //   e.preventDefault();
   //   socket.emit("send-message", messageForm)
@@ -81,11 +102,6 @@ const Chat = ({ hidden, onClose } : Props) => {
   //   }
   // }
   
-  useEffect(() => {
-    fetchConversations();
-  });
-
-
   const chatroomItemOnClick = (conversation: Conversation) => {
     setChatroomModalIsHidden(false);
     setSelectedConversation(conversation);
@@ -241,7 +257,7 @@ const Chat = ({ hidden, onClose } : Props) => {
                 : <div>No Conversation</div>
               }
             </div>
-            <div className="h-1/6 flex flex-row bg-gray-400">
+            <form className="h-1/6 flex flex-row bg-gray-400">
               <div className="w-full flex flex-row justify-center items-center p-2 relative">
                 <textarea name="" id="" className="w-full h-full items-start" ></textarea>
                 <GrAttachment className="absolute right-6"/>
@@ -251,7 +267,7 @@ const Chat = ({ hidden, onClose } : Props) => {
                   <AiOutlineSend className="w-6 h-6 fill-white"/>
                 </button>
               </div>
-            </div>
+            </form>
           </section>
         </div>
       </div>
