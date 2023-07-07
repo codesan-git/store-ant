@@ -23,8 +23,11 @@ import transactions from '../transactions'
 import {
   HiHome, HiChartPie, HiChatBubbleBottomCenterText,
   HiShoppingBag, HiCurrencyDollar, HiChevronDown,
-  HiChevronUp
+  HiChevronUp,
+  HiShoppingCart,
+  HiOutlineEllipsisVertical
 } from "react-icons/hi2";
+import Agungageng from '@/components/shop/agungageng'
 
 interface Props {
   shop: {
@@ -34,9 +37,24 @@ interface Props {
     balance: number
     transaction: Transaction[]
   },
-  transaction: {
-    status: string
-  }
+  product: {
+    id: Number,
+    shopId: Number,
+    categoryId: Number,
+    name: string,
+    image: string,
+    description: string,
+    price: number,
+    stock: number
+  },
+  order: {
+    id: Number,
+    transactionId: Number,
+    productId: Number,
+    count: number,
+    product: Product[]
+  },
+
 }
 
 interface SellerTransactions {
@@ -114,10 +132,12 @@ interface Product {
   stock: number
 }
 
-export default function Profile({ shop }: { shop: Shop }, { transaction }: Props) {
+export default function Profile({ shop, product, order }: Props) {
 
   const router = useRouter()
   const { data: session } = useSession();
+  let count = 0;
+  const kecoa = [];
 
   const statusMap: Record<string, Array<any>> = {
     UNPAID: [],  // Inisialisasi array kosong untuk status "UNPAID"
@@ -137,9 +157,32 @@ export default function Profile({ shop }: { shop: Shop }, { transaction }: Props
     CANCEL_REJECTED: [],  // Inisialisasi array kosong untuk status "CANCEL_REJECTED"
   };
 
+  // const renderTransaction = () => {
+  //   return Object.keys(statusMap).map((status) => {
+  //     return (
+  //       <Agungageng 
+  //         activeTab={activeTab},
+  //         statusMap={statusMap},
+  //       />
+  //     )
+  //   })
+  // }
+
+  // console.log(`status1`, statusMap.PAID)
+  // console.log(`status2`, statusMap.PAID.map((kebo)=>
+  //   kebo
+  // ))
+  // console.log(`status3`, Object.keys(statusMap).map((status) => (status[0])))
+  console.log(`status`, Object.keys(statusMap).map((status)=>{
+    statusMap[status].map((badak)=>(
+      badak.id
+    ))
+  }))
+
   // const [selectedStatus, setSelectedStatus] = useState(statusMap)
   const [activeTab, setActiveTab] = useState('UNPAID');
   const [isSalesDropdownClosed, setIsSalesDropdownClosed] = useState<boolean>(true);
+  const [pesanan, setPesanan] = useState([])
 
   const formatter = new Intl.NumberFormat('id-ID', {
     style: 'currency',
@@ -153,6 +196,158 @@ export default function Profile({ shop }: { shop: Shop }, { transaction }: Props
     setActiveTab(status);
     setIsSalesDropdownClosed(true)
   };
+
+  // const renderActionButtons = () => { //TODO: REFACTOR THIS SWITCH CASE CODE SMELL
+
+  //   const detailTransaksiButton = () => {
+  //     return (
+  //       <button onClick={() => onDetail(transaction)} className="flex justify-center items-center text-xs lg:text-base w-28 lg:w-32 h-8 border-2 border-green-500 text-green-500">
+  //         Detail Transaksi
+  //       </button>
+  //     );
+  //   }
+
+  //   const renderExtraActionDropdown = () => { //THIS STILL CAUSES A BUG. If you enter web-view mode, and click various extra action buttons consecutively, then enter mobile mode, there will be a stack of extra actions modal
+  //     return(
+  //       <div className="">
+  //         <button id="extra-actions-mobile" onClick={() => setExtraActionsIsOpen(!extraActionsIsOpen)} className="lg:hidden w-8 h-8 flex justify-center items-center bg-black">
+  //           <HiOutlineEllipsisVertical className="text-white"/>
+  //         </button>
+  //         <div id="extra-actions-web-view" className="hidden lg:block dropdown dropdown-end">
+  //           <label onClick={() => setExtraActionsIsOpen(true)} tabIndex={0} className="w-8 h-8 flex justify-center items-center bg-black hover:cursor-pointer">
+  //             <HiOutlineEllipsisVertical className="text-white"/>
+  //           </label>
+  //           <ul tabIndex={0} className="mt-1 dropdown-content menu shadow bg-base-100 rounded-sm w-52">
+  //             <li className="rounded-sm hover:bg-gray-100 transition duration-300"><a>Tanya Penjual</a></li>
+  //             { //I really need to refactor this entire module
+  //               (transaction.status === TransactionStatus.UNPAID||transaction.status === TransactionStatus.AWAITING_CONFIRMATION || transaction.status === TransactionStatus.PACKING) 
+  //               ? <li className="rounded-sm hover:bg-gray-100 transition duration-300">
+  //                   <label onClick={() => onCancel(transaction)} htmlFor="cancel-alert">
+  //                   Batalkan
+  //                   </label>
+  //                 </li>
+  //               // : <li className="rounded-sm hover:bg-gray-100 transition duration-300"><div onClick={()=>onReturn(transaction.id)}>Ajukan Komplain</div></li>
+  //               : <li className="rounded-sm hover:bg-gray-100 transition duration-300"><div>Ajukan Komplain</div></li>
+  //             }
+  //             <li className="rounded-sm hover:bg-gray-100 transition duration-300"><a>Pusat Bantuan</a></li>
+  //           </ul>
+  //         </div>
+  //       </div>
+  //     );
+  //   }
+
+  //   //better idea: Create a callback function argument that passes all the handle functions and buttons to render as objects and render them there
+
+  //   if(transaction.status === TransactionStatus.UNPAID){
+  //     return (
+  //       <>
+  //         <label htmlFor="payment-modal" onClick={() => onBayar(transaction)} className="text-xs lg:text-base flex justify-center items-center w-24 h-8 text-white bg-green-500 hover:cursor-pointer">
+  //           Bayar
+  //         </label>
+  //         {renderExtraActionDropdown()}
+  //       </>
+  //     );
+  //   }
+  //   if (transaction.status === TransactionStatus.AWAITING_CONFIRMATION){
+  //     return (
+  //       <>
+  //         {detailTransaksiButton()}
+  //         {renderExtraActionDropdown()}
+  //       </>
+  //     );
+  //   }
+  //   else if (transaction.status === TransactionStatus.FINISHED){ // FINISHED == SUCCESS
+  //     return (
+  //       <>
+  //         {detailTransaksiButton()}
+  //         {/* <label htmlFor="review-modal" onClick={onRateClick} className="flex justify-center items-center text-xs lg:text-base w-32 text-white bg-green-500 hover:cursor-pointer">
+  //           Ulas Produk
+  //         </label> */}
+  //         <div className="flex justify-center items-center text-xs lg:text-base w-32 text-white bg-green-500 hover:cursor-pointer">
+  //           Ulas Produk
+  //         </div>
+  //         {renderExtraActionDropdown()}
+  //       </>
+  //     );
+  //   }
+  //   else if (transaction.status === TransactionStatus.CANCELED || transaction.status === TransactionStatus.CANCEL_REJECTED){
+  //     return (
+  //       <>
+  //         {detailTransaksiButton()}
+  //         {renderExtraActionDropdown()}
+  //       </>
+  //     );
+  //   }
+  //   else if (transaction.status === TransactionStatus.PACKING){
+  //     return (
+  //       <>
+  //         {detailTransaksiButton()}
+  //         {renderExtraActionDropdown()}
+  //       </>
+  //     );
+  //   }
+  //   else if (transaction.status === TransactionStatus.DELIVERING){
+  //     return (
+  //       <>
+  //         {detailTransaksiButton()}
+  //         <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 text-white bg-green-500">
+  //           Lacak
+  //         </button>
+  //         {renderExtraActionDropdown()}
+  //       </>
+  //     );
+  //   }
+
+  //   return <>
+  //     {renderExtraActionDropdown()}
+  //   </>;
+  // }
+
+  // let indexTrans = shop.transaction
+
+  // let priceMap = shop.transaction.map((trans) => (
+  //   trans.order.map((oor) => (
+  //     oor.product.price
+  //   ))
+  // ))
+
+  // let priceMap = indexTrans?.order.map((trans) => (
+  //     trans.product.price
+  // ))
+
+  // let priceMap = shop.transaction.map((ccd)=>(
+  //   ccd.order
+  // ))
+
+  // let total = 0
+  // const ngitung = () => {
+  //   priceMap?.forEach((totalPrice) => {
+  //     for (let val = 0; val < totalPrice.length; val++) {
+  //       total += totalPrice[val];
+  //     }
+  //   })
+  //   return total
+  // }
+
+
+
+  // const renderExtraItems = () => {
+  //   // let mapping = {statusMap[status].length > 0}
+  //   let count = 0
+  //   shop.transaction.forEach((trans) => {
+  //     trans.order.forEach((orders) => {
+  //       count += Number(orders.length)
+  //     })
+  //     if (count === 1) {
+  //       return <></>
+  //     } else {
+  //       return <>
+  //         <h1 className="text-xs lg:text-base">+{count - 1} Produk Lainnya</h1>
+  //       </>
+  //     }
+  //   })
+  // }
+
 
   const renderSalesModal = () => {
     return (
@@ -239,19 +434,30 @@ export default function Profile({ shop }: { shop: Shop }, { transaction }: Props
     router.push('/shop/register')
   } else {
     console.log(`shop`, shop)
+    console.log(`first product`, product)
+    console.log(`order bang`, order)
     // console.log(`statusMap`, statusMap.PAID)
     // console.log(`displaynya`, selectedStatus.status)
     // console.log(`statusmap.paid`, statusMap.PAID[0].status)
-    console.log(`active`, activeTab)
+    // console.log(`active`, activeTab)
+    // console.log(`price`, price)
+    // console.log(`apaan nih`, priceMap)
+    // console.log(`calculated`, ngitung())
+    console.log(`length`, sellList[5].order.length)
+
+    console.log(`shop2`, shop.transaction)
 
 
-
-
+    console.log(`extraItems`, shop.transaction.map((gg) => (
+      gg.order.length as number
+    )))
+    // console.log(`orders`, firstOrder)
     return (
       <div className='-m-4'>
         <div className='hidden lg:block'>
           <Navbar />
         </div>
+        {/* <h1 className="text-xs">Rp {calculateTransactionTotal().toString()}</h1> */}
         <div className='lg:flex lg:flex-row py-4 space-x-2'>
           {/* <ShopDashboard shop={transaction.status} /> */}
           <div id='product-list' className=' w-full bg-gray-100 py-5'>
@@ -384,6 +590,8 @@ export default function Profile({ shop }: { shop: Shop }, { transaction }: Props
                   </div>
                 </div> */}
 
+
+
                 <div id='shop-dashboard' className="lg:sticky lg:top-0 hidden lg:block lg:shadow-md lg:w-1/5 ">
                   <div id="shop-profile" className="flex flex-col justify-center items-center px-2 py-4 space-y-2">
                     <div id="profile-photo-container" className="avatar">
@@ -451,48 +659,68 @@ export default function Profile({ shop }: { shop: Shop }, { transaction }: Props
                 </div>
 
                 <div className='w-full'>
-                  
+
                   {Object.keys(statusMap).map((status) => (
                     <div key={status} className={`${activeTab === status ? '' : 'hidden'}`}>
                       {statusMap[status].length > 0 ? (
                         <>
-                          <h1>{activeTab}</h1>
                           {statusMap[status].map((kodok) => (
-                            <div key={kodok.id}>
-                              <div className='border-4 bg-blue-gray-400'>
-                                <h2>Nama Pembeli: {kodok.user.profile?.username ? kodok.user.profile?.username! : kodok.user.name}</h2>
+                            <div key={kodok.id} className="my-4">
+                              <div id="upper-detail" className="flex flex-row p-2 bg-gray-400">
+                                <div className="w-1/2 flex justify-start items-center ">
+                                  <h1 className="text-sm lg:text-xl font-bold">{kodok.user.profile?.username ? kodok.user.profile?.username! : kodok.user.name}</h1>
+                                </div>
+                                <div className="w-1/2 flex flex-col lg:flex-row lg:items-center lg:space-x-2 justify-end">
+                                  <h1>{activeTab == "AWAITING_CONFIRMATION" ? "Otomatis Batal" : activeTab}</h1>
+                                </div>
                               </div>
-                              <div className='grid grid-cols-4'>
-                                <div className='col-span-3'>
-                                  <div className='grid grid-cols-5'>
-                                    <div className='col-span-1'>
-                                      {kodok.order.map((kecoa: any) => (
+                              <div id="lower-detail">
+                                {kodok.order.map((kecoa: any) => (
+                                  <>
+                                    <div key={kecoa.id} id="product-details" className="flex flex-row p-2 bg-gray-300">
+                                      <div id="product-detail-img-container" className=" flex justify-center items-center">
                                         <Image
-                                          key={kecoa.id}
-                                          alt={`Product ${kecoa.product.name}`}
+                                          alt={`Product nama`}
                                           src={`http://localhost:3000/${kecoa.product.image.split(",")[0]}`}
                                           width={800}
                                           height={400}
                                           quality={70}
-                                          className='w-full sm:p-2 lg:p-6'
+                                          className='w-36 h-36 object-cover'
+                                          onError={({ currentTarget }) => {
+                                            currentTarget.onerror = null; // prevents looping
+                                            currentTarget.src = "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
+                                          }}
                                         />
-                                      ))}
-                                    </div>
-                                    <div className='col-span-4 sm:py-2 lg:py-6'>
-                                      {kodok.order.map((kerang: any) => (
-                                        <div key={kerang.id}>
-                                          <p>Kode Transaksi: {kerang.transactionId}</p>
-                                          <p>
-                                            <b>{kerang.product.name}</b>
-                                          </p>
-                                          <p>Qty: {kerang.count}</p>
+                                      </div>
+                                      <div id="product-detail" className="flex-1 p-4 flex flex-col justify-center">
+                                        <h1 className="text-xs lg:text-base">Kode Transaksi: {kodok.id} </h1>
+                                        <div>
+                                          <h1 className="text-xs lg:text-base font-bold">
+                                            {kecoa.product.name}
+                                          </h1>
+                                          <h1 className="text-xs lg:text-base">Jumlah: {kecoa.count}</h1>
                                         </div>
-                                      ))}
+                                        {(kodok.order.length as number === 1 ? <></> : <h1 className="text-xs lg:text-base">{kodok.order.length as number - 1} Produk lainnya</h1>)}
+                                      </div>
+                                      <div id="total-details-lower" className="hidden lg:flex lg:flex-col lg:justify-center w-1/3 p-4 space-y-2 border-l-gray-500 border-l-2">
+                                        <h1 className="">Total Belanja</h1>
+                                        <h1 className="font-bold">Rp 10000</h1>
+                                      </div>
                                     </div>
+                                  </>
+                                ))}
+                                <div id="total-section" className="flex flex-row p-2 bg-gray-400">
+                                  <div id="total-details" className="w-1/3 lg:hidden">
+                                    <h1 className="text-xs">Total Belanja</h1>
+                                    <h1 className="text-xs">Rp 10000</h1>
                                   </div>
-                                </div>
-                                <div>
-                                  <p>komen bang</p>
+                                  <div className="w-1/3 hidden lg:flex lg:flex-row lg:justify-start lg:items-center">
+                                    <HiShoppingCart className="mr-1" />
+                                    renderTransactionDate
+                                  </div>
+                                  <div id="transaction-actions" className="w-2/3 lg:w-full flex flex-row justify-end space-x-2">
+                                    renderActionButtons
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -566,8 +794,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                   image: true,
                   description: true,
                   price: true,
-                  stock: true
-                }
+                  stock: true,
+                },
               }
             }
           },
@@ -592,24 +820,57 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
   })
 
-  const transactionList = await prisma.shop.findUnique({
-    where: {
-      userId: session?.user?.id
-    },
-    include: {
-      transaction: {
-        select: {
-          status: true
-        }
-      }
-    }
-  })
+  // const transactionList = await prisma.transaction.findMany({
+  //   where: {
+  //     shopId: shop2?.id
+  //   },
+  //   // include:{
+  //   //   order:{
+  //   //     include: {
+  //   //       product: true
+  //   //     }
+  //   //   }
+  //   // }
+  // })
+  // const orderList = await prisma.order.findFirst({
+  //   // take: 1,
+  //   where: {
+  //     transactionId: transactionList?.id
+  //   },
+  //   select: {
+  //     id: true,
+  //     transactionId: true,
+  //     productId: true,
+  //     count: true,
+  //     product: true
+  //   }
+  // })
+
+  // const productList = await prisma.product.findFirst({
+  //   take: 1,
+  //   where: {
+  //     shopId: transactionList?.shopId
+  //   },
+  //   select: {
+  //     id: true,
+  //     shopId: true,
+  //     categoryId: true,
+  //     name: true,
+  //     image: true,
+  //     description: true,
+  //     price: true,
+  //     stock: true
+  //   }
+  // })
+
+
+  // const takeId  = shop2?.transaction.length
 
   // const dateMap = shop.map((asw)=> ({
   //   ...asw,
   //   transaction: {
   //     ...asw.transaction,
-  //     order:{
+  //     order:{()
   //       ...asw.transaction.order
   //     }
   //     // Rating:{
@@ -619,10 +880,19 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   // createdAt: asw.createdAt.toISOString(),
   // updatedAt: asw.updatedAt.toISOString()
   // }))
+  // const firstOrder = shop2?.transaction.map((trans) => (
+  //   trans.order.map((orders) => (
+  //     orders
+  //   ))
+  // ))
+  // const orders = firstOrder?.product[firstOrder.product.length - 1]
+  // console.log('shop2', shop2?.transaction)
   return {
     props: {
       shop: JSON.parse(JSON.stringify(shop2)),
-      transaction: JSON.parse(JSON.stringify(transactionList))
+      // transaction: JSON.parse(JSON.stringify(transactionList))
+      // product: JSON.parse(JSON.stringify(productList)),
+      // order: JSON.parse(JSON.stringify(orderList))
     },
   }
   // finishedOrders: JSON.parse(JSON.stringify(finishedOrders))
