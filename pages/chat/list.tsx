@@ -16,6 +16,8 @@ interface Message {
   recipientId: string;
   sender: User;
   recipient: User;
+  createdAt: Date,
+  isSeen: boolean,
 }
 
 interface User {

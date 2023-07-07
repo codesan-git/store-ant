@@ -19,6 +19,8 @@ interface Message {
   recipientId: string;
   sender: User;
   recipient: User;
+  createdAt: Date,
+  isSeen: boolean,
 }
 
 interface User {
@@ -43,8 +45,10 @@ const Chat = ({ hidden, onClose } : Props) => {
 
   const [conversations, setConversations] = useState<Conversation[]>();
   const [chatroomModalIsHidden, setChatroomModalIsHidden] = useState<boolean>(true);
+  const [selectedConversation, setSelectedConversation] = useState<Conversation>();
+  const [selectedRecepient, setSelectedRecepient] = useState<User>();
 
-  const fetchConversations = async () =>{
+  const fetchConversations = async () => {
     const res = await axios.get("/api/chat");
     setConversations(res.data.conversations);
   }
@@ -54,22 +58,33 @@ const Chat = ({ hidden, onClose } : Props) => {
   });
 
 
-  const chatroomItemOnClick = () => {
+  const chatroomItemOnClick = (conversation: Conversation) => {
     setChatroomModalIsHidden(false);
+    setSelectedConversation(conversation);
+
+    const latestMessage = conversation.messages.at(conversation.messages.length-1);
+    const recepient = getRecepient(latestMessage!);
+    setSelectedRecepient(recepient);
+  }
+
+  const getRecepient = (latestMessage: Message) : User => {
+    let recepient; //TODO: create user names variable in Conversation Model
+
+    if(latestMessage?.recipientId === session?.user.id) recepient = latestMessage?.sender;
+    else recepient = latestMessage?.recipient;
+
+    return recepient;
   }
 
 
   const chatroomItem = (conversation: Conversation) => {
 
-    let recepient; //TODO: create user names variable in Conversation Model
-
     const latestMessage = conversation.messages.at(conversation.messages.length-1);
 
-    if(latestMessage?.recipientId === session?.user.id) recepient = latestMessage?.sender;
-    else recepient = latestMessage?.recipient;
+    const recepient = getRecepient(latestMessage!);
 
     return (
-      <div onClick={chatroomItemOnClick} className="flex flex-row h-24 bg-gray-300 hover:bg-gray-500 transition hover:cursor-pointer">
+      <div onClick={() => chatroomItemOnClick(conversation)} className="flex flex-row h-24 bg-gray-300 hover:bg-gray-500 transition hover:cursor-pointer">
         <div id="recepient-image-container" className="w-1/4 flex justify-center items-center">
           <img
             src={recepient?.image} 
@@ -84,18 +99,25 @@ const Chat = ({ hidden, onClose } : Props) => {
     );
   }
 
-  const chatroomItemForModal = () => {
+  const chatroomItemForModal = (conversation: Conversation) => {
+
+    const latestMessage = conversation.messages.at(conversation.messages.length-1);
+
+    const recepient = getRecepient(latestMessage!);
+
     return (
-      <div onClick={chatroomItemOnClick} className="flex flex-row h-24 bg-gray-300 hover:bg-gray-500 transition hover:cursor-pointer">
+      <div onClick={() => chatroomItemOnClick(conversation)} className="flex flex-row h-24 bg-gray-300 hover:bg-gray-500 transition hover:cursor-pointer">
         <div id="recepient-image-container" className="w-1/4 flex justify-center items-center">
-          <div className="w-14 h-14 rounded-full bg-purple-300">
-          </div>
+          <img
+            src={recepient?.image} 
+            className="w-14 h-14 rounded-full bg-purple-300"
+          />
         </div>
         <div id="chatroom-item-details" className="w-3/4 p-4 flex flex-col items-start">
           <div className="w-full flex flex-row">
-            <h1 className="font-bold">TokoAgung</h1>
+            <h1 className="font-bold">{recepient?.name.toString()}</h1>
             <div className="w-full flex justify-end items-center">
-              <h1 className="text-sm">2/6/2023</h1>
+              <h1 className="text-sm">{latestMessage?.message.toString()}</h1>
             </div>
           </div>
           <p id="last-message" className="text-sm truncate w-60 h-48">Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit minima vero saepe assumenda illum nostrum voluptate ex, est itaque dolores enim maiores laborum odit porro ratione animi, nam corporis similique.</p>
@@ -104,7 +126,15 @@ const Chat = ({ hidden, onClose } : Props) => {
     );
   }
 
-  const messageElement = (isSender: boolean) => {
+  const messageElement = (message: Message) => {
+
+    let isSender: boolean;
+
+    if (message.senderId === session?.user.id) isSender = true;
+    else isSender = false;
+
+  const messageDate = new Date(message.createdAt);
+
 
     const userMessageContainerStyle = "w-full px-4 py-2 flex justify-end";
     const userMessageBoxStyle = "rounded-lg w-2/3 p-4 bg-green-400 shadow-xl space-y-2"
@@ -116,15 +146,19 @@ const Chat = ({ hidden, onClose } : Props) => {
       <div id="message-container" className={(isSender) ? userMessageContainerStyle : recieverMessageContainerStyle}>
         <div id="message-box" className={(isSender) ? userMessageBoxStyle : recieverMessageBoxStyle}>
           <div id="message-text-container" className="">
-            <p className="">Lorem ipsum dolor sit amet consectetur aaaaaaa adipisicing elit. Accusantium officiis sunt aliquid totam! Soluta nesciunt beatae magnam incidunt officiis non saepe, commodi similique molestias facilis libero voluptates, sapiente pariatur quibusdam.</p>
+            <p className="">{message.message}</p>
           </div>
           <div id="message-date" className="flex justify-end items-center space-x-2">
             <BsCheck2 className="w-4 h-4 lg:w-6 lg:h-6"/>
-            <h1 className="text-xs lg:text-base">2 July 2023, 10:30 WIB</h1>
+            <h1 className="text-xs lg:text-base">{messageDate.toDateString()}</h1>
           </div>
         </div>
       </div>
     );
+  }
+  
+  const chatroom = () => {
+    
   }
   
   return (
@@ -147,11 +181,13 @@ const Chat = ({ hidden, onClose } : Props) => {
           <section hidden={hidden} id="chatroom-web" className="w-3/4">
             <div id="chat-chatroom-details" className="h-1/6 p-2 bg-gray-400 flex flex-row space-x-4">
               <div className="w-16 flex justify-center items-center">
-                <div className="w-10 h-10 rounded-full bg-purple-300">
-                </div>  
+                <img 
+                  src={selectedRecepient?.image}
+                  className="w-10 h-10 rounded-full bg-purple-300">
+                </img>  
               </div>
               <div id="recepient-and-status" className="flex flex-col items-start w-1/2">
-                <h1 className="text-xl">TokoAgung</h1>
+                <h1 className="text-xl">{selectedRecepient?.name.toString()}</h1>
                 <div className="flex flex-row justify-center items-center space-x-1">
                   <div className="w-2 h-2 rounded-full bg-green-600"></div>
                   <h1 className="text-xs">Online</h1>
@@ -162,15 +198,11 @@ const Chat = ({ hidden, onClose } : Props) => {
               </div>
             </div>
             <div className="h-4/6 overflow-y-auto flex flex-col-reverse">
-              {messageElement(true)}
-              {messageElement(false)}
-              {messageElement(true)}
-              {messageElement(false)}
-              {messageElement(true)}
-              {messageElement(false)}
-              {messageElement(true)}
-              {messageElement(true)}
-              {messageElement(false)}
+              {
+                (selectedConversation) 
+                ? selectedConversation.messages.map((m) => messageElement(m)) 
+                : <div>No Conversation</div>
+              }
             </div>
             <div className="h-1/6 flex flex-row bg-gray-400">
               <div className="w-full flex flex-row justify-center items-center p-2 relative">
@@ -202,16 +234,7 @@ const Chat = ({ hidden, onClose } : Props) => {
               </div>
             </div>
             <div id="chatlist" className="h-5/6 flex flex-col overflow-y-auto">
-              {chatroomItemForModal()}
-              {chatroomItemForModal()}
-              {chatroomItemForModal()}
-              {chatroomItemForModal()}
-              {chatroomItemForModal()}
-              {chatroomItemForModal()}
-              {chatroomItemForModal()}
-              {chatroomItemForModal()}
-              {chatroomItemForModal()}
-              {chatroomItemForModal()}
+              {conversations?.map((c) => chatroomItemForModal(c))}
             </div>
           </div>
         </div>
@@ -224,12 +247,14 @@ const Chat = ({ hidden, onClose } : Props) => {
                 <MdArrowBack className="w-6 h-6"/>
               </button>
               <div className="w-16 flex justify-center items-center">
-                <div className="w-10 h-10 rounded-full bg-purple-300">
-                </div>  
+                <img 
+                  src={selectedRecepient?.image}
+                  className="w-10 h-10 rounded-full bg-purple-300">
+                </img>  
               </div>
               <div id="recepient-and-status" className="flex flex-col items-start w-1/2">
                 <div>
-                  <h1 className="text-xl font-bold">TokoAgung</h1>
+                  <h1 className="text-xl font-bold">{selectedRecepient?.name}</h1>
 
                 </div>
                 <div className="flex flex-row justify-center items-center space-x-1">
@@ -242,15 +267,11 @@ const Chat = ({ hidden, onClose } : Props) => {
               </div>
             </div>
             <div id="chatlist" className="h-5/6 flex flex-col overflow-y-auto">
-              {messageElement(true)}
-              {messageElement(false)}
-              {messageElement(true)}
-              {messageElement(false)}
-              {messageElement(true)}
-              {messageElement(false)}
-              {messageElement(true)}
-              {messageElement(true)}
-              {messageElement(false)}
+              {
+                (selectedConversation) 
+                ? selectedConversation.messages.map((m) => messageElement(m)) 
+                : <div>No Conversation</div>
+              }
             </div>
             <div className="flex flex-row w-full bg-gray-400">
               <div className="w-5/6 flex flex-row justify-center items-center p-2 relative">
