@@ -12,6 +12,7 @@ import ReviewModal from "@/components/transactions/review_modal";
 import Footer from "./footer";
 import Navbar from "./navbar";
 import ShopItem from "@/components/shop/shop_item";
+import SellerDashboard from "@/components/shop/seller_dashboard";
 
 interface CartId {
   id: Number;
@@ -164,7 +165,7 @@ const OrdersMania = ({ transactions } : { transactions: Transaction[]}) => {
       <Navbar />
       <div className="flex lg:flex-row flex-col py-4 space-y-2 lg:space-y-0 lg:space-x-2">
         <div id="transactions-dashboard-container" className="lg:w-1/6 lg:h-full lg:sticky lg:top-24">
-          <TransactionsDashboard TransactionDashboardArguments={TransactionDashboardArguments}/>
+          <SellerDashboard TransactionDashboardArguments={TransactionDashboardArguments}/>
         </div>
         <div className="w-full p-2 space-y-2 bg-gray-100">
           <div className="w-full p-2 text-3xl">
