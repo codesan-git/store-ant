@@ -105,6 +105,8 @@ const Chat = ({ hidden, onClose } : Props) => {
 
     const recepient = getRecepient(latestMessage!);
 
+    const latestMessageDate = new Date(latestMessage!.createdAt);
+
     return (
       <div onClick={() => chatroomItemOnClick(conversation)} className="flex flex-row h-24 bg-gray-300 hover:bg-gray-500 transition hover:cursor-pointer">
         <div id="recepient-image-container" className="w-1/4 flex justify-center items-center">
@@ -115,12 +117,12 @@ const Chat = ({ hidden, onClose } : Props) => {
         </div>
         <div id="chatroom-item-details" className="w-3/4 p-4 flex flex-col items-start">
           <div className="w-full flex flex-row">
-            <h1 className="font-bold">{recepient?.name.toString()}</h1>
+            <h1 className="font-bold w-1/2">{recepient?.name.toString()}</h1>
             <div className="w-full flex justify-end items-center">
-              <h1 className="text-sm">{latestMessage?.message.toString()}</h1>
+              <h1 className="text-sm">{latestMessageDate.toDateString()}</h1>
             </div>
           </div>
-          <p id="last-message" className="text-sm truncate w-60 h-48">Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit minima vero saepe assumenda illum nostrum voluptate ex, est itaque dolores enim maiores laborum odit porro ratione animi, nam corporis similique.</p>
+          <p id="last-message" className="text-sm truncate w-60 h-48">{latestMessage?.message.toString()}</p>
         </div>
       </div>
     );
@@ -133,7 +135,7 @@ const Chat = ({ hidden, onClose } : Props) => {
     if (message.senderId === session?.user.id) isSender = true;
     else isSender = false;
 
-  const messageDate = new Date(message.createdAt);
+    const messageDate = new Date(message.createdAt);
 
 
     const userMessageContainerStyle = "w-full px-4 py-2 flex justify-end";
@@ -149,7 +151,7 @@ const Chat = ({ hidden, onClose } : Props) => {
             <p className="">{message.message}</p>
           </div>
           <div id="message-date" className="flex justify-end items-center space-x-2">
-            <BsCheck2 className="w-4 h-4 lg:w-6 lg:h-6"/>
+            {(message.isSeen) ? <BsCheck2All className="w-4 h-4 lg:w-6 lg:h-6"/> : <BsCheck2 className="w-4 h-4 lg:w-6 lg:h-6"/>}
             <h1 className="text-xs lg:text-base">{messageDate.toDateString()}</h1>
           </div>
         </div>
