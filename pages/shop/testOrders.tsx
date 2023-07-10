@@ -769,7 +769,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
               Rating: {
                 select: {
                   id: true,
-                  oderId: true,
+                  orderId: true,
                   comment: true,
                   rate: true,
                   image: true
@@ -778,7 +778,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
               Complain: {
                 select: {
                   id: true,
-                  oderId: true,
+                  orderId: true,
                   status: true,
                   description: true,
                   ShopComment: true,
