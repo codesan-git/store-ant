@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
 import { prisma } from "../../../lib/prisma"
-import { Status, TransactionStatus } from '@prisma/client'
+import { TransactionStatus } from '@prisma/client'
 
 export default async function handler(
   req: NextApiRequest,
@@ -40,7 +40,7 @@ export default async function handler(
     let parameter = {
         "payment_type": "gopay",
         "transaction_details": {
-            "order_id": transactionData.id,
+            "order_id": id,
             "gross_amount": Number(price) - Number(session?.user?.balance!)
         },
         "callbacks": {
@@ -71,6 +71,6 @@ export default async function handler(
             balance: currentBalance
         }
     })
-    res.status(200).json({ token: "", redirectUrl: `http://localhost:3000/redirect?order_id=${transaction.id}&status_code=200&transaction_status=settlement` })
+    res.status(200).json({ token: "", redirectUrl: `http://localhost:3000/redirect?order_id=${id}&status_code=200&transaction_status=settlement` })
   }
 }

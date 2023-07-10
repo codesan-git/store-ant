@@ -44,7 +44,7 @@ export default async function handler(
   let parameter = {
     "payment_type": "gopay",
     "transaction_details": {
-        "order_id": transactionData?.id!,
+        "order_id": id!,
         "gross_amount": price
     },
     "callbacks": {

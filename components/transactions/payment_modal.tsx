@@ -55,13 +55,13 @@ const PaymentModal = ({htmlElementId: id, selectProductCallback} : Props) => {
   };
 
   async function onBayar() {
-    const params : Params = {id: selectedTransaction.id, price: totalPrice};
+    const params : Params = {id: selectedTransaction.id, price: totalPrice + cost?.cost[0].value!};
     const transactionToken : TransactionToken = (await axios.post(`http://localhost:3000/api/cart/pay`, params)).data;
     window.open(transactionToken.redirectUrl);
   }
 
   async function onBayarDenganSaldo() {
-    const params : Params = {id: selectedTransaction.id, price: totalPrice};
+    const params : Params = {id: selectedTransaction.id, price: totalPrice + cost?.cost[0].value!};
     const transactionToken : TransactionToken = (await axios.post(`http://localhost:3000/api/cart/paywithbalance`, params)).data;
     window.open(transactionToken.redirectUrl);
   }
@@ -94,7 +94,7 @@ const PaymentModal = ({htmlElementId: id, selectProductCallback} : Props) => {
 
   useEffect(() => {
     getCost();
-  });
+  }, []);
 
   return (
     <>

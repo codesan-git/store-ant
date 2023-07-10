@@ -45,13 +45,12 @@ export default async function handler(
     const { fields, files } = await readFile(req, true);
     const {orderId, description} = fields;
     const session = await getSession({req})
-    console.log("ID = ", productInCartId);
     const order = await prisma.order.update({
         where: {
             id: Number(orderId as string)
         },
         data:{
-            status: OrderStatus.RETURNING
+            OrderStatus: OrderStatus.RETURNING
         }
     })
    
@@ -75,7 +74,7 @@ export default async function handler(
         // // // CREATE
         const complain = await prisma.complain.create({
             data: {
-                orderId: orderId!,
+                orderId: Number( orderId),
                 description: description as string,
                 image: imageUrl.join(",")
             }

@@ -16,16 +16,10 @@ export default async function handler(
     const transaction = await prisma.transaction.findMany({
         where:{
             shopId: shop?.id!,
-        },
-        select:{
-            id: true,
-            productId: true,
-            count: true,
-            // status: true
         }
     })
 
-    res.status(200).json({productInCart})
+    res.status(200).json({transaction})
   } catch (error) {
     //console.log(error)
     res.status(400).json({ message: "Fail" })

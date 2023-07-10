@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
 import { prisma } from "../../../lib/prisma"
+import { TransactionStatus } from '@prisma/client'
 
 export default async function handler(
   req: NextApiRequest,
@@ -53,14 +54,27 @@ export default async function handler(
         }
     })
   }else{
-    const productInCart = await prisma.productInCart.create({
-      data:{
-          cartId: cart.id,
-          productId: Number(productId),
-          count: Number(count)
-      },
+    const product = await prisma.product.findFirst({
+      where: {id: productId}
     })
-    console.log("insert: ", productInCart);
+
+    let transaction = await prisma.transaction.create({
+      data:{
+        userId: session?.user.id!,
+        shopId: product?.shopId!,
+        paymentMethod: "",
+        status: TransactionStatus.UNPAID
+      }
+    });
+
+    let order = await prisma.order.create({
+      data:{
+        transactionId: transaction.id!,
+        productId: productId!,
+        count: Number(count),
+      }
+    });
+    console.log("insert: ", order);
   }
   res.status(200).json({ message: "Success" })
 

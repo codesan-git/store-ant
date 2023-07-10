@@ -2,7 +2,11 @@ import { TransactionStatus, Product } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment, useState } from "react";
-import { HiChevronDown, HiChevronUp } from "react-icons/hi2";
+import {
+    HiChevronDown, HiChevronUp, HiHome, HiChartPie, HiChatBubbleBottomCenterText,
+    HiShoppingBag, HiCurrencyDollar,
+    HiPencilSquare
+} from "react-icons/hi2";
 
 interface Props {
     shop: {
@@ -51,6 +55,7 @@ const SellerDashboard = ({ TransactionDashboardArguments, shop }: Props) => {
     } = TransactionDashboardArguments();
 
     const [berlangsungIsOpen, setBerlangsungIsOpen] = useState<Boolean>(false);
+    const [isSalesDropdownClosed, setIsSalesDropdownClosed] = useState<boolean>(false);
 
     //I'm losing my mind just to make this work - Peter D. //((semangat))
     const menungguPembayaranOnClick = () => {
@@ -104,7 +109,7 @@ const SellerDashboard = ({ TransactionDashboardArguments, shop }: Props) => {
                     <div id="berlangsung-modal-content">
                         <ul>
                             <li>
-                                <div onClick={menungguKonfirmasiOnClick} className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300">
+                                <div onClick={menungguKonfirmasiOnClick} className="flex justify-start p-1 w-auto h-12 text-xs font-normal hover:bg-gray-300 transition duration-300">
                                     <div className="flex justify-center items-center text-center lg:pl-6">
                                         Menunggu Konfirmasi
                                     </div>
@@ -158,7 +163,7 @@ const SellerDashboard = ({ TransactionDashboardArguments, shop }: Props) => {
                 <div id="photo-and-details-container" className="bg-gray-300 flex flex-row lg:flex-col justify-start lg:justify-center items-center px-4 lg:px-2 py-4 lg:space-y-2 space-x-4 lg:space-x-0">
                     <div id="profile-photo-container" className="">
                         <div className="w-16 lg:w-24 rounded-full border border-black">
-                            <Image src={`http://localhost:3000/${shop?.image}`} alt="" width={300} height={300} className="rounded-full" />
+                            <Image src={`http://localhost:3000/${shop?.image}`} alt="" width={500} height={300} className="rounded-full" />
                         </div>
                     </div>
                     <div id="shop-details-container" className="flex flex-col items-start lg:items-center lg:space-y-1">
@@ -172,73 +177,151 @@ const SellerDashboard = ({ TransactionDashboardArguments, shop }: Props) => {
                         <h1 className="text-sm lg:hidden">Kas: {formatKas()}</h1>
                     </div>
                 </div>
-                <div id="title-container" className="hidden lg:block pt-4 px-4">
-                    <h1 className="text-3xl">Pembelian</h1>
+                <div id="shop-stats" className="bg-gray-300 invisible lg:visible lg:py-2 lg:px-4 h-2 lg:h-auto border border-y-gray-600">
+                    <h1 className="">Kas: {formatKas()}</h1>
                 </div>
-                <div id="transactions-dashboard-navigation" className="">
-                    <ul className="flex flex-row lg:flex-col lg:h-auto space-x-2 lg:space-x-0 overflow-x-auto lg:overflow-visible ">
-                        <li>
-                            <div onClick={menungguPembayaranOnClick} className="flex justify-center lg:justify-start p-1 lg:p-4 w-32 lg:w-auto h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300 hover:cursor-pointer"> {/*TODO: reduce centering classnames*/}
-                                <span className="flex justify-center items-center text-center">
-                                    Menungggu Pembayaran
-                                </span>
-                            </div>
+                {/* <div id="title-container" className="hidden lg:block pt-4 px-4">
+                    <h1 className="text-3xl">Pembelian</h1>
+                </div> */}
+                <div id="shop-dashboard-navigation" className="lg:p-2 lg:bg-gray-300">
+                    <ul className="flex flex-row overflow-y-auto space-x-2 lg:space-x-0 lg:flex-col">
+                        <li className="bg-gray-300 lg:bg-none">
+                            <Link href={'/shop'} className="flex p-2 text-base font-normal rounded-lg transition duration-200 hover:bg-gray-300">
+                                <HiHome className="h-6 w-6" />
+                                <span className="ml-3">Home</span>
+                            </Link>
                         </li>
-                        <li id="berlangsung-mobile-version" className="lg:hidden">
-                            <button className="flex justify-center lg:justify-start items-center text-center p-2 lg:p-4 w-32 lg:w-full h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300 " onClick={() => setBerlangsungIsOpen(true)}>
+                        <li className="bg-gray-300 lg:bg-none">
+                            <Link href={''} className="flex p-2 text-base font-normal rounded-lg transition duration-200 hover:bg-gray-300">
+                                <HiChatBubbleBottomCenterText className="h-6 w-6" />
+                                <span className="ml-3">Chat</span>
+                            </Link>
+                        </li>
+                        {/* <li id="sales-mobile-version" className="lg:hidden bg-gray-300 lg:bg-none">
+                            <button onClick={() => { setIsSalesDropdownClosed(false) }} className="flex items-center whitespace-nowrap w-full p-2 text-base font-normal rounded-lg hover:bg-gray-300">
+                                <HiCurrencyDollar className="h-6 w-6" />
+                                <span className="flex-1 ml-3 text-left">Sales</span>
+                                {isSalesDropdownClosed ? <HiChevronDown className="h-6 w-6" /> : <HiChevronUp className="h-6 w-6" />}
+                            </button>
+                        </li> */}
+                        <li id="berlangsung-mobile-version" className="lg:hidden bg-gray-300 lg:bg-none">
+                            <button className="flex p-2 text-base font-normal rounded-lg transition duration-200 hover:bg-gray-300 " onClick={() => setBerlangsungIsOpen(true)}>
+                                <HiCurrencyDollar className="h-6 w-6" />
                                 <span className="flex-1 text-left ml-1 lg:ml-0">
-                                    Berlangsung
+                                    Sales
                                 </span>
                                 {berlangsungIsOpen ? <HiChevronUp className="h-6 w-6" /> : <HiChevronDown className="h-6 w-6" />}
                             </button>
                         </li>
-                        <li id="berlangsung-web-version" className="hidden lg:block">
-                            <button className="flex justify-center lg:justify-start items-center text-center p-2 lg:p-4 w-32 lg:w-full h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300" onClick={() => setBerlangsungIsOpen(!berlangsungIsOpen)}>
-                                <span className="flex-1 text-left ml-1 lg:ml-0">
-                                    Berlangsung
+                        <li hidden id="sales-web-version" className="hidden lg:block bg-gray-300 lg:bg-none">
+                            <button className="flex p-2 text-base font-normal rounded-lg transition duration-200 hover:bg-gray-300 " onClick={() => setIsSalesDropdownClosed(true)}>
+                                <HiCurrencyDollar className="h-6 w-6" />
+                                <span className="flex-1 ml-3 text-left">
+                                    Sales
                                 </span>
-                                {berlangsungIsOpen ? <HiChevronUp className="h-6 w-6" /> : <HiChevronDown className="h-6 w-6" />}
+                                {isSalesDropdownClosed ? <HiChevronUp className="h-6 w-6" /> : <HiChevronDown className="h-6 w-6" />}
                             </button>
-                            <ul hidden={!berlangsungIsOpen.valueOf()} className="bg-gray-400">
+                            <ul hidden={!isSalesDropdownClosed.valueOf()} className="flex flex-row lg:flex-col lg:h-auto space-x-2 lg:space-x-0 overflow-x-auto lg:overflow-visible ">
                                 <li>
-                                    <div onClick={menungguKonfirmasiOnClick} className="flex justify-center lg:justify-start p-1 lg:p-4 w-32 lg:w-auto h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300 hover:cursor-pointer">
-                                        <span className="flex justify-center items-center text-center lg:pl-6">
-                                            Menunggu Konfirmasi
+                                    <div onClick={menungguPembayaranOnClick} className="flex justify-center lg:justify-start p-1 lg:p-4 w-32 lg:w-auto h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300 hover:cursor-pointer"> {/*TODO: reduce centering classnames*/}
+                                        <span className="flex justify-center items-center text-center">
+                                            Menungggu Pembayaran
+                                        </span>
+                                    </div>
+                                </li>
+                                <li id="berlangsung-mobile-version" className="lg:hidden">
+                                    <button className="flex justify-center lg:justify-start items-center text-center p-2 lg:p-4 w-32 lg:w-full h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300 " onClick={() => setBerlangsungIsOpen(true)}>
+                                        <span className="flex-1 text-left ml-1 lg:ml-0">
+                                            Berlangsung
+                                        </span>
+                                        {berlangsungIsOpen ? <HiChevronUp className="h-6 w-6" /> : <HiChevronDown className="h-6 w-6" />}
+                                    </button>
+                                    <ul hidden={!berlangsungIsOpen.valueOf()} className="bg-gray-400">
+                                        <li>
+                                            <div onClick={menungguKonfirmasiOnClick} className="flex justify-center lg:justify-start p-1 lg:p-4 w-32 lg:w-auto h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300 hover:cursor-pointer">
+                                                <span className="flex justify-center items-center text-center lg:pl-6">
+                                                    Menunggu Konfirmasi
+                                                </span>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div onClick={pesananDiprosesOnClick} className="flex justify-center lg:justify-start p-1 lg:p-4 w-32 lg:w-auto h-12 text-sm font-normal rounded-sm lg:rounded-none hover:bg-gray-300 transition duration-300 hover:cursor-pointer">
+                                                <div className="flex justify-center items-center text-center lg:pl-6">
+                                                    Pesanan Diproses
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div onClick={pesananDikirimOnClick} className="flex justify-center lg:justify-start p-1 lg:p-4 w-32 lg:w-auto h-12 text-sm font-normal rounded-sm lg:rounded-none hover:bg-gray-300 transition duration-300 hover:cursor-pointer">
+                                                <div className="flex justify-center items-center text-center lg:pl-6">
+                                                    Pesanan Dikirim
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li hidden={!isSalesDropdownClosed.valueOf()} id="berlangsung-web-version" className="hidden lg:block">
+                                    <button className="flex justify-center lg:justify-start items-center text-center p-2 lg:p-4 w-32 lg:w-full h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300" onClick={() => setBerlangsungIsOpen(!berlangsungIsOpen)}>
+                                        <span className="flex-1 text-left ml-1 lg:ml-0">
+                                            Berlangsung
+                                        </span>
+                                        {berlangsungIsOpen ? <HiChevronUp className="h-6 w-6" /> : <HiChevronDown className="h-6 w-6" />}
+                                    </button>
+                                    <ul hidden={!berlangsungIsOpen.valueOf()} className="bg-gray-400">
+                                        <li>
+                                            <div onClick={menungguKonfirmasiOnClick} className="flex justify-center lg:justify-start p-1 lg:p-4 w-32 lg:w-auto h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300 hover:cursor-pointer">
+                                                <span className="flex justify-center items-center text-center lg:pl-6">
+                                                    Menunggu Konfirmasi
+                                                </span>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div onClick={pesananDiprosesOnClick} className="flex justify-center lg:justify-start p-1 lg:p-4 w-32 lg:w-auto h-12 text-sm font-normal rounded-sm lg:rounded-none hover:bg-gray-300 transition duration-300 hover:cursor-pointer">
+                                                <div className="flex justify-center items-center text-center lg:pl-6">
+                                                    Pesanan Diproses
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div onClick={pesananDikirimOnClick} className="flex justify-center lg:justify-start p-1 lg:p-4 w-32 lg:w-auto h-12 text-sm font-normal rounded-sm lg:rounded-none hover:bg-gray-300 transition duration-300 hover:cursor-pointer">
+                                                <div className="flex justify-center items-center text-center lg:pl-6">
+                                                    Pesanan Dikirim
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <div onClick={berhasilOnClick} className="flex justify-center lg:justify-start items-center text-center p-1 lg:p-4 w-32 lg:w-full h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300 hover:cursor-pointer">
+                                        <span className="flex justify-center items-center text-center">
+                                            Berhasil
                                         </span>
                                     </div>
                                 </li>
                                 <li>
-                                    <div onClick={pesananDiprosesOnClick} className="flex justify-center lg:justify-start p-1 lg:p-4 w-32 lg:w-auto h-12 text-sm font-normal rounded-sm lg:rounded-none hover:bg-gray-300 transition duration-300 hover:cursor-pointer">
-                                        <div className="flex justify-center items-center text-center lg:pl-6">
-                                            Pesanan Diproses
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div onClick={pesananDikirimOnClick} className="flex justify-center lg:justify-start p-1 lg:p-4 w-32 lg:w-auto h-12 text-sm font-normal rounded-sm lg:rounded-none hover:bg-gray-300 transition duration-300 hover:cursor-pointer">
-                                        <div className="flex justify-center items-center text-center lg:pl-6">
-                                            Pesanan Dikirim
-                                        </div>
+                                    <div onClick={tidakBerhasilOnClick} className="flex justify-center lg:justify-start items-center text-center p-1 lg:p-4 w-32 lg:w-full h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300 hover:cursor-pointer">
+                                        <span className="flex justify-center items-center text-center">
+                                            Tidak Berhasil
+                                        </span>
                                     </div>
                                 </li>
                             </ul>
                         </li>
-                        <li>
-                            <div onClick={berhasilOnClick} className="flex justify-center lg:justify-start items-center text-center p-1 lg:p-4 w-32 lg:w-full h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300 hover:cursor-pointer">
-                                <span className="flex justify-center items-center text-center">
-                                    Berhasil
-                                </span>
-                            </div>
+                        <li className="bg-gray-300 lg:bg-none">
+                            <Link href={''} className="flex p-2 text-base font-normal rounded-lg transition duration-200 hover:bg-gray-300">
+                                <HiChartPie className="h-6 w-6" />
+                                <span className="ml-3">Stats</span>
+                            </Link>
                         </li>
-                        <li>
-                            <div onClick={tidakBerhasilOnClick} className="flex justify-center lg:justify-start items-center text-center p-1 lg:p-4 w-32 lg:w-full h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300 hover:cursor-pointer">
-                                <span className="flex justify-center items-center text-center">
-                                    Tidak Berhasil
-                                </span>
-                            </div>
+                        <li className="bg-gray-300 lg:bg-none">
+                            <Link href={'/shop/withdrawals'} className="flex p-2 text-base font-normal rounded-lg transition duration-200 hover:bg-gray-300">
+                                <HiChatBubbleBottomCenterText className="h-6 w-6" />
+                                <span className="ml-3">Withdraw</span>
+                            </Link>
                         </li>
                     </ul>
                 </div>
+
             </div>
             {berlangsungBottomModal()}
         </Fragment>

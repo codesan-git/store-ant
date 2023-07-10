@@ -16,7 +16,7 @@ export default async function handler(
     });
 
     const transaction = await prisma.transaction.update({
-        where:{id: Number(id)},
+        where:{id: id},
         data:{
             status: TransactionStatus.CANCEL_REJECTED
         }
