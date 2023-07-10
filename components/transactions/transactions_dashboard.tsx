@@ -38,7 +38,7 @@ const TransactionsDashboard = ({TransactionDashboardArguments}: Props) => {
   }
 
   const pesananDikirimOnClick = () => {
-    setItemsToDisplay(allTransactions?.filter((e: any) => e.status === TransactionStatus.DELIVERING || e.status === TransactionStatus.RETURNING));
+    setItemsToDisplay(allTransactions?.filter((e: any) => e.status === TransactionStatus.DELIVERING || e.status === TransactionStatus.DELIVERED || e.status === TransactionStatus.RETURNING));
     setCurrentSelectedSection("Pesanan Dikirim");
     setChatIsHidden(true);
   }

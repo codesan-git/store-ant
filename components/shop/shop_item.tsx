@@ -120,6 +120,7 @@ const ShopItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinis
   const renderTransactionStatus = () => {
     if (transaction.status === TransactionStatus.UNPAID) return <h1 className="flex justify-end text-sm font-bold">Bayar Sebelum</h1>;
     if (transaction.status === TransactionStatus.DELIVERING) return <h1 className="flex justify-end text-sm font-bold">Sedang Dikirim</h1>;
+    if (transaction.status === TransactionStatus.DELIVERED) return <h1 className="flex justify-end text-sm font-bold">Pesanan Sampai</h1>;
     if (transaction.status === TransactionStatus.CANCELING) return <h1 className="flex justify-end text-sm font-bold text-yellow-600">Pembatalan Diajukan</h1>;
     if (transaction.status === TransactionStatus.RETURNING) return <h1 className="flex justify-end text-sm font-bold text-yellow-600">Pengembalian Diajukan</h1>;
     if (transaction.status === TransactionStatus.CANCELED) return <h1 className="flex justify-end text-sm font-bold text-red-600">Dibatalkan Sistem</h1>; //CANCELED||CANCELED_REJECTED == FAILED

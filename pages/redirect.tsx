@@ -17,8 +17,8 @@ export default function Redirect() {
   }
 
   async function UpdateStatus() {
-    const transactionId:TransactionId = {id: order_id as string};
-    console.log(transactionId);
+    //const transactionId:TransactionId = {id: order_id as string, paymentType: };
+    //console.log(transactionId);
     //await axios.post(`http://localhost:3000/api/cart/success`, transactionId);
   }
 
@@ -49,15 +49,20 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   axios
     .request(options)
     .then(function (response) {
-      console.log(response.data);
+      console.log("error ", response.data);
       if(response.data.status_code == 200){
         const data = {id: context.query.order_id, paymentType: response.data.payment_type};
         console.log("data: ", data);
         axios.post(`http://localhost:3000/api/cart/success`, data);
       }
+      if(response.data.status_code == 404){
+        const data = {id: context.query.order_id, paymentType: "Balance"};
+        console.log("data: ", data);
+        axios.post(`http://localhost:3000/api/cart/success`, data);
+      }
     })
     .catch(function (error) {
-      console.error(error);
+      console.error("error ", error.status_message);
     });
   //const res = await axios.get(`https://api.sandbox.midtrans.com/v2/${order_id}/status`);
 

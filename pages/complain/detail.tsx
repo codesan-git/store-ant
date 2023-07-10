@@ -2,7 +2,7 @@ import React from "react";
 import { GetServerSideProps } from "next";
 import { prisma } from "@/lib/prisma";
 import { useRouter } from "next/router";
-import { User, Shop, Status } from "@prisma/client";
+import { User, Shop, OrderStatus } from "@prisma/client";
 import Navbar from "../navbar";
 
 interface ComplainData {
@@ -10,18 +10,18 @@ interface ComplainData {
     id: number;
     image: string;
     description: string;
-    productInCart: ProductInCart;
+    order: Order;
   };
 }
 
-interface ProductInCart {
+interface Order {
   id: Number;
-  cart: Cart;
+  transaction: Transaction;
   product: Product;
-  status: Status;
+  status: OrderStatus;
 }
 
-interface Cart {
+interface Transaction {
   user: User;
 }
 
@@ -101,20 +101,20 @@ export default function Detail({ complain }: ComplainData) {
           <div className="w-full">
             <div className="py-5 px-10 flex w-full">
               <div>
-                <p>Complain By: {complain.productInCart.cart.user.name}</p>
-                <p>Product: {complain.productInCart.product.name}</p>
-                <p>Shop: {complain.productInCart.product.shop.shopName}</p>
+                <p>Complain By: {complain.order.transaction.user.name}</p>
+                <p>Product: {complain.order.product.name}</p>
+                <p>Shop: {complain.order.product.shop.shopName}</p>
                 <p>Deskripsi: {complain.description}</p>
                 <p>
                   Status:{" "}
-                  {complain.productInCart.status === Status.NEED_ADMIN_REVIEW
+                  {complain.order.status === OrderStatus.NEED_ADMIN_REVIEW
                     ? "Toko menolak pengembalian, menunggu tanggapan admin"
                     : "Menunggu tanggapan toko"}{" "}
                 </p>
                 <div>
-                  {complain.productInCart.status === Status.RETURNED || complain.productInCart.status === Status.RETURN_REJECTED ? (
+                  {complain.order.status === OrderStatus.RETURNED || complain.order.status === OrderStatus.RETURN_REJECTED ? (
                     <div>
-                        <p>Persetujuan {complain.productInCart.status === Status.RETURNED ? "Diterima" : "Ditolak"}</p>
+                        <p>Persetujuan {complain.order.status === OrderStatus.RETURNED ? "Diterima" : "Ditolak"}</p>
                     </div>
                   ) : (
                     <></>
@@ -132,14 +132,14 @@ export default function Detail({ complain }: ComplainData) {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { id } = context.query;
   const complain = await prisma.complain.findFirst({
-    where: { productInCartId: Number(id) },
+    where: { orderId: Number(id) },
     select: {
       id: true,
       image: true,
       description: true,
-      productInCart: {
+      order: {
         select: {
-          cart: {
+          transaction: {
             select: {
               user: true,
             },
@@ -153,7 +153,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
               shop: true,
             },
           },
-          status: true,
+          OrderStatus: true,
           id: true
         },
       },
