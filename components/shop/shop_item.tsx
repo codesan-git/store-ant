@@ -152,12 +152,12 @@ const ShopItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinis
               <HiOutlineEllipsisVertical className="text-white" />
             </label>
             <ul tabIndex={0} className="mt-1 dropdown-content menu shadow bg-base-100 rounded-sm w-52">
-              <li className="rounded-sm hover:bg-gray-100 transition duration-300"><a>Tanya Penjual</a></li>
+              <li className="rounded-sm hover:bg-gray-100 transition duration-300 text-red-700 font-bold"><a>Tolak Pesanan</a></li>
               { //I really need to refactor this entire module
                 (transaction.status === TransactionStatus.UNPAID || transaction.status === TransactionStatus.AWAITING_CONFIRMATION || transaction.status === TransactionStatus.PACKING)
                   ? <li className="rounded-sm hover:bg-gray-100 transition duration-300">
                     <label onClick={() => onCancel(transaction)} htmlFor="cancel-alert">
-                      Batalkan
+                      Chat Pembeli
                     </label>
                   </li>
                   // : <li className="rounded-sm hover:bg-gray-100 transition duration-300"><div onClick={()=>onReturn(transaction.id)}>Ajukan Komplain</div></li>
@@ -175,8 +175,11 @@ const ShopItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinis
     if (transaction.status === TransactionStatus.UNPAID) {
       return (
         <Fragment>
-          <label htmlFor="payment-modal" onClick={() => onBayar(transaction)} className="text-xs lg:text-base flex justify-center items-center w-24 h-8 text-white bg-green-500 hover:cursor-pointer">
-            Bayar
+          <label htmlFor="payment-modal" onClick={() => onBayar(transaction)} className="flex justify-center items-center text-xs lg:text-base w-28 lg:w-32 h-8 border-2 border-green-500 text-green-500 cursor-pointer">
+            Detail
+          </label>
+          <label htmlFor="payment-modal" className="flex justify-center items-center text-xs lg:text-base w-32 text-white bg-green-500 hover:cursor-pointer">
+            Terima
           </label>
           {renderExtraActionDropdown()}
         </Fragment>
