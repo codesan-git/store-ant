@@ -23,6 +23,10 @@ import {
   UserCircleIcon,
   Cog6ToothIcon,
 } from "@heroicons/react/24/solid";
+import {
+  BsFillHouseFill
+} from "react-icons/bs"
+import AddressFormModal from "@/components/profile/address_form_modal";
 
 interface FormData {
   username?: string;
@@ -573,26 +577,19 @@ export default function Profile({ profile, address }: Props) {
     {
       label: "Address",
       value: "address",
-      icon: Square3Stack3DIcon,
-      desc: `Because it's about motivating the doers. Because I'm here
-        to follow my dreams and inspire other people to follow their dreams, too.`,
+      icon: BsFillHouseFill,
+      desc: ``,
       code: (
         <>
           <section className="mt-8 flex flex-col gap-5 bg-gray-100 p-10 rounded-md">
             <div className="flex">
-              <div className="title w-full self-center">
-                <input
-                  type="text"
-                  placeholder="Cari alamat atau nama penerima"
-                  className="title input input-bordered input-primary input-group-md w-full max-w-xs rounded-md"
-                />
-              </div>
               <button
                 className="btn btn-primary btn-outline btn-md rounded-md"
                 onClick={() => router.push("/address")}
               >
                 + Tambah Alamat Baru
               </button>
+              <AddressFormModal/>
             </div>
             {address ? (
               <div>
@@ -646,12 +643,15 @@ export default function Profile({ profile, address }: Props) {
       ),
     },
     {
-      label: "Settings",
-      value: "settings",
+      label: "Bank",
+      value: "bank",
       icon: Cog6ToothIcon,
-      desc: `We're not always in the position that we want to be at.
-        We're constantly growing. We're constantly making mistakes. We're
-        constantly trying to express ourselves and actualize our dreams.`,
+      desc: ``,
+      code: (
+        <div>
+
+        </div>
+      )
     },
   ];
 
@@ -665,7 +665,7 @@ export default function Profile({ profile, address }: Props) {
     <>
       <Navbar />
       <div className="flex my-5 w-3/4 mx-auto">
-        <div className="text-center justify-center mt-8 border shadow-md w-72 h-1/2 rounded-lg">
+        {/* <div className="text-center justify-center mt-8 border shadow-md w-72 h-1/2 rounded-lg">
           <div className="grid grid-cols-2 shadow p-2 pr-10">
             <div className="avatar mx-auto">
               <div className="w-16 rounded-full">
@@ -677,10 +677,6 @@ export default function Profile({ profile, address }: Props) {
             </div>
           </div>
           <hr />
-          {/* <div className="details font-bold text-lg">
-            <h5>{session?.user?.name}</h5>
-            <h5>{session?.user?.email}</h5>
-          </div> */}
           <div className="drawer-side">
             <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
             <ul className="menu p-4 w-full bg-base-100 text-base-content">
@@ -695,7 +691,7 @@ export default function Profile({ profile, address }: Props) {
               </li>
             </ul>
           </div>
-        </div>
+        </div> */}
         <div className="w-full mx-10">
           <span className="flex gap-2">
             <HiUser className="my-auto w-5 h-5" />
@@ -720,51 +716,6 @@ export default function Profile({ profile, address }: Props) {
               ))}
             </TabsBody>
           </Tabs>
-
-          {/* <section className="mt-8 flex flex-col gap-10 bg-gray-100 p-10 rounded-md">
-            <div className="flex">
-              <div className="title w-full">
-                <h1 className="text-gray-800 text-4xl font-bold">Address</h1>
-                <p className="mx-auto text-gray-400">Address list</p>
-              </div>
-              <button
-                className={styles.button_square}
-                onClick={() => router.push("/address")}
-              >
-                +
-              </button>
-            </div>
-            {address ? (
-              <div>
-                {address.map((address) => (
-                  <div
-                    className="card w-full bg-base-100 shadow-xl text-sm"
-                    key={String(address.id)}
-                  >
-                    <div className="py-5 px-10 flex w-full">
-                      <div className="w-5/6">
-                        <h2 className="card-title">{address.address}</h2>
-                        <p>
-                          {address.region}, {address.city}, {address.province}
-                        </p>
-                        <p>{address.postcode}</p>
-                      </div>
-                      <div className="card-actions justify-end flex w-fit my-auto ml-5">
-                        <button className="btn btn-primary bg-gradient-to-r from-blue-500 to-indigo-500">
-                          Edit
-                        </button>
-                        <button className="btn btn-primary bg-red-500">
-                          Delete
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p>address not added yet</p>
-            )}
-          </section> */}
         </div>
       </div>
       <Footer />
@@ -774,6 +725,20 @@ export default function Profile({ profile, address }: Props) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context);
+  const account = await prisma.user.findUnique({
+    where: {
+      id: session?.user.id
+    },
+    select: {
+      id: true,
+      bankAccount: {
+        select: {
+          bankTypeId: true,
+          name: true,
+        }
+      }
+    }
+  });
   const profile = await prisma.profile.findUnique({
     where: { userId: session?.user?.id },
     select: {
