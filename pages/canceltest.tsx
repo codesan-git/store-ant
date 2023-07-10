@@ -9,25 +9,21 @@ export default function canceltest() {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   
   var options = {
-    method: 'GET',
-    url: 'https://api.rajaongkir.com/starter/province',
-    headers: {key: '7d840a0e0bb1962debcae4fd1f65fb8e'}
+    headers: { 'key': "7d840a0e0bb1962debcae4fd1f65fb8e"}
   };
 
-  const res = await axios.request(options);
-  const data = res.data.rajaongkir;
-    // .then(function (response) {
-    //   console.log(response.data.rajaongkir);
-    //   data = response.data.rajaongkir;
-    // })
-    // .catch(function (error) {
-    //   console.error(error);
-    // });
-
-    console.log("data: ", data);
+  const form = {
+    origin: '455',
+    destination: '32',
+    weight: Number(100),
+    courier: "jne",
+  };
+  const costRes = await axios.post("https://api.rajaongkir.com/starter/cost", form, options);
+  const cost = costRes.data.rajaongkir.results[0].costs.filter((x) => x.service == "REG")[0].cost;
+  console.log("cost: ", cost);
   return {
     props:{
-      data
+      
     }
   };
 };

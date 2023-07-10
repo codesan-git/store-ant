@@ -14,39 +14,35 @@ export default async function handler(
 
   let convoId;
   
-  // const conversation = await prisma.conversation.findFirst({
-  //   where: { 
-  //     OR: [
-  //       {
-  //         AND: [
-  //           {recipientId: session?.user?.id},
-  //           {senderId: String(recipientId)}
-  //         ]
-  //       },
-  //       {
-  //         AND: [
-  //           {senderId: session?.user?.id},
-  //           {recipientId: String(recipientId)}
-  //         ]
-  //       }
-  //     ]
-  //   }
-  // });
+  const conversation = await prisma.conversation.findMany({
+    include:{
+      messages: true
+    }
+  });
 
-  // if(!conversation){
-  //   const newConvo = await prisma.conversation.create({
-  //     data:{
-  //       senderId: String(session?.user.id),
-  //       recipientId: String(recipientId)
-  //     }
-  //   })
-  //   convoId = newConvo.id;
-  // }else{
-  //   convoId = conversation.id;
-  // }
+  if(conversation){
+    conversation.forEach(conversation => {
+      conversation.messages.forEach(message => {
+        if((message.senderId == session?.user.id && message.recipientId == recipientId) || (message.recipientId == session?.user.id && message.senderId == recipientId)){
+          convoId = conversation.id;
+        }
+      })
+    });
+  }
 
+  if(!conversation || !convoId){
+    const newConvo = await prisma.conversation.create({
+      data:{
+
+      }
+    });
+    convoId = newConvo.id;
+  }
+
+  console.log("convo id: ", convoId);
   const messageData = await prisma.message.create({
       data: {
+        conversationId: convoId,
         senderId: String(session?.user.id!),
         recipientId: String(recipientId),
         message: String(message)
