@@ -80,7 +80,7 @@ export default async function handler(
     const order = await prisma.order.update({
       where: { id: complain?.orderId },
       data: {
-        status: OrderStatus.NEED_ADMIN_REVIEW,
+        OrderStatus: OrderStatus.NEED_ADMIN_REVIEW,
       },
     });
     res.status(200).json({ message: "Success!" });

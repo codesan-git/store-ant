@@ -231,12 +231,12 @@ model Order {
 
 model Rating {
   id              Int @id @default(autoincrement())
-  oderId          Int @map("order_id") @unique
+  orderId          Int @map("order_id") @unique
   rate            Int
   comment         String?
   image           String?
   
-  order           Order @relation(fields: [oderId], references: [id], onDelete: Cascade)
+  order           Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
 }
 
 model Event {
@@ -250,13 +250,13 @@ model Event {
 
 model Complain {
   id                Int @id @default(autoincrement())
-  oderId            Int @map("order_id") @unique
+  orderId            Int @map("order_id") @unique
   image             String
   description       String
   status            ComplainStatus @default(OPEN)
   ShopComment       ShopComment?
 
-  order             Order @relation(fields: [oderId], references: [id], onDelete: Cascade)
+  order             Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
 }
 
 model ShopComment {
