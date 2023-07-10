@@ -1,7 +1,20 @@
 import { Button, Dialog, DialogBody, DialogFooter, DialogHeader } from "@material-tailwind/react";
 import { Fragment, useState } from "react";
 
-const AddressFormModal = () => {
+interface Props {
+  provinceData: {
+    province_id: string,
+    province: string
+  }[]
+
+  cityData: {
+      city_id: string,
+      province_id: string
+      city_name: string
+  }[]
+}
+
+const AddressFormModal = ({ provinceData, cityData } : Props) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   
   const modalOpenHandler = () => setModalOpen(!modalOpen);
@@ -31,9 +44,9 @@ const AddressFormModal = () => {
               <select name="province" id="province-input" className='p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white'
                   onChange={e => {e.preventDefault(); }} 
               >
-                {/* {provinceData?.map(province =>(
+                {provinceData?.map(province =>(
                     <option value={province.province} key={province.province_id}>{province.province}</option>
-                ))} */}
+                ))}
               </select>
             </div>               
             <div className='flex flex-col space-y-1 w-full'>
@@ -41,6 +54,9 @@ const AddressFormModal = () => {
               <select name="city" id="city-input" className='p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white'
                   onChange={e => {e.preventDefault()}} 
               >
+                {cityData?.map(city =>(
+                  <option value={city.city_name} key={city.city_id}>{city.city_name}</option>
+                ))}
                 {/* {cityData?.filter((x) => x.province_id == form.provinceId).map(city =>(
                     <option value={city.city_name} key={city.city_id}>{city.city_name}</option>
                 ))} */}

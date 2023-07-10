@@ -40,8 +40,16 @@ interface Props {
     username: string;
     phoneNumber: string;
   };
-
   address: Address[];
+  provinceData: {
+    province_id: string,
+    province: string
+  }[];
+  cityData: {
+      city_id: string,
+      province_id: string
+      city_name: string
+  }[];
 }
 
 interface Address {
@@ -55,7 +63,7 @@ interface Address {
   isShopAddress: boolean
 }
 
-export default function Profile({ profile, address }: Props) {
+export default function Profile({ profile, address, provinceData, cityData }: Props) {
   const [form, setForm] = useState<FormData>({
     username: profile?.username,
     phonenumber: profile?.phoneNumber,
@@ -589,7 +597,7 @@ export default function Profile({ profile, address }: Props) {
               >
                 + Tambah Alamat Baru
               </button>
-              <AddressFormModal/>
+              <AddressFormModal provinceData={provinceData} cityData={cityData}/>
             </div>
             {address ? (
               <div>
@@ -763,5 +771,26 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     });
   }
-  return { props: { profile, address } };
+
+  var options = {
+    method: 'GET',
+    url: 'https://api.rajaongkir.com/starter/province',
+    headers: {key: 'c6ea8e82078275e61b3a46b5e65b69f1'}
+  };
+
+  const provinceRes = await axios.request(options);
+  const province = provinceRes.data.rajaongkir.results;
+
+  options.url = 'https://api.rajaongkir.com/starter/city'
+  const cityRes = await axios.request(options);
+  const city = cityRes.data.rajaongkir.results;
+
+  return { 
+    props: { 
+      profile, 
+      address,
+      cityData: city,
+      provinceData: province
+    } 
+  };
 };
