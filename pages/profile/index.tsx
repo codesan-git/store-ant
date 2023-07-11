@@ -39,7 +39,16 @@ interface FormData {
 interface Props {
   user: {
     id: string
-    bankAccount: BankAccount
+    bankAccount: {
+      id: number,
+      bankTypeId: number,
+      userId: string,
+      name: string
+      number: string,
+      bank: {
+        name: string
+      }
+    }
   }
   profile: {
     id: Number;
@@ -662,7 +671,23 @@ export default function Profile({ profile, user, address, provinceData, cityData
             <BankAccountFormModal  banks={banks}/>
           </div>
           <div>
-            {user.bankAccount ? <h1>There is an account</h1> : <h1>There is no account</h1>}
+            {user.bankAccount ? 
+              <div className="w-1/2">
+                <div className="flex flex-row space-x-1">
+                  <h1 className="w-1/2">Bank</h1>
+                  <h1 className="w-1/2">: {user.bankAccount.bank.name}</h1>  
+                </div>
+                <div className="flex flex-row space-x-1">
+                  <h1 className="w-1/2">Name</h1>
+                  <h1 className="w-1/2">: {user.bankAccount.name}</h1>  
+                </div>
+                <div className="flex flex-row space-x-1">
+                  <h1 className="w-1/2">Account No.</h1>
+                  <h1 className="w-1/2">: {user.bankAccount.number}</h1>  
+                </div>
+              </div> 
+              : <h1>No bank account has been added.</h1>  
+            }
           </div>
         </div>
       )
@@ -746,10 +771,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     select: {
       id: true,
       bankAccount: {
-        select: {
-          bankTypeId: true,
-          name: true,
-          number: true
+        include: {
+          bank:{
+            select: {
+              name: true
+            }
+          }
         }
       }
     }
