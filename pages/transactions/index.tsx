@@ -2,18 +2,17 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { getSession } from "next-auth/react";
-import { prisma } from "../lib/prisma";
-import Navbar from "./navbar";
-import Footer from "./footer";
-import ReviewModal from "../components/transactions/review_modal";
+import { prisma } from "../../lib/prisma";
+import Navbar from "../navbar";
+import Footer from "../footer";
+import ReviewModal from "../../components/transactions/review_modal";
 import TransactionsDashboard from "@/components/transactions/transactions_dashboard";
 import TransactionItem from "@/components/transactions/transaction_item";
 import PaymentModal from "@/components/transactions/payment_modal";
 import CancelAlert from "@/components/transactions/user_cancel_alert";
 import DetailTransactionModal from "@/components/transactions/detail_transaction_modal";
 import { Product, Order as PrismaOrder, Transaction as PrismaTransaction, TransactionStatus } from "@prisma/client";
-import Chat from "../components/transactions/chat";
-
+import Chat from "../../components/transactions/chat";
 
 interface CartId {
   id: Number;
@@ -30,8 +29,8 @@ interface Order {
 }
 
 interface Transaction {
-  id: number,
-  userId: number,
+  id: string,
+  userId: string,
   shopId: number,
   status: TransactionStatus,
   createdAt: Date,

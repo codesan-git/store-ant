@@ -125,8 +125,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     var options = {
       method: 'GET',
       url: 'https://api.rajaongkir.com/starter/province',
-      headers: {key: '7d840a0e0bb1962debcae4fd1f65fb8e'}
-    };
+      headers: {key: 'c6ea8e82078275e61b3a46b5e65b69f1'}
+    }; 
   
     const provinceRes = await axios.request(options);
     const province = provinceRes.data.rajaongkir.results;

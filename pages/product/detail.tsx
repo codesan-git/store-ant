@@ -323,7 +323,7 @@ export default function CreateShop({ product, ratings }: FetchData) {
                         {rating?.order?.transaction?.user?.image ? (
                             <img
                               className='mt-5 object-cover rounded-full w-16 h-16 sm:h-16 border-2 border-gray-600'
-                              src={`${rating?.oder?.transaction?.user.image}`}                              
+                              src={`${rating?.order?.transaction?.user.image}`}                              
                               onError={({ currentTarget }) => {
                                 currentTarget.onerror = null; // prevents looping
                                 currentTarget.src =

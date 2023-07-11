@@ -11,14 +11,14 @@ export default async function handler(
   const session = await getSession({req})
 
   try {
-    const orderData = await prisma.order.update({
-        where:{id: Number(id)}
+    const orderData = await prisma.order.findFirst({
+        where: {id: Number(id)}
     })  
 
     const order = await prisma.order.update({
         where:{id: Number(id)},
         data:{
-            status: OrderStatus.RETURNED
+            OrderStatus: OrderStatus.RETURNED
         }
     })
 

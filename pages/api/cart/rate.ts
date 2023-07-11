@@ -42,14 +42,14 @@ export default async function handler(
     }    
 
     const { fields, files } = await readFile(req, true);
-    const {cartId, star, comment} = fields;
+    const {orderId, star, comment} = fields;
     let avgRating = 0, ratingTotal = 0;
 
     const file = files.image;
     let urls = Array.isArray(file) ? file.map((f) => f.filepath) : file?.filepath;
 
     const oldRating = await prisma.rating.findFirst({
-        where: {productInCartId: Number(cartId)},
+        where: {orderId: Number(orderId)},
         select: {
           image: true
         }
@@ -71,9 +71,9 @@ export default async function handler(
 
   try {
     const rating = await prisma.rating.upsert({
-        where:{productInCartId: Number(cartId)},
+        where:{orderId: Number(orderId)},
         create:{
-            productInCartId: Number(cartId),
+            orderId: Number(orderId),
             rate: Number(star),
             comment: comment as string,
             image: imageUrl.join(",")
@@ -85,17 +85,17 @@ export default async function handler(
         }
     })
 
-    const productInCart = await prisma.productInCart.findFirst({
-        where: {id: Number(cartId)}
+    const order = await prisma.order.findFirst({
+        where: {id: Number(orderId)}
     })
 
     const product = await prisma.product.findFirst({
-        where:{id: productInCart?.productId}
+        where:{id: order?.productId}
     })
     
     let ratings = await prisma.rating.findMany({
         where:{
-            productInCart:{
+            order:{
                 product:{
                     shopId: product?.shopId
                 }
@@ -118,7 +118,7 @@ export default async function handler(
 
     ratings = await prisma.rating.findMany({
         where:{
-            productInCart:{
+            order:{
                 productId: product?.id
              }
         }
