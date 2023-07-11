@@ -591,16 +591,10 @@ export default function Profile({ profile, address, provinceData, cityData }: Pr
         <>
           <section className="mt-8 flex flex-col gap-5 bg-gray-100 p-10 rounded-md">
             <div className="flex">
-              <button
-                className="btn btn-primary btn-outline btn-md rounded-md"
-                onClick={() => router.push("/address")}
-              >
-                + Tambah Alamat Baru
-              </button>
               <AddressFormModal provinceData={provinceData} cityData={cityData}/>
             </div>
             {address ? (
-              <div>
+              <div className="space-y-4">
                 {address.map((address) => (
                   <div
                     className="card w-full bg-base-100 shadow-xl text-md leading-loose"
