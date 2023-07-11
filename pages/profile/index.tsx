@@ -147,6 +147,17 @@ export default function Profile({ profile, user, address, provinceData, cityData
     }
   }
 
+  const handleBankAccountDelete = () => {
+    try {
+      fetch("http://localhost:3000/api/profile/bank/delete", {
+        method: "DELETE"
+      }).then(() => router.push(router.asPath));
+    }
+    catch (error){
+      console.log(error);
+    }
+  }
+
   function onSetMainAddress(id: number){
     const addressId = {id: id};
     try {
@@ -672,7 +683,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
             user.bankAccount ?
             <Fragment>
               <div>
-                <Button  className="bg-red-500">Delete Bank Account</Button>
+                <Button onClick={handleBankAccountDelete} className="bg-red-500">Delete Bank Account</Button>
               </div>
               <div>
                 <div className="w-1/2">
