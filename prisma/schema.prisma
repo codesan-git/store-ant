@@ -64,6 +64,17 @@ enum WithdrawalStatus {
   DONE
 }
 
+enum NotifType {
+  CHAT
+  TRANSACTION
+  OTHER
+}
+
+enum NotifRole {
+  USER
+  SELLER
+}
+
 model Account {
   id                 String     @id @default(cuid())
   userId             String     @map("user_id")
@@ -155,6 +166,18 @@ model User {
   Transaction     Transaction[]
   SentMessage     Message[]   @relation("sender")
   ReceivedMessage Message[]   @relation("recipient")
+  notifications   Notification[]
+}
+
+model Notification {
+  id            Int @unique @id @default(autoincrement())
+  userId        String @unique @map("user_id")
+  body          String
+  createdAt     DateTime @default(now())
+  notifType     NotifType?
+  notifRole     NotifRole?
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Product {
