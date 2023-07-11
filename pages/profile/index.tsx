@@ -27,6 +27,8 @@ import {
   BsFillHouseFill
 } from "react-icons/bs"
 import AddressFormModal from "@/components/profile/address_form_modal";
+import { BankAccount, BankType } from "@prisma/client";
+import BankAccountFormModal from "@/components/profile/bank_account_form_modal";
 
 interface FormData {
   username?: string;
@@ -35,6 +37,10 @@ interface FormData {
 }
 
 interface Props {
+  user: {
+    id: string
+    bankAccount: BankAccount
+  }
   profile: {
     id: Number;
     username: string;
@@ -50,6 +56,7 @@ interface Props {
       province_id: string
       city_name: string
   }[];
+  banks: BankType[]
 }
 
 interface Address {
@@ -63,7 +70,7 @@ interface Address {
   isShopAddress: boolean
 }
 
-export default function Profile({ profile, address, provinceData, cityData }: Props) {
+export default function Profile({ profile, user, address, provinceData, cityData, banks }: Props) {
   const [form, setForm] = useState<FormData>({
     username: profile?.username,
     phonenumber: profile?.phoneNumber,
@@ -650,8 +657,13 @@ export default function Profile({ profile, address, provinceData, cityData }: Pr
       icon: Cog6ToothIcon,
       desc: ``,
       code: (
-        <div>
-
+        <div className="mt-8 flex flex-col gap-5 bg-gray-100 p-10 rounded-md">
+          <div>
+            <BankAccountFormModal  banks={banks}/>
+          </div>
+          <div>
+            {user.bankAccount ? <h1>There is an account</h1> : <h1>There is no account</h1>}
+          </div>
         </div>
       )
     },
@@ -727,7 +739,7 @@ export default function Profile({ profile, address, provinceData, cityData }: Pr
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context);
-  const account = await prisma.user.findUnique({
+  const user = await prisma.user.findUnique({
     where: {
       id: session?.user.id
     },
@@ -737,6 +749,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         select: {
           bankTypeId: true,
           name: true,
+          number: true
         }
       }
     }
@@ -779,12 +792,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const cityRes = await axios.request(options);
   const city = cityRes.data.rajaongkir.results;
 
+  const banks = await prisma.bankType.findMany();
+
   return { 
     props: { 
       profile, 
+      user,
       address,
       cityData: city,
-      provinceData: province
+      provinceData: province,
+      banks
     } 
   };
 };
