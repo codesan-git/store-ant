@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { Fragment, useEffect } from "react";
 import styles from "../../styles/Form.module.css";
 import Image from "next/image";
 import { useState } from "react";
@@ -17,6 +17,7 @@ import {
   TabsBody,
   Tab,
   TabPanel,
+  Button,
 } from "@material-tailwind/react";
 import {
   Square3Stack3DIcon,
@@ -667,28 +668,39 @@ export default function Profile({ profile, user, address, provinceData, cityData
       desc: ``,
       code: (
         <div className="mt-8 flex flex-col gap-5 bg-gray-100 p-10 rounded-md">
-          <div>
-            <BankAccountFormModal  banks={banks}/>
-          </div>
-          <div>
-            {user.bankAccount ? 
-              <div className="w-1/2">
-                <div className="flex flex-row space-x-1">
-                  <h1 className="w-1/2">Bank</h1>
-                  <h1 className="w-1/2">: {user.bankAccount.bank.name}</h1>  
-                </div>
-                <div className="flex flex-row space-x-1">
-                  <h1 className="w-1/2">Name</h1>
-                  <h1 className="w-1/2">: {user.bankAccount.name}</h1>  
-                </div>
-                <div className="flex flex-row space-x-1">
-                  <h1 className="w-1/2">Account No.</h1>
-                  <h1 className="w-1/2">: {user.bankAccount.number}</h1>  
-                </div>
-              </div> 
-              : <h1>No bank account has been added.</h1>  
-            }
-          </div>
+          {
+            user.bankAccount ?
+            <Fragment>
+              <div>
+                <Button  className="bg-red-500">Delete Bank Account</Button>
+              </div>
+              <div>
+                <div className="w-1/2">
+                  <div className="flex flex-row space-x-1">
+                    <h1 className="w-1/2">Bank</h1>
+                    <h1 className="w-1/2">: {user.bankAccount.bank.name}</h1>  
+                  </div>
+                  <div className="flex flex-row space-x-1">
+                    <h1 className="w-1/2">Name</h1>
+                    <h1 className="w-1/2">: {user.bankAccount.name}</h1>  
+                  </div>
+                  <div className="flex flex-row space-x-1">
+                    <h1 className="w-1/2">Account No.</h1>
+                    <h1 className="w-1/2">: {user.bankAccount.number}</h1>  
+                  </div>
+                </div> 
+              </div>
+            </Fragment>
+            : 
+            <Fragment>
+              <div>
+                <BankAccountFormModal  banks={banks}/>
+              </div>
+              <div>
+                <h1>No bank account has been added yet.</h1>
+              </div>
+            </Fragment>
+          }
         </div>
       )
     },
