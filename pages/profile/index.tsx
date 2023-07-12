@@ -331,7 +331,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
         who are like offended by it, it doesn't matter.`,
       code: (
         <>
-          <section className="mt-8 flex flex-row gap-10 bg-gray-100 rounded-md">
+          <section className="mt-8 flex flex-col lg:flex-row gap-10 bg-gray-100 rounded-md">
             <div className="columns">
               <div className="card card-compact w-96 bg-base-100 shadow-xl">
                 <figure className="p-4">
