@@ -30,6 +30,7 @@ import {
 import AddressFormModal from "@/components/profile/address_form_modal";
 import { BankAccount, BankType } from "@prisma/client";
 import BankAccountFormModal from "@/components/profile/bank_account_form_modal";
+import BankAccountDeletionModal from "@/components/profile/bank_account_deletion_modal";
 
 interface FormData {
   username?: string;
@@ -683,7 +684,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
             user.bankAccount ?
             <Fragment>
               <div>
-                <Button onClick={handleBankAccountDelete} className="bg-red-500">Delete Bank Account</Button>
+                <BankAccountDeletionModal onConfirm={handleBankAccountDelete}/>
               </div>
               <div>
                 <div className="w-1/2">
