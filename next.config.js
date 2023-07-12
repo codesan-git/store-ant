@@ -39,7 +39,7 @@ const nextConfig = {
         hostname: 'localhost:3000'
       }
     ],
-    domains:['localhost']
+    domains:['http://localhost:3000/public/']
   }
 }
 

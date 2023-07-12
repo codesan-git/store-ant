@@ -74,9 +74,10 @@ export default async function handler(
         // // // CREATE
         const complain = await prisma.complain.create({
             data: {
-                orderId: Number( orderId),
+                orderId: Number(orderId),
                 description: description as string,
                 image: imageUrl.join(",")
+                // image: image as string
             }
         })
         res.status(200).json({ message: 'complain created', data: complain });
