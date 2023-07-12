@@ -28,7 +28,7 @@ const BankAccountDeletionModal = ({ onConfirm } : Props) => {
           <p>Are you sure you want to delete your bank account?</p>
         </DialogBody>
         <DialogFooter className="space-x-2">
-          <Button onClick={handleModalOpen}>
+          <Button onClick={handleModalOpen} className="bg-red-500">
             Cancel
           </Button>
           <Button onClick={() => {onConfirm(); handleModalOpen();}}>
