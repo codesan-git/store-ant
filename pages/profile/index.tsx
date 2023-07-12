@@ -331,7 +331,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
         who are like offended by it, it doesn't matter.`,
       code: (
         <>
-          <section className="mt-8 flex flex-row gap-10 bg-gray-100 p-10 rounded-md">
+          <section className="mt-8 flex flex-row gap-10 bg-gray-100 rounded-md">
             <div className="columns">
               <div className="card card-compact w-96 bg-base-100 shadow-xl">
                 <figure className="p-4">
@@ -618,7 +618,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
       desc: ``,
       code: (
         <>
-          <section className="mt-8 flex flex-col gap-5 bg-gray-100 p-10 rounded-md">
+          <section className="mt-8 flex flex-col gap-5 bg-gray-100 p-2 lg:p-10 rounded-md">
             <div className="flex">
               <AddressFormModal provinceData={provinceData} cityData={cityData}/>
             </div>
@@ -636,9 +636,9 @@ export default function Profile({ profile, user, address, provinceData, cityData
                           {address.region}, {address.city}, {address.province}
                         </p>
                         <p>{address.postcode}</p>
-                        <div className="flex gap-3">
+                        <div className="flex flex-col lg:flex-row gap-3 text-xs lg:text-base">
                           <a className="text-primary-focus">Ubah Alamat</a>
-                          <p className="text-primary">|</p>
+                          <p className="text-primary hidden lg:block">|</p>
                           <div>
                             {address.isMainAddress ? (
                               <a>Alamat Utama</a>
@@ -648,7 +648,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
                               </a>
                             )}
                           </div>
-                          <p className="text-primary">|</p>
+                          <p className="text-primary hidden lg:block">|</p>
                           <div>
                             {address.isShopAddress ? (
                               <a>Alamat Toko</a>
@@ -658,7 +658,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
                               </a>
                             )}
                           </div>
-                          <p className="text-primary">|</p>
+                          <p className="text-primary hidden lg:block">|</p>
                           <a className="text-primary-focus">Hapus</a>
                         </div>
                       </div>
@@ -679,29 +679,27 @@ export default function Profile({ profile, user, address, provinceData, cityData
       icon: Cog6ToothIcon,
       desc: ``,
       code: (
-        <div className="mt-8 flex flex-col gap-5 bg-gray-100 p-10 rounded-md">
+        <div className="mt-8 flex flex-col gap-5 bg-gray-100 p-2 lg:p-10 rounded-md">
           {
             user.bankAccount ?
             <Fragment>
               <div>
                 <BankAccountDeletionModal onConfirm={handleBankAccountDelete}/>
               </div>
-              <div>
-                <div className="w-1/2">
-                  <div className="flex flex-row space-x-1">
-                    <h1 className="w-1/2">Bank</h1>
-                    <h1 className="w-1/2">: {user.bankAccount.bank.name}</h1>  
-                  </div>
-                  <div className="flex flex-row space-x-1">
-                    <h1 className="w-1/2">Name</h1>
-                    <h1 className="w-1/2">: {user.bankAccount.name}</h1>  
-                  </div>
-                  <div className="flex flex-row space-x-1">
-                    <h1 className="w-1/2">Account No.</h1>
-                    <h1 className="w-1/2">: {user.bankAccount.number}</h1>  
-                  </div>
-                </div> 
-              </div>
+              <div className="lg:w-1/2">
+                <div className="flex flex-row space-x-1">
+                  <h1 className="w-1/2">Bank</h1>
+                  <h1 className="w-1/2">: {user.bankAccount.bank.name}</h1>  
+                </div>
+                <div className="flex flex-row space-x-1">
+                  <h1 className="w-1/2">Name</h1>
+                  <h1 className="w-1/2">: {user.bankAccount.name}</h1>  
+                </div>
+                <div className="flex flex-row space-x-1">
+                  <h1 className="w-1/2">Account No.</h1>
+                  <h1 className="w-1/2">: {user.bankAccount.number}</h1>  
+                </div>
+              </div>         
             </Fragment>
             : 
             <Fragment>
@@ -727,35 +725,8 @@ export default function Profile({ profile, user, address, provinceData, cityData
   return (
     <>
       <Navbar />
-      <div className="flex my-5 w-3/4 mx-auto">
-        {/* <div className="text-center justify-center mt-8 border shadow-md w-72 h-1/2 rounded-lg">
-          <div className="grid grid-cols-2 shadow p-2 pr-10">
-            <div className="avatar mx-auto">
-              <div className="w-16 rounded-full">
-                <img src={session?.user?.image!} />
-              </div>
-            </div>
-            <div className="text-left">
-              <h5>{profile?.username}</h5>
-            </div>
-          </div>
-          <hr />
-          <div className="drawer-side">
-            <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
-            <ul className="menu p-4 w-full bg-base-100 text-base-content">
-              <li>
-                <a className="text-center">Profile</a>
-              </li>
-              <li>
-                <a className="text-center">Orders</a>
-              </li>
-              <li>
-                <a className="text-center">Vouchers</a>
-              </li>
-            </ul>
-          </div>
-        </div> */}
-        <div className="w-full mx-10">
+      <div className="lg:flex w-full my-5 lg:w-3/4 mx-auto">
+        <div className="w-full lg:mx-10">
           <span className="flex gap-2">
             <HiUser className="my-auto w-5 h-5" />
             <h5>{session?.user?.name}</h5>
@@ -766,7 +737,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
                 <Tab key={value} value={value}>
                   <div className="flex items-center gap-2">
                     {React.createElement(icon, { className: "w-5 h-5" })}
-                    {label}
+                    <h1 className="text-xs lg:text-base">{label}</h1>
                   </div>
                 </Tab>
               ))}
