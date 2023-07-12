@@ -1,92 +1,133 @@
-import React from "react";
+import { Complain, Order } from "@prisma/client";
 import { GetServerSideProps } from "next";
-import { prisma } from "@/lib/prisma";
-import { useRouter } from "next/router";
-import { User, Shop, Status } from "@prisma/client";
+import { getSession } from "next-auth/react";
 
-interface ShopComment {
-    shopComment: {
-        id: number;
-        image: string;
-        description: string;
+import { getTypeTransactions } from "@/types";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import getDataOrders from "../admin/console/testcomplain/action/getComplainSeller";
+import { Fragment } from "react";
+
+interface Props {
+  getOrders: getTypeTransactions[]
+}
+
+export default function ComplainAdmin({ getOrders }: Props) {
+
+  const router = useRouter()
+  const acceptStatus = async (id: string) => {
+    try {
+      const response = await axios.patch(`http://localhost:3000/api/complain/seller/accept`, {
+        id: id
+      }).then(() => router.refresh())
+
+    } catch (error) {
+
     }
-}
+  };
 
-interface CartId {
-  id: Number;
-}
+  const rejectStatus = async (id: string) => {
+    try {
+      const response = await axios.patch(`http://localhost:3000/api/complain/seller/reject`, {
+        id: id
+      }).then(() => router.refresh())
 
-export default function Detail({ shopComment }: ShopComment) {
-  const router = useRouter();
+    } catch (error) {
 
-  async function onReturn(id: Number) {
-    const cartId: CartId = {id: id};
-    try{
-        fetch('http://localhost:3000/api/shop/rejectreturn', {
-            body: JSON.stringify(cartId),
-            headers: {
-                'Content-Type' : 'application/json'
-            },
-            method: 'PUT'
-        }).then(()=> router.reload())
-      }catch(error){
-          //console.log(error)
-      }
-  }
-
-  console.log(shopComment);
+    }
+  };
+  // console.log(`getOrders`,getOrders)
+  console.log(`getOrders`, getOrders[11].order[0].Complain)
   return (
     <div>
-      <div className="card bg-base-100 shadow-xl text-md">
-        <div>
-          <div className="card-body py-5">
-            {shopComment.image ? (
-              <div className="rounded-md h-40 w-40 flex gap-5">
-                {shopComment.image.split(",").map((image) => (
-                  <img
-                    className="rounded-md w-40 h-40"
-                    src={`http://localhost:3000/${image}`}
-                    onError={({ currentTarget }) => {
-                      currentTarget.onerror = null; // prevents looping
-                      currentTarget.src =
-                        "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg";
-                    }}
-                  />
-                ))}
-              </div>
-            ) : (
-              <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg" />
-            )}
-          </div>
-          <div className="w-full">
-            <div className="py-5 px-10 flex w-full">
-                <p>Deskripsi: {shopComment.description}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+      <table className="table">
+        {/* head */}
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Job</th>
+            <th>Favorite Color</th>
+            <th>Action</th>
+            <th>Nama Buyer</th>
+            <th>Nama Seller</th>
+            <th>Product</th>
+          </tr>
+        </thead>
+        {/* {getOrders.map((comp: any) => (
+          <>
+            {comp.order.map((orders: any) => (
+              <>
+                {comp.order.OrderStatus === "ONGOING" && (
+                  <>
+                    <tbody key={orders.complain.id}>
+                      <tr className="hover">
+                        <th>{orders.id}</th>
+                        <td className="flex gap-4">
+                          {orders.complain.image.split(",").map((kocak: string) => (
+                            <>
+                              <img
+                                src={`http://localhost:3000\\${kocak}`}
+                                className="w-16 h-16"
+                              />
+                            </>
+                          ))}
+                        </td>
+                        <td>{orders.complain.description}</td>
+                        <td>{orders.complain.status}</td>
+                        <td>
+                          <button onClick={() => acceptStatus(String(orders.complain.id))} className="btn">accept</button>
+                          <button onClick={() => rejectStatus(String(orders.complain.id))} className="btn">reject</button></td>
+                      </tr>
+                    </tbody>
+                  </>
 
+                )}
+              </>
+            ))}
+          </>
+        ))} */}
+        {getOrders.map((comp: any) => (
+          <Fragment key={comp.id}>
+            {comp.order.map((orders: any) => (
+              <Fragment key={orders.complain}>
+                {orders.Complain?.status === "OPEN" && (
+                  <tbody>
+                    <tr className="hover">
+                      <th>{orders.Complain?.orderId}</th>
+                      <td className="flex gap-4">
+                        {orders.Complain?.image.split(",").map((kocak: string) => (
+                          <img
+                            key={kocak}
+                            src={`http://localhost:3000/${kocak}`}
+                            className="w-16 h-16"
+                          />
+                        ))}
+                      </td>
+                      <td>{orders.Complain?.description}</td>
+                      <td>{orders.Complain?.status}</td>
+                      <td>
+                        <button onClick={() => acceptStatus(String(orders.Complain?.orderId))} className="btn">accept</button>
+                        <button onClick={() => rejectStatus(String(orders.Complain?.orderId))} className="btn">reject</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                )}
+              </Fragment>
+            ))}
+          </Fragment>
+        ))}
+
+      </table>
+    </div >
+  )
+}
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { id } = context.query;
-  const shopComment = await prisma.shopComment.findFirst({
-    where: { 
-      complain: {
-        productInCartId: Number(id)
-      }
-     },
-    select: {
-      id: true,
-      image: true,
-      description: true,
-    },
-  });
+  const complain = await getDataOrders(context)
 
   return {
     props: {
-        shopComment: JSON.parse(JSON.stringify(shopComment)),
+      getOrders: JSON.parse(JSON.stringify(complain))
     },
   };
-};
+}

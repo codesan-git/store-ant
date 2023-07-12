@@ -44,14 +44,24 @@ export default async function handler(
 
     const { fields, files } = await readFile(req, true);
     const {orderId, description} = fields;
-    const session = await getSession({req})
-    const order = await prisma.order.update({
-        where: {
-            id: Number(orderId as string)
-        },
-        data:{
-            OrderStatus: OrderStatus.RETURNING
-        }
+    const session = await getSession({req});
+    (orderId as string).split(",").forEach( async (id:string) => {
+        const order = await prisma.order.update({
+            where: {
+                id: Number(id)
+            },
+            data:{
+                OrderStatus: OrderStatus.RETURNING
+            }
+        })
+        const complain = await prisma.complain.create({
+            data: {
+                orderId: Number(id),
+                description: description as string,
+                image: imageUrl.join(",")
+                // image: image as string
+            }
+        })
     })
    
     const file = files.image;
@@ -69,18 +79,19 @@ export default async function handler(
     }else{
       imageUrl.push("");
     }
-
+    
+    console.log((orderId as string).split(","))
+    res.status(200).json({ message: 'complain created' });
     try {
-        // // // CREATE
-        const complain = await prisma.complain.create({
-            data: {
-                orderId: Number(orderId),
-                description: description as string,
-                image: imageUrl.join(",")
-                // image: image as string
-            }
-        })
-        res.status(200).json({ message: 'complain created', data: complain });
+        // // // // CREATE
+        // const complain = await prisma.complain.create({
+        //     data: {
+        //         orderId: Number(orderId),
+        //         description: description as string,
+        //         image: imageUrl.join(",")
+        //         // image: image as string
+        //     }
+        // })
     } catch (error) {
         res.status(400).json({ message: "Fail" })
     }

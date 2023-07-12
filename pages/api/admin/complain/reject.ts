@@ -15,31 +15,12 @@ export default async function handler(
       where: {userId: session?.user.id}
     });
 
-    const orderData = await prisma.order.update({
-        where:{id: Number(id)}
-    })  
-
     const order = await prisma.order.update({
-        where:{id: Number(id)},
-        data:{
-            status: OrderStatus.RETURNED
-        }
-    })
-
-    const product = await prisma.product.findFirst({
-      where: {id: orderData?.productId}
-    })
-
-    const shop = await prisma.shop.findFirst({
-      where: {id: product?.shopId}
-    })
-
-    const shopUpdate = await prisma.shop.update({
-      where: {id: shop?.id},
-      data: {
-        balance: Number(shop?.balance) + (orderData?.count * Number(product?.price))
+      where:{id: Number(id)},
+      data:{
+          OrderStatus: OrderStatus.RETURN_REJECTED
       }
-    })
+  })
     res.status(200).json({ message: "Success!" })
   } catch (error) {
     //console.log(error)

@@ -35,7 +35,10 @@ interface Transaction {
 		shopName: string
 	}
 }
-
+interface FormData{
+	orderId:number[],
+	description:string
+}
 
 const ComplainModal = ({ complainTransactionModalArguments }: Props) => {
 
@@ -52,6 +55,7 @@ const ComplainModal = ({ complainTransactionModalArguments }: Props) => {
 	const [isAddProduct, setIsAddProduct] = useState(false)
 	const [selectedImage, setSelectedImage] = useState<string>();
 	const [selectedFiles, setFile] = useState<any[]>([]);
+	const [form, setForm] = useState<FormData>({orderId:[],description:""});
 
 	const ref = useRef<any>(null)
 
@@ -70,24 +74,27 @@ const ComplainModal = ({ complainTransactionModalArguments }: Props) => {
 	};
 
 	const postComplain = async () => {
-		if (fillProduct.length > 0) {
-			for (let i = 0; i < fillProduct.length; i++) {
+		// if (form.orderId.length > 0) {
+		// 	for (let i = 0; i < form.orderId.length; i++) {
 				try {
 					if (selectedFiles.length == 0) return;
 					const formData = new FormData();
 					selectedFiles.forEach((file) => formData.append("image", file));
-					await axios.post(`http://localhost:3000/api/complain/create`, {
-						orderId: fillProduct[i],
-						description: complainDesc,
-						image:formData
-						// image: selectedImage
+					formData.append("orderId", form.orderId.join(','));
+					formData.append("description", form.description);
+					await axios.post(`/api/complain/create`, formData)
 
-					});
+					// await axios.post(`http://localhost:3000/api/complain/create`, {
+					// 	orderId: fillProduct[i],
+					// 	description: complainDesc,
+					// 	image:formData
+					// 	// image: selectedImage
+					// });
 				} catch (error) {
 					console.error(error);
 				}
-			}
-		}
+			// }
+		// }
 	};
 
 	useEffect(() => {
@@ -152,11 +159,11 @@ const ComplainModal = ({ complainTransactionModalArguments }: Props) => {
 		return total;
 	}
 
-	const getImage = transaction?.order[0].product.image
+	// const getImage = transaction?.order[0].product.image
 
 	const renderSelectedProduct = () => {
 		return transaction?.order.map((orders) => {
-			if (fillProduct.includes(orders.id)) {
+			if (form.orderId.includes(orders.id)) {
 				return (
 					<div key={orders.id} className="flex gap-4">
 						<img
@@ -252,9 +259,10 @@ const ComplainModal = ({ complainTransactionModalArguments }: Props) => {
 	}
 
 	// console.log(`isOpen`, isAddProduct)
-	console.log(`fill`, fillProduct)
-	console.log(`complain`, complainDesc)
+	console.log(`fill`, form.orderId)
+	console.log(`complain`, form.description)
 	console.log(`imgUrl`, selectedImage)
+	console.log(`formdata`, form)
 	useEffect(() => {
 		console.log(`complain`, { complainDesc })
 		console.log(`imgUrl`, selectedImage)
@@ -328,7 +336,7 @@ const ComplainModal = ({ complainTransactionModalArguments }: Props) => {
 							<div>
 								{isAddProduct ?
 									<>
-										<select className="select w-1/2 max-w-xs rounded-sm" placeholder="Select Product" onChange={(e: any) => setFillProduct(prevFillProduct => [...prevFillProduct, Number(e.target.value)])}>
+										<select className="select w-1/2 max-w-xs rounded-sm" placeholder="Select Product" onChange={e => setForm({...form, orderId: form.orderId.concat(Number(e.target.value))})}>
 											<option disabled selected>Select Product</option>
 											{transaction?.order.map((orders) => (
 												<>
@@ -350,7 +358,7 @@ const ComplainModal = ({ complainTransactionModalArguments }: Props) => {
 								<textarea
 									className="textarea textarea-bordered w-full rounded-sm"
 									placeholder="Text Complain"
-									onChange={(e: any) => setComplainDesc(e.target.value)}
+									onChange={e => setForm({...form,description:e.target.value})}
 								></textarea>
 							</div>
 							<div id="complain-image" className="cursor-pointer">
