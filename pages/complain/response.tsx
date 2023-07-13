@@ -1,11 +1,9 @@
-import { Complain, Order } from "@prisma/client";
 import { GetServerSideProps } from "next";
-import { getSession } from "next-auth/react";
 
 import { getTypeTransactions } from "@/types";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import getDataOrders from "../admin/console/testcomplain/action/getComplainSeller";
+import getDataOrders from "./action/getComplainSeller";
 import { Fragment } from "react";
 
 interface Props {
@@ -37,60 +35,28 @@ export default function ComplainAdmin({ getOrders }: Props) {
     }
   };
   // console.log(`getOrders`,getOrders)
-  console.log(`getOrders`, getOrders[11].order[0].Complain)
+  console.log(`getOrders`, getOrders[11].order[0].OrderStatus)
   return (
     <div>
       <table className="table">
         {/* head */}
         <thead>
-          <tr>
+          <tr className="text-center">
             <th>ID</th>
-            <th>Name</th>
-            <th>Job</th>
-            <th>Favorite Color</th>
-            <th>Action</th>
+            <th>Image</th>
+            <th>Description</th>
+            <th>Status Complain</th>
+            <th>Status Order</th>
+            <th>Action Complain</th>
             <th>Nama Buyer</th>
-            <th>Nama Seller</th>
+            <th>Nama Toko</th>
             <th>Product</th>
           </tr>
         </thead>
-        {/* {getOrders.map((comp: any) => (
-          <>
-            {comp.order.map((orders: any) => (
-              <>
-                {comp.order.OrderStatus === "ONGOING" && (
-                  <>
-                    <tbody key={orders.complain.id}>
-                      <tr className="hover">
-                        <th>{orders.id}</th>
-                        <td className="flex gap-4">
-                          {orders.complain.image.split(",").map((kocak: string) => (
-                            <>
-                              <img
-                                src={`http://localhost:3000\\${kocak}`}
-                                className="w-16 h-16"
-                              />
-                            </>
-                          ))}
-                        </td>
-                        <td>{orders.complain.description}</td>
-                        <td>{orders.complain.status}</td>
-                        <td>
-                          <button onClick={() => acceptStatus(String(orders.complain.id))} className="btn">accept</button>
-                          <button onClick={() => rejectStatus(String(orders.complain.id))} className="btn">reject</button></td>
-                      </tr>
-                    </tbody>
-                  </>
-
-                )}
-              </>
-            ))}
-          </>
-        ))} */}
         {getOrders.map((comp: any) => (
           <Fragment key={comp.id}>
             {comp.order.map((orders: any) => (
-              <Fragment key={orders.complain}>
+              <Fragment key={orders.id}>
                 {orders.Complain?.status === "OPEN" && (
                   <tbody>
                     <tr className="hover">
@@ -105,11 +71,32 @@ export default function ComplainAdmin({ getOrders }: Props) {
                         ))}
                       </td>
                       <td>{orders.Complain?.description}</td>
-                      <td>{orders.Complain?.status}</td>
-                      <td>
-                        <button onClick={() => acceptStatus(String(orders.Complain?.orderId))} className="btn">accept</button>
-                        <button onClick={() => rejectStatus(String(orders.Complain?.orderId))} className="btn">reject</button>
+                      <td className="text-center">{orders.Complain?.status}</td>
+                      <td className="text-center">{orders.OrderStatus}</td>
+                      <td className="gap-4">
+                        {orders.OrderStatus === "RETURNED" || orders.OrderStatus === "NEED_ADMIN_REVIEW" ?
+                          <>
+                            <div className="flex gap-2">
+                              <button onClick={() => acceptStatus(String(orders.Complain?.orderId))} className="btn-disabled w-16 h-8 rounded-sm">accept</button>
+                              <button onClick={() => rejectStatus(String(orders.Complain?.orderId))} className="btn-disabled w-16 h-8 rounded-sm">reject</button>
+                            </div>
+                          </>
+                          :
+                          <>
+                            <div className="flex gap-2">
+                              <button onClick={() => acceptStatus(String(orders.Complain?.orderId))} className="w-16 h-8 rounded-sm bg-green-500 border border-green-500 text-white hover:bg-transparent hover:bg-white hover:text-black">accept</button>
+                              <button onClick={() => rejectStatus(String(orders.Complain?.orderId))} className="w-16 h-8 rounded-sm bg-red-500 border border-red-500 text-white hover:bg-transparent hover:bg-white hover:text-black">reject</button>
+                            </div>
+                          </>
+                        }
+                        {/* <div className="flex gap-2">
+                          <button onClick={() => acceptStatus(String(orders.Complain?.orderId))} className="w-16 h-8 rounded-sm bg-green-500 border border-green-500 text-white hover:bg-transparent hover:bg-white hover:text-black">accept</button>
+                          <button onClick={() => rejectStatus(String(orders.Complain?.orderId))} className="w-16 h-8 rounded-sm bg-red-500 border border-red-500 text-white hover:bg-transparent hover:bg-white hover:text-black">reject</button>
+                        </div> */}
                       </td>
+                      <td>{comp.user.name}</td>
+                      <td>{comp.shop.shopName}</td>
+                      <td></td>
                     </tr>
                   </tbody>
                 )}

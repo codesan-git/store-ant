@@ -19,7 +19,9 @@ const getDataOrders = async (context: any) => {
                 include: {
                     Complain: true
                 }
-            }
+            },
+            user: true,
+            shop: true
         }
     })
     console.log(`getTransactions`, getTransactions)

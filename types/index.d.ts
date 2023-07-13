@@ -19,4 +19,6 @@ export type getTypeTransactions = Transaction & {
   order:Order[] & {
     Complain: Complain
   }
+  user:User;
+  shop:Shop;
 }
