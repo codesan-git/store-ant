@@ -8,9 +8,8 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const {id, paymentType} = req.body
-  const session = await getSession({req})  
+    const session = await getSession({req});
 
-  try {
     const transaction = await prisma.transaction.update({
         where:{id: id!},
         data:{
@@ -25,7 +24,7 @@ export default async function handler(
 
     const notificationUser = await prisma.notification.create({
       data:{
-        userId: session?.user.id!,
+        userId: transaction.userId,
         notifRole: NotifRole.USER,
         notifType: NotifType.TRANSACTION,
         body: `Pembayaran untuk transaksi ${transaction.id} telah berhasil.`
@@ -37,12 +36,14 @@ export default async function handler(
         userId: shop?.userId!,
         notifRole: NotifRole.SELLER,
         notifType: NotifType.TRANSACTION,
-        body: `Transaksi baru dengan kode ${transaction.id} telah dibuat.`
+        body: `Pesanan baru dengan kode ${transaction.id} telah dibuat.`
       }
     })
     res.status(200).json({ message: "Success!" })
-  } catch (error) {
-    //console.log(error)
-    res.status(400).json({ message: "Fail" })
-  }
+  // try {
+    
+  // } catch (error) {
+  //   //console.log(error)
+  //   res.status(400).json({ message: "Fail" })
+  // }
 }

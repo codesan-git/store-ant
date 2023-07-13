@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
 import { prisma } from "../../../lib/prisma"
+import { NotifType } from '@prisma/client'
 
 
 export default async function handler(
@@ -48,6 +49,14 @@ export default async function handler(
         message: String(message)
       }
   });
+  
+  const notification = await prisma.notification.create({
+    data:{
+      userId: recipientId!,
+      notifType: NotifType.CHAT,
+      body: `${session?.user.name} mengirimkan pesan.`
+    }
+  })
   res.status(200).json({ message: 'message created' })
   // try {
   // } catch (error) {

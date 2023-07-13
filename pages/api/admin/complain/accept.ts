@@ -10,25 +10,25 @@ export default async function handler(
   const {id} = req.body
   const session = await getSession({req})
 
-  const orderData = await prisma.order.update({
+  const orderData = await prisma.order.findFirst({
       where:{id: Number(id)}
   })  
 
   const order = await prisma.order.update({
       where:{id: Number(id)},
       data:{
-          status: OrderStatus.RETURNED
+          OrderStatus: OrderStatus.RETURNED
       }
   })  
 
   const product = await prisma.product.findFirst({
-    where:{id: Number(orderData.productId)}
+    where:{id: Number(orderData?.productId)}
   })
 
   const productUpdate = await prisma.product.update({
     where:{id: Number(product?.id)},
     data:{
-      stock: Number(Number(product?.stock) + Number(orderData.count))
+      stock: Number(Number(product?.stock) + Number(orderData?.count))
     }
   })    
 

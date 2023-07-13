@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { HiShoppingCart } from "react-icons/hi";
+import { HiShoppingCart, HiBell } from "react-icons/hi";
 import { useState } from 'react';
-import { Category } from "@prisma/client";
+import { Category, NotifRole, NotifType } from "@prisma/client";
 import useSWR from 'swr';
 import { InferGetServerSidePropsType } from "next";
 import LoginDropdown from "@/components/navbar/login_dropdown";
+import axios from "axios";
 
 interface CartItems {
   id: Number;
@@ -22,6 +23,14 @@ interface Product {
   price: Number;
   stock: Number;
   image: string;
+}
+
+interface Notification {
+  id: number;
+  body: string;
+  notifType: NotifType;
+  notifRole: NotifRole;
+  isSeen: boolean;
 }
 
 async function handleGoogleSignOut() {
@@ -66,6 +75,23 @@ const Navbar = () => {
   }
   
   const [query, setQuery] = useState('');
+  const [notif, setNotif] = useState<Notification[]>();
+  
+  async function getNotif(){
+    const res = await axios.get("/api/notification");
+    setNotif(res.data.notifications);
+    console.log("notif: ", res.data.notifications);
+  }
+
+  async function readNotif(){
+    console.log("read");
+    const res = await axios.put("/api/notification/read");
+  }
+  
+  useEffect(()=>{
+    getNotif();
+  });
+
   const onSearch = (event : React.FormEvent) => {
     event.preventDefault();
     const encodedSearchQuery = encodeURI(query);
@@ -84,6 +110,19 @@ const Navbar = () => {
   if(!categoryData?.categories){
     
     return null
+  }
+
+  function onNotifClick(type: NotifType, role: NotifRole){
+    console.log("click notif");
+    if(type == NotifType.CHAT){
+
+    } else {
+      if(role == NotifRole.SELLER){
+        router.push("/ordersMania/");
+      } else {
+        router.push("/transactions/");
+      }
+    }
   }
 
   return (
@@ -135,7 +174,7 @@ const Navbar = () => {
         <div className="navbar-end">
           {/* Session Login */}
           {session ? (
-            <div className="flex-none">
+            <div className="flex">
               <div className="dropdown dropdown-end">
                 <label tabIndex={0} className="btn btn-ghost btn-circle mr-5">
                   <div className="indicator">
@@ -173,6 +212,30 @@ const Navbar = () => {
                         View cart
                       </button>
                     </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* notif */}
+              <div className="dropdown dropdown-end" onClick={()=>readNotif()}>
+                <label tabIndex={0} className="btn btn-ghost m-1 text-lg">
+                  <HiBell className="hidden sm:block"/>
+                  <div className="indicator">                      
+                    {notif ? (
+                      <span className="badge badge-sm indicator-item">{notif.filter((x) => x.isSeen == false).length}</span>
+                    ) : (
+                      <></>
+                    )}
+                  </div>
+                </label>
+                <div tabIndex={0} className="mt-3 card card-compact dropdown-content w-72 bg-base-100 shadow">
+                  <div className="card-body">
+                    {notif?.map((notif) => (
+                      <div className="cursor-pointer" onClick={()=> onNotifClick(notif.notifType, notif.notifRole)}>
+                        <p className="py-2">{notif.body}</p>
+                        <hr/>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
