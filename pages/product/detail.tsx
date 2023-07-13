@@ -19,7 +19,9 @@ interface FetchData {
     description: string;
     image: string;
     averageRating: number;
-    shop: Shop;
+    shop: Shop & {
+      user: User;
+    }
   };
   ratings: {
     id: Number;
@@ -473,7 +475,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       description: true,
       image: true,
       averageRating: true,
-      shop: true
+      shop: {
+        include: {
+          user: true
+        }
+      }
     },
   });
 

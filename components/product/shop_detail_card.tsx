@@ -1,11 +1,15 @@
-import { Shop } from "@prisma/client";
+import { Shop, User } from "@prisma/client";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 
 interface Props{
-    shop: Shop;
+    shop: Shop & {
+        user: User;
+    }
 }
 
 const ShopDetailCard = ({shop}: Props) => {
+    const {data: session} = useSession();
     return (
     <>
         <div id="shop-details" className=''>
@@ -14,7 +18,7 @@ const ShopDetailCard = ({shop}: Props) => {
                     {shop.image ? (
                         <img 
                             className='object-cover rounded-full w-16 h-16 sm:h-16 border-2 border-gray-600'
-                            src={`http://localhost:3000/${shop.image!}`}
+                            src={shop.image!}
                             onError={({ currentTarget }) => {
                                 currentTarget.onerror = null; // prevents looping
                                 currentTarget.src =
@@ -25,7 +29,7 @@ const ShopDetailCard = ({shop}: Props) => {
                     ) : (
                         <img 
                             className='object-cover rounded-full w-16 h-16 sm:h-16 border-2 border-gray-600'
-                            src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
+                            src={shop.user.image!}
                             alt=''
                         />
                     )}

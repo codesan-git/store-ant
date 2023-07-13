@@ -80,7 +80,7 @@ const Navbar = () => {
   async function getNotif(){
     const res = await axios.get("/api/notification");
     setNotif(res.data.notifications);
-    console.log("notif: ", res.data.notifications);
+    //console.log("notif: ", res.data.notifications);
   }
 
   async function readNotif(){
@@ -105,7 +105,7 @@ const Navbar = () => {
     //console.log(encodedSearchQuery);
   }
   
-  console.log("profile ", session?.user.image);
+  //console.log("profile ", session?.user.image);
 
   if(!categoryData?.categories){
     

@@ -4,7 +4,8 @@ import Image from "next/image";
 import { useState } from "react";
 import { HiAtSymbol, HiKey, HiUser } from "react-icons/hi";
 import { useRouter } from "next/router";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { GetServerSideProps } from "next";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject  } from "firebase/storage";
 import { getSession, useSession } from "next-auth/react";
 import { prisma } from "../../lib/prisma";
 import Navbar from "../navbar";
@@ -164,17 +165,43 @@ export default function Profile({ profile, address, provinceData, cityData }: Pr
     }
   }
 
-  const changePhoto = async () => {
-    try {
-      if (!selectedFile) return;
-      const formData = new FormData();
-      formData.append("image", selectedFile);
-      await axios
-        .post("http://localhost:3000/api/profile/photo", formData)
-        .then(() => router.reload());
-    } catch (error: any) {
-      //console.log(error);
-    }
+  async function changePhoto(file: any){
+    const storage = getStorage();
+    const storageRef = ref(storage, `images/profile/${session?.user.email}`);
+
+    let pictureRef = ref(storage, session?.user.image!);
+    console.log(pictureRef);
+    deleteObject(pictureRef).then(() => {
+      console.log("deleted");
+    }).catch((error) => {
+      console.log("error: ", error);
+    })
+
+    const uploadTask = uploadBytesResumable(storageRef, file);
+    uploadTask.on('state_changed', 
+      (snapshot) => {
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log('Upload is ' + progress + '% done');
+        switch (snapshot.state) {
+          case 'paused':
+            console.log('Upload is paused');
+            break;
+          case 'running':
+            console.log('Upload is running');
+            break;
+        }
+      }, 
+      (error) => {
+        console.log("error, ", error);
+      }, 
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+          const data = {image: downloadURL};
+          await axios.put("http://localhost:3000/api/profile/photo", data)
+            .then(() => router.reload());
+        });
+      }
+    );
   };
 
   const changePhoneNumber = (e: any) => {
@@ -341,7 +368,7 @@ export default function Profile({ profile, address, provinceData, cityData }: Pr
                       Ketuk gambar untuk mengubah foto
                     </p>
                     <button
-                      onClick={changePhoto}
+                      onClick={() => changePhoto(selectedFile)}
                       className="btn btn-primary btn-outline rounded-md w-full"
                     >
                       Simpan Foto
