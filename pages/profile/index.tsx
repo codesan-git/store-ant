@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { Fragment, useEffect } from "react";
 import styles from "../../styles/Form.module.css";
 import Image from "next/image";
 import { useState } from "react";
@@ -17,6 +17,7 @@ import {
   TabsBody,
   Tab,
   TabPanel,
+  Button,
 } from "@material-tailwind/react";
 import {
   Square3Stack3DIcon,
@@ -27,6 +28,9 @@ import {
   BsFillHouseFill
 } from "react-icons/bs"
 import AddressFormModal from "@/components/profile/address_form_modal";
+import { BankAccount, BankType } from "@prisma/client";
+import BankAccountFormModal from "@/components/profile/bank_account_form_modal";
+import BankAccountDeletionModal from "@/components/profile/bank_account_deletion_modal";
 
 interface FormData {
   username?: string;
@@ -35,6 +39,19 @@ interface FormData {
 }
 
 interface Props {
+  user: {
+    id: string
+    bankAccount: {
+      id: number,
+      bankTypeId: number,
+      userId: string,
+      name: string
+      number: string,
+      bank: {
+        name: string
+      }
+    }
+  }
   profile: {
     id: Number;
     username: string;
@@ -50,6 +67,7 @@ interface Props {
       province_id: string
       city_name: string
   }[];
+  banks: BankType[]
 }
 
 interface Address {
@@ -63,7 +81,7 @@ interface Address {
   isShopAddress: boolean
 }
 
-export default function Profile({ profile, address, provinceData, cityData }: Props) {
+export default function Profile({ profile, user, address, provinceData, cityData, banks }: Props) {
   const [form, setForm] = useState<FormData>({
     username: profile?.username,
     phonenumber: profile?.phoneNumber,
@@ -127,6 +145,17 @@ export default function Profile({ profile, address, provinceData, cityData }: Pr
       });
     } catch (error) {
       //console.log(error);
+    }
+  }
+
+  const handleBankAccountDelete = () => {
+    try {
+      fetch("http://localhost:3000/api/profile/bank/delete", {
+        method: "DELETE"
+      }).then(() => router.push(router.asPath));
+    }
+    catch (error){
+      console.log(error);
     }
   }
 
@@ -302,9 +331,9 @@ export default function Profile({ profile, address, provinceData, cityData }: Pr
         who are like offended by it, it doesn't matter.`,
       code: (
         <>
-          <section className="mt-8 flex flex-row gap-10 bg-gray-100 p-10 rounded-md">
-            <div className="columns">
-              <div className="card card-compact w-96 bg-base-100 shadow-xl">
+          <section className="mt-8 flex flex-col lg:flex-row gap-10 bg-gray-100 lg:p-10 rounded-md">
+            <div className="">
+              <div className="card card-compact lg:w-96 bg-base-100 shadow-xl">
                 <figure className="p-4">
                   <label>
                     <input
@@ -353,7 +382,7 @@ export default function Profile({ profile, address, provinceData, cityData }: Pr
                   </p>
                 </div>
               </div>
-              <div className="card card-compact w-96 bg-base-100 shadow-xl mt-5">
+              <div className="card card-compact lg:w-96 bg-base-100 shadow-xl mt-5">
                 <div className="card-actions justify-end">
                   <button 
                   className="btn btn-primary btn-outline rounded-md w-full"
@@ -380,10 +409,10 @@ export default function Profile({ profile, address, provinceData, cityData }: Pr
                   </p>
                 </div>
                 <div className="flex gap-5">
-                  <label className="my-auto mr-4">Username</label>
-                  <h5>{profile?.username}</h5>
+                  <label className="my-auto mr-4 text-sm lg:text-base w-1/3 lg:w-auto">Username</label>
+                  <h5 className="text-sm lg:text-base w-1/3 lg:w-auto">{profile?.username}</h5>
                   {/* The button to open modal */}
-                  <a href="#my-modal-2" className="text-primary">
+                  <a href="#my-modal-2" className="text-primary text-sm lg:text-base w-1/3 lg:w-auto">
                     ubah
                   </a>
                   <div className="modal z-50" id="my-modal-2">
@@ -455,10 +484,10 @@ export default function Profile({ profile, address, provinceData, cityData }: Pr
 
                 {/* Handle Tanggal Lahir */}
                 <div className="flex gap-5">
-                  <label className="my-auto mr-4">Tanggal Lahir</label>
-                  <h5>30 Desember 1995</h5>
+                  <label className="my-auto mr-4 text-sm lg:text-base w-1/3 lg:w-auto">Tanggal Lahir</label>
+                  <h5 className="text-sm lg:text-base w-1/3 lg:w-auto">30 Desember 1995</h5>
                   {/* The button to open modal */}
-                  <a href="#modal-tanggal-lahir" className="text-primary">
+                  <a href="#modal-tanggal-lahir" className="text-primary text-sm lg:text-base w-1/3 lg:w-auto">
                     ubah
                   </a>
                 </div>
@@ -466,8 +495,8 @@ export default function Profile({ profile, address, provinceData, cityData }: Pr
 
                 {/* Handle Gender */}
                 <div className="flex gap-5">
-                  <label className="my-auto mr-4">Jenis Kelamin</label>
-                  <h5>Pria</h5>
+                  <label className="my-auto lg:mr-4 text-sm lg:text-base w-1/3 lg:w-auto">Jenis Kelamin</label>
+                  <h5 className="text-sm lg:text-base w-1/3 lg:w-auto">Pria</h5>
                 </div>
                 {/* End Handle Gender */}
 
@@ -479,10 +508,10 @@ export default function Profile({ profile, address, provinceData, cityData }: Pr
                 </div>
                 {/* Handle Nomor HP */}
                 <div className="flex gap-5">
-                  <label className="mr-4">Nomor HP</label>
-                  <h5>{profile?.phoneNumber}</h5>
+                  <label className="mr-4 text-sm lg:text-base w-1/3 lg:w-auto">Nomor HP</label>
+                  <h5 className="text-sm lg:text-base w-1/3 lg:w-auto">{profile?.phoneNumber}</h5>
                   {/* The button to open modal */}
-                  <a href="#modal-nomorhp" className="text-primary">
+                  <a href="#modal-nomorhp" className="text-primary text-sm lg:text-base w-1/3 lg:w-auto">
                     ubah
                   </a>
                   {/* <p>{/<em> Put this part before </body> tag </em>/}</p> */}
@@ -518,11 +547,13 @@ export default function Profile({ profile, address, provinceData, cityData }: Pr
                 {/* End Handle Nomor HP */}
 
                 {/* Handle Email */}
-                <div className="flex gap-5">
-                  <label className="mr-4">Email</label>
-                  <h5>{session?.user?.email}</h5>
+                <div className="flex flex-col lg:flex-row gap-5">
+                  <div className="flex flex-row">
+                    <label className="mr-4 text-sm lg:text-base w-1/3 lg:w-auto">Email</label>
+                    <h5 className="text-sm lg:text-base w-1/3 lg:w-auto">{session?.user?.email}</h5>
+                  </div>
                   {/* The button to open modal */}
-                  <a href="#modal-email" className="text-primary">
+                  <a href="#modal-email" className="text-primary text-sm lg:text-base w-1/3 lg:w-auto">
                     ubah
                   </a>
                   {/* <p>{/<em> Put this part before </body> tag </em>/}</p> */}
@@ -589,7 +620,7 @@ export default function Profile({ profile, address, provinceData, cityData }: Pr
       desc: ``,
       code: (
         <>
-          <section className="mt-8 flex flex-col gap-5 bg-gray-100 p-10 rounded-md">
+          <section className="mt-8 flex flex-col gap-5 bg-gray-100 p-2 lg:p-10 rounded-md">
             <div className="flex">
               <AddressFormModal provinceData={provinceData} cityData={cityData}/>
             </div>
@@ -607,9 +638,9 @@ export default function Profile({ profile, address, provinceData, cityData }: Pr
                           {address.region}, {address.city}, {address.province}
                         </p>
                         <p>{address.postcode}</p>
-                        <div className="flex gap-3">
+                        <div className="flex flex-col lg:flex-row gap-3 text-xs lg:text-base">
                           <a className="text-primary-focus">Ubah Alamat</a>
-                          <p className="text-primary">|</p>
+                          <p className="text-primary hidden lg:block">|</p>
                           <div>
                             {address.isMainAddress ? (
                               <a>Alamat Utama</a>
@@ -619,7 +650,7 @@ export default function Profile({ profile, address, provinceData, cityData }: Pr
                               </a>
                             )}
                           </div>
-                          <p className="text-primary">|</p>
+                          <p className="text-primary hidden lg:block">|</p>
                           <div>
                             {address.isShopAddress ? (
                               <a>Alamat Toko</a>
@@ -629,7 +660,7 @@ export default function Profile({ profile, address, provinceData, cityData }: Pr
                               </a>
                             )}
                           </div>
-                          <p className="text-primary">|</p>
+                          <p className="text-primary hidden lg:block">|</p>
                           <a className="text-primary-focus">Hapus</a>
                         </div>
                       </div>
@@ -650,8 +681,38 @@ export default function Profile({ profile, address, provinceData, cityData }: Pr
       icon: Cog6ToothIcon,
       desc: ``,
       code: (
-        <div>
-
+        <div className="mt-8 flex flex-col gap-5 bg-gray-100 p-2 lg:p-10 rounded-md">
+          {
+            user.bankAccount ?
+            <Fragment>
+              <div>
+                <BankAccountDeletionModal onConfirm={handleBankAccountDelete}/>
+              </div>
+              <div className="lg:w-1/2">
+                <div className="flex flex-row space-x-1">
+                  <h1 className="w-1/2">Bank</h1>
+                  <h1 className="w-1/2">: {user.bankAccount.bank.name}</h1>  
+                </div>
+                <div className="flex flex-row space-x-1">
+                  <h1 className="w-1/2">Name</h1>
+                  <h1 className="w-1/2">: {user.bankAccount.name}</h1>  
+                </div>
+                <div className="flex flex-row space-x-1">
+                  <h1 className="w-1/2">Account No.</h1>
+                  <h1 className="w-1/2">: {user.bankAccount.number}</h1>  
+                </div>
+              </div>         
+            </Fragment>
+            : 
+            <Fragment>
+              <div>
+                <BankAccountFormModal  banks={banks}/>
+              </div>
+              <div>
+                <h1>No bank account has been added yet.</h1>
+              </div>
+            </Fragment>
+          }
         </div>
       )
     },
@@ -666,35 +727,8 @@ export default function Profile({ profile, address, provinceData, cityData }: Pr
   return (
     <>
       <Navbar />
-      <div className="flex my-5 w-3/4 mx-auto">
-        {/* <div className="text-center justify-center mt-8 border shadow-md w-72 h-1/2 rounded-lg">
-          <div className="grid grid-cols-2 shadow p-2 pr-10">
-            <div className="avatar mx-auto">
-              <div className="w-16 rounded-full">
-                <img src={session?.user?.image!} />
-              </div>
-            </div>
-            <div className="text-left">
-              <h5>{profile?.username}</h5>
-            </div>
-          </div>
-          <hr />
-          <div className="drawer-side">
-            <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
-            <ul className="menu p-4 w-full bg-base-100 text-base-content">
-              <li>
-                <a className="text-center">Profile</a>
-              </li>
-              <li>
-                <a className="text-center">Orders</a>
-              </li>
-              <li>
-                <a className="text-center">Vouchers</a>
-              </li>
-            </ul>
-          </div>
-        </div> */}
-        <div className="w-full mx-10">
+      <div className="lg:flex w-full my-5 lg:w-3/4 mx-auto">
+        <div className="w-full lg:mx-10">
           <span className="flex gap-2">
             <HiUser className="my-auto w-5 h-5" />
             <h5>{session?.user?.name}</h5>
@@ -705,7 +739,7 @@ export default function Profile({ profile, address, provinceData, cityData }: Pr
                 <Tab key={value} value={value}>
                   <div className="flex items-center gap-2">
                     {React.createElement(icon, { className: "w-5 h-5" })}
-                    {label}
+                    <h1 className="text-xs lg:text-base">{label}</h1>
                   </div>
                 </Tab>
               ))}
@@ -727,16 +761,19 @@ export default function Profile({ profile, address, provinceData, cityData }: Pr
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context);
-  const account = await prisma.user.findUnique({
+  const user = await prisma.user.findUnique({
     where: {
       id: session?.user.id
     },
     select: {
       id: true,
       bankAccount: {
-        select: {
-          bankTypeId: true,
-          name: true,
+        include: {
+          bank:{
+            select: {
+              name: true
+            }
+          }
         }
       }
     }
@@ -779,12 +816,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const cityRes = await axios.request(options);
   const city = cityRes.data.rajaongkir.results;
 
+  const banks = await prisma.bankType.findMany();
+
   return { 
     props: { 
       profile, 
+      user,
       address,
       cityData: city,
-      provinceData: province
+      provinceData: province,
+      banks
     } 
   };
 };
