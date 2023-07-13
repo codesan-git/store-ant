@@ -33,10 +33,11 @@ interface Props {
   onFinish: (id: number) => Promise<void>,
   onReturn: (id: number) => Promise<void>,
   onDetail: (transaction: Transaction) => void,
+  onComplain: (transaction: Transaction) => void,
   onRate: (productName: String, cartItemId: Number) => void,
 }
 
-const TransactionItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinish, onReturn, onDetail }: Props) => { //TODO: re-adjust background colors based on website. the one in the wireframe are just placeholder colors.
+const TransactionItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinish, onReturn, onDetail, onComplain }: Props) => { //TODO: re-adjust background colors based on website. the one in the wireframe are just placeholder colors.
 
   const transactionCreatedDate = new Date(transaction.createdAt);
   const transactionLastUpdate = new Date(transaction.updatedAt);
@@ -135,7 +136,7 @@ const TransactionItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, 
         </button>
       );
     }
-
+    console.log(`transaction`, transaction)
     const renderExtraActionDropdown = () => { //THIS STILL CAUSES A BUG. If you enter web-view mode, and click various extra action buttons consecutively, then enter mobile mode, there will be a stack of extra actions modal
       return (
         <div className="">
@@ -156,7 +157,7 @@ const TransactionItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, 
                     </label>
                   </li>
                   // : <li className="rounded-sm hover:bg-gray-100 transition duration-300"><div onClick={()=>onReturn(transaction.id)}>Ajukan Komplain</div></li>
-                  : <li className="rounded-sm hover:bg-gray-100 transition duration-300"><div>Ajukan Komplain</div></li>
+                  : <li className="rounded-sm hover:bg-gray-100 transition duration-300"><button onClick={()=>onComplain(transaction)}>Ajukan Komplain</button></li>
               }
               <li className="rounded-sm hover:bg-gray-100 transition duration-300"><a>Pusat Bantuan</a></li>
             </ul>
