@@ -53,8 +53,8 @@ export default function ComplainAdmin({ getComplain }: Props) {
         </thead>
         {getComplain.map((comp: any) => (
           <Fragment key={comp.id}>
-            {comp.status === "OPEN" && (
-              <>
+            {/* {comp.status === "OPEN" && (
+              <> */}
                 <tbody>
                   <tr className="hover">
                     <th>{comp.id}</th>
@@ -95,8 +95,8 @@ export default function ComplainAdmin({ getComplain }: Props) {
                     <td></td>
                   </tr>
                 </tbody>
-              </>
-            )}
+              {/* </>
+            )} */}
           </Fragment>
         ))}
       </table>

@@ -57,7 +57,7 @@ export default function ComplainAdmin({ getOrders }: Props) {
           <Fragment key={comp.id}>
             {comp.order.map((orders: any) => (
               <Fragment key={orders.id}>
-                {orders.Complain?.status === "OPEN" && (
+                {orders.Complain?.status && (
                   <tbody>
                     <tr className="hover">
                       <th>{orders.Complain?.orderId}</th>

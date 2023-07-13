@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
 import { prisma } from "../../../../lib/prisma"
-import { OrderStatus } from '@prisma/client'
+import { ComplainStatus, OrderStatus } from '@prisma/client'
 
 export default async function handler(
   req: NextApiRequest,
@@ -18,7 +18,12 @@ export default async function handler(
     const order = await prisma.order.update({
       where:{id: Number(id)},
       data:{
-          OrderStatus: OrderStatus.RETURN_REJECTED
+          OrderStatus: OrderStatus.RETURN_REJECTED,
+          Complain:{
+            update:{
+              status: ComplainStatus.CLOSED
+            }
+          }
       }
   })
     res.status(200).json({ message: "Success!" })
