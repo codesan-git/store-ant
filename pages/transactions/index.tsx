@@ -14,6 +14,7 @@ import DetailTransactionModal from "@/components/transactions/detail_transaction
 import { Product, Order as PrismaOrder, Transaction as PrismaTransaction, TransactionStatus } from "@prisma/client";
 import Chat from "@/components/transactions/chat";
 import ComplainModal from "@/components/transactions/complain_modal";
+import RatingModal from "@/components/transactions/rating_modal";
 
 
 interface CartId {
@@ -58,6 +59,7 @@ const Transactions = ({ transactions }: { transactions: Transaction[] }) => {
 
   const [transactionModalIsHidden, setTransactionModalIsHidden] = useState<Boolean>(true);
   const [complainModalIsHidden, setComplainModalIsHidden] = useState<Boolean>(true);
+  const [ratingModalIsHidden, setRatingModalIsHidden] = useState<Boolean>(true);
 
   const [chatIsHidden, setChatIsHidden] = useState<boolean>(true);
 
@@ -99,6 +101,11 @@ const Transactions = ({ transactions }: { transactions: Transaction[] }) => {
     setComplainModalIsHidden(false);
   }
 
+  const onRating = (transaction: Transaction) => {
+    setSelectedTransaction(transaction)
+    setRatingModalIsHidden(false);
+  }
+
   async function onCommentDetail(id: number) {
     router.push({
       pathname: "http://localhost:3000/complain/response/",
@@ -118,6 +125,12 @@ const Transactions = ({ transactions }: { transactions: Transaction[] }) => {
   };
 
   const getTransactionComplain = () => {
+    return {
+      selectedTransaction
+    };
+  };
+
+  const getTransactionRating = () => {
     return {
       selectedTransaction
     };
@@ -156,6 +169,14 @@ const Transactions = ({ transactions }: { transactions: Transaction[] }) => {
     }
   }
 
+  const ratingTransactionModalArguments = () => {
+    return {
+      ratingModalIsHidden,
+      setRatingModalIsHidden: () => setRatingModalIsHidden(true),
+      getTransactionRating
+    }
+  }
+
   const renderItemsToDisplay = () => {
 
     // if(itemsToDisplay?.length === 0 || !itemsToDisplay) return <h1 hidden={chatIsHidden} className="h-full flex justify-center items-center">No Items</h1>;
@@ -176,6 +197,7 @@ const Transactions = ({ transactions }: { transactions: Transaction[] }) => {
                 onDetail={onDetail}
                 onRate={onRateClick}
                 onComplain={onComplain}
+                onRating={onRating}
               />
             )
         }
@@ -220,7 +242,7 @@ const Transactions = ({ transactions }: { transactions: Transaction[] }) => {
       <CancelAlert htmlElementId={`cancel-alert`} selectProductCallback={getTransactionDetail} />
       <DetailTransactionModal detailTransactionModalArguments={detailTransactionModalArguments} />
       <ComplainModal complainTransactionModalArguments={complainTransactionModalArguments} />
-        {/* {/* <Footer /> */}
+      <RatingModal ratingTransactionModalArguments={ratingTransactionModalArguments} />
     </div>
   );
 }

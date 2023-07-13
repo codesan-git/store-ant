@@ -34,10 +34,11 @@ interface Props {
   onReturn: (id: number) => Promise<void>,
   onDetail: (transaction: Transaction) => void,
   onComplain: (transaction: Transaction) => void,
+  onRating:(transaction:Transaction) => void,
   onRate: (productName: String, cartItemId: Number) => void,
 }
 
-const TransactionItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinish, onReturn, onDetail, onComplain }: Props) => { //TODO: re-adjust background colors based on website. the one in the wireframe are just placeholder colors.
+const TransactionItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinish, onReturn, onDetail, onComplain, onRating }: Props) => { //TODO: re-adjust background colors based on website. the one in the wireframe are just placeholder colors.
 
   const transactionCreatedDate = new Date(transaction.createdAt);
   const transactionLastUpdate = new Date(transaction.updatedAt);
@@ -193,7 +194,7 @@ const TransactionItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, 
           {/* <label htmlFor="review-modal" onClick={onRateClick} className="flex justify-center items-center text-xs lg:text-base w-32 text-white bg-green-500 hover:cursor-pointer">
             Ulas Produk
           </label> */}
-          <div className="flex justify-center items-center text-xs lg:text-base w-32 text-white bg-green-500 hover:cursor-pointer">
+          <div className="flex justify-center items-center text-xs lg:text-base w-32 text-white bg-green-500 hover:cursor-pointer" onClick={()=>onRating(transaction)}>
             Ulas Produk
           </div>
           {renderExtraActionDropdown()}
