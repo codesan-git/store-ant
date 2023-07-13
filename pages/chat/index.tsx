@@ -31,7 +31,7 @@ export default function Chat({messages, recipient} : Messages) {
 
   useEffect(() => {
     socketInitializer();
-  }, [])
+  }, [session?.user.id])
 
   useEffect(() => {
     if(socket)
@@ -48,8 +48,7 @@ export default function Chat({messages, recipient} : Messages) {
   async function listen(){    
     socket.on("receive-message", (data : MessageForm) => {
       console.log(data);
-      //if(data.recipientId == session?.user?.id)
-        setAllMessage([...allMessage, data]);
+      setAllMessage([...allMessage, data]);
     });
   }
 

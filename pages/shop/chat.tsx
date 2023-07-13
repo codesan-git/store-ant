@@ -32,7 +32,7 @@ export default function Chat({messages, recipient, shop} : Messages) {
 
   useEffect(() => {
     socketInitializer();
-  }, [])
+  }, [session?.user.id])
 
   useEffect(() => {
     if(socket)
@@ -43,14 +43,14 @@ export default function Chat({messages, recipient, shop} : Messages) {
     await fetch("/api/socket");
 
     socket = io('ws://localhost:3000', {transports: ['websocket']});
+    console.log(session?.user.id);
     socket.emit("connect-user", session?.user.id);
   }
 
   async function listen(){    
     socket.on("receive-message", (data : MessageForm) => {
       console.log(data);
-      //if(data.recipientId == session?.user?.id)
-        setAllMessage([...allMessage, data]);
+      setAllMessage([...allMessage, data]);
     });
   }
 

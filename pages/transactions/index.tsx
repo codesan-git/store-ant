@@ -12,7 +12,9 @@ import PaymentModal from "@/components/transactions/payment_modal";
 import CancelAlert from "@/components/transactions/user_cancel_alert";
 import DetailTransactionModal from "@/components/transactions/detail_transaction_modal";
 import { Product, Order as PrismaOrder, Transaction as PrismaTransaction, TransactionStatus } from "@prisma/client";
-import Chat from "../../components/transactions/chat";
+import Chat from "@/components/transactions/chat";
+import ComplainModal from "@/components/transactions/complain_modal";
+
 
 interface CartId {
   id: Number;
@@ -39,25 +41,27 @@ interface Transaction {
   order: Order[],
   shop: {
     shopName: string
-  } 
+  }
 }
 
-const Transactions = ({ transactions } : { transactions: Transaction[]}) => {
+const Transactions = ({ transactions }: { transactions: Transaction[] }) => {
   const router = useRouter();
-  
+
   const [currentSelectedSection, setCurrentSelectedSection] = useState<String>("Menunggu Pembayaran");
 
   const [allTransactions, setAllTransactions] = useState<Transaction[]>(transactions);
 
-  const [itemsToDisplay, setItemsToDisplay] = useState<Transaction[]>(transactions.filter((transaction) =>  transaction.status === TransactionStatus.UNPAID));
+  const [itemsToDisplay, setItemsToDisplay] = useState<Transaction[]>(transactions.filter((transaction) => transaction.status === TransactionStatus.UNPAID));
   const [currentRateProductName, setCurrentRateProductName] = useState<String>("");
   const [currentCartItemId, setCurrentCartItemId] = useState<Number>();
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction>();
+
   const [transactionModalIsHidden, setTransactionModalIsHidden] = useState<Boolean>(true);
+  const [complainModalIsHidden, setComplainModalIsHidden] = useState<Boolean>(true);
 
   const [chatIsHidden, setChatIsHidden] = useState<boolean>(true);
-  
-  useEffect(() => {}, [itemsToDisplay]);
+
+  useEffect(() => { }, [itemsToDisplay]);
 
   async function onSelect(transaction: Transaction) {
     setSelectedTransaction(transaction);
@@ -90,6 +94,11 @@ const Transactions = ({ transactions } : { transactions: Transaction[]}) => {
     setTransactionModalIsHidden(false);
   }
 
+  const onComplain = (transaction: Transaction) => {
+    setSelectedTransaction(transaction)
+    setComplainModalIsHidden(false);
+  }
+
   async function onCommentDetail(id: number) {
     router.push({
       pathname: "http://localhost:3000/complain/response/",
@@ -101,8 +110,14 @@ const Transactions = ({ transactions } : { transactions: Transaction[]}) => {
     setCurrentRateProductName(productName);
     setCurrentCartItemId(cartItemId);
   };
-  
+
   const getTransactionDetail = () => {
+    return {
+      selectedTransaction
+    };
+  };
+
+  const getTransactionComplain = () => {
     return {
       selectedTransaction
     };
@@ -133,8 +148,12 @@ const Transactions = ({ transactions } : { transactions: Transaction[]}) => {
     }
   }
 
-  const chatOnClose = () => {
-    setChatIsHidden(true);
+  const complainTransactionModalArguments = () => {
+    return {
+      complainModalIsHidden,
+      setComplainModalIsHidden: () => setComplainModalIsHidden(true),
+      getTransactionComplain
+    }
   }
 
   const renderItemsToDisplay = () => {
@@ -146,22 +165,39 @@ const Transactions = ({ transactions } : { transactions: Transaction[]}) => {
         {
           (itemsToDisplay?.length === 0 || !itemsToDisplay) ?
             <h1 hidden={chatIsHidden} className="flex justify-center items-center">No Items</h1>
-          :itemsToDisplay?.map(
-            (transaction, i) => <TransactionItem 
-              key={i} 
-              transaction={transaction} 
-              onBayar={onSelect}
-              onCancel={onSelect}
-              onFinish={onFinish}
-              onReturn={onReturn}
-              onDetail={onDetail}
-              onRate={onRateClick}
-            />
-          )
+            : itemsToDisplay?.map(
+              (transaction, i) => <TransactionItem
+                key={i}
+                transaction={transaction}
+                onBayar={onSelect}
+                onCancel={onSelect}
+                onFinish={onFinish}
+                onReturn={onReturn}
+                onDetail={onDetail}
+                onRate={onRateClick}
+                onComplain={onComplain}
+              />
+            )
         }
       </div>
     );
+  }
 
+  const complainModalArguments = () => {
+    return (
+      <>
+        <input type="checkbox" id="complain-modal" className="modal-toggle" />
+        <div className="modal">
+          <div className="modal-box">
+            <h3 className="font-bold text-lg">Hello!</h3>
+            <p className="py-4">This modal works with a hidden checkbox!</p>
+            <div className="modal-action">
+              <label htmlFor="complain-modal" className="btn">Close!</label>
+            </div>
+          </div>
+        </div>
+      </>
+    )
   }
 
   return (
@@ -169,21 +205,22 @@ const Transactions = ({ transactions } : { transactions: Transaction[]}) => {
       <Navbar />
       <div className="flex lg:flex-row flex-col py-4 space-y-2 lg:space-y-0 lg:space-x-2">
         <div id="transactions-dashboard-container" className="lg:w-1/6 lg:h-full lg:sticky lg:top-24">
-          <TransactionsDashboard TransactionDashboardArguments={TransactionDashboardArguments}/>
+          <TransactionsDashboard TransactionDashboardArguments={TransactionDashboardArguments} />
         </div>
         <div className="w-full p-2 space-y-2 bg-gray-100">
           <div className="w-full p-2 text-3xl">
             <h1>{currentSelectedSection}</h1>
           </div>
           {renderItemsToDisplay()}
-          <Chat hidden={chatIsHidden} onClose={() => setChatIsHidden(true)}/>
+          <Chat hidden={chatIsHidden} onClose={() => setChatIsHidden(true)} />
         </div>
       </div>
-      <ReviewModal htmlElementId={`review-modal`}  selectProductCallback={getCurrentSelectedProductForRate}/>
-      <PaymentModal htmlElementId={`payment-modal`} selectProductCallback={getTransactionDetail}/>
-      <CancelAlert htmlElementId={`cancel-alert`} selectProductCallback={getTransactionDetail}/>
-      <DetailTransactionModal detailTransactionModalArguments={detailTransactionModalArguments}/>
-      <Footer />
+      <ReviewModal htmlElementId={`review-modal`} selectProductCallback={getCurrentSelectedProductForRate} />
+      <PaymentModal htmlElementId={`payment-modal`} selectProductCallback={getTransactionDetail} />
+      <CancelAlert htmlElementId={`cancel-alert`} selectProductCallback={getTransactionDetail} />
+      <DetailTransactionModal detailTransactionModalArguments={detailTransactionModalArguments} />
+      <ComplainModal complainTransactionModalArguments={complainTransactionModalArguments} />
+        {/* {/* <Footer /> */}
     </div>
   );
 }
@@ -225,8 +262,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         }
       }
     }
-    
+
   });
+
+  const trans = await prisma.transaction.findMany({
+    where: {
+      userId: session?.user.id
+    }
+  })
 
   console.log(JSON.parse(JSON.stringify(transactions)));
 
