@@ -25,6 +25,7 @@ interface Message {
 }
 
 interface User {
+  id: string;
   name: string;
   image: string;
   shop: Shop;
@@ -58,19 +59,23 @@ const Chat = ({ hidden, onClose } : Props) => {
   const [selectedConversation, setSelectedConversation] = useState<Conversation>();
   const [currentChatroomMessages, setChatroomMessages] = useState<Message[]>();
 
+  const [messageForm, setMessageForm] = useState<MessageForm>({senderId: String(session?.user.id), recipientId: "1", message:""});
   
   const [selectedRecepient, setSelectedRecepient] = useState<User>();
 
-  // const socketInitializer = async () => {
-  //   await fetch("/api/socket");
+  const socketInitializer = async () => {
+    await fetch("/api/socket");
 
-  //   socket = io('ws://localhost:3000', {transports: ['websocket']});
+    socket = io('ws://localhost:3000', {transports: ['websocket']});
+    console.log(session?.user.id);
+    socket.emit("connect-user", session?.user.id);
+  }
 
-  //   socket.on("receive-message", (data : Message) => {
+  // const listen = async () => {    
+  //   socket.on("receive-message", (data : MessageForm) => {
   //     console.log(data);
-  //     if(data.recipientId == session?.user.id)
-  //       setChatroomMessages([...currentChatroomMessages!, data]);
-  //   })
+  //     setAllMessage([...allMessage, data]);
+  //   });
   // }
 
   const fetchConversations = async () => {
@@ -80,27 +85,28 @@ const Chat = ({ hidden, onClose } : Props) => {
 
   
   useEffect(() => {
-    // socketInitializer();
     fetchConversations();
+    console.log(messageForm);
+    socketInitializer();
   });
   
-  // const handleSubmitMessage = (e: FormEvent) => {
-  //   e.preventDefault();
-  //   socket.emit("send-message", messageForm)
-  //   setMessageForm({...messageForm, message: ""});
-  //   setAllMessage([...allMessage, messageForm]);
-  //   try{
-  //       fetch('http://localhost:3000/api/chat/send', {
-  //           body: JSON.stringify(messageForm),
-  //           headers: {
-  //               'Content-Type' : 'application/json'
-  //           },
-  //           method: 'POST'
-  //       })
-  //   }catch(error){
-  //       //console.log(error)
-  //   }
-  // }
+  const handleSubmitMessage = (e: FormEvent) => {
+    e.preventDefault();
+    socket.emit("send-message", messageForm);
+    setMessageForm({...messageForm, message: ""});
+    // setChatroomMessages([...currentChatroomMessages, messageForm]);
+    try{
+        fetch('http://localhost:3000/api/chat/send', {
+            body: JSON.stringify(messageForm),
+            headers: {
+                'Content-Type' : 'application/json'
+            },
+            method: 'POST'
+        })
+    }catch(error){
+        //console.log(error)
+    }
+  }
   
   const chatroomItemOnClick = (conversation: Conversation) => {
     setChatroomModalIsHidden(false);
@@ -109,6 +115,18 @@ const Chat = ({ hidden, onClose } : Props) => {
     const latestMessage = conversation.messages.at(conversation.messages.length-1);
     const recepient = getRecepient(latestMessage!);
     setSelectedRecepient(recepient);
+    console.log(recepient.id);
+
+    const newMessageForm = {...messageForm, senderId: session?.user.id, recipientId: recepient.id};
+    console.log(newMessageForm);
+
+    // setMessageForm({...messageForm, recipientId: recepient.id}); //WHY DOESN"T THIS UPDATE RECIPIENTID???
+    // console.log(messageForm);
+    // console.log(messageForm);
+    // console.log(messageForm);
+
+    setMessageForm(newMessageForm);
+    console.log(messageForm);
   }
 
   const getRecepient = (latestMessage: Message) : User => {
@@ -257,9 +275,9 @@ const Chat = ({ hidden, onClose } : Props) => {
                 : <div>No Conversation</div>
               }
             </div>
-            <form className="h-1/6 flex flex-row bg-gray-400">
+            <form onSubmit={(e) => handleSubmitMessage(e)} className="h-1/6 flex flex-row bg-gray-400">
               <div className="w-full flex flex-row justify-center items-center p-2 relative">
-                <textarea name="" id="" className="w-full h-full items-start" ></textarea>
+                <textarea name="" id="" className="w-full h-full items-start" onChange={(e) => {setMessageForm({...messageForm, senderId: String(session?.user.id), message: e.target.value})}}></textarea>
                 <GrAttachment className="absolute right-6"/>
               </div>
               <div className="flex justify-center items-center w-24">
