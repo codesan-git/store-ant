@@ -10,11 +10,6 @@ export type getDataComplain = Complain & {
   }
 }
 
-// export type getTypeTransactions = Transaction & {
-//   order: (Order & {
-//     complain: Complain;
-//   })[];
-// };
 export type getTypeTransactions = Transaction & {
   order:Order[] & {
     Complain: Complain
