@@ -7,9 +7,16 @@ import { BiStoreAlt } from "react-icons/bi";
 import { HiOutlineCamera, HiPlus } from "react-icons/hi";
 import { HiOutlinePhoto } from "react-icons/hi2";
 import useSWR from 'swr';
-// import Rating from '@mui/material/Rating';
-// import Box from '@mui/material/Box';
-// import StarIcon from '@mui/icons-material/Star';
+import { styled } from '@mui/material/styles';
+import Rating, { IconContainerProps } from '@mui/material/Rating';
+import Box from '@mui/material/Box';
+import StarIcon from '@mui/icons-material/Star';
+import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
+import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied';
+import SentimentSatisfiedIcon from '@mui/icons-material/SentimentSatisfied';
+import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAltOutlined';
+import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfied';
+
 
 interface Props {
     ratingTransactionModalArguments: () => any;
@@ -39,25 +46,48 @@ interface Transaction {
     }
 }
 interface FormData {
-    orderId: number[],
-    description: string
+    orderId: number,
+    star: number,
+    comment: string
 }
 
-const labels: { [index: string]: string } = {
-    0.5: 'Useless',
-    1: 'Useless+',
-    1.5: 'Poor',
-    2: 'Poor+',
-    2.5: 'Ok',
-    3: 'Ok+',
-    3.5: 'Good',
-    4: 'Good+',
-    4.5: 'Excellent',
-    5: 'Excellent+',
+const StyledRating = styled(Rating)(({ theme }) => ({
+    '& .MuiRating-iconEmpty .MuiSvgIcon-root': {
+        color: theme.palette.action.disabled,
+    },
+}));
+
+const customIcons: {
+    [index: string]: {
+        icon: React.ReactElement;
+        label: string;
+    };
+} = {
+    1: {
+        icon: <SentimentVeryDissatisfiedIcon color="error" />,
+        label: 'Very Dissatisfied',
+    },
+    2: {
+        icon: <SentimentDissatisfiedIcon color="error" />,
+        label: 'Dissatisfied',
+    },
+    3: {
+        icon: <SentimentSatisfiedIcon color="warning" />,
+        label: 'Neutral',
+    },
+    4: {
+        icon: <SentimentSatisfiedAltIcon color="success" />,
+        label: 'Satisfied',
+    },
+    5: {
+        icon: <SentimentVerySatisfiedIcon color="success" />,
+        label: 'Very Satisfied',
+    },
 };
 
-function getLabelText(value: number) {
-    return `${value} Star${value !== 1 ? 's' : ''}, ${labels[value]}`;
+function IconContainer(props: IconContainerProps) {
+    const { value, ...other } = props;
+    return <span {...other}>{customIcons[value].icon}</span>;
 }
 
 const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
@@ -68,19 +98,34 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
         getTransactionRating
     } = ratingTransactionModalArguments();
 
+    
+
     const { selectedTransaction: transaction }: { selectedTransaction: Transaction | undefined } = getTransactionRating(); //this is pretty cursed lol -
+    const mapValue = transaction?.order.map((orders:any)=>({
+        value: orders.id
+    }))
+    const initialOrders = transaction?.order ? transaction.order.map(orders => String(orders.id)) : [];
     const [shop, setShop] = useState<Shop>();
     const [fillProduct, setFillProduct] = useState<number[]>([]);
     const [ratingDesc, setratingDesc] = useState<string>("")
     const [isAddProduct, setIsAddProduct] = useState(false)
     const [selectedImage, setSelectedImage] = useState<string>();
     const [selectedFiles, setFile] = useState<any[]>([]);
-    const [form, setForm] = useState<FormData>({ orderId: [], description: "" });
+    const [getValue, setGetValue] = useState<string[]>(initialOrders)
+    const [form, setForm] = useState<FormData>({
+        orderId: 0,
+        star: 0,
+        comment: ""
+    });
+
+    
 
     const [value, setValue] = useState<number | null>(2);
     const [hover, setHover] = useState(-1);
 
     const ref = useRef<any>(null)
+
+
 
     const fetchShop = async () => {
         try {
@@ -96,24 +141,25 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
         }
     };
 
-    const postrating = async () => {
+    
+
+    const postRating = async () => {
         try {
+            // if (selectedFiles.length == 0) return;
+            // let comment = [];
             if (selectedFiles.length == 0) return;
+            // for (let i = 0; i < form.length; i++) {
+            // }
             const formData = new FormData();
             selectedFiles.forEach((file) => formData.append("image", file));
-            formData.append("orderId", form.orderId.join(','));
-            formData.append("description", form.description);
-            await axios.post(`/api/rating/create`, formData)
+            formData.append("orderId", String(form.orderId));
+            formData.append("star", String(form.star))
+            formData.append("comment", form.comment);
+            await axios.post(`/api/cart/rate`, formData)
         } catch (error) {
-            console.error(error);
+            console.error(`cekerror`, error);
         }
-        // }
-        // }
     };
-
-    useEffect(() => {
-        fetchShop()
-    }, []);
 
     const transactionDate = new Date(transaction?.createdAt!);
 
@@ -173,37 +219,40 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
         return total;
     }
 
-    const renderSelectedProduct = () => {
-        return transaction?.order.map((orders) => {
-            if (form.orderId.includes(orders.id)) {
-                return (
-                    <div key={orders.id} className="flex gap-4">
-                        <img
-                            src={orders?.product.image || ""}
-                            alt=""
-                            className="w-16 h-16 border border-dotted bg-gray-300 border-green-800"
-                        />
-                        <div className="my-auto font-bold">
-                            <p>{orders?.product.name}</p>
-                        </div>
-                        <div
-                            className="my-auto font-bold cursor-pointer"
-                            onClick={() => {
-                                const index = fillProduct.findIndex((obj) => obj === orders.id);
-                                if (index !== -1) {
-                                    fillProduct.splice(index, 1);
-                                    // Lakukan tindakan lain setelah menghapus order
-                                }
-                            }}
-                        >
-                            X
-                        </div>
-                    </div>
-                );
-            }
-            return null;
-        });
-    };
+    // const renderSelectedProduct = () => {
+    //     return transaction?.order.map((orders) => {
+    //         for (let i = 0; i < form.length; i++) {
+
+    //             if (String(form[i].orderId).includes(String(orders.id))) {
+    //                 return (
+    //                 <div key={orders.id} className="flex gap-4">
+    //                     <img
+    //                         src={orders?.product.image || ""}
+    //                         alt=""
+    //                         className="w-16 h-16 border border-dotted bg-gray-300 border-green-800"
+    //                     />
+    //                     <div className="my-auto font-bold">
+    //                         <p>{orders?.product.name}</p>
+    //                     </div>
+    //                     <div
+    //                         className="my-auto font-bold cursor-pointer"
+    //                         onClick={() => {
+    //                             const index = fillProduct.findIndex((obj) => obj === orders.id);
+    //                             if (index !== -1) {
+    //                                 fillProduct.splice(index, 1);
+    //                                 // Lakukan tindakan lain setelah menghapus order
+    //                             }
+    //                         }}
+    //                     >
+    //                         X
+    //                     </div>
+    //                 </div>
+    //             );
+    //         }
+    //         return null;
+    //     }
+    //     });
+    // };
 
     function handleFile(target: any) {
         let file = target.files;
@@ -270,15 +319,20 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
 
     }
 
-    console.log(`fill`, form.orderId)
-    console.log(`rating`, form.description)
-    console.log(`imgUrl`, selectedImage)
-    console.log(`formdata`, form)
-    useEffect(() => {
-        console.log(`rating`, { ratingDesc })
-        console.log(`imgUrl`, selectedImage)
-        renderSelectedProduct()
-    }, [])
+    // console.log(`fill`, transaction?.order[0].id)
+    console.log(`getValue`,getValue)
+    // console.log(`comment`, form.comment)
+    // console.log(`rare`, form.star)
+    // console.log(`imgUrl`, selectedImage)
+    // console.log(`formdata`, form)
+    // useEffect(() => {
+    //     console.log(`rating`, { ratingDesc })
+    //     console.log(`imgUrl`, selectedImage)
+    //     renderSelectedProduct()
+    // }, [])
+    // console.log(`formData`, form)
+    // console.log(`transaction`, transaction)
+    // console.log(`getTransactionProps`, getTransactionRating())
     return (
         <Fragment>
             <div hidden={ratingModalIsHidden} id="new-modal-custom" className="bg-gray-900 bg-opacity-75 fixed h-full w-full top-0 left-0 z-50 pointer-events-auto">
@@ -297,122 +351,100 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
                                 <h1 className="text-xl font-bold">No. Invoice</h1>
                                 <p>{transaction?.id.toString()}</p>
                             </div>
-                            <div id="selected-products">
-                                <div className="my-auto font-bold">
-                                    <p>Rate Product</p>
-                                </div>
-                                <div className="gap-4">
-                                    {/* {renderSelectedProduct()} */}
-                                    {/* <div className="rating rating-lg rating-half">
-                                        <input type="radio" name="rating-10" className="rating-hidden" />
-                                        <input type="radio" name="rating-10" value={0.5} className="bg-green-500 mask mask-star-2 mask-half-1" />
-                                        <input type="radio" name="rating-10" value={1} className="bg-green-500 mask mask-star-2 mask-half-2" />
-                                        <input type="radio" name="rating-10" value={1.5} className="bg-green-500 mask mask-star-2 mask-half-1" />
-                                        <input type="radio" name="rating-10" value={2} className="bg-green-500 mask mask-star-2 mask-half-2" />
-                                        <input type="radio" name="rating-10" value={2.5}className="bg-green-500 mask mask-star-2 mask-half-1" />
-                                        <input type="radio" name="rating-10" value={3} className="bg-green-500 mask mask-star-2 mask-half-2" />
-                                        <input type="radio" name="rating-10" value={3.5} className="bg-green-500 mask mask-star-2 mask-half-1" />
-                                        <input type="radio" name="rating-10" value={4} className="bg-green-500 mask mask-star-2 mask-half-2" />
-                                        <input type="radio" name="rating-10" value={4.5} className="bg-green-500 mask mask-star-2 mask-half-1" />
-                                        <input type="radio" name="rating-10" value={5} className="bg-green-500 mask mask-star-2 mask-half-2" />
-                                    </div> */}
-                                    {/* <Box
-                                        sx={{
-                                            width: 200,
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                        }}
-                                    >
-                                        <Rating
-                                            name="hover-feedback"
-                                            value={value}
-                                            precision={0.5}
-                                            getLabelText={getLabelText}
-                                            onChange={(event:any, newValue:any) => {
-                                                setValue(newValue);
-                                            }}
-                                            onChangeActive={(event:any, newHover:any) => {
-                                                setHover(newHover);
-                                            }}
-                                            emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
-                                        />
-                                        {value !== null && (
-                                            <Box sx={{ ml: 2 }}>{labels[hover !== -1 ? hover : value]}</Box>
-                                        )}
-                                    </Box> */}
-                                </div>
-                            </div>
-                            <div id="select-orders" className="">
-                                <div className="my-auto font-bold">
-                                    <p>Item Bermasalah</p>
-                                </div>
-                                <div className="flex gap-4 cursor-pointer" onClick={() => { setIsAddProduct(!isAddProduct) }}>
-                                    <div className="flex w-16 h-16 border border-dotted bg-gray-300 border-green-800">
-                                        <HiPlus className="m-auto" />
+                            {transaction?.order.map((orders) => (
+                                <div key={orders.id}>
+                                    {/* {setGetValue([String(orders.id)])} */}
+                                    <button onClick={()=>setGetValue([String(orders.id)])}>kadal</button>
+                                    
+                                    <div id="invoice-product">
+                                        <h1 className="text-xl font-bold">No. Invoice</h1>
+                                        <p>{orders.productId.toString()}</p>
                                     </div>
-                                    <div className="my-auto font-bold">
-                                        <p>Add Item</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                {isAddProduct ?
-                                    <>
-                                        <select className="select w-1/2 max-w-xs rounded-sm" placeholder="Select Product" onChange={e => setForm({ ...form, orderId: form.orderId.concat(Number(e.target.value)) })}>
-                                            <option disabled selected>Select Product</option>
-                                            {transaction?.order.map((orders) => (
-                                                <>
-                                                    <option key={orders.id} value={orders.id} >
-                                                        {orders.id}
-                                                        {orders.product.name}
-                                                    </option>
-                                                </>
-                                            ))}
-                                        </select>
-                                    </>
-                                    :
-                                    <>
-
-                                    </>
-                                }
-                            </div>
-                            <div id="rating-description">
-                                <textarea
-                                    className="textarea textarea-bordered w-full rounded-sm"
-                                    placeholder="Text rating"
-                                    onChange={e => setForm({ ...form, description: e.target.value })}
-                                ></textarea>
-                            </div>
-                            <div id="rating-image" className="cursor-pointer">
-                                <h1 className="text-xl font-bold">Upload Gambar</h1>
-                                {/* <div className="flex border border-dashed border-black w-full h-48 m-auto">
-									<div className="flex m-auto cursor-pointer" onClick={() => ref.current?.click()}>[<HiPlus className="my-auto" />] Select Image</div>
-									<input ref={ref} type="file" className="hidden m-auto cursor-pointer" onChange={(e: any) => setSelectedImage(e.target.value)} />
-								</div> */}
-                                <form action="" className='lg:flex lg:flex-row'>
-                                    <section className='px-4 lg:w-1/2 flex flex-col justify-center items-center space-y-4'>
-                                        <div className='border-gray-600 border border-dashed rounded-xl flex justify-center items-center h-40 w-full lg:h-5/6 lg:w-5/6 relative'>
-                                            <input disabled={selectedFiles.length >= 5} type="file" accept='.jpg, .jpeg, .png, .webp' name="product-image" id="product-image-input" className='w-full h-full cursor-pointer opacity-0 absolute'
-                                                onChange={({ target }) => {
-                                                    handleFile(target);
-                                                    if (target.files) {
-                                                        const file = target.files[0];
-                                                        if (file)
-                                                            setSelectedImage(URL.createObjectURL(file));
-                                                    }
-                                                }}
-                                            />
-                                            {renderInputMessage()}
+                                    <div id="selected-products">
+                                        <div className="my-auto font-bold">
+                                            <p>{orders.id}</p>
                                         </div>
-                                        {renderSelectedImages()}
-                                    </section>
-                                </form>
-                            </div>
+                                        <div className="flex gap-4">
+                                            <img
+                                                src={`http://localhost:3000\\${transaction?.order[0].product.image?.split(",")}` || ""}
+                                                alt=""
+                                                className="w-16 h-16 border border-dotted bg-gray-300 border-green-800"
+                                            />
+                                            <div className="my-auto font-bold">
+                                                <p>{transaction?.order[0].product.name}</p>
+                                            </div>
+                                        </div>
+                                        <div className="gap-4">
+                                            {/* {form.map((forms)=>( */}
+                                            {/* <Fragment key={forms.star}> */}
+                                            <StyledRating
+                                                name="highlight-selected-only"
+                                                defaultValue={2}
+                                                IconContainerComponent={IconContainer}
+                                                getLabelText={(value: number) => customIcons[value].label}
+                                                highlightSelectedOnly
+                                                onChange={(e: any) => setForm({ ...form, star: e.target.value, orderId: orders.id })}
+                                            />
+                                            {/* </Fragment> */}
+                                            {/* ))} */}
+                                        </div>
+                                    </div>
+                                    {/* <div>
+                                        {isAddProduct ?
+                                            <>
+                                                <select className="select w-1/2 max-w-xs rounded-sm" placeholder="Select Product" onChange={e => setForm({ ...form, orderId: orders.id })}>
+                                                    <option disabled selected>Select Product</option>
+                                                    {transaction?.order.map((orders) => (
+                                                        <>
+                                                            <option key={orders.id} value={orders.id} >
+                                                                {orders.id}
+                                                                {orders.product.name}
+                                                            </option>
+                                                        </>
+                                                    ))}
+                                                </select>
+                                            </>
+                                            :
+                                            <>
+
+                                            </>
+                                        }
+                                    </div> */}
+                                    <div id="rating-description">
+                                        <textarea
+                                            className="textarea textarea-bordered w-full rounded-sm"
+                                            placeholder="Text rating"
+                                            onChange={e => setForm({ ...form, comment: e.target.value })}
+                                        ></textarea>
+                                    </div>
+                                    <div id="rating-image" className="cursor-pointer">
+                                        <h1 className="text-xl font-bold">Upload Gambar</h1>
+                                        <form action="" className='lg:flex lg:flex-row'>
+                                            <section className='px-4 lg:w-1/2 flex flex-col justify-center items-center space-y-4'>
+                                                <div className='border-gray-600 border border-dashed rounded-xl flex justify-center items-center h-40 w-full lg:h-5/6 lg:w-5/6 relative'>
+                                                    <input disabled={selectedFiles.length >= 5} type="file" accept='.jpg, .jpeg, .png, .webp' name="product-image" id="product-image-input" className='w-full h-full cursor-pointer opacity-0 absolute'
+                                                        onChange={({ target }) => {
+                                                            handleFile(target);
+                                                            if (target.files) {
+                                                                const file = target.files[0];
+                                                                if (file)
+                                                                    setSelectedImage(URL.createObjectURL(file));
+                                                            }
+                                                        }}
+                                                    />
+                                                    {renderInputMessage()}
+                                                </div>
+                                                {renderSelectedImages()}
+                                            </section>
+                                        </form>
+                                    </div>
+                                </div>
+                            ))}
                             <div id="button-action" className="flex justify-end">
                                 <div className="w-20 h-8 m-auto border border-red-500 hover:bg-red-500 ">Batal</div>
                                 <div
-                                    onClick={postrating}
-                                    className="w-20 h-8 m-auto bg-green-500 hover:border border-green-500 bg-transparent"
+                                    onClick={() => postRating()}
+                                    className="cursor-pointer w-20 h-8 m-auto bg-green-500 hover:border border-green-500 bg-transparent"
                                 >Ajukan</div>
                             </div>
                         </div>
