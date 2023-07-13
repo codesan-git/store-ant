@@ -331,9 +331,9 @@ export default function Profile({ profile, user, address, provinceData, cityData
         who are like offended by it, it doesn't matter.`,
       code: (
         <>
-          <section className="mt-8 flex flex-col lg:flex-row gap-10 bg-gray-100 rounded-md">
-            <div className="columns">
-              <div className="card card-compact w-96 bg-base-100 shadow-xl">
+          <section className="mt-8 flex flex-col lg:flex-row gap-10 bg-gray-100 lg:p-10 rounded-md">
+            <div className="">
+              <div className="card card-compact lg:w-96 bg-base-100 shadow-xl">
                 <figure className="p-4">
                   <label>
                     <input
@@ -382,7 +382,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
                   </p>
                 </div>
               </div>
-              <div className="card card-compact w-96 bg-base-100 shadow-xl mt-5">
+              <div className="card card-compact lg:w-96 bg-base-100 shadow-xl mt-5">
                 <div className="card-actions justify-end">
                   <button 
                   className="btn btn-primary btn-outline rounded-md w-full"
@@ -409,10 +409,10 @@ export default function Profile({ profile, user, address, provinceData, cityData
                   </p>
                 </div>
                 <div className="flex gap-5">
-                  <label className="my-auto mr-4">Username</label>
-                  <h5>{profile?.username}</h5>
+                  <label className="my-auto mr-4 text-sm lg:text-base w-1/3 lg:w-auto">Username</label>
+                  <h5 className="text-sm lg:text-base w-1/3 lg:w-auto">{profile?.username}</h5>
                   {/* The button to open modal */}
-                  <a href="#my-modal-2" className="text-primary">
+                  <a href="#my-modal-2" className="text-primary text-sm lg:text-base w-1/3 lg:w-auto">
                     ubah
                   </a>
                   <div className="modal z-50" id="my-modal-2">
@@ -484,10 +484,10 @@ export default function Profile({ profile, user, address, provinceData, cityData
 
                 {/* Handle Tanggal Lahir */}
                 <div className="flex gap-5">
-                  <label className="my-auto mr-4">Tanggal Lahir</label>
-                  <h5>30 Desember 1995</h5>
+                  <label className="my-auto mr-4 text-sm lg:text-base w-1/3 lg:w-auto">Tanggal Lahir</label>
+                  <h5 className="text-sm lg:text-base w-1/3 lg:w-auto">30 Desember 1995</h5>
                   {/* The button to open modal */}
-                  <a href="#modal-tanggal-lahir" className="text-primary">
+                  <a href="#modal-tanggal-lahir" className="text-primary text-sm lg:text-base w-1/3 lg:w-auto">
                     ubah
                   </a>
                 </div>
@@ -495,8 +495,8 @@ export default function Profile({ profile, user, address, provinceData, cityData
 
                 {/* Handle Gender */}
                 <div className="flex gap-5">
-                  <label className="my-auto mr-4">Jenis Kelamin</label>
-                  <h5>Pria</h5>
+                  <label className="my-auto lg:mr-4 text-sm lg:text-base w-1/3 lg:w-auto">Jenis Kelamin</label>
+                  <h5 className="text-sm lg:text-base w-1/3 lg:w-auto">Pria</h5>
                 </div>
                 {/* End Handle Gender */}
 
@@ -508,10 +508,10 @@ export default function Profile({ profile, user, address, provinceData, cityData
                 </div>
                 {/* Handle Nomor HP */}
                 <div className="flex gap-5">
-                  <label className="mr-4">Nomor HP</label>
-                  <h5>{profile?.phoneNumber}</h5>
+                  <label className="mr-4 text-sm lg:text-base w-1/3 lg:w-auto">Nomor HP</label>
+                  <h5 className="text-sm lg:text-base w-1/3 lg:w-auto">{profile?.phoneNumber}</h5>
                   {/* The button to open modal */}
-                  <a href="#modal-nomorhp" className="text-primary">
+                  <a href="#modal-nomorhp" className="text-primary text-sm lg:text-base w-1/3 lg:w-auto">
                     ubah
                   </a>
                   {/* <p>{/<em> Put this part before </body> tag </em>/}</p> */}
@@ -547,11 +547,13 @@ export default function Profile({ profile, user, address, provinceData, cityData
                 {/* End Handle Nomor HP */}
 
                 {/* Handle Email */}
-                <div className="flex gap-5">
-                  <label className="mr-4">Email</label>
-                  <h5>{session?.user?.email}</h5>
+                <div className="flex flex-col lg:flex-row gap-5">
+                  <div className="flex flex-row">
+                    <label className="mr-4 text-sm lg:text-base w-1/3 lg:w-auto">Email</label>
+                    <h5 className="text-sm lg:text-base w-1/3 lg:w-auto">{session?.user?.email}</h5>
+                  </div>
                   {/* The button to open modal */}
-                  <a href="#modal-email" className="text-primary">
+                  <a href="#modal-email" className="text-primary text-sm lg:text-base w-1/3 lg:w-auto">
                     ubah
                   </a>
                   {/* <p>{/<em> Put this part before </body> tag </em>/}</p> */}
