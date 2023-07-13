@@ -17,7 +17,7 @@ export default async function handler(
   const order = await prisma.order.update({
       where:{id: Number(id)},
       data:{
-          OrderStatus: OrderStatus.RETURNING
+          OrderStatus: OrderStatus.RETURNED
       }
   })  
 
