@@ -71,23 +71,37 @@ const Chat = ({ hidden, onClose } : Props) => {
     socket.emit("connect-user", session?.user.id);
   }
 
-  // const listen = async () => {    
-  //   socket.on("receive-message", (data : MessageForm) => {
-  //     console.log(data);
-  //     setAllMessage([...allMessage, data]);
-  //   });
-  // }
+  const listen = async () => {    
+    socket.on("receive-message", (data : Message) => {
+      console.log(data);
+
+      // const newMessage: Message = {
+      //   createdAt: Date.now(),
+      //   id: 0,
+      //   isSeen: false,
+      //   message: data.message ,
+      //   recipient: {} ,
+      //   recipientId: ,
+      //   sender: ,
+      //   senderId: ,
+      // }
+
+      setChatroomMessages([...currentChatroomMessages as Message[], data]);
+    });
+  }
 
   const fetchConversations = async () => {
     const res = await axios.get("/api/chat");
     setConversations(res.data.conversations);
   }
 
-  
   useEffect(() => {
-    fetchConversations();
     console.log(messageForm);
     socketInitializer();
+    fetchConversations();
+  },[]);
+  
+  useEffect(() => {
   });
   
   const handleSubmitMessage = (e: FormEvent) => {
@@ -117,7 +131,7 @@ const Chat = ({ hidden, onClose } : Props) => {
     setSelectedRecepient(recepient);
     console.log(recepient.id);
 
-    const newMessageForm = {...messageForm, senderId: session?.user.id, recipientId: recepient.id};
+    const newMessageForm = {...messageForm, senderId: String(session?.user.id), recipientId: recepient.id};
     console.log(newMessageForm);
 
     // setMessageForm({...messageForm, recipientId: recepient.id}); //WHY DOESN"T THIS UPDATE RECIPIENTID???
