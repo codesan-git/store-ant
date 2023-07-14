@@ -7,6 +7,7 @@ import { FormEvent, Fragment, useEffect, useState } from "react";
 import axios from 'axios';
 import { useSession } from "next-auth/react";
 import { Socket, io } from 'socket.io-client'
+import { useRouter } from "next/router";
 
 interface Conversation {
   id: number;
@@ -52,12 +53,14 @@ interface Props {
 
 const Chat = ({ hidden, onClose } : Props) => {
 
+  const router = useRouter();
+
   const {data: session} = useSession();
 
   const [conversations, setConversations] = useState<Conversation[]>();
   const [chatroomModalIsHidden, setChatroomModalIsHidden] = useState<boolean>(true);
   const [selectedConversation, setSelectedConversation] = useState<Conversation>();
-  const [currentChatroomMessages, setChatroomMessages] = useState<Message[]>();
+  const [currentChatroomMessages, setCurrentChatroomMessages] = useState<Message[]>();
 
   const [messageForm, setMessageForm] = useState<MessageForm>({senderId: String(session?.user.id), recipientId: "1", message:""});
   
@@ -86,7 +89,7 @@ const Chat = ({ hidden, onClose } : Props) => {
       //   senderId: ,
       // }
 
-      setChatroomMessages([...currentChatroomMessages as Message[], data]);
+      setCurrentChatroomMessages([...currentChatroomMessages as Message[], data]);
     });
   }
 
@@ -107,8 +110,21 @@ const Chat = ({ hidden, onClose } : Props) => {
   const handleSubmitMessage = (e: FormEvent) => {
     e.preventDefault();
     socket.emit("send-message", messageForm);
-    setMessageForm({...messageForm, message: ""});
-    // setChatroomMessages([...currentChatroomMessages, messageForm]);
+
+    // const now = new Date();
+
+    // const newMessage: Message = {
+    //   createdAt: now,
+    //   id: 0, 
+    //   isSeen: false,
+    //   message: messageForm.message,
+    //   recipient: selectedRecepient as User,
+    //   recipientId: selectedRecepient?.id as string,
+    //   sender: {...session?.user, shop: {image: "", name: ""}} as User,
+    //   senderId: session?.user.id as string
+    // }
+
+    // setCurrentChatroomMessages([...currentChatroomMessages as Message[], newMessage]);
     try{
         fetch('http://localhost:3000/api/chat/send', {
             body: JSON.stringify(messageForm),
@@ -116,7 +132,7 @@ const Chat = ({ hidden, onClose } : Props) => {
                 'Content-Type' : 'application/json'
             },
             method: 'POST'
-        })
+        }).then(() => router.reload())
     }catch(error){
         //console.log(error)
     }
@@ -138,6 +154,8 @@ const Chat = ({ hidden, onClose } : Props) => {
     // console.log(messageForm);
     // console.log(messageForm);
     // console.log(messageForm);
+
+    setCurrentChatroomMessages(selectedConversation?.messages);
 
     setMessageForm(newMessageForm);
     console.log(messageForm);
