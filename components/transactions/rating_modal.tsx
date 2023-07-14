@@ -2,7 +2,7 @@ import Orders from "@/pages/shop/orders";
 import { Product, ProductInCart, Shop, TransactionStatus } from "@prisma/client";
 import axios from "axios";
 import Image from "next/image";
-import { Fragment, useEffect, useState, useRef } from "react";
+import { Fragment, useEffect, useState, useRef, ChangeEvent } from "react";
 import { BiStoreAlt } from "react-icons/bi";
 import { HiOutlineCamera, HiPlus } from "react-icons/hi";
 import { HiOutlinePhoto } from "react-icons/hi2";
@@ -16,6 +16,7 @@ import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied
 import SentimentSatisfiedIcon from '@mui/icons-material/SentimentSatisfied';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAltOutlined';
 import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfied';
+import router, { useRouter } from "next/navigation";
 
 
 interface Props {
@@ -98,10 +99,10 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
         getTransactionRating
     } = ratingTransactionModalArguments();
 
-    
+
 
     const { selectedTransaction: transaction }: { selectedTransaction: Transaction | undefined } = getTransactionRating(); //this is pretty cursed lol -
-    const mapValue = transaction?.order.map((orders:any)=>({
+    const mapValue = transaction?.order.map((orders: any) => ({
         value: orders.id
     }))
     const initialOrders = transaction?.order ? transaction.order.map(orders => String(orders.id)) : [];
@@ -110,20 +111,23 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
     const [ratingDesc, setratingDesc] = useState<string>("")
     const [isAddProduct, setIsAddProduct] = useState(false)
     const [selectedImage, setSelectedImage] = useState<string>();
-    const [selectedFiles, setFile] = useState<any[]>([]);
+    // const [selectedFiles, setFile] = useState<any[]>([]);
+    const [selectedFiles, setSelectedFiles] = useState<Array<Array<File>>>([]);
     const [getValue, setGetValue] = useState<string[]>(initialOrders)
-    const [form, setForm] = useState<FormData>({
-        orderId: 0,
-        star: 0,
-        comment: ""
-    });
+    // const [form, setForm] = useState<FormData>({
+    //     orderId: 0,
+    //     star: 0,
+    //     comment: ""
+    // });
+    const [form, setForm] = useState<FormData[]>([]);
 
-    
+
 
     const [value, setValue] = useState<number | null>(2);
     const [hover, setHover] = useState(-1);
 
     const ref = useRef<any>(null)
+    const router = useRouter()
 
 
 
@@ -138,26 +142,6 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
             setShop(shop);
         } catch (error) {
 
-        }
-    };
-
-    
-
-    const postRating = async () => {
-        try {
-            // if (selectedFiles.length == 0) return;
-            // let comment = [];
-            if (selectedFiles.length == 0) return;
-            // for (let i = 0; i < form.length; i++) {
-            // }
-            const formData = new FormData();
-            selectedFiles.forEach((file) => formData.append("image", file));
-            formData.append("orderId", String(form.orderId));
-            formData.append("star", String(form.star))
-            formData.append("comment", form.comment);
-            await axios.post(`/api/cart/rate`, formData)
-        } catch (error) {
-            console.error(`cekerror`, error);
         }
     };
 
@@ -219,63 +203,40 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
         return total;
     }
 
-    // const renderSelectedProduct = () => {
-    //     return transaction?.order.map((orders) => {
-    //         for (let i = 0; i < form.length; i++) {
-
-    //             if (String(form[i].orderId).includes(String(orders.id))) {
-    //                 return (
-    //                 <div key={orders.id} className="flex gap-4">
-    //                     <img
-    //                         src={orders?.product.image || ""}
-    //                         alt=""
-    //                         className="w-16 h-16 border border-dotted bg-gray-300 border-green-800"
-    //                     />
-    //                     <div className="my-auto font-bold">
-    //                         <p>{orders?.product.name}</p>
-    //                     </div>
-    //                     <div
-    //                         className="my-auto font-bold cursor-pointer"
-    //                         onClick={() => {
-    //                             const index = fillProduct.findIndex((obj) => obj === orders.id);
-    //                             if (index !== -1) {
-    //                                 fillProduct.splice(index, 1);
-    //                                 // Lakukan tindakan lain setelah menghapus order
-    //                             }
-    //                         }}
-    //                     >
-    //                         X
-    //                     </div>
-    //                 </div>
-    //             );
-    //         }
-    //         return null;
-    //     }
-    //     });
-    // };
-
-    function handleFile(target: any) {
-        let file = target.files;
-
-        for (let i = 0; i < file.length; i++) {
-            const fileType = file[i]["type"];
+    const handleFile = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
+        const file = event.target.files && event.target.files[0];
+        if (file) {
+            const fileType = file.type;
             const validImageTypes = ["image/gif", "image/jpeg", "image/png"];
             if (validImageTypes.includes(fileType)) {
-                setFile([...selectedFiles, file[i]]);
+                setSelectedFiles((prevFiles) => {
+                    const updatedFiles = [...prevFiles];
+                    const images = updatedFiles[index] || [];
+
+                    if (images.length < 5) {
+                        images.push(file);
+                        updatedFiles[index] = images;
+                        return updatedFiles;
+                    } else {
+                        console.log("Max limit reached for images.");
+                        return prevFiles;
+                    }
+                });
             } else {
-                console.log("only images accepted");
+                console.log("Only images are accepted.");
             }
-            console.log("FILES: ", selectedFiles);
         }
     };
 
-    const removeImage = (i: string) => {
-        setFile(selectedFiles.filter((x) => x.name !== i));
-        if (selectedFiles.length >= 2)
-            setSelectedImage(URL.createObjectURL(selectedFiles[selectedFiles.length - 2]));
+    const removeImage = (fileIndex: number, imageIndex: number) => {
+        const updatedSelectedFiles = [...selectedFiles];
+        updatedSelectedFiles[fileIndex] = updatedSelectedFiles[fileIndex].filter(
+            (_, index) => index !== imageIndex
+        );
+        setSelectedFiles(updatedSelectedFiles);
     };
 
-    const renderInputMessage = () => {
+    const renderInputMessage = (index: number) => {
 
         if (selectedFiles.length >= 5) return (
             <>
@@ -297,30 +258,93 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
     }
 
     const renderSelectedImages = () => {
-        if (selectedFiles.length == 0) return;
-
         return (
             <>
-                <div className='flex flex-row gap-2'>
-                    {
-                        selectedFiles.map(
-                            (file, key) =>
-                                <div key={key} className="relative">
-                                    <div onClick={() => removeImage(file.name)} className="flex justify-center items-center bg-black text-white rounded-full h-4 w-4 text-xs font-bold absolute -right-2 -top-2 sm:-right-2 hover:cursor-pointer">
+                {selectedFiles.map((imageArray, fileIndex) => (
+                    <div key={fileIndex}>
+                        <div className="w-full font-bold block mb-3">
+                            <p>Image For Product {transaction?.order[fileIndex]?.id}</p>
+                        </div>
+                        <div className="flex flex-row gap-2">
+                            {imageArray.map((file, imageIndex) => (
+                                <div key={imageIndex} className="relative flex">
+                                    <div
+                                        onClick={() => removeImage(fileIndex, imageIndex)}
+                                        className="flex justify-center items-center bg-black text-white rounded-full h-4 w-4 text-xs font-bold absolute -right-2 -top-2 sm:-right-2 hover:cursor-pointer"
+                                    >
                                         ✕
                                     </div>
-                                    <img src={URL.createObjectURL(file)} alt="" className="w-12 h-12 sm:w-16 sm:h-16 object-cover border border-gray-600" />
+                                    <img
+                                        src={URL.createObjectURL(file)}
+                                        alt=""
+                                        className="w-12 h-12 sm:w-16 sm:h-16 object-cover border border-gray-600"
+                                    />
                                 </div>
-                        )
-                    }
-                </div>
+                            ))}
+                        </div>
+                    </div>
+                ))}
             </>
         );
+    };
 
-    }
+
+
+
+    const handleRatingChange = (index: number, value: number) => {
+        setForm((prevForm) => {
+            const updatedForm = [...prevForm];
+            updatedForm[index].star = value;
+            return updatedForm;
+        });
+    };
+
+    const handleCommentChange = (index: number, value: string) => {
+        setForm((prevForm) => {
+            const updatedForm = [...prevForm];
+            updatedForm[index].comment = value;
+            return updatedForm;
+        });
+    };
+    const handleSubmit = async () => {
+        try {
+            const promises = form.map(async (formItem, index) => {
+                const { orderId, star, comment } = formItem;
+                const formData = new FormData();
+                formData.append("orderId", String(orderId));
+                formData.append("star", String(star));
+                formData.append("comment", comment);
+
+                const images = selectedFiles[index];
+                if (images && images.length > 0) {
+                    images.forEach((image, imageIndex) => {
+                        formData.append("image", image);
+                    });
+                }
+
+                await axios.post(`/api/cart/rate`, formData).then(() => router.refresh());
+            });
+
+            // await Promise.all(promises);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        if (transaction && transaction.order.length > 0) {
+            const initialForm = transaction.order.map((order) => ({
+                orderId: order.id,
+                star: 0,
+                comment: ""
+            }));
+            setForm(initialForm);
+        }
+    }, [transaction]);
+
 
     // console.log(`fill`, transaction?.order[0].id)
-    console.log(`getValue`,getValue)
+    console.log(`getValue`, getValue)
     // console.log(`comment`, form.comment)
     // console.log(`rare`, form.star)
     // console.log(`imgUrl`, selectedImage)
@@ -330,8 +354,9 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
     //     console.log(`imgUrl`, selectedImage)
     //     renderSelectedProduct()
     // }, [])
-    // console.log(`formData`, form)
-    // console.log(`transaction`, transaction)
+    console.log(`formData`, form)
+    console.log(`transaction`, transaction)
+    console.log(`File`, selectedFiles)
     // console.log(`getTransactionProps`, getTransactionRating())
     return (
         <Fragment>
@@ -351,99 +376,53 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
                                 <h1 className="text-xl font-bold">No. Invoice</h1>
                                 <p>{transaction?.id.toString()}</p>
                             </div>
-                            {transaction?.order.map((orders) => (
-                                <div key={orders.id}>
-                                    {/* {setGetValue([String(orders.id)])} */}
-                                    <button onClick={()=>setGetValue([String(orders.id)])}>kadal</button>
-                                    
+
+                            {form.map((formData, index) => (
+                                <div key={formData.orderId}>
                                     <div id="invoice-product">
                                         <h1 className="text-xl font-bold">No. Invoice</h1>
-                                        <p>{orders.productId.toString()}</p>
+                                        <p>{formData.orderId.toString()}</p>
                                     </div>
-                                    <div id="selected-products">
-                                        <div className="my-auto font-bold">
-                                            <p>{orders.id}</p>
-                                        </div>
-                                        <div className="flex gap-4">
-                                            <img
-                                                src={`http://localhost:3000\\${transaction?.order[0].product.image?.split(",")}` || ""}
-                                                alt=""
-                                                className="w-16 h-16 border border-dotted bg-gray-300 border-green-800"
-                                            />
-                                            <div className="my-auto font-bold">
-                                                <p>{transaction?.order[0].product.name}</p>
-                                            </div>
-                                        </div>
-                                        <div className="gap-4">
-                                            {/* {form.map((forms)=>( */}
-                                            {/* <Fragment key={forms.star}> */}
-                                            <StyledRating
-                                                name="highlight-selected-only"
-                                                defaultValue={2}
-                                                IconContainerComponent={IconContainer}
-                                                getLabelText={(value: number) => customIcons[value].label}
-                                                highlightSelectedOnly
-                                                onChange={(e: any) => setForm({ ...form, star: e.target.value, orderId: orders.id })}
-                                            />
-                                            {/* </Fragment> */}
-                                            {/* ))} */}
-                                        </div>
+                                    {/* ... */}
+                                    <div id="rating-star" className="gap-4">
+                                        <StyledRating
+                                            name="highlight-selected-only"
+                                            defaultValue={2}
+                                            IconContainerComponent={IconContainer}
+                                            getLabelText={(value: number) => customIcons[value].label}
+                                            highlightSelectedOnly
+                                            onChange={(e: any) => handleRatingChange(index, e.target.value)}
+                                        />
                                     </div>
-                                    {/* <div>
-                                        {isAddProduct ?
-                                            <>
-                                                <select className="select w-1/2 max-w-xs rounded-sm" placeholder="Select Product" onChange={e => setForm({ ...form, orderId: orders.id })}>
-                                                    <option disabled selected>Select Product</option>
-                                                    {transaction?.order.map((orders) => (
-                                                        <>
-                                                            <option key={orders.id} value={orders.id} >
-                                                                {orders.id}
-                                                                {orders.product.name}
-                                                            </option>
-                                                        </>
-                                                    ))}
-                                                </select>
-                                            </>
-                                            :
-                                            <>
-
-                                            </>
-                                        }
-                                    </div> */}
                                     <div id="rating-description">
                                         <textarea
                                             className="textarea textarea-bordered w-full rounded-sm"
                                             placeholder="Text rating"
-                                            onChange={e => setForm({ ...form, comment: e.target.value })}
+                                            value={formData.comment}
+                                            onChange={(e) => handleCommentChange(index, e.target.value)}
                                         ></textarea>
                                     </div>
-                                    <div id="rating-image" className="cursor-pointer">
-                                        <h1 className="text-xl font-bold">Upload Gambar</h1>
-                                        <form action="" className='lg:flex lg:flex-row'>
-                                            <section className='px-4 lg:w-1/2 flex flex-col justify-center items-center space-y-4'>
-                                                <div className='border-gray-600 border border-dashed rounded-xl flex justify-center items-center h-40 w-full lg:h-5/6 lg:w-5/6 relative'>
-                                                    <input disabled={selectedFiles.length >= 5} type="file" accept='.jpg, .jpeg, .png, .webp' name="product-image" id="product-image-input" className='w-full h-full cursor-pointer opacity-0 absolute'
-                                                        onChange={({ target }) => {
-                                                            handleFile(target);
-                                                            if (target.files) {
-                                                                const file = target.files[0];
-                                                                if (file)
-                                                                    setSelectedImage(URL.createObjectURL(file));
-                                                            }
-                                                        }}
-                                                    />
-                                                    {renderInputMessage()}
-                                                </div>
-                                                {renderSelectedImages()}
-                                            </section>
-                                        </form>
+                                    <div key={index} id="rating-image" className="border-gray-600 my-2 border border-dashed rounded-sm flex justify-center items-center w-full lg:h-full lg:w-full relative">
+                                        <input
+                                            // disabled={selectedFiles[index].length >= 5}
+                                            type="file"
+                                            accept=".jpg, .jpeg, .png, .webp"
+                                            name={`product-image-${index}`}
+                                            id={`product-image-input-${index}`}
+                                            className="w-full h-full cursor-pointer opacity-0 absolute"
+                                            onChange={(event) => handleFile(event, index)}
+                                        />
+                                        {renderInputMessage(index)}
                                     </div>
+                                    {/* <p>Image For Product {transaction?.order[index].id}</p> */}
                                 </div>
+
                             ))}
-                            <div id="button-action" className="flex justify-end">
+                            {renderSelectedImages()}
+                            <div id="button-action" className="flex justify-end mt-10">
                                 <div className="w-20 h-8 m-auto border border-red-500 hover:bg-red-500 ">Batal</div>
                                 <div
-                                    onClick={() => postRating()}
+                                    onClick={() => handleSubmit()}
                                     className="cursor-pointer w-20 h-8 m-auto bg-green-500 hover:border border-green-500 bg-transparent"
                                 >Ajukan</div>
                             </div>
