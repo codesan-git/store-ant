@@ -1,4 +1,5 @@
 import { Button, Dialog, DialogBody, DialogFooter, DialogHeader } from "@material-tailwind/react";
+import { size } from "@material-tailwind/react/types/components/avatar";
 import { useRouter } from "next/router";
 import { Fragment, useState } from "react";
 
@@ -29,7 +30,13 @@ interface Props {
 
 const AddressFormModal = ({ provinceData, cityData } : Props) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const modalOpenHandler = () => setModalOpen(!modalOpen);
+  const [modalSize, setModalSize] = useState<size>();
+
+  const modalOpenHandler = (size: size) => {
+    setModalSize(size);
+    setModalOpen(!modalOpen)
+  };
+
 
   const [form, setForm] = useState<FormData>({
     address: '', 
@@ -71,19 +78,22 @@ const AddressFormModal = ({ provinceData, cityData } : Props) => {
   
   return (
     <Fragment>
-      <Button  onClick={modalOpenHandler}>
+      <Button id="open-modal-mobile" onClick={() => modalOpenHandler("xl")}>
         + Tambah Alamat Baru
       </Button>
-      <Dialog open={modalOpen} handler={modalOpenHandler}>
+      <Button id="open-modal-web" onClick={() => modalOpenHandler("lg")}>
+        + Tambah Alamat Baru
+      </Button>
+      <Dialog open={modalOpen} handler={modalOpenHandler} size={modalSize}>
         <DialogHeader>
           <h1 className="w-3/4">Add New Address</h1>
           <div  className="w-1/4 flex justify-end">
-            <button onClick={modalOpenHandler}>
+            <button onClick={() => modalOpenHandler("xl")}>
               ✕
             </button>
           </div>
         </DialogHeader>
-        <DialogBody>
+        <DialogBody className="">
           <form  onSubmit={e=>{e.preventDefault(); create()}}  className="space-y-4">
             <div className="flex flex-col space-y-1">
               <label htmlFor="address-input">Address</label>
@@ -125,7 +135,7 @@ const AddressFormModal = ({ provinceData, cityData } : Props) => {
               <input id="address-input" type="text" name="contact" onChange={e => setForm({...form, contact: e.target.value})} className="p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white"/>
             </div>
             <div className="w-full flex justify-end">
-              <button type="submit" onClick={modalOpenHandler} className="w-24 h-8 bg-green-700 hover:bg-green-500 transition text-white rounded-md ">Save</button>
+              <button type="submit" onClick={() => modalOpenHandler("xl")} className="w-24 h-8 bg-green-700 hover:bg-green-500 transition text-white rounded-md ">Save</button>
             </div>
           </form>
         </DialogBody>

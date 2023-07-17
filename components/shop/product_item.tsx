@@ -1,6 +1,8 @@
 import { Fragment } from "react";
 import { HiLocationMarker } from "react-icons/hi";
 import { HiClipboard, HiOutlineClipboard, HiStar } from "react-icons/hi2";
+import { AiFillEdit } from "react-icons/ai";
+import Link from "next/link";
 
 interface Product {
   id: string,
@@ -24,7 +26,16 @@ interface Props {
 const ProductItem = ({ product } : Props) => {
   return (
     <Fragment>
-      <div id="card" className="w-64 lg:w-5/6 bg-white h-96 rounded-lg shadow-lg">
+      <div id="card" className="w-64 lg:w-5/6 bg-white h-96 rounded-lg shadow-lg relative">
+        <Link href={{
+          pathname: '/product/update',
+          query: {
+            id: product.id
+          }
+        }}
+          className="absolute top-2 right-2 drop-shadow">
+          <AiFillEdit className="fill-white w-10 h-10"/>
+        </Link>
         {/* <div id="product-image-container" className="object-cover rounded-t-lg bg-green-500 h-1/2"></div> */}
         <img 
           src={`http://localhost:3000/${product.image.split(",")[0]}`} 
