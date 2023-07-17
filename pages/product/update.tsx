@@ -125,7 +125,7 @@ const [form, setForm] = useState<FormData>({name: product.name, price: String(pr
     return (
       <>
         <div className='flex flex-row gap-2'>
-          {
+          {/* {
             oldImages.map( 
               (file, key) => 
                 <div key={key} className="relative">
@@ -135,7 +135,7 @@ const [form, setForm] = useState<FormData>({name: product.name, price: String(pr
                   <img src={file} alt="" className="w-12 h-12 sm:w-16 sm:h-16 object-cover border border-gray-600" />
                 </div>
             )
-          }
+          } */}
           {images.map((file, key) => {
             return (
               <div key={key} className="relative">
