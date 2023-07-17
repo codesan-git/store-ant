@@ -14,6 +14,9 @@ import Navbar from "./navbar";
 import ShopItem from "@/components/shop/shop_item";
 import SellerDashboard from "@/components/shop/seller_dashboard";
 import TerimaModal from "@/components/shop/terima_modal";
+import axios from "axios";
+import ProcessModal from "@/components/transactions/process_modal";
+import ItemReceiveModal from "@/components/shop/item_receive";
 
 
 interface Props {
@@ -101,6 +104,12 @@ const OrdersMania = ({ transactions }: { transactions: Transaction[] }, shop: Pr
       //console.log(error)
     }
   }
+  
+  async function onTolak(id:number){
+    const terimaTransactions = await axios.put(`http://localhost:3000/api/shop/tolak`, {
+        id: selectedTransaction?.id
+    })
+  }
 
   async function onReturn(id: Number) {
     router.push({
@@ -177,6 +186,9 @@ const OrdersMania = ({ transactions }: { transactions: Transaction[] }, shop: Pr
               onDetail={onDetail}
               onRate={onRateClick}
               onTerima={onSelect}
+              onTolak={onTolak}
+              onProcess={onSelect}
+              onItemReceive={onSelect}
             />
           )
         }
@@ -205,6 +217,8 @@ const OrdersMania = ({ transactions }: { transactions: Transaction[] }, shop: Pr
       </div>
       <ReviewModal htmlElementId={`review-modal`} selectProductCallback={getCurrentSelectedProductForRate} />
       <TerimaModal htmlElementId={`terima-modal`} selectProductCallback={getTransactionDetail} />
+      <ProcessModal htmlElementId={`process-modal`} selectProductCallback={getTransactionDetail} />
+      <ItemReceiveModal htmlElementId={`itemreceive-modal`} selectProductCallback={getTransactionDetail} />
       <CancelAlert htmlElementId={`cancel-alert`} selectProductCallback={getTransactionDetail} />
       <DetailTransactionModal detailTransactionModalArguments={detailTransactionModalArguments} />
       {/* <Footer /> */}

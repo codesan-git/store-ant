@@ -41,9 +41,12 @@ interface Props {
   onDetail: (transaction: Transaction) => void,
   onRate: (productName: String, cartItemId: Number) => void,
   onTerima: (transaction: Transaction) => Promise<void>
+  onTolak: (id: number) => Promise<void>,
+  onProcess: (transaction: Transaction) => Promise<void>
+  onItemReceive: (transaction: Transaction) => Promise<void>
 }
 
-const ShopItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinish, onReturn, onDetail, onTerima }: Props) => { //TODO: re-adjust background colors based on website. the one in the wireframe are just placeholder colors.
+const ShopItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinish, onReturn, onDetail, onTerima, onTolak, onItemReceive }: Props) => { //TODO: re-adjust background colors based on website. the one in the wireframe are just placeholder colors.
 
   const transactionCreatedDate = new Date(transaction.createdAt);
   const transactionLastUpdate = new Date(transaction.updatedAt);
@@ -122,6 +125,7 @@ const ShopItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinis
     if (transaction.status === TransactionStatus.UNPAID) return <h1 className="flex justify-end text-sm font-bold">Bayar Sebelum</h1>;
     if (transaction.status === TransactionStatus.DELIVERING) return <h1 className="flex justify-end text-sm font-bold">Sedang Dikirim</h1>;
     if (transaction.status === TransactionStatus.DELIVERED) return <h1 className="flex justify-end text-sm font-bold">Pesanan Sampai</h1>;
+    if (transaction.status === TransactionStatus.ITEM_RECEIVE) return <h1 className="flex justify-end text-sm font-bold text-green-600">Item Diterima</h1>;
     if (transaction.status === TransactionStatus.CANCELING) return <h1 className="flex justify-end text-sm font-bold text-yellow-600">Pembatalan Diajukan</h1>;
     if (transaction.status === TransactionStatus.RETURNING) return <h1 className="flex justify-end text-sm font-bold text-yellow-600">Pengembalian Diajukan</h1>;
     if (transaction.status === TransactionStatus.CANCELED) return <h1 className="flex justify-end text-sm font-bold text-red-600">Dibatalkan Sistem</h1>; //CANCELED||CANCELED_REJECTED == FAILED
@@ -154,7 +158,9 @@ const ShopItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinis
               <HiOutlineEllipsisVertical className="text-white" />
             </label>
             <ul tabIndex={0} className="mt-1 dropdown-content menu shadow bg-base-100 rounded-sm w-52">
-              <li className="rounded-sm hover:bg-gray-100 transition duration-300 text-red-700 font-bold"><a>Tolak Pesanan</a></li>
+              <li className="rounded-sm hover:bg-gray-100 transition duration-300 text-red-700 font-bold">
+                <label>Tolak Pesanan</label>
+              </li>
               { //I really need to refactor this entire module
                 (transaction.status === TransactionStatus.UNPAID || transaction.status === TransactionStatus.AWAITING_CONFIRMATION || transaction.status === TransactionStatus.PACKING)
                   ? <li className="rounded-sm hover:bg-gray-100 transition duration-300">
@@ -180,6 +186,28 @@ const ShopItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinis
           {detailTransaksiButton()}
           <label htmlFor="terima-modal" className="flex justify-center items-center text-xs lg:text-base w-32 text-white bg-green-500 hover:cursor-pointer">
             Terima
+          </label>
+          {renderExtraActionDropdown()}
+        </Fragment>
+      );
+    }
+    if (transaction.status === TransactionStatus.RETURNED) {
+      return (
+        <Fragment>
+          {detailTransaksiButton()}
+          <label htmlFor="process-modal" className="flex justify-center items-center text-xs lg:text-base w-32 text-white bg-green-500 hover:cursor-pointer">
+            Process
+          </label>
+          {renderExtraActionDropdown()}
+        </Fragment>
+      );
+    }
+    if (transaction.status === TransactionStatus.SENT_ITEM) {
+      return (
+        <Fragment>
+          {detailTransaksiButton()}
+          <label htmlFor="itemreceive-modal" className="flex justify-center items-center text-xs lg:text-base w-32 text-white bg-green-500 hover:cursor-pointer">
+            Confirm
           </label>
           {renderExtraActionDropdown()}
         </Fragment>

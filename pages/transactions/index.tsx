@@ -15,6 +15,7 @@ import { Product, Order as PrismaOrder, Transaction as PrismaTransaction, Transa
 import Chat from "@/components/transactions/chat";
 import ComplainModal from "@/components/transactions/complain_modal";
 import RatingModal from "@/components/transactions/rating_modal";
+import SentItemModal from "@/components/transactions/sent_item";
 
 
 interface CartId {
@@ -198,6 +199,7 @@ const Transactions = ({ transactions }: { transactions: Transaction[] }) => {
                 onRate={onRateClick}
                 onComplain={onComplain}
                 onRating={onRating}
+                onSentItem={onSelect}
               />
             )
         }
@@ -243,6 +245,7 @@ const Transactions = ({ transactions }: { transactions: Transaction[] }) => {
       <DetailTransactionModal detailTransactionModalArguments={detailTransactionModalArguments} />
       <ComplainModal complainTransactionModalArguments={complainTransactionModalArguments} />
       <RatingModal ratingTransactionModalArguments={ratingTransactionModalArguments} />
+      <SentItemModal htmlElementId={`sentitem-modal`} selectProductCallback={getTransactionDetail} />
     </div>
   );
 }

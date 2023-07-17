@@ -84,7 +84,7 @@ const SellerDashboard = ({ TransactionDashboardArguments, shop }: Props) => {
     }
 
     const tidakBerhasilOnClick = () => {
-        setItemsToDisplay(allTransactions?.filter((e: any) => (e.status === TransactionStatus.CANCELED || e.status === TransactionStatus.RETURNED)));
+        setItemsToDisplay(allTransactions?.filter((e: any) => (e.status === TransactionStatus.CANCELED || e.status === TransactionStatus.RETURNED || e.status === TransactionStatus.SENT_ITEM || e.status === TransactionStatus.ITEM_RECEIVE)));
         setCurrentSelectedSection("Tidak Berhasil");
     }
 

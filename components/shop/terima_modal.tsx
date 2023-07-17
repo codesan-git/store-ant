@@ -68,7 +68,7 @@ const TerimaModal = ({htmlElementId: id, selectProductCallback} : Props) => {
 
   async function onTerima() {
     const terimaTransactions = await axios.put(`http://localhost:3000/api/shop/deliver`, {
-        id: selectedTransaction.id
+        id: selectedTransaction?.id
     })
   }
 
