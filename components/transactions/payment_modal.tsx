@@ -108,7 +108,7 @@ const PaymentModal = ({htmlElementId: id, selectProductCallback} : Props) => {
             </div>
           </div>
           {selectedTransaction?.order.map((order: any)=> (
-            <div id="product-box" className="p-2 space-x-2 flex flex-row">
+            <div key={order.id} id="product-box" className="p-2 space-x-2 flex flex-row">
             <div id="product-detail-img-container" className=" flex justify-center items-center">
                 <img className="w-20 h-20 object-cover" 
                     src={`http://localhost:3000/${order?.product.image.split(",")[0]}`}

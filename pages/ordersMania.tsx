@@ -13,6 +13,7 @@ import Footer from "./footer";
 import Navbar from "./navbar";
 import ShopItem from "@/components/shop/shop_item";
 import SellerDashboard from "@/components/shop/seller_dashboard";
+import TerimaModal from "@/components/shop/terima_modal";
 
 
 interface Props {
@@ -175,6 +176,7 @@ const OrdersMania = ({ transactions }: { transactions: Transaction[] }, shop: Pr
               onReturn={onReturn}
               onDetail={onDetail}
               onRate={onRateClick}
+              onTerima={onSelect}
             />
           )
         }
@@ -202,7 +204,7 @@ const OrdersMania = ({ transactions }: { transactions: Transaction[] }, shop: Pr
         </div>
       </div>
       <ReviewModal htmlElementId={`review-modal`} selectProductCallback={getCurrentSelectedProductForRate} />
-      <PaymentModal htmlElementId={`payment-modal`} selectProductCallback={getTransactionDetail} />
+      <TerimaModal htmlElementId={`terima-modal`} selectProductCallback={getTransactionDetail} />
       <CancelAlert htmlElementId={`cancel-alert`} selectProductCallback={getTransactionDetail} />
       <DetailTransactionModal detailTransactionModalArguments={detailTransactionModalArguments} />
       {/* <Footer /> */}

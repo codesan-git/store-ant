@@ -40,9 +40,10 @@ interface Props {
   onReturn: (id: number) => Promise<void>,
   onDetail: (transaction: Transaction) => void,
   onRate: (productName: String, cartItemId: Number) => void,
+  onTerima: (transaction: Transaction) => Promise<void>
 }
 
-const ShopItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinish, onReturn, onDetail }: Props) => { //TODO: re-adjust background colors based on website. the one in the wireframe are just placeholder colors.
+const ShopItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinish, onReturn, onDetail, onTerima }: Props) => { //TODO: re-adjust background colors based on website. the one in the wireframe are just placeholder colors.
 
   const transactionCreatedDate = new Date(transaction.createdAt);
   const transactionLastUpdate = new Date(transaction.updatedAt);
@@ -176,10 +177,8 @@ const ShopItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinis
     if (transaction.status === TransactionStatus.UNPAID) {
       return (
         <Fragment>
-          <label htmlFor="payment-modal" onClick={() => onBayar(transaction)} className="flex justify-center items-center text-xs lg:text-base w-28 lg:w-32 h-8 border-2 border-green-500 text-green-500 cursor-pointer">
-            Detail
-          </label>
-          <label htmlFor="payment-modal" className="flex justify-center items-center text-xs lg:text-base w-32 text-white bg-green-500 hover:cursor-pointer">
+          {detailTransaksiButton()}
+          <label htmlFor="terima-modal" className="flex justify-center items-center text-xs lg:text-base w-32 text-white bg-green-500 hover:cursor-pointer">
             Terima
           </label>
           {renderExtraActionDropdown()}
@@ -190,6 +189,9 @@ const ShopItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinis
       return (
         <Fragment>
           {detailTransaksiButton()}
+          <label htmlFor="terima-modal" className="flex justify-center items-center text-xs lg:text-base w-32 text-white bg-green-500 hover:cursor-pointer">
+            Terima
+          </label>
           {renderExtraActionDropdown()}
         </Fragment>
       );
