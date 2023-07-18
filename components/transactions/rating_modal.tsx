@@ -259,7 +259,7 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
 
     const renderSelectedImages = () => {
         return (
-            <>
+            <div className="flex flex-row gap-x-4 justify-around">
                 {selectedFiles.map((imageArray, fileIndex) => (
                     <div key={fileIndex}>
                         <div className="w-full font-bold block mb-3">
@@ -284,7 +284,7 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
                         </div>
                     </div>
                 ))}
-            </>
+            </div>
         );
     };
 
@@ -361,8 +361,8 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
     return (
         <Fragment>
             <div hidden={ratingModalIsHidden} id="new-modal-custom" className="bg-gray-900 bg-opacity-75 fixed h-full w-full top-0 left-0 z-50 pointer-events-auto">
-                <div className="flex justify-center items-center h-[30rem] w-[30rem] lg:h-5/6 pointer-events-auto mx-auto">
-                    <div id="detail-transaksi-modal-box" className="py-4 bg-white h-full w-full lg:w-5/6 lg:h-5/6 rounded-lg pointer-events-auto">
+                <div className="flex justify-center items-center h-full w-full lg:h-5/6 pointer-events-auto mx-auto">
+                    <div id="detail-transaksi-modal-box" className="relative py-4 bg-white h-full w-full lg:w-5/6 lg:h-5/6 rounded-lg pointer-events-auto">
                         <div id="detail-transaksi-modal-top" className="h-12 flex flex-row px-4 lg:h-1/6">
                             <div className="w-3/4 lg:flex lg:items-center">
                                 <h1 className="text-3xl font-bold">Rating Product</h1>
@@ -371,60 +371,67 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
                                 <button onClick={setRatingModalIsHidden} className="text-4xl font-bold float-right">✕</button>
                             </div>
                         </div>
-                        <div id="contents" className="px-4 pb-14 lg:pb-0 h-full lg:h-5/6 space-y-4 overflow-y-auto">
+                        <div id="contents" className="px-4 pb-14 lg:pb-0 h-full lg:h-5/6 space-y-4 overflow-y-auto overflow-x-auto">
                             <div id="invoice-details">
                                 <h1 className="text-xl font-bold">No. Invoice</h1>
                                 <p>{transaction?.id.toString()}</p>
                             </div>
+                            <div className="flex flex-row gap-x-4 justify-around">
+                                {form.map((formData, index) => (
+                                    <div key={formData.orderId}>
+                                        <div>
+                                            <div id="invoice-product">
+                                                <h1 className="text-xl font-bold">No. Invoice</h1>
+                                                <p>{formData.orderId.toString()}</p>
+                                            </div>
+                                            {/* ... */}
+                                            <div id="rating-star" className="gap-4">
+                                                <StyledRating
+                                                    name="highlight-selected-only"
+                                                    defaultValue={2}
+                                                    IconContainerComponent={IconContainer}
+                                                    getLabelText={(value: number) => customIcons[value].label}
+                                                    highlightSelectedOnly
+                                                    onChange={(e: any) => handleRatingChange(index, e.target.value)}
+                                                />
+                                            </div>
+                                            <div id="rating-description">
+                                                <textarea
+                                                    className="textarea textarea-bordered w-full rounded-sm"
+                                                    placeholder="Text rating"
+                                                    value={formData.comment}
+                                                    onChange={(e) => handleCommentChange(index, e.target.value)}
+                                                ></textarea>
+                                            </div>
+                                            <div key={index} id="rating-image" className="border-gray-600 my-2 border border-dashed rounded-sm flex justify-center items-center w-full lg:h-full lg:w-full relative">
+                                                <input
+                                                    // disabled={selectedFiles[index].length >= 5}
+                                                    type="file"
+                                                    accept=".jpg, .jpeg, .png, .webp"
+                                                    name={`product-image-${index}`}
+                                                    id={`product-image-input-${index}`}
+                                                    className="w-full h-full cursor-pointer opacity-0 absolute"
+                                                    onChange={(event) => handleFile(event, index)}
+                                                />
+                                                {renderInputMessage(index)}
+                                            </div>
+                                            {/* <p>Image For Product {transaction?.order[index].id}</p> */}
+                                        </div>
+                                    </div>
 
-                            {form.map((formData, index) => (
-                                <div key={formData.orderId}>
-                                    <div id="invoice-product">
-                                        <h1 className="text-xl font-bold">No. Invoice</h1>
-                                        <p>{formData.orderId.toString()}</p>
-                                    </div>
-                                    {/* ... */}
-                                    <div id="rating-star" className="gap-4">
-                                        <StyledRating
-                                            name="highlight-selected-only"
-                                            defaultValue={2}
-                                            IconContainerComponent={IconContainer}
-                                            getLabelText={(value: number) => customIcons[value].label}
-                                            highlightSelectedOnly
-                                            onChange={(e: any) => handleRatingChange(index, e.target.value)}
-                                        />
-                                    </div>
-                                    <div id="rating-description">
-                                        <textarea
-                                            className="textarea textarea-bordered w-full rounded-sm"
-                                            placeholder="Text rating"
-                                            value={formData.comment}
-                                            onChange={(e) => handleCommentChange(index, e.target.value)}
-                                        ></textarea>
-                                    </div>
-                                    <div key={index} id="rating-image" className="border-gray-600 my-2 border border-dashed rounded-sm flex justify-center items-center w-full lg:h-full lg:w-full relative">
-                                        <input
-                                            // disabled={selectedFiles[index].length >= 5}
-                                            type="file"
-                                            accept=".jpg, .jpeg, .png, .webp"
-                                            name={`product-image-${index}`}
-                                            id={`product-image-input-${index}`}
-                                            className="w-full h-full cursor-pointer opacity-0 absolute"
-                                            onChange={(event) => handleFile(event, index)}
-                                        />
-                                        {renderInputMessage(index)}
-                                    </div>
-                                    {/* <p>Image For Product {transaction?.order[index].id}</p> */}
-                                </div>
-
-                            ))}
+                                ))}
+                            </div>
                             {renderSelectedImages()}
-                            <div id="button-action" className="flex justify-end mt-10">
-                                <div className="w-20 h-8 m-auto border border-red-500 hover:bg-red-500 ">Batal</div>
+                        </div>
+                        <div id="button-action" className="absolute bottom-0 right-0 mb-10 mr-10">
+                            <div className="flex justify-end gap-x-4">
+                                <div className="btn btn-outline w-20 h-8 m-auto text-center border rounded-sm bg-transparent border-red-500 hover:bg-red-500">Batal</div>
                                 <div
                                     onClick={() => handleSubmit()}
-                                    className="cursor-pointer w-20 h-8 m-auto bg-green-500 hover:border border-green-500 bg-transparent"
-                                >Ajukan</div>
+                                    className="btn cursor-pointer w-20 h-8 text-white text-center rounded-sm green hover:border bg-green-500 border-green-500 hover:bg-transparent hover:text-black"
+                                >
+                                    Ajukan
+                                </div>
                             </div>
                         </div>
                     </div>

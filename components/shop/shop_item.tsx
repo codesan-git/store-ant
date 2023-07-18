@@ -126,6 +126,7 @@ const ShopItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinis
     if (transaction.status === TransactionStatus.DELIVERING) return <h1 className="flex justify-end text-sm font-bold">Sedang Dikirim</h1>;
     if (transaction.status === TransactionStatus.DELIVERED) return <h1 className="flex justify-end text-sm font-bold">Pesanan Sampai</h1>;
     if (transaction.status === TransactionStatus.ITEM_RECEIVE) return <h1 className="flex justify-end text-sm font-bold text-green-600">Item Diterima</h1>;
+    if (transaction.status === TransactionStatus.SENT_ITEM) return <h1 className="flex justify-end text-sm font-bold text-yellow-600">Mengirim Barang</h1>;
     if (transaction.status === TransactionStatus.CANCELING) return <h1 className="flex justify-end text-sm font-bold text-yellow-600">Pembatalan Diajukan</h1>;
     if (transaction.status === TransactionStatus.RETURNING) return <h1 className="flex justify-end text-sm font-bold text-yellow-600">Pengembalian Diajukan</h1>;
     if (transaction.status === TransactionStatus.CANCELED) return <h1 className="flex justify-end text-sm font-bold text-red-600">Dibatalkan Sistem</h1>; //CANCELED||CANCELED_REJECTED == FAILED
@@ -184,7 +185,7 @@ const ShopItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinis
       return (
         <Fragment>
           {detailTransaksiButton()}
-          <label htmlFor="terima-modal" className="flex justify-center items-center text-xs lg:text-base w-32 text-white bg-green-500 hover:cursor-pointer">
+          <label htmlFor="terima-modal" onClick={()=>onTerima(transaction)} className="flex justify-center items-center text-xs lg:text-base w-32 text-white bg-green-500 hover:cursor-pointer">
             Terima
           </label>
           {renderExtraActionDropdown()}
@@ -206,7 +207,7 @@ const ShopItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinis
       return (
         <Fragment>
           {detailTransaksiButton()}
-          <label htmlFor="itemreceive-modal" className="flex justify-center items-center text-xs lg:text-base w-32 text-white bg-green-500 hover:cursor-pointer">
+          <label htmlFor="itemreceive-modal" onClick={()=>onItemReceive(transaction)} className="flex justify-center items-center text-xs lg:text-base w-32 text-white bg-green-500 hover:cursor-pointer">
             Confirm
           </label>
           {renderExtraActionDropdown()}
