@@ -3,7 +3,7 @@ import { BsCheck2, BsCheck2All } from "react-icons/bs"
 import { AiOutlineSend } from "react-icons/ai";
 import { GrAttachment }  from "react-icons/gr"
 import { MdArrowBack } from "react-icons/md"
-import { FormEvent, Fragment, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, Fragment, useEffect, useState } from "react";
 import axios from 'axios';
 import { useSession } from "next-auth/react";
 import { Socket, io } from 'socket.io-client'
@@ -15,14 +15,14 @@ interface Conversation {
 }
 
 interface Message {
-  id: number;
+  id?: number;
   message: string;
   senderId: string;
   recipientId: string;
   sender: User;
   recipient: User;
-  createdAt: Date,
-  isSeen: boolean,
+  createdAt?: Date,
+  isSeen?: boolean,
 }
 
 interface User {
@@ -62,7 +62,8 @@ const Chat = ({ hidden, onClose } : Props) => {
   const [selectedConversation, setSelectedConversation] = useState<Conversation>();
   const [currentChatroomMessages, setCurrentChatroomMessages] = useState<Message[]>();
 
-  const [messageForm, setMessageForm] = useState<MessageForm>({senderId: String(session?.user.id), recipientId: "1", message:""});
+  //const [messageForm, setMessageForm] = useState<MessageForm>({senderId: String(session?.user.id), recipientId: "1", message:""});
+  const [newMessage, setNewMessage] = useState<Message>();
   
   const [selectedRecepient, setSelectedRecepient] = useState<User>();
 
@@ -99,40 +100,28 @@ const Chat = ({ hidden, onClose } : Props) => {
   }
 
   useEffect(() => {
-    console.log(messageForm);
+    // console.log(messageForm);
     socketInitializer();
     fetchConversations();
   },[]);
   
   useEffect(() => {
+    if(socket) listen();
   });
   
   const handleSubmitMessage = (e: FormEvent) => {
     e.preventDefault();
-    socket.emit("send-message", messageForm);
+    socket.emit("send-message", newMessage);
 
-    // const now = new Date();
-
-    // const newMessage: Message = {
-    //   createdAt: now,
-    //   id: 0, 
-    //   isSeen: false,
-    //   message: messageForm.message,
-    //   recipient: selectedRecepient as User,
-    //   recipientId: selectedRecepient?.id as string,
-    //   sender: {...session?.user, shop: {image: "", name: ""}} as User,
-    //   senderId: session?.user.id as string
-    // }
-
-    // setCurrentChatroomMessages([...currentChatroomMessages as Message[], newMessage]);
+    setCurrentChatroomMessages([...currentChatroomMessages as Message[], newMessage as Message]);
     try{
         fetch('http://localhost:3000/api/chat/send', {
-            body: JSON.stringify(messageForm),
+            body: JSON.stringify(newMessage),
             headers: {
                 'Content-Type' : 'application/json'
             },
             method: 'POST'
-        }).then(() => router.reload())
+        }).then()
     }catch(error){
         //console.log(error)
     }
@@ -147,18 +136,17 @@ const Chat = ({ hidden, onClose } : Props) => {
     setSelectedRecepient(recepient);
     console.log(recepient.id);
 
-    const newMessageForm = {...messageForm, senderId: String(session?.user.id), recipientId: recepient.id};
-    console.log(newMessageForm);
+    setCurrentChatroomMessages(conversation?.messages);
 
-    // setMessageForm({...messageForm, recipientId: recepient.id}); //WHY DOESN"T THIS UPDATE RECIPIENTID???
+    // setMessageForm(newMessageForm);
+    setNewMessage({
+      message: newMessage?.message as string,
+      recipient: recepient,
+      recipientId: recepient.id,
+      sender: session?.user as unknown as User,
+      senderId: String(session?.user.id)
+    });
     // console.log(messageForm);
-    // console.log(messageForm);
-    // console.log(messageForm);
-
-    setCurrentChatroomMessages(selectedConversation?.messages);
-
-    setMessageForm(newMessageForm);
-    console.log(messageForm);
   }
 
   const getRecepient = (latestMessage: Message) : User => {
@@ -199,7 +187,7 @@ const Chat = ({ hidden, onClose } : Props) => {
 
     const recepient = getRecepient(latestMessage!);
 
-    const latestMessageDate = new Date(latestMessage!.createdAt);
+    const latestMessageDate = new Date(latestMessage?.createdAt as Date);
 
     return (
       <div onClick={() => chatroomItemOnClick(conversation)} className="flex flex-row h-24 bg-gray-300 hover:bg-gray-500 transition hover:cursor-pointer">
@@ -213,7 +201,7 @@ const Chat = ({ hidden, onClose } : Props) => {
           <div className="w-full flex flex-row">
             <h1 className="font-bold w-1/2">{recepient?.name.toString()}</h1>
             <div className="w-full flex justify-end items-center">
-              <h1 className="text-sm">{latestMessageDate.toDateString()}</h1>
+              <h1 className="text-sm">{latestMessageDate?.toDateString()}</h1>
             </div>
           </div>
           <p id="last-message" className="text-sm truncate w-60 h-48">{latestMessage?.message.toString()}</p>
@@ -229,7 +217,7 @@ const Chat = ({ hidden, onClose } : Props) => {
     if (message.senderId === session?.user.id) isSender = true;
     else isSender = false;
 
-    const messageDate = new Date(message.createdAt);
+    const messageDate = new Date(message.createdAt as Date);
 
 
     const userMessageContainerStyle = "w-full px-4 py-2 flex justify-end";
@@ -246,7 +234,7 @@ const Chat = ({ hidden, onClose } : Props) => {
           </div>
           <div id="message-date" className="flex justify-end items-center space-x-2">
             {(message.isSeen) ? <BsCheck2All className="w-4 h-4 lg:w-6 lg:h-6"/> : <BsCheck2 className="w-4 h-4 lg:w-6 lg:h-6"/>}
-            <h1 className="text-xs lg:text-base">{messageDate.toDateString()}</h1>
+            <h1 className="text-xs lg:text-base">{messageDate?.toDateString()}</h1>
           </div>
         </div>
       </div>
@@ -254,7 +242,7 @@ const Chat = ({ hidden, onClose } : Props) => {
   }
 
   const renderMessages = () => {
-    const cloneMessages = selectedConversation?.messages.slice();
+    const cloneMessages = currentChatroomMessages?.slice();
     const reversedMessages = cloneMessages?.reverse();
     
     return (
@@ -263,6 +251,15 @@ const Chat = ({ hidden, onClose } : Props) => {
       </>
     );
   }
+
+  const handleMessageChange = (e: ChangeEvent<HTMLTextAreaElement>) => setNewMessage({
+    message:  e.target.value,
+    recipient: selectedRecepient as User,
+    recipientId: String(selectedRecepient?.id),
+    sender: session?.user as unknown as User,
+    senderId: String(session?.user.id),
+    createdAt: new Date(Date.now())
+  });
   
   return (
     <Fragment>  
@@ -309,7 +306,7 @@ const Chat = ({ hidden, onClose } : Props) => {
             </div>
             <form onSubmit={(e) => handleSubmitMessage(e)} className="h-1/6 flex flex-row bg-gray-400">
               <div className="w-full flex flex-row justify-center items-center p-2 relative">
-                <textarea name="" id="" className="w-full h-full items-start" onChange={(e) => {setMessageForm({...messageForm, senderId: String(session?.user.id), message: e.target.value})}}></textarea>
+                <textarea name="" id="" className="w-full h-full items-start" onChange={handleMessageChange}></textarea>
                 <GrAttachment className="absolute right-6"/>
               </div>
               <div className="flex justify-center items-center w-24">
