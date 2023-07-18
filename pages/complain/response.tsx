@@ -118,15 +118,11 @@ export default function ComplainAdmin({ getOrders }: Props) {
                   <div className="my-4">
                     <div id="upper-detail" className="flex flex-row p-2 bg-gray-400">
                       <div className="w-1/2 flex justify-start items-center ">
-                        <h1 className="text-sm lg:text-xl font-bold">{orders.Complain?.orderId}</h1>
+                        <h1 className="text-sm lg:text-xl font-bold">{orders.Complain?.id}</h1>
                       </div>
-                      <div className="w-1/2 flex flex-col lg:flex-row lg:items-center lg:space-x-2 justify-end">
-                        {/* {renderTransactionStatus()}
-    {(transaction.status === TransactionStatus.DELIVERING)
-      ? <></>
-      : <h1 className="flex justify-end text-xs lg:text-sm">{transactionLastUpdate.toDateString()}</h1>
-    } */}
-                        
+                      <div className="w-full flex flex-row items-center space-x-2 justify-end">
+                        <h1 className="flex justify-end text-sm font-bold text-red-600">{orders.OrderStatus}</h1>
+                        <h1 className="flex justify-end text-xs">{orders.createdAt.split("",10)}</h1>
                       </div>
                     </div><div id="lower-detail">
                       <div id="product-details" className="flex flex-row p-2 bg-gray-300">
@@ -140,18 +136,15 @@ export default function ComplainAdmin({ getOrders }: Props) {
                           ))}
                         </div>
                         <div id="product-detail" className="flex-1 p-4 flex flex-col justify-center">
-                          <h1 className="text-xs lg:text-base">Kode Transaksi: </h1>
-                          <h1 className="text-xs lg:text-base font-bold">transaction.order</h1>
-                          <h1 className="text-xs lg:text-base">Jumlah: transaction.order</h1>
+                          <h1 className="text-xs lg:text-base">Kode Transaksi: {orders.Complain?.orderId} </h1>
+                          <h1 className="text-xs lg:text-base font-bold">{orders.Complain?.description}</h1>
+                          <h1 className="text-xs lg:text-base">Jumlah: {orders.count}</h1>
                           {/* {renderExtraItems()} */}
-                        </div>
-                        <div id="total-details-lower" className="hidden lg:flex lg:flex-col lg:justify-center w-1/3 p-4 space-y-2 border-l-gray-500 border-l-2">
-                          <h1 className="">Total Belanja</h1>
                         </div>
                       </div>
                       <div id="total-section" className="flex flex-row p-2 bg-gray-400">
-                        <div id="total-details" className="w-1/3 lg:hidden">
-                          <h1 className="text-xs">Total Belanja</h1>
+                        <div id="total-details" className="w-full lg:hidden">
+                          <h1 className="text-xs items-center">Complain Status: {orders.Complain?.status}</h1>
                           {/* <h1 className="text-xs">Rp {calculateTransactionTotal().toString()}</h1> */}
                         </div>
                         <div className="w-1/3 hidden lg:flex lg:flex-row lg:justify-start lg:items-center">
@@ -160,6 +153,21 @@ export default function ComplainAdmin({ getOrders }: Props) {
                         </div>
                         <div id="transaction-actions" className="w-2/3 lg:w-full flex flex-row justify-end space-x-2">
                           {/* {renderActionButtons()} */}
+                          {orders.OrderStatus === "RETURNED" || orders.OrderStatus === "NEED_ADMIN_REVIEW" || orders.OrderStatus === "RETURN_REJECTED" ?
+                            <>
+                              <div className="flex gap-2">
+                                <button onClick={() => acceptStatus(String(orders.Complain?.orderId))} className="btn-disabled btn-xs w-16 h-4 rounded-sm">accept</button>
+                                <button onClick={() => rejectStatus(String(orders.Complain?.orderId))} className="btn-disabled btn-xs w-16 h-4 rounded-sm">reject</button>
+                              </div>
+                            </>
+                            :
+                            <>
+                              <div className="flex gap-2">
+                                <button onClick={() => acceptStatus(String(orders.Complain?.orderId))} className="w-16 h-8 rounded-sm bg-green-500 border border-green-500 text-white hover:bg-transparent hover:bg-white hover:text-black">accept</button>
+                                <button onClick={() => rejectStatus(String(orders.Complain?.orderId))} className="w-16 h-8 rounded-sm bg-red-500 border border-red-500 text-white hover:bg-transparent hover:bg-white hover:text-black">reject</button>
+                              </div>
+                            </>
+                          }
                         </div>
                       </div>
                     </div></div>
