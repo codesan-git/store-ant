@@ -361,7 +361,7 @@ const Chat = ({ hidden, onClose } : Props) => {
               </div>
               <div id="recepient-and-status" className="flex flex-col items-start w-3/4">
                 <div className="h-1/2 w-full">
-                  <h1 className="text-xl font-bold">{selectedRecepient?.name}</h1>
+                  <h1 className="text-base font-bold">{selectedRecepient?.name}</h1>
                 </div>
                 <div className="h-1/2 flex flex-row justify-center items-center space-x-1">
                   <div className="w-2 h-2 rounded-full bg-green-600"></div>
@@ -372,7 +372,7 @@ const Chat = ({ hidden, onClose } : Props) => {
                 <HiEllipsisVertical className="w-6 h-6 hover:cursor-pointer"/>
               </div>
             </div>
-            <div id="chatlist" className="h-5/6 flex flex-col-reverse justify-end overflow-y-auto">
+            <div id="chatlist" className="h-5/6 overflow-y-auto flex flex-col-reverse">
               {
                 (selectedConversation) 
                 ? renderMessages() 
