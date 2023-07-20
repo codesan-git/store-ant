@@ -118,7 +118,6 @@ const Chat = ({ hidden, onClose } : Props) => {
   const handleSubmitMessage = (e: FormEvent) => {
     e.preventDefault();
     socket.emit("send-message", newMessage);
-
     setCurrentChatroomMessages([...currentChatroomMessages as Message[], newMessage as Message]);
     try{
         fetch('http://localhost:3000/api/chat/send', {
@@ -131,6 +130,8 @@ const Chat = ({ hidden, onClose } : Props) => {
     }catch(error){
         //console.log(error)
     }
+
+    setNewMessage({...newMessage as Message, message: ""});
   }
   
   const chatroomItemOnClick = (conversation: Conversation) => {
@@ -146,7 +147,7 @@ const Chat = ({ hidden, onClose } : Props) => {
 
     // setMessageForm(newMessageForm);
     setNewMessage({
-      message: newMessage?.message as string,
+      message: "",
       recipient: recepient,
       recipientId: recepient.id,
       sender: session?.user as unknown as User,
@@ -312,7 +313,7 @@ const Chat = ({ hidden, onClose } : Props) => {
             </div>
             <form onSubmit={(e) => handleSubmitMessage(e)} className="h-1/6 flex flex-row bg-gray-400">
               <div className="w-full flex flex-row justify-center items-center p-2 relative">
-                <textarea name="" id="" className="w-full h-full items-start" onChange={handleMessageChange}></textarea>
+                <textarea value={newMessage?.message} name="" id="" className="w-full h-full items-start" onChange={handleMessageChange}></textarea>
                 <GrAttachment className="absolute right-6"/>
               </div>
               <div className="flex justify-center items-center w-24">
