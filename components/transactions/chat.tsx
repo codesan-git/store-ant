@@ -359,17 +359,16 @@ const Chat = ({ hidden, onClose } : Props) => {
                   className="w-10 h-10 rounded-full bg-purple-300">
                 </img>  
               </div>
-              <div id="recepient-and-status" className="flex flex-col items-start w-1/2">
-                <div>
+              <div id="recepient-and-status" className="flex flex-col items-start w-3/4">
+                <div className="h-1/2 w-full">
                   <h1 className="text-xl font-bold">{selectedRecepient?.name}</h1>
-
                 </div>
-                <div className="flex flex-row justify-center items-center space-x-1">
+                <div className="h-1/2 flex flex-row justify-center items-center space-x-1">
                   <div className="w-2 h-2 rounded-full bg-green-600"></div>
                   <h1 className="text-xs">Online</h1>
                 </div>
               </div>
-              <div className="w-full flex items-center justify-end">
+              <div className="w-1/4 flex items-center justify-end">
                 <HiEllipsisVertical className="w-6 h-6 hover:cursor-pointer"/>
               </div>
             </div>
@@ -381,7 +380,18 @@ const Chat = ({ hidden, onClose } : Props) => {
               }
             </div>
             <div className="flex flex-row w-full bg-gray-400">
-              <div className="w-5/6 flex flex-row justify-center items-center p-2 relative">
+              <form onSubmit={(e) => handleSubmitMessage(e)} className="w-full flex flex-row relative bg-gray-400">
+                <div className="w-full flex flex-row justify-center items-center p-2 relative">
+                  <textarea value={newMessage?.message} name="" id="" className="w-full h-full items-start" onChange={handleMessageChange}></textarea>
+                  <GrAttachment className="absolute right-6"/>
+                </div>
+                <div className="flex justify-center items-center w-24">
+                  <button className="bg-green-500 rounded-full w-12 h-12 flex justify-center items-center">
+                    <AiOutlineSend className="w-6 h-6 fill-white"/>
+                  </button>
+                </div>
+              </form>
+              {/* <div className="w-5/6 flex flex-row justify-center items-center p-2 relative">
                 <textarea name="" id="" className="w-full h-full items-start" ></textarea>
                 <GrAttachment className="absolute right-6"/>
               </div>
@@ -389,7 +399,7 @@ const Chat = ({ hidden, onClose } : Props) => {
                 <button className="bg-green-500 rounded-full w-12 h-12 flex justify-center items-center">
                   <AiOutlineSend className="w-6 h-6 fill-white"/>
                 </button>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
