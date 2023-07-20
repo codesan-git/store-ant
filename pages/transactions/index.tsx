@@ -44,7 +44,12 @@ interface Transaction {
   }
 }
 
-const Transactions = ({ transactions }: { transactions: Transaction[] }) => {
+interface Props {
+  newChatId?: string,
+  transactions: Transaction[]
+}
+
+const Transactions = ({ transactions, newChatId }: Props) => {
   const router = useRouter();
 
   const [currentSelectedSection, setCurrentSelectedSection] = useState<String>("Menunggu Pembayaran");
@@ -62,6 +67,13 @@ const Transactions = ({ transactions }: { transactions: Transaction[] }) => {
   const [chatIsHidden, setChatIsHidden] = useState<boolean>(true);
 
   useEffect(() => { }, [itemsToDisplay]);
+
+  useEffect(() => {
+    if(newChatId) {
+      setCurrentSelectedSection("Chat");
+      setChatIsHidden(false);
+    }
+  }, []);
 
   async function onSelect(transaction: Transaction) {
     setSelectedTransaction(transaction);
@@ -230,6 +242,8 @@ export default Transactions;
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context);
 
+  const newChatId = context.query.newChatId ?? null;
+
   const transactions = await prisma.transaction.findMany({
     where: {
       userId: session?.user.id
@@ -276,6 +290,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
       transactions: JSON.parse(JSON.stringify(transactions)),
+      newChatId: newChatId,
     },
   };
 };
