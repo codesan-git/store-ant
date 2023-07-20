@@ -197,9 +197,8 @@ export default function Profile({ profile, address, provinceData, cityData }: Pr
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
           const data = {image: downloadURL};
-          await axios.put("http://localhost:3000/api/profile/photo", data)
-            .then(() => router.reload());
-        });
+          await axios.put("http://localhost:3000/api/profile/photo", data);
+        }).then(() => router.reload());
       }
     );
   };

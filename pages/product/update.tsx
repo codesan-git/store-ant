@@ -1,5 +1,5 @@
 import styles from '../../styles/Form.module.css'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router'
 import { GetServerSideProps } from 'next'
 import { prisma } from "../../lib/prisma"
@@ -8,6 +8,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Category } from "@prisma/client";
 import useSWR from 'swr';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL  } from "firebase/storage";
 
 const fetchCategories = async (url: string) => {
 
@@ -49,10 +50,28 @@ const [form, setForm] = useState<FormData>({name: product.name, price: String(pr
   const [oldImages, setOldImages] = useState<string[]>(product.image.split(","));
   const [selectedFile, setSelectedFile] = useState<File>();
   const [files, setFile] = useState<any[]>([]);
+  const [urls, setURLs] = useState<string[]>([]);
 
   const productImages = product.image.split(",");
   const [images, setImages] = useState<string[]>(productImages);
   const router = useRouter();
+  
+  useEffect(() => {
+    console.log("images: ", urls.join(","));
+    console.log("url length: ", urls.length);
+    console.log("files length: ", files.length);
+    console.log("condition: ", files.length == urls.length);
+    if(urls.join(",") != "" && urls.length == files.length && oldImages.length != 0){
+        const formData = new FormData();
+        files.forEach((file) => formData.append("image", file) );
+        formData.append("imageString", oldImages.join(","));
+        formData.append("name", form.name);
+        formData.append("price", form.price);
+        formData.append("stock", form.stock);
+        formData.append("categoryId", form.categoryId);
+        axios.put(`http://localhost:3000/api/product/${product.id}`, formData).then(() => { router.back() });
+    }
+  },[urls]);
 
   const {data, isLoading} = useSWR<{categories : Array<Category>}>(
     `/api/category/`,
@@ -95,25 +114,40 @@ const [form, setForm] = useState<FormData>({name: product.name, price: String(pr
     //  setSelectedImage(URL.createObjectURL(files[files.length - 2]));
   };
 
-  const handleUpdate = async (id: string) => {
-    try {
-        if(files.length == 0 && oldImages.length == 0) return
-        const formData = new FormData();
-        files.forEach((file) => formData.append("image", file) );
-        formData.append("imageString", oldImages.join(","));
-        formData.append("name", form.name);
-        formData.append("price", form.price);
-        formData.append("stock", form.stock);
-        formData.append("categoryId", form.categoryId);
-        await axios.put(`http://localhost:3000/api/product/${id}`, formData).then(() => { router.back() });
-    } catch (error: any) {
-        console.log(error.response);
-    }
-  }
 
   const handleSubmit = async(id: string) => {
     try{
-        handleUpdate(id)
+      const promises : any[] = [];
+      const storage = getStorage();
+  
+      files.map((file) => {
+        console.log("loop");
+  
+        const sotrageRef = ref(storage, `images/product/${file.name}`);
+  
+        const uploadTask = uploadBytesResumable(sotrageRef, file);
+        promises.push(uploadTask);
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            const prog = Math.round(
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+            );
+            //setProgress(prog);
+          },
+          (error) => console.log(error),
+          async () => {
+            await getDownloadURL(uploadTask.snapshot.ref).then((downloadURLs) => {
+              setURLs(prevArray => [...prevArray, downloadURLs]);
+            });
+          }
+        );
+      });
+      Promise.all(promises)
+        .then(async () => {
+          alert("All images uploaded");
+        })
+        .then((err) => console.log(err));
     }catch(error){
         //console.log(error)
     }
@@ -144,7 +178,7 @@ const [form, setForm] = useState<FormData>({name: product.name, price: String(pr
           </div>
         </section>
       </div>
-      <form action="" onSubmit={e=>{e.preventDefault(); handleUpdate(String(product.id));}} className='lg:flex lg:flex-row'>
+      <form action="" onSubmit={e=>{e.preventDefault(); handleSubmit(String(product.id));}} className='lg:flex lg:flex-row'>
         <section className='px-4 lg:w-1/2 flex lg:flex-col justify-center items-center'>
           <div className='border-gray-600 border border-dashed rounded-xl flex justify-center items-center h-40 w-full lg:h-5/6 lg:w-5/6 relative'>
             <input type="file" accept='.jpg, .jpeg, .png, .webp' name="product-image" id="product-image-input" className='w-full h-full cursor-pointer opacity-0 absolute' 
@@ -174,8 +208,7 @@ const [form, setForm] = useState<FormData>({name: product.name, price: String(pr
                       src={file}
                       onError={({ currentTarget }) => {
                         currentTarget.onerror = null; // prevents looping
-                        currentTarget.src =
-                          `http://localhost:3000/${file}`;
+                        currentTarget.src = `${file}`;
                       }}
                     />
                   </div>
@@ -201,7 +234,7 @@ const [form, setForm] = useState<FormData>({name: product.name, price: String(pr
                 ))}
               </select>
             </div>
-            <div className='flex flex-col space-y-1 w-full'>
+            <div className='flex flex-col space-y-1 w-full'> 
               <label htmlFor="product-quantity-input" className='font-bold'>Quantity</label>
               <input id='product-quantity-input' name='product-quantity' type="number" className='p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white'
                 value={form?.stock} onChange={e => setForm({...form, stock: e.target.value})}
