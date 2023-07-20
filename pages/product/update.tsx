@@ -8,7 +8,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Category } from "@prisma/client";
 import useSWR from 'swr';
-import { getStorage, ref, uploadBytesResumable, getDownloadURL  } from "firebase/storage";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject  } from "firebase/storage";
 
 const fetchCategories = async (url: string) => {
 
@@ -45,33 +45,34 @@ interface FormData{
 }
 
 export default function CreateShop({product} : FetchData) {    
-const [form, setForm] = useState<FormData>({name: product.name, price: String(product.price), stock: String(product.stock), description: product.description, categoryId: String(product.category.id)});
+  const [form, setForm] = useState<FormData>({name: product.name, price: String(product.price), stock: String(product.stock), description: product.description, categoryId: String(product.category.id)});
   const [selectedImage, setSelectedImage] = useState<string>();
   const [oldImages, setOldImages] = useState<string[]>(product.image.split(","));
   const [selectedFile, setSelectedFile] = useState<File>();
   const [files, setFile] = useState<any[]>([]);
   const [urls, setURLs] = useState<string[]>([]);
+  const [isSubmit, setIsSubmit] = useState<boolean>(false);
 
   const productImages = product.image.split(",");
   const [images, setImages] = useState<string[]>(productImages);
   const router = useRouter();
   
   useEffect(() => {
-    console.log("images: ", urls.join(","));
-    console.log("url length: ", urls.length);
-    console.log("files length: ", files.length);
     console.log("condition: ", files.length == urls.length);
-    if(urls.join(",") != "" && urls.length == files.length && oldImages.length != 0){
-        const formData = new FormData();
-        files.forEach((file) => formData.append("image", file) );
-        formData.append("imageString", oldImages.join(","));
-        formData.append("name", form.name);
-        formData.append("price", form.price);
-        formData.append("stock", form.stock);
-        formData.append("categoryId", form.categoryId);
-        axios.put(`http://localhost:3000/api/product/${product.id}`, formData).then(() => { router.back() });
+    console.log("condition oldimage: ", oldImages.length != 0);
+    console.log("condition submit: ", isSubmit);
+    if(isSubmit){
+      if(urls.join(",") != "" ){
+        if(urls.length == files.length){        
+          const data = {imageString: oldImages.join(","), name: form.name, price: form.price, stock: form.stock, categoryId: form.categoryId, urls: urls.join(",")}
+          axios.put(`http://localhost:3000/api/product/${product.id}`, data).then(() => { router.back() });
+        }
+      } else if(oldImages.length != 0 && files.length == 0) {
+          const data = {imageString: oldImages.join(","), name: form.name, price: form.price, stock: form.stock, categoryId: form.categoryId, urls: urls.join(",")}
+          axios.put(`http://localhost:3000/api/product/${product.id}`, data).then(() => { router.back() });
+      }
     }
-  },[urls]);
+  },[urls, oldImages, isSubmit]);
 
   const {data, isLoading} = useSWR<{categories : Array<Category>}>(
     `/api/category/`,
@@ -102,6 +103,16 @@ const [form, setForm] = useState<FormData>({name: product.name, price: String(pr
     setImages(images.filter((x) => x !== i));
     setOldImages(oldImages.filter((x) => x !== i));
 
+    const storage = getStorage();
+
+    let pictureRef = ref(storage, i);
+    console.log(pictureRef);
+    deleteObject(pictureRef).then(() => {
+      console.log("deleted");
+    }).catch((error) => {
+      console.log("error: ", error);
+    })
+
     for (let i = 0; i < files.length; i++) {
         let tempFiles = files;
         if(images[i] === URL.createObjectURL(tempFiles[i])) {
@@ -115,8 +126,9 @@ const [form, setForm] = useState<FormData>({name: product.name, price: String(pr
   };
 
 
-  const handleSubmit = async(id: string) => {
+  const handleSubmit = async() => {
     try{
+      setIsSubmit(true);
       const promises : any[] = [];
       const storage = getStorage();
   
@@ -178,7 +190,7 @@ const [form, setForm] = useState<FormData>({name: product.name, price: String(pr
           </div>
         </section>
       </div>
-      <form action="" onSubmit={e=>{e.preventDefault(); handleSubmit(String(product.id));}} className='lg:flex lg:flex-row'>
+      <form action="" onSubmit={e=>{e.preventDefault(); handleSubmit();}} className='lg:flex lg:flex-row'>
         <section className='px-4 lg:w-1/2 flex lg:flex-col justify-center items-center'>
           <div className='border-gray-600 border border-dashed rounded-xl flex justify-center items-center h-40 w-full lg:h-5/6 lg:w-5/6 relative'>
             <input type="file" accept='.jpg, .jpeg, .png, .webp' name="product-image" id="product-image-input" className='w-full h-full cursor-pointer opacity-0 absolute' 
