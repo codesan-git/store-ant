@@ -60,7 +60,7 @@ const Chat = ({ hidden, onClose } : Props) => {
   const [conversations, setConversations] = useState<Conversation[]>();
   const [chatroomModalIsHidden, setChatroomModalIsHidden] = useState<boolean>(true);
   const [selectedConversation, setSelectedConversation] = useState<Conversation>();
-  const [currentChatroomMessages, setCurrentChatroomMessages] = useState<Message[]>();
+  const [currentChatroomMessages, setCurrentChatroomMessages] = useState<Message[]>([]);
 
   //const [messageForm, setMessageForm] = useState<MessageForm>({senderId: String(session?.user.id), recipientId: "1", message:""});
   const [newMessage, setNewMessage] = useState<Message>();
@@ -75,9 +75,11 @@ const Chat = ({ hidden, onClose } : Props) => {
     socket.emit("connect-user", session?.user.id);
   }
 
-  const listen = async () => {    
+  const listen = () => {    
     socket.on("receive-message", (data : Message) => {
+      console.log("DATA RECIEVED FROM SOCKET");
       console.log(data);
+      console.log("DATA ARRIVED FROM SOCKET");
 
       // const newMessage: Message = {
       //   createdAt: Date.now(),
@@ -101,9 +103,13 @@ const Chat = ({ hidden, onClose } : Props) => {
 
   useEffect(() => {
     // console.log(messageForm);
-    socketInitializer();
     fetchConversations();
   },[]);
+
+
+  useEffect(() => {
+    socketInitializer();
+  }, [session?.user.id])
   
   useEffect(() => {
     if(socket) listen();
