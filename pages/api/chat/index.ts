@@ -41,6 +41,7 @@ export default async function handler(
               include:{
                 sender: {
                   select: {
+                    id:true,
                     name: true,
                     image: true,
                     shop: {
@@ -53,6 +54,7 @@ export default async function handler(
                 },
                 recipient: {
                   select: {
+                    id:true,
                     name: true,
                     image: true,
                     shop:{

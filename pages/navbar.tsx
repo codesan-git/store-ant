@@ -90,7 +90,7 @@ const Navbar = () => {
   
   useEffect(()=>{
     getNotif();
-  });
+  },[]);
 
   const onSearch = (event : React.FormEvent) => {
     event.preventDefault();
