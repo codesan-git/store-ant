@@ -74,8 +74,6 @@ const ComplainModal = ({ complainTransactionModalArguments }: Props) => {
 	};
 
 	const postComplain = async () => {
-		// if (form.orderId.length > 0) {
-		// 	for (let i = 0; i < form.orderId.length; i++) {
 				try {
 					if (selectedFiles.length == 0) return;
 					const formData = new FormData();
@@ -83,13 +81,6 @@ const ComplainModal = ({ complainTransactionModalArguments }: Props) => {
 					formData.append("orderId", form.orderId.join(','));
 					formData.append("description", form.description);
 					await axios.post(`/api/complain/create`, formData)
-
-					// await axios.post(`http://localhost:3000/api/complain/create`, {
-					// 	orderId: fillProduct[i],
-					// 	description: complainDesc,
-					// 	image:formData
-					// 	// image: selectedImage
-					// });
 				} catch (error) {
 					console.error(error);
 				}
@@ -158,8 +149,6 @@ const ComplainModal = ({ complainTransactionModalArguments }: Props) => {
 
 		return total;
 	}
-
-	// const getImage = transaction?.order[0].product.image
 
 	const renderSelectedProduct = () => {
 		return transaction?.order.map((orders) => {
