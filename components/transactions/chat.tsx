@@ -122,46 +122,6 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
     }
   }
 
-  // const fetchNewRecepientDetails = async () => { //TODO: Rename function to a more clear name on what it actually does
-  //   const res = await axios.get(`/api/user/${newChatUserId}`);
-
-  //   const {user: userToBeChatted} : {user: User} = res.data;
-
-  //   const newConversation: Conversation = {
-  //     messages: [],
-  //   }
-
-  //   let chatDoesNotExistYet = true;
-
-  //   conversations.map((c: Conversation) => {
-  //     console.log("Running map")
-  //     const latestMessage = c.messages.at(c.messages.length-1);
-
-  //     if(latestMessage?.recipientId == newChatUserId) {
-  //       setSelectedConversation(c);
-  //       setSelectedRecepient(latestMessage?.recipient);
-  //       setCurrentChatroomMessages(c.messages);
-
-  //       chatDoesNotExistYet = false;
-  //     }
-  //     else if(latestMessage?.senderId == newChatUserId) {
-  //       setSelectedConversation(c);
-  //       setSelectedRecepient(latestMessage?.sender);
-  //       setCurrentChatroomMessages(c.messages);
-
-  //       chatDoesNotExistYet = false;
-  //     }
-  //   })
-
-  //   if(chatDoesNotExistYet) {
-  //     setConversations([...conversations as Conversation[], newConversation]);
-  //     setSelectedConversation(newConversation);
-  //     setSelectedRecepient(userToBeChatted);
-  //     setCurrentChatroomMessages([]);
-  //   }
-
-    
-  // }
   
   useEffect(() => {
     socketInitializer();
@@ -349,6 +309,22 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
             </div>
             <div id="chatroom-list" className="h-5/6 flex flex-col overflow-y-auto">
               {conversations?.map((c)=> chatroomItem(c))}
+              {
+                (newChatUserId)
+                ? <div className="flex flex-row h-24 bg-gray-300 hover:bg-gray-500 transition hover:cursor-pointer">
+                    <div id="recepient-image-container" className="w-1/4 flex justify-center items-center">
+                      <img
+                        src={selectedRecepient?.image} 
+                        className="w-14 h-14 rounded-full bg-purple-300"
+                      />
+                    </div>
+                    <div id="chatroom-item-details" className="w-3/4 p-4 flex flex-col items-start">
+                      <h1 className="font-bold">{selectedRecepient?.name.toString()}</h1>
+                      {/* <p id="last-message" className="truncate w-64 h-48">{latestMessage?.message.toString()}</p> */}
+                    </div>
+                  </div>
+                : <></>
+              }
             </div>
           </section>
           <section hidden={hidden} id="chatroom-web" className="w-3/4">
