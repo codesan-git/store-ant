@@ -10,6 +10,7 @@ import { Socket, io } from 'socket.io-client'
 import { useRouter } from "next/router";
 
 interface Conversation {
+  
   id?: number;
   messages: Message[];
 }
@@ -93,7 +94,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
       const {user: userToBeChatted} : {user: User} = res.data;
 
       const newConversation: Conversation = {
-        
+
         messages: [],
       }
 
@@ -114,7 +115,6 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
       })
 
       if(chatDoesNotExistYet) {
-        setConversations([...data, newConversation]);
         setSelectedConversation(newConversation);
         setSelectedRecepient(userToBeChatted);
         setCurrentChatroomMessages([]);
@@ -359,12 +359,13 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
                   className="w-10 h-10 rounded-full bg-purple-300">
                 </img>  
               </div>
-              <div id="recepient-and-status" className="flex flex-col items-start w-1/2">
+              {/* <div id="recepient-and-status" className="flex flex-col items-start w-1/2"> */}
+              <div id="recepient-and-status" className="flex flex-col justify-center w-1/2">
                 <h1 className="text-xl">{selectedRecepient?.name.toString()}</h1>
-                <div className="flex flex-row justify-center items-center space-x-1">
+                {/* <div className="flex flex-row justify-center items-center space-x-1">
                   <div className="w-2 h-2 rounded-full bg-green-600"></div>
                   <h1 className="text-xs">Online</h1>
-                </div>
+                </div> */}
               </div>
               <div className="w-full flex items-center justify-end">
                 <HiEllipsisVertical className="w-6 h-6 hover:cursor-pointer"/>
