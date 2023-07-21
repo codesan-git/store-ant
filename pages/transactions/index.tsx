@@ -45,11 +45,11 @@ interface Transaction {
 }
 
 interface Props {
-  newChatId?: string,
+  newChatUserId?: string,
   transactions: Transaction[]
 }
 
-const Transactions = ({ transactions, newChatId }: Props) => {
+const Transactions = ({ transactions, newChatUserId }: Props) => {
   const router = useRouter();
 
   const [currentSelectedSection, setCurrentSelectedSection] = useState<String>("Menunggu Pembayaran");
@@ -69,11 +69,11 @@ const Transactions = ({ transactions, newChatId }: Props) => {
   useEffect(() => { }, [itemsToDisplay]);
 
   useEffect(() => {
-    if(newChatId) {
+    if(newChatUserId) {
       setCurrentSelectedSection("Chat");
       setChatIsHidden(false);
     }
-  }, []);
+  }, [newChatUserId]);
 
   async function onSelect(transaction: Transaction) {
     setSelectedTransaction(transaction);
@@ -224,7 +224,7 @@ const Transactions = ({ transactions, newChatId }: Props) => {
             <h1>{currentSelectedSection}</h1>
           </div>
           {renderItemsToDisplay()}
-          <Chat hidden={chatIsHidden} onClose={() => setChatIsHidden(true)} />
+          <Chat newChatUserId={newChatUserId} hidden={chatIsHidden} onClose={() => setChatIsHidden(true)} />
         </div>
       </div>
       <ReviewModal htmlElementId={`review-modal`} selectProductCallback={getCurrentSelectedProductForRate} />
@@ -242,7 +242,7 @@ export default Transactions;
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context);
 
-  const newChatId = context.query.newChatId ?? null;
+  const newChatUserId = context.query.newChatUserId ?? null;
 
   const transactions = await prisma.transaction.findMany({
     where: {
@@ -290,7 +290,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
       transactions: JSON.parse(JSON.stringify(transactions)),
-      newChatId: newChatId,
+      newChatUserId: newChatUserId,
     },
   };
 };

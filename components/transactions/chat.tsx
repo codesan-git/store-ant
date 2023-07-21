@@ -10,7 +10,7 @@ import { Socket, io } from 'socket.io-client'
 import { useRouter } from "next/router";
 
 interface Conversation {
-  id: number;
+  id?: number;
   messages: Message[];
 }
 
@@ -46,18 +46,19 @@ interface MessageForm {
 let socket : Socket;
 
 interface Props {
+  newChatUserId? : string;
   hidden: boolean;
-  onClose: () => any
+  onClose: () => any;
 }
 
 
-const Chat = ({ hidden, onClose } : Props) => {
+const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
 
   const router = useRouter();
 
   const {data: session} = useSession();
 
-  const [conversations, setConversations] = useState<Conversation[]>();
+  const [conversations, setConversations] = useState<Conversation[]>([]);
   const [chatroomModalIsHidden, setChatroomModalIsHidden] = useState<boolean>(true);
   const [selectedConversation, setSelectedConversation] = useState<Conversation>();
   const [currentChatroomMessages, setCurrentChatroomMessages] = useState<Message[]>([]);
@@ -77,43 +78,108 @@ const Chat = ({ hidden, onClose } : Props) => {
 
   const listen = () => {    
     socket.on("receive-message", (data : Message) => {
-      console.log("DATA RECIEVED FROM SOCKET");
-      console.log(data);
-      console.log("DATA ARRIVED FROM SOCKET");
-
-      // const newMessage: Message = {
-      //   createdAt: Date.now(),
-      //   id: 0,
-      //   isSeen: false,
-      //   message: data.message ,
-      //   recipient: {} ,
-      //   recipientId: ,
-      //   sender: ,
-      //   senderId: ,
-      // }
-
       setCurrentChatroomMessages([...currentChatroomMessages as Message[], data]);
     });
   }
 
   const fetchConversations = async () => {
-    const res = await axios.get("/api/chat");
-    setConversations(res.data.conversations);
+    const conversationsRes = await axios.get("/api/chat");
+    const data: Conversation[] = conversationsRes.data.conversations;
+    setConversations(data);
+
+    if(newChatUserId) {
+      const res = await axios.get(`/api/user/${newChatUserId}`);
+
+      const {user: userToBeChatted} : {user: User} = res.data;
+
+      const newConversation: Conversation = {
+        
+        messages: [],
+      }
+
+      let chatDoesNotExistYet = true;
+
+      data.map((c) => {
+        console.log("Running map")
+        const latestMessage = c.messages.at(c.messages.length-1);
+        const recepient = getRecepient(latestMessage!);
+
+        if(recepient.id == userToBeChatted.id) {
+          setSelectedConversation(c);
+          setSelectedRecepient(recepient);
+          setCurrentChatroomMessages(c.messages);
+
+          chatDoesNotExistYet = false;
+        }
+      })
+
+      if(chatDoesNotExistYet) {
+        setConversations([...data, newConversation]);
+        setSelectedConversation(newConversation);
+        setSelectedRecepient(userToBeChatted);
+        setCurrentChatroomMessages([]);
+      }
+    }
   }
 
-  useEffect(() => {
-    // console.log(messageForm);
-    fetchConversations();
-  },[]);
+  // const fetchNewRecepientDetails = async () => { //TODO: Rename function to a more clear name on what it actually does
+  //   const res = await axios.get(`/api/user/${newChatUserId}`);
 
+  //   const {user: userToBeChatted} : {user: User} = res.data;
 
+  //   const newConversation: Conversation = {
+  //     messages: [],
+  //   }
+
+  //   let chatDoesNotExistYet = true;
+
+  //   conversations.map((c: Conversation) => {
+  //     console.log("Running map")
+  //     const latestMessage = c.messages.at(c.messages.length-1);
+
+  //     if(latestMessage?.recipientId == newChatUserId) {
+  //       setSelectedConversation(c);
+  //       setSelectedRecepient(latestMessage?.recipient);
+  //       setCurrentChatroomMessages(c.messages);
+
+  //       chatDoesNotExistYet = false;
+  //     }
+  //     else if(latestMessage?.senderId == newChatUserId) {
+  //       setSelectedConversation(c);
+  //       setSelectedRecepient(latestMessage?.sender);
+  //       setCurrentChatroomMessages(c.messages);
+
+  //       chatDoesNotExistYet = false;
+  //     }
+  //   })
+
+  //   if(chatDoesNotExistYet) {
+  //     setConversations([...conversations as Conversation[], newConversation]);
+  //     setSelectedConversation(newConversation);
+  //     setSelectedRecepient(userToBeChatted);
+  //     setCurrentChatroomMessages([]);
+  //   }
+
+    
+  // }
+  
   useEffect(() => {
     socketInitializer();
-  }, [session?.user.id])
-  
+  }, [session?.user.id]);
+
   useEffect(() => {
     if(socket) listen();
   });
+
+  useEffect(() => {
+    fetchConversations();
+    // if(newChatUserId){
+    //   fetchNewRecepientDetails();
+    // }
+  },[]);
+
+
+  
   
   const handleSubmitMessage = (e: FormEvent) => {
     e.preventDefault();
