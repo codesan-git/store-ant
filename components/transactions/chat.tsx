@@ -253,17 +253,17 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
     const messageDate = new Date(message.createdAt as Date);
 
 
-    const userMessageContainerStyle = "w-full px-4 py-2 flex justify-end";
+    const userMessageContainerStyle = "px-4 py-2 flex justify-end";
     const userMessageBoxStyle = "rounded-lg w-2/3 p-4 bg-green-400 shadow-xl space-y-2"
 
-    const recieverMessageContainerStyle = "w-full px-4 py-2";
+    const recieverMessageContainerStyle = "px-4 py-2";
     const recieverMessageBoxStyle = "rounded-lg w-2/3 p-4 bg-gray-400 shadow-xl space-y-2";
     
     return (
       <div id="message-container" className={(isSender) ? userMessageContainerStyle : recieverMessageContainerStyle}>
         <div id="message-box" className={(isSender) ? userMessageBoxStyle : recieverMessageBoxStyle}>
           <div id="message-text-container" className="">
-            <p className="">{message.message}</p>
+            <p className="break-words h-auto">{message.message}</p>
           </div>
           <div id="message-date" className="flex justify-end items-center space-x-2">
             {(message.isSeen) ? <BsCheck2All className="w-4 h-4 lg:w-6 lg:h-6"/> : <BsCheck2 className="w-4 h-4 lg:w-6 lg:h-6"/>}
@@ -356,11 +356,11 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
             </div>
             <form onSubmit={(e) => handleSubmitMessage(e)} className="h-1/6 flex flex-row bg-gray-400">
               <div className="w-full flex flex-row justify-center items-center p-2 relative">
-                <textarea value={newMessage?.message} name="" id="" className="w-full h-full items-start" onChange={handleMessageChange}></textarea>
+                <textarea value={newMessage?.message} name="" id="" className="w-full h-full items-start pr-10" onChange={handleMessageChange}></textarea>
                 <GrAttachment className="absolute right-6"/>
               </div>
               <div className="flex justify-center items-center w-24">
-                <button className="bg-green-500 rounded-full w-12 h-12 flex justify-center items-center">
+                <button type="submit" className="bg-green-500 rounded-full w-12 h-12 flex justify-center items-center">
                   <AiOutlineSend className="w-6 h-6 fill-white"/>
                 </button>
               </div>

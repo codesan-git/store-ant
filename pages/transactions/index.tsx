@@ -219,7 +219,7 @@ const Transactions = ({ transactions, newChatUserId }: Props) => {
         <div id="transactions-dashboard-container" className="lg:w-1/6 lg:h-full lg:sticky lg:top-24">
           <TransactionsDashboard TransactionDashboardArguments={TransactionDashboardArguments} />
         </div>
-        <div className="w-full p-2 space-y-2 bg-gray-100">
+        <div className="w-5/6 p-2 space-y-2 bg-gray-100">
           <div className="w-full p-2 text-3xl">
             <h1>{currentSelectedSection}</h1>
           </div>
