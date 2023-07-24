@@ -4,16 +4,51 @@ import { getTypeTransactions } from "@/types";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import getDataOrders from "./action/getComplainSeller";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { HiShoppingCart } from "react-icons/hi";
+
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+import TextField from '@mui/material/TextField';
+import { HiOutlineCamera, HiPlus } from "react-icons/hi";
+import { HiOutlinePhoto } from "react-icons/hi2";
 
 interface Props {
   getOrders: getTypeTransactions[]
 }
 
+interface FormData {
+  complainId: number,
+  description: string,
+}
+
+const style = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
+
 export default function ComplainAdmin({ getOrders }: Props) {
 
   const router = useRouter()
+  const [open, setOpen] = useState(false);
+  const [description, setDescription] = useState("")
+  const [image, setImage] = useState("")
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const [selectedImage, setSelectedImage] = useState<string>();
+  const [selectedFiles, setFile] = useState<any[]>([]);
+  const [form, setForm] = useState<FormData>({
+    complainId: 0,
+    description: "",
+  });
   const acceptStatus = async (id: string) => {
     try {
       const response = await axios.patch(`http://localhost:3000/api/complain/seller/accept`, {
@@ -25,6 +60,20 @@ export default function ComplainAdmin({ getOrders }: Props) {
     }
   };
 
+  // const shopComment = async () => {
+  //   const data:FormData = {complainId: id,description:description, image:image};
+  //   try {
+  //     await axios.post('http://localhost:3000/api/complain/seller/shopComment', {
+  //       complainId:complainId,
+  //       description: description,
+  //       image: image,
+  //   })
+  //   } catch (error) {
+
+  //   }
+  // } 
+
+
   const rejectStatus = async (id: string) => {
     try {
       const response = await axios.patch(`http://localhost:3000/api/complain/seller/reject`, {
@@ -35,8 +84,91 @@ export default function ComplainAdmin({ getOrders }: Props) {
 
     }
   };
+
+  const postComment = async () => {
+    try {
+      if (selectedFiles.length == 0) return;
+      const formData = new FormData();
+      selectedFiles.forEach((file) => formData.append("image", file));
+      formData.append("complainId", String(form.complainId));
+      formData.append("description", form.description);
+      await axios.post(`/api/complain/seller/shopComment`, formData)
+    } catch (error) {
+      console.error(error);
+    }
+    // }
+    // }
+  };
+
+  function handleFile(target: any) {
+    let file = target.files;
+
+    for (let i = 0; i < file.length; i++) {
+      const fileType = file[i]["type"];
+      const validImageTypes = ["image/gif", "image/jpeg", "image/png"];
+      if (validImageTypes.includes(fileType)) {
+        setFile([...selectedFiles, file[i]]);
+      } else {
+        console.log("only images accepted");
+      }
+      console.log("FILES: ", selectedFiles);
+    }
+  };
+
+  const removeImage = (i: string) => {
+    setFile(selectedFiles.filter((x) => x.name !== i));
+    if (selectedFiles.length >= 2)
+      setSelectedImage(URL.createObjectURL(selectedFiles[selectedFiles.length - 2]));
+  };
+
+  const renderInputMessage = () => {
+
+    if (selectedFiles.length >= 5) return (
+      <>
+        <label htmlFor="product-image-input" className='hover:cursor-pointer flex flex-col lg:flex-row justify-center items-center'>
+          <HiOutlinePhoto className='w-6 h-6' />
+          <p className='text-xs lg:text-base'>&nbsp;You have reached the max limit for photos.</p>
+        </label>
+      </>
+    );
+
+    return (
+      <>
+        <label htmlFor="product-image-input" className='hover:cursor-pointer flex flex-col lg:flex-row justify-center items-center'>
+          <HiOutlineCamera className='w-6 h-6' />
+          &nbsp;Select Image
+        </label>
+      </>
+    );
+  }
+
+  const renderSelectedImages = () => {
+    if (selectedFiles.length == 0) return;
+
+    return (
+      <>
+        <div className='flex flex-row gap-2'>
+          {
+            selectedFiles.map(
+              (file, key) =>
+                <div key={key} className="relative">
+                  <div onClick={() => removeImage(file.name)} className="flex justify-center items-center bg-black text-white rounded-full h-4 w-4 text-xs font-bold absolute -right-2 -top-2 sm:-right-2 hover:cursor-pointer">
+                    ✕
+                  </div>
+                  <img src={URL.createObjectURL(file)} alt="" className="w-12 h-12 sm:w-16 sm:h-16 object-cover border border-gray-600" />
+                </div>
+            )
+          }
+        </div>
+      </>
+    );
+
+  }
+
   // console.log(`getOrders`,getOrders)
-  console.log(`getOrders`, getOrders[11].order[0].OrderStatus)
+  // console.log(`getOrders`, getOrders[11].order[0].OrderStatus)
+  console.log(`desc`, form)
+  console.log(`img`, selectedImage)
   return (
     <>
       <div className="hidden lg:block">
@@ -80,6 +212,14 @@ export default function ComplainAdmin({ getOrders }: Props) {
                             <>
                               <div className="flex gap-2">
                                 <button onClick={() => acceptStatus(String(orders.Complain?.orderId))} className="btn-disabled w-16 h-8 rounded-sm">accept</button>
+                                {/* <button className="btn" onClick={() => window.my_modal_3.showModal()}>open modal</button>
+                                <dialog id="my_modal_3" className="modal">
+                                  <form method="dialog" className="modal-box">
+                                    <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                                    <h3 className="font-bold text-lg">Hello!</h3>
+                                    <p className="py-4">Press ESC key or click on ✕ button to close</p>
+                                  </form>
+                                </dialog> */}
                                 <button onClick={() => rejectStatus(String(orders.Complain?.orderId))} className="btn-disabled w-16 h-8 rounded-sm">reject</button>
                               </div>
                             </>
@@ -87,7 +227,69 @@ export default function ComplainAdmin({ getOrders }: Props) {
                             <>
                               <div className="flex gap-2">
                                 <button onClick={() => acceptStatus(String(orders.Complain?.orderId))} className="w-16 h-8 rounded-sm bg-green-500 border border-green-500 text-white hover:bg-transparent hover:bg-white hover:text-black">accept</button>
-                                <button onClick={() => rejectStatus(String(orders.Complain?.orderId))} className="w-16 h-8 rounded-sm bg-red-500 border border-red-500 text-white hover:bg-transparent hover:bg-white hover:text-black">reject</button>
+                                <button onClick={() => {
+                                  handleOpen();
+                                  setForm({ ...form, complainId: orders.Complain?.id });
+                                }} className="w-16 h-8 rounded-sm bg-red-500 border border-red-500 text-white hover:bg-transparent hover:bg-white hover:text-black">reject</button>
+                                <Modal
+                                  open={open}
+                                  onClose={handleClose}
+                                  aria-labelledby="modal-modal-title"
+                                  aria-describedby="modal-modal-description"
+                                >
+                                  <Box sx={style}>
+                                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                                      Text in a modal
+                                    </Typography>
+                                    <Box
+                                      component="form"
+                                      sx={{
+                                        '& .MuiTextField-root': { width: '100%' },
+                                      }}
+                                      noValidate
+                                      autoComplete="off"
+                                    >
+                                      <div>
+                                        <TextField
+                                          id="outlined-textarea"
+                                          label="Multiline Placeholder"
+                                          placeholder="Placeholder"
+                                          multiline
+                                          value={form.description}
+                                          onChange={(e) => setForm({ ...form, description: e.target.value })}
+                                        />
+                                      </div>
+                                    </Box>
+                                    <div id="complain-image" className="cursor-pointer">
+                                      <h1 className="text-xl font-bold">Upload Gambar</h1>
+                                      <form action="" className='lg:flex lg:flex-row'>
+                                        <section className='px-4 lg:w-1/2 flex flex-col justify-center items-center space-y-4'>
+                                          <div className='border-gray-600 border border-dashed rounded-xl flex justify-center items-center h-40 w-full lg:h-5/6 lg:w-5/6 relative'>
+                                            <input disabled={selectedFiles.length >= 5} type="file" accept='.jpg, .jpeg, .png, .webp' name="product-image" id="product-image-input" className='w-full h-full cursor-pointer opacity-0 absolute'
+                                              onChange={({ target }) => {
+                                                handleFile(target);
+                                                if (target.files) {
+                                                  const file = target.files[0];
+                                                  if (file)
+                                                    setSelectedImage(URL.createObjectURL(file));
+                                                }
+                                              }}
+                                            />
+                                            {renderInputMessage()}
+                                          </div>
+                                          {renderSelectedImages()}
+                                        </section>
+                                      </form>
+                                    </div>
+                                    <button
+                                      onClick={() => { postComment(), rejectStatus(String(orders.Complain?.orderId)) }}
+                                      className="w-16 h-8 rounded-sm bg-red-500 border border-red-500 text-white hover:bg-transparent hover:bg-white hover:text-black"
+                                    >
+                                      reject
+                                    </button>
+                                  </Box>
+                                </Modal>
+                                {/* <button onClick={() => rejectStatus(String(orders.Complain?.orderId))} className="w-16 h-8 rounded-sm bg-red-500 border border-red-500 text-white hover:bg-transparent hover:bg-white hover:text-black">reject</button> */}
                               </div>
                             </>
                           }
@@ -122,7 +324,7 @@ export default function ComplainAdmin({ getOrders }: Props) {
                       </div>
                       <div className="w-full flex flex-row items-center space-x-2 justify-end">
                         <h1 className="flex justify-end text-sm font-bold text-red-600">{orders.OrderStatus}</h1>
-                        <h1 className="flex justify-end text-xs">{orders.createdAt.split("",10)}</h1>
+                        <h1 className="flex justify-end text-xs">{orders.createdAt.split("", 10)}</h1>
                       </div>
                     </div><div id="lower-detail">
                       <div id="product-details" className="flex flex-row p-2 bg-gray-300">

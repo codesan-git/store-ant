@@ -17,3 +17,10 @@ export type getTypeTransactions = Transaction & {
   user:User;
   shop:Shop;
 }
+
+declare global {
+  interface Window {
+    // modalReject: ()=> void;
+    modalReject: any;
+  }
+}

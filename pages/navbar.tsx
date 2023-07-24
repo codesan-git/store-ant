@@ -10,6 +10,11 @@ import { InferGetServerSidePropsType } from "next";
 import LoginDropdown from "@/components/navbar/login_dropdown";
 import axios from "axios";
 
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+
 interface CartItems {
   id: Number;
   product: Product;
@@ -33,22 +38,60 @@ interface Notification {
   isSeen: boolean;
 }
 
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+function CustomTabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+function a11yProps(index: number) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+}
+
 async function handleGoogleSignOut() {
-    signOut({ callbackUrl: "http://localhost:3000/login" });
+  signOut({ callbackUrl: "http://localhost:3000/login" });
 }
 
 const fetchCategories = async (url: string) => {
 
   const response = await fetch(url);
 
-  if(!response.ok) throw new Error("Failed to fetch Categories for Navbar");
+  if (!response.ok) throw new Error("Failed to fetch Categories for Navbar");
 
   return response.json();
 }
 
 // export default function 
 const Navbar = () => {
-  const {data: categoryData, isLoading} = useSWR<{categories : Array<Category>}>(
+  const [value, setValue] = useState(0);
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
+  const { data: categoryData, isLoading } = useSWR<{ categories: Array<Category> }>(
     `http://localhost:3000/api/category/`,
     fetchCategories
   )
@@ -59,7 +102,7 @@ const Navbar = () => {
     router.replace(router.asPath);
   };
 
-  const {data: cartItems, isLoading: loadingCart} = useSWR<{productInCart : Array<CartItems>}>(
+  const { data: cartItems, isLoading: loadingCart } = useSWR<{ productInCart: Array<CartItems> }>(
     `http://localhost:3000/api/cart/`,
     fetchCategories
   )
@@ -71,37 +114,41 @@ const Navbar = () => {
   )
 
   let price = 0;
-  if(cartItems){
-    let i:number;
-    if(cartItems.productInCart){
-      for(i = 0; i < cartItems.productInCart.length; i++){
+  if (cartItems) {
+    let i: number;
+    if (cartItems.productInCart) {
+      for (i = 0; i < cartItems.productInCart.length; i++) {
         price += (Number(cartItems.productInCart[i].count) * Number(cartItems.productInCart[i].product.price));
       }
     }
   }
-  
+
   const [query, setQuery] = useState('');
   const [notif, setNotif] = useState<Notification[]>();
-  
-  async function getNotif(){
+
+  async function getNotif() {
     const res = await axios.get("/api/notification");
     setNotif(res.data.notifications);
     //console.log("notif: ", res.data.notifications);
   }
 
-  async function readNotif(){
+  async function readNotif() {
     console.log("read");
     const res = await axios.put("/api/notification/read");
   }
 
-  const onSearch = (event : React.FormEvent) => {
+  useEffect(() => {
+    getNotif();
+  }, []);
+
+  const onSearch = (event: React.FormEvent) => {
     event.preventDefault();
     const encodedSearchQuery = encodeURI(query);
     router.push(`http://localhost:3000/search?q=${encodedSearchQuery}`);
     //console.log(encodedSearchQuery);
   }
 
-  function onFilter(categoryId: string){
+  function onFilter(categoryId: string) {
     const encodedSearchQuery = encodeURI(categoryId);
     router.push(`http://localhost:3000/filter?q=${encodedSearchQuery}`);
     //console.log(encodedSearchQuery);
@@ -109,17 +156,17 @@ const Navbar = () => {
   
   //console.log("profile ", session?.user.image);
 
-  if(!categoryData?.categories){
-    
+  if (!categoryData?.categories) {
+
     return null
   }
 
-  function onNotifClick(type: NotifType, role: NotifRole){
+  function onNotifClick(type: NotifType, role: NotifRole) {
     console.log("click notif");
-    if(type == NotifType.CHAT){
+    if (type == NotifType.CHAT) {
 
     } else {
-      if(role == NotifRole.SELLER){
+      if (role == NotifRole.SELLER) {
         router.push("/ordersMania/");
       } else {
         router.push("/transactions/");
@@ -153,7 +200,7 @@ const Navbar = () => {
                 {categoryData.categories.map(
                   category => (
                     <li key={category.id}>
-                      <a onClick={()=> onFilter(String(category.id))}>{category.category}</a>
+                      <a onClick={() => onFilter(String(category.id))}>{category.category}</a>
                     </li>
                   )
                 )}
@@ -169,7 +216,7 @@ const Navbar = () => {
               placeholder="Shop now"
               className="input input-bordered input-primary input-sm w-full placeholder-primary-focus"
               value={query}
-              onChange={e => {setQuery(e.target.value); }}
+              onChange={e => { setQuery(e.target.value); }}
             />
           </form>
         </div>
@@ -195,7 +242,7 @@ const Navbar = () => {
                       />
                     </svg>
                     {cartItems ? (
-                    <span className="badge badge-sm indicator-item">{cartItems.productInCart?.length}</span>
+                      <span className="badge badge-sm indicator-item ">{cartItems.productInCart?.length}</span>
                     ) : (
                       <></>
                     )}
@@ -210,14 +257,14 @@ const Navbar = () => {
                     )}
                     <span className="text-info">Subtotal: Rp.{price}</span>
                     <div className="card-actions">
-                      <button onClick={()=> router.push('http://localhost:3000/cart')} className="btn btn-primary btn-block">
+                      <button onClick={() => router.push('http://localhost:3000/cart')} className="btn btn-primary btn-block">
                         View cart
                       </button>
                     </div>
                   </div>
                 </div>
               </div>
-              
+
               {/* notif */}
               <div className="dropdown dropdown-end" onClick={()=>{getNotif(); readNotif();}}>
                 <label tabIndex={0} className="btn btn-ghost m-1 text-lg">
@@ -230,25 +277,57 @@ const Navbar = () => {
                     )}
                   </div>
                 </label>
-                <div tabIndex={0} className="mt-3 card card-compact dropdown-content w-72 bg-base-100 shadow">
-                  <div className="card-body">
-                    {notif?.map((notif) => (
-                      <div className="cursor-pointer" onClick={()=> onNotifClick(notif.notifType, notif.notifRole)}>
-                        <p className="py-2">{notif.body}</p>
-                        <hr/>
-                      </div>
-                    ))}
+                <div tabIndex={0} className="mt-3 card dropdown-content bg-base-100 shadow">
+                  <div className="card-body h-[400px] w-[400px] overflow-y-scroll">
+                    <Box>
+                      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                          <Tab label="Chat" {...a11yProps(0)} />
+                          <Tab label="Transaction" {...a11yProps(1)} />
+                          <Tab label="Order" {...a11yProps(2)} />
+                        </Tabs>
+                      </Box>
+                      {notif?.map((notif) => (
+                        <div key={notif.id} className="cursor-pointer hover:bg-gray-300 overflow-y-auto" onClick={() => onNotifClick(notif.notifType, notif.notifRole)}>
+
+                          {notif.notifType === "CHAT" &&
+                            <CustomTabPanel value={value} index={0}>
+                              <div>{notif.body}</div>
+                            </CustomTabPanel>
+                          }
+                          {notif.notifType === "TRANSACTION" && notif.notifRole === "USER" ?
+                            <>
+                              <CustomTabPanel value={value} index={1}>
+                                <div>{notif.body}</div>
+                              </CustomTabPanel>
+                            </>
+                            :
+                            <>
+                            </>
+                          }
+                          {notif.notifType === "TRANSACTION" && notif.notifRole === "SELLER" ?
+                            <>
+                              <CustomTabPanel value={value} index={2}>
+                                <div>{notif.body}</div>
+                              </CustomTabPanel>
+                            </>
+                            :
+                            <></>
+                          }
+                        </div>
+                      ))}
+                    </Box>
                   </div>
                 </div>
               </div>
-              <LoginDropdown onLogoutClick={handleGoogleSignOut} session={session}/>
+              <LoginDropdown onLogoutClick={handleGoogleSignOut} session={session} />
             </div>
           ) : (
             <>
               {/* Dropdown Chart */}
               <div className="dropdown dropdown-hover dropdown-left mx-5">
                 <label tabIndex={0} className="btn btn-ghost m-1 text-lg">
-                  <HiShoppingCart className="hidden sm:block"/>
+                  <HiShoppingCart className="hidden sm:block" />
                 </label>
                 <div
                   tabIndex={0}
@@ -286,16 +365,16 @@ const Navbar = () => {
         </div>
       </div>
       <form className='mt-4 sm:hidden' onSubmit={onSearch}>
-          <input
-            type="text"
-            placeholder="Shop now"
-            className="input input-bordered input-primary input-sm w-full placeholder-primary-focus"
-            value={query}
-            onChange={e => {setQuery(e.target.value); }}
-          />
-        </form>
+        <input
+          type="text"
+          placeholder="Shop now"
+          className="input input-bordered input-primary input-sm w-full placeholder-primary-focus"
+          value={query}
+          onChange={e => { setQuery(e.target.value); }}
+        />
+      </form>
       {/* End New Navbar */}
-      
+
     </div>
   );
 }
