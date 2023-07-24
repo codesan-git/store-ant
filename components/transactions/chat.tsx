@@ -10,7 +10,7 @@ import { Socket, io } from 'socket.io-client'
 import { useRouter } from "next/router";
 
 interface Conversation {
-  
+  recepient?: User;
   id?: number;
   messages: Message[];
 }
@@ -66,8 +66,11 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
 
   //const [messageForm, setMessageForm] = useState<MessageForm>({senderId: String(session?.user.id), recipientId: "1", message:""});
   const [newMessage, setNewMessage] = useState<Message>();
+  const [newConversation, setNewConversation] = useState<Conversation>();
   
   const [selectedRecepient, setSelectedRecepient] = useState<User>();
+
+  let chatDoesNotExistYet = true;
 
   const socketInitializer = async () => {
     await fetch("/api/socket");
@@ -98,7 +101,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
         messages: [],
       }
 
-      let chatDoesNotExistYet = true;
+      chatDoesNotExistYet = true;
 
       data.map((c) => {
         console.log("Running map")
@@ -118,6 +121,8 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
         setSelectedConversation(newConversation);
         setSelectedRecepient(userToBeChatted);
         setCurrentChatroomMessages([]);
+
+        setNewConversation(newConversation);
       }
     }
   }
@@ -310,7 +315,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
             <div id="chatroom-list" className="h-5/6 flex flex-col overflow-y-auto">
               {conversations?.map((c)=> chatroomItem(c))}
               {
-                (newChatUserId)
+                (newConversation)
                 ? <div className="flex flex-row h-24 bg-gray-300 hover:bg-gray-500 transition hover:cursor-pointer">
                     <div id="recepient-image-container" className="w-1/4 flex justify-center items-center">
                       <img
