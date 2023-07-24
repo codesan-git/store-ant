@@ -3,11 +3,12 @@ import { BsCheck2, BsCheck2All } from "react-icons/bs"
 import { AiOutlineSend } from "react-icons/ai";
 import { GrAttachment }  from "react-icons/gr"
 import { MdArrowBack } from "react-icons/md"
-import { ChangeEvent, FormEvent, Fragment, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, Fragment, KeyboardEvent, useEffect, useState } from "react";
 import axios from 'axios';
 import { useSession } from "next-auth/react";
 import { Socket, io } from 'socket.io-client'
 import { useRouter } from "next/router";
+import { Textarea } from "@material-tailwind/react";
 
 interface Conversation {
   recepient?: User;
@@ -146,23 +147,45 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
 
   
   
-  const handleSubmitMessage = (e: FormEvent) => {
+  const handleSubmitMessage = (e: KeyboardEvent<HTMLTextAreaElement> | KeyboardEvent<HTMLInputElement>) => {
+    
+    if(e.key  === 'Enter'){
+      e.preventDefault();
+      socket.emit("send-message", newMessage);
+      setCurrentChatroomMessages([...currentChatroomMessages as Message[], newMessage as Message]);
+      try{
+          fetch('http://localhost:3000/api/chat/send', {
+              body: JSON.stringify(newMessage),
+              headers: {
+                  'Content-Type' : 'application/json'
+              },
+              method: 'POST'
+          }).then()
+      }catch(error){
+          //console.log(error)
+      }
+  
+      setNewMessage({...newMessage as Message, message: ""});
+    }
+  }
+
+  const handleMobileSubmitMessage = (e: FormEvent) => {
     e.preventDefault();
     socket.emit("send-message", newMessage);
-    setCurrentChatroomMessages([...currentChatroomMessages as Message[], newMessage as Message]);
-    try{
-        fetch('http://localhost:3000/api/chat/send', {
-            body: JSON.stringify(newMessage),
-            headers: {
-                'Content-Type' : 'application/json'
-            },
-            method: 'POST'
-        }).then()
-    }catch(error){
-        //console.log(error)
-    }
-
-    setNewMessage({...newMessage as Message, message: ""});
+      setCurrentChatroomMessages([...currentChatroomMessages as Message[], newMessage as Message]);
+      try{
+          fetch('http://localhost:3000/api/chat/send', {
+              body: JSON.stringify(newMessage),
+              headers: {
+                  'Content-Type' : 'application/json'
+              },
+              method: 'POST'
+          }).then()
+      }catch(error){
+          //console.log(error)
+      }
+  
+      setNewMessage({...newMessage as Message, message: ""});
   }
   
   const chatroomItemOnClick = (conversation: Conversation) => {
@@ -359,10 +382,11 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
                 : <div>No Conversation</div>
               }
             </div>
-            <form onSubmit={(e) => handleSubmitMessage(e)} className="h-1/6 flex flex-row bg-gray-400">
+            <form className="h-1/6 flex flex-row bg-gray-400">
               <div className="w-full flex flex-row justify-center items-center p-2 relative">
-                <textarea value={newMessage?.message} name="" id="" className="w-full h-full items-start pr-10" onChange={handleMessageChange}></textarea>
-                <GrAttachment className="absolute right-6"/>
+                {/* <textarea aria-multiline="true" value={newMessage?.message} name="" id="" className="w-full h-full items-start pr-10" onKeyDown={(e) => handleSubmitMessage(e)} onChange={handleMessageChange}/> */}
+                <textarea aria-multiline="true" value={newMessage?.message} name="" id="" className="w-full h-full items-start " onKeyDown={(e) => handleSubmitMessage(e)} onChange={handleMessageChange}/>
+                {/* <GrAttachment className="absolute right-6"/> */}
               </div>
               <div className="flex justify-center items-center w-24">
                 <button type="submit" className="bg-green-500 rounded-full w-12 h-12 flex justify-center items-center">
@@ -428,13 +452,14 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
               }
             </div>
             <div className="flex flex-row w-full bg-gray-400">
-              <form onSubmit={(e) => handleSubmitMessage(e)} className="w-full flex flex-row relative bg-gray-400">
+              <form onSubmit={(e) => handleMobileSubmitMessage(e)} className="w-full flex flex-row relative bg-gray-400">
                 <div className="w-full flex flex-row justify-center items-center p-2 relative">
-                  <textarea value={newMessage?.message} name="" id="" className="w-full h-full items-start" onChange={handleMessageChange}></textarea>
-                  <GrAttachment className="absolute right-6"/>
+                  {/* <textarea aria-multiline="true" value={newMessage?.message} name="" id="" className="w-full h-full items-start" onKeyDown={(e) => handleSubmitMessage(e)} onChange={handleMessageChange}/> */}
+                  <textarea aria-multiline="true" value={newMessage?.message} name="" id="" className="w-full h-full items-start" onKeyDown={(e) => handleSubmitMessage(e)} onChange={handleMessageChange}/>
+                  {/* <GrAttachment className="absolute right-6"/> */}
                 </div>
                 <div className="flex justify-center items-center w-24">
-                  <button className="bg-green-500 rounded-full w-12 h-12 flex justify-center items-center">
+                  <button type="submit" className="bg-green-500 rounded-full w-12 h-12 flex justify-center items-center">
                     <AiOutlineSend className="w-6 h-6 fill-white"/>
                   </button>
                 </div>
