@@ -17,7 +17,8 @@ const getData = async () => {
                         }
                     }
                 }
-            }
+            },
+            ShopComment: true
         }
     })
     const safeComplain = getComplain.map((complain) => ({
@@ -40,6 +41,9 @@ const getData = async () => {
             product:{
                 name: complain.order.product.name
             }
+        },
+        ShopComment: {
+            ...complain.ShopComment
         }
     }))
     return safeComplain
