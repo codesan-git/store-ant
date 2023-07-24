@@ -17,6 +17,7 @@ import SentimentSatisfiedIcon from '@mui/icons-material/SentimentSatisfied';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAltOutlined';
 import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfied';
 import router, { useRouter } from "next/navigation";
+import { getStorage, uploadBytesResumable, getDownloadURL, ref  } from "firebase/storage";
 
 
 interface Props {
@@ -113,23 +114,51 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
     const [selectedImage, setSelectedImage] = useState<string>();
     // const [selectedFiles, setFile] = useState<any[]>([]);
     const [selectedFiles, setSelectedFiles] = useState<Array<Array<File>>>([]);
-    const [getValue, setGetValue] = useState<string[]>(initialOrders)
+    const [getValue, setGetValue] = useState<string[]>(initialOrders);
+	const [urls, setURLs] = useState<Array<Array<string>>>([]);
     // const [form, setForm] = useState<FormData>({
     //     orderId: 0,
     //     star: 0,
     //     comment: ""
     // });
     const [form, setForm] = useState<FormData[]>([]);
-
-
-
     const [value, setValue] = useState<number | null>(2);
     const [hover, setHover] = useState(-1);
+    const [submit, setSubmit] = useState(false);
 
-    const ref = useRef<any>(null)
+    //const ref = useRef<any>(null)
     const router = useRouter()
 
+	useEffect(() => {
+        console.log("url length: ", urls.length);
+        console.log("files length: ", selectedFiles.length);
+        console.log("condition: ", selectedFiles.length == urls.length);        
 
+        let isSameLength = urls.length == selectedFiles.length;
+        
+        if(isSameLength){
+            for (let i=0;i< urls.length; i++){
+                if(urls[i].length != selectedFiles[i].length)
+                    isSameLength = false;
+            }
+        }
+
+        console.log("is same length: ", isSameLength);
+        if(isSameLength && submit){
+            try {
+                const promises = form.map(async (formItem, index) => {
+                    const { orderId, star, comment } = formItem;
+                    const images = urls[index];
+                    console.log("urls index length: ", images.length);
+                    const data = {orderId: String(orderId), star: String(star), comment: String(comment), image: images.join(",")}
+    
+                    axios.post(`/api/cart/rate`, data).then(() => router.refresh());
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    },[urls, submit]);
 
     const fetchShop = async () => {
         try {
@@ -307,28 +336,52 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
         });
     };
     const handleSubmit = async () => {
-        try {
-            const promises = form.map(async (formItem, index) => {
-                const { orderId, star, comment } = formItem;
-                const formData = new FormData();
-                formData.append("orderId", String(orderId));
-                formData.append("star", String(star));
-                formData.append("comment", comment);
+        const promises : any[] = [];
+		const storage = getStorage();
+        setSubmit(true);
 
-                const images = selectedFiles[index];
-                if (images && images.length > 0) {
-                    images.forEach((image, imageIndex) => {
-                        formData.append("image", image);
-                    });
-                }
+		selectedFiles.map((file, index) => {
+            file.map((fileData) => {
+                console.log("loop");
 
-                await axios.post(`/api/cart/rate`, formData).then(() => router.refresh());
-            });
+                const sotrageRef = ref(storage, `images/rating/${fileData.name}`);
+    
+                const uploadTask = uploadBytesResumable(sotrageRef, fileData);
+                promises.push(uploadTask);
+                uploadTask.on(
+                    "state_changed",
+                    (snapshot) => {
+                    const prog = Math.round(
+                        (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                    );
+                    //setProgress(prog);
+                    },
+                    (error) => console.log(error),
+                    async () => {
+                        await getDownloadURL(uploadTask.snapshot.ref).then((downloadURLs) => {
+                            console.log("URLS ISINYA: ", urls);
+                            let tempUrls = urls;
+                            console.log("TEMP URLS ISINYA: ", tempUrls);
 
-            // await Promise.all(promises);
-        } catch (error) {
-            console.error(error);
-        }
+                            if(!tempUrls[index])
+                                tempUrls.push([]);
+
+                            let url = tempUrls[index];
+                            url?.push(downloadURLs);
+                            tempUrls[index] = url;
+                            setURLs(tempUrls);
+                            const reference = [...urls];
+                            setURLs(reference);
+                        });
+                    }
+                );
+            })
+		});
+		Promise.all(promises)
+		.then(async () => {
+			alert("All images uploaded");
+		})
+		.then((err) => console.log(err));
     };
 
     useEffect(() => {

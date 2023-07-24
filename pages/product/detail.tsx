@@ -19,7 +19,9 @@ interface FetchData {
     description: string;
     image: string;
     averageRating: number;
-    shop: Shop;
+    shop: Shop & {
+      user: User;
+    }
   };
   ratings: {
     id: Number;
@@ -212,7 +214,7 @@ export default function CreateShop({ product, ratings }: FetchData) {
           <div id="product-image-container" className="p-4 w-full h-auto">
             <div className="w-full h-auto">
               <img
-                src={`http://localhost:3000/${selectedImage}`}
+                src={selectedImage}
                 onError={({ currentTarget }) => {
                   currentTarget.onerror = null; // prevents looping
                   currentTarget.src =
@@ -230,7 +232,7 @@ export default function CreateShop({ product, ratings }: FetchData) {
               {product.image.split(",").map((image, i)=>(
                 <img
                   key = {i}
-                  src={`http://localhost:3000/${image}`}
+                  src={image}
                   onClick={()=>{onImageClick(i)}}
                   onError={({ currentTarget }) => {
                     currentTarget.onerror = null; // prevents looping
@@ -473,7 +475,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       description: true,
       image: true,
       averageRating: true,
-      shop: true
+      shop: {
+        include: {
+          user: true
+        }
+      }
     },
   });
 

@@ -38,8 +38,13 @@ const ProductItem = ({ product } : Props) => {
         </Link>
         {/* <div id="product-image-container" className="object-cover rounded-t-lg bg-green-500 h-1/2"></div> */}
         <img 
-          src={`http://localhost:3000/${product.image.split(",")[0]}`} 
+          src={product.image.split(",")[0]} 
           alt="no image available" 
+          onError={({ currentTarget }) => {
+              currentTarget.onerror = null; // prevents looping
+              currentTarget.src =
+              "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
+          }}
           className="w-full h-1/2 object-cover rounded-t-lg"
         />
         <div id="card-body" className="w-64 lg:w-auto rounded-b-lg p-4 h-1/2 space-y-2 bg-gray-300">

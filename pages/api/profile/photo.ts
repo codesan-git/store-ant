@@ -1,62 +1,30 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
 import { prisma } from "../../../lib/prisma"
-import formidable from 'formidable';
-import path from 'path';
-import fs from "fs/promises"
+import bcrypt from "bcrypt"
 
-export const config = {
-    api: {
-        bodyParser: false
-    }
-};
-
-const readFile = (req: NextApiRequest, saveLocally?: boolean) 
-: Promise<{fields: formidable.Fields; files: formidable.Files}> => {
-    const options: formidable.Options = {};
-    if(saveLocally){
-        options.uploadDir = path.join(process.cwd(), "/public/images/profiles");
-        options.filename = (name, ext, path, form) => {
-            return Date.now().toString() + "_" + path.originalFilename;
-        }
-    }
-    const form = formidable(options);
-    return new Promise((resolve, reject) => {
-      form.parse(req, (err, fields, files) => {
-          if(err) reject(err);
-          resolve({fields, files});
-      })
-    });
-};
+type Data = {
+  message: string
+}
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse<Data>
 ) {
-    const session = await getSession({req});
-    try {
-        await fs.readdir(path.join(process.cwd() + "/public", "/images/profiles"));
-    } catch (error) {
-        await fs.mkdir(path.join(process.cwd() + "/public", "/images/profiles"));
-    } 
-    const { fields, files } = await readFile(req, true);   
-    const file = files.image;
-    let url = Array.isArray(file) ? file.map((f) => f.filepath) : file.filepath;
-    let imageUrl = String(url);
-    imageUrl = imageUrl.substring(imageUrl.indexOf("images"));
+  const {image} = req.body
+  const session = await getSession({req})
 
-    try {
-        fs.unlink(path.join(process.cwd(), `public\\${session?.user.image!.substring(session?.user.image!.indexOf("http:\\\\localhost:3000\\"))}`));
-
-        // // // CREATE
-        const user = await prisma.user.update({
-          where:{ id: session?.user.id},
-          data:{
-            image: "http:\\\\localhost:3000\\" + imageUrl
-          }
-        })
-        res.status(200).json({ message: 'profile updated'});
-    } catch (error) {
-        res.status(400).json({ message: "Fail" })
-    }
-};
+  console.log("image url: ", image);
+  try {
+    await prisma.user.update({
+      where: {id: session?.user?.id},
+      data: {
+        image: image
+      }
+    })
+    res.status(200).json({ message: 'Photo updated' })
+  } catch (error) {
+    //console.log(error)
+    res.status(400).json({ message: "Fail" })
+  }
+}

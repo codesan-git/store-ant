@@ -1,10 +1,13 @@
-import { Shop } from "@prisma/client";
+import { Shop, User } from "@prisma/client";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
 interface Props{
-    shop: Shop;
+    shop: Shop & {
+        user: User;
+    }
 }
 
 const ShopDetailCard = ({shop}: Props) => {
@@ -23,7 +26,7 @@ const ShopDetailCard = ({shop}: Props) => {
             {shop.image ? (
               <img 
                 className='object-cover rounded-full w-16 h-16 sm:h-16 border-2 border-gray-600'
-                src={`http://localhost:3000/${shop.image!}`}
+                src={shop.image!}
                 onError={({ currentTarget }) => {
                     currentTarget.onerror = null; // prevents looping
                     currentTarget.src =

@@ -6,6 +6,7 @@ import { GetServerSideProps } from "next";
 import { Shop } from '@prisma/client';
 import { getSession } from 'next-auth/react';
 import { prisma } from "../../lib/prisma"
+import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject  } from "firebase/storage";
 
 interface ShopData{
     shop: Shop
@@ -17,16 +18,34 @@ export default function Profile(shopData : ShopData) {
     const [selectedImage, setSelectedImage] = useState("");
     const [selectedFile, setSelectedFile] = useState<File>();
 
-    const handleUpload = async () => {
-        try {
-            if(!selectedFile) return;
-            const formData = new FormData();
-            formData.append("image", selectedFile);
-            formData.append("name", name);
-            await axios.post('http://localhost:3000/api/shop/profile', formData).then(() => {router.back() });
-        } catch (error: any) {
-            //console.log(error);
-        }
+    async function handleUpload(file: any){
+        const storage = getStorage();
+        const storageRef = ref(storage, `images/shop/${name}`);
+
+        const uploadTask = uploadBytesResumable(storageRef, file);
+        uploadTask.on('state_changed', 
+            (snapshot) => {
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log('Upload is ' + progress + '% done');
+                switch (snapshot.state) {
+                case 'paused':
+                    console.log('Upload is paused');
+                    break;
+                case 'running':
+                    console.log('Upload is running');
+                    break;
+                }
+            }, 
+            (error) => {
+                console.log("error, ", error);
+            }, 
+            () => {
+                getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+                    const data = {name: name, image: downloadURL};
+                    await axios.put("http://localhost:3000/api/shop/profile", data);
+                }).then(() => router.reload());
+            }
+        );
     }
 
     return (
@@ -36,7 +55,7 @@ export default function Profile(shopData : ShopData) {
                     <h1 className="text-gray-800 text-4xl font-bold py-4">Edit Shop</h1>
                     <p className="mx-auto text-gray-400">Edit Shop</p>
                 </div>
-                <form onSubmit={e=>{e.preventDefault(); handleUpload();}} className="flex flex-col gap-5">
+                <form onSubmit={e=>{e.preventDefault(); handleUpload(selectedFile);}} className="flex flex-col gap-5">
                     <div className='max-w-4xl mx-auto p-20 space-y-6'>
                         <label>
                             <input 
@@ -56,7 +75,7 @@ export default function Profile(shopData : ShopData) {
                                 ) : (
                                     <div>
                                         {shopData.shop.image? (
-                                            <img src={`http://localhost:3000/${shopData.shop.image}`} alt=""/>
+                                            <img src={shopData.shop.image} alt=""/>
                                         ) : (
                                             <span>Select Image</span>
                                         )}

@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState } from 'react';
 import { useRouter } from 'next/router'
+import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject  } from "firebase/storage";
 import axios from 'axios';
 
 interface FormData{
@@ -17,20 +18,34 @@ export default function Event() {
   const [selectedImage, setSelectedImage] = useState<string>();
   const [selectedFile, setSelectedFile] = useState<File>();
   
-  const handleUpload = async () => {
-    try {
-        if(!selectedFile) return;
-        const formData = new FormData();
-        formData.append("image", selectedFile);
-        formData.append("eventName", form.eventName);
-        formData.append("eventPath", form.eventPath);
-        formData.append("startDate", form.startDate);
-        formData.append("endDate", form.endDate);
-        //formData.append("image", selectedFile);
-        await axios.post('http://localhost:3000/api/admin/event/create/', formData).then(() => {router.back() });
-    } catch (error: any) {
-        //console.log(error);
-    }
+  async function handleUpload(file: any){
+    const storage = getStorage();
+    const storageRef = ref(storage, `images/event/${form.eventName}`);
+
+    const uploadTask = uploadBytesResumable(storageRef, file);
+    uploadTask.on('state_changed', 
+      (snapshot) => {
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log('Upload is ' + progress + '% done');
+        switch (snapshot.state) {
+          case 'paused':
+            console.log('Upload is paused');
+            break;
+          case 'running':
+            console.log('Upload is running');
+            break;
+        }
+      }, 
+      (error) => {
+        console.log("error, ", error);
+      }, 
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+          const data = {image: downloadURL, eventName: form.eventName, eventPath: form.eventPath, startDate: form.startDate, endDate: form.endDate};
+          await axios.post('http://localhost:3000/api/admin/event/create/', data).then(() => {router.back() });
+        }).then(() => router.reload());
+      }
+    );
   }
 
   const renderSelectedImage = () => {
@@ -61,7 +76,7 @@ export default function Event() {
           </div>
         </section>
       </div>
-      <form action="" onSubmit={e=>{e.preventDefault(); handleUpload();}} className='lg:flex lg:flex-row'>
+      <form action="" onSubmit={e=>{e.preventDefault(); handleUpload(selectedFile);}} className='lg:flex lg:flex-row'>
         <section className='px-4 lg:w-1/2 flex lg:flex-col justify-center items-center'>
           <div className='border-gray-600 border border-dashed rounded-xl flex justify-center items-center h-40 w-full lg:h-5/6 lg:w-5/6 relative'>
             <input type="file" accept='.jpg, .jpeg, .png, .webp' name="product-image" id="product-image-input" className='w-full h-full cursor-pointer opacity-0 absolute' 

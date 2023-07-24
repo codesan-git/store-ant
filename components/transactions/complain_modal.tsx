@@ -1,12 +1,9 @@
-import Orders from "@/pages/shop/orders";
-import { Product, ProductInCart, Shop, TransactionStatus } from "@prisma/client";
+import { Product, Shop, TransactionStatus } from "@prisma/client";
 import axios from "axios";
-import Image from "next/image";
 import { Fragment, useEffect, useState, useRef } from "react";
-import { BiStoreAlt } from "react-icons/bi";
 import { HiOutlineCamera, HiPlus } from "react-icons/hi";
 import { HiOutlinePhoto } from "react-icons/hi2";
-import useSWR from 'swr';
+import { getStorage, uploadBytesResumable, getDownloadURL, ref  } from "firebase/storage";
 
 interface Props {
 	complainTransactionModalArguments: () => any;
@@ -56,8 +53,29 @@ const ComplainModal = ({ complainTransactionModalArguments }: Props) => {
 	const [selectedImage, setSelectedImage] = useState<string>();
 	const [selectedFiles, setFile] = useState<any[]>([]);
 	const [form, setForm] = useState<FormData>({orderId:[],description:""});
+	const [urls, setURLs] = useState<string[]>([]);
+	
+	useEffect(() => {
+	  console.log("images: ", urls.join(","));
+	  console.log("url length: ", urls.length);
+	  console.log("files length: ", selectedFiles.length);
+	  console.log("condition: ", selectedFiles.length == urls.length);
+	  if(urls.join(",") != "" && urls.length == selectedFiles.length){		
+		// if (form.orderId.length > 0) {
+		// 	for (let i = 0; i < form.orderId.length; i++) {
+			try {
+				const data = {image: urls.join(","), orderId: form.orderId.join(","), description: form.description}
+				if (selectedFiles.length == 0) return;
+				axios.post(`/api/complain/create`, data);
+			} catch (error) {
+				console.error(error);
+			}
+		// }
+	// }
+	  }
+	},[urls]);
 
-	const ref = useRef<any>(null)
+	//const ref = useRef<any>(null)
 
 	const fetchShop = async () => {
 		try {
@@ -73,19 +91,38 @@ const ComplainModal = ({ complainTransactionModalArguments }: Props) => {
 		}
 	};
 
-	const postComplain = async () => {
-				try {
-					if (selectedFiles.length == 0) return;
-					const formData = new FormData();
-					selectedFiles.forEach((file) => formData.append("image", file));
-					formData.append("orderId", form.orderId.join(','));
-					formData.append("description", form.description);
-					await axios.post(`/api/complain/create`, formData)
-				} catch (error) {
-					console.error(error);
-				}
-			// }
-		// }
+	async function postComplain(){
+		const promises : any[] = [];
+		const storage = getStorage();
+
+		selectedFiles.map((file) => {
+		console.log("loop");
+
+		const sotrageRef = ref(storage, `images/complain/${file.name}`);
+
+		const uploadTask = uploadBytesResumable(sotrageRef, file);
+		promises.push(uploadTask);
+		uploadTask.on(
+			"state_changed",
+			(snapshot) => {
+			const prog = Math.round(
+				(snapshot.bytesTransferred / snapshot.totalBytes) * 100
+			);
+			//setProgress(prog);
+			},
+			(error) => console.log(error),
+			async () => {
+				await getDownloadURL(uploadTask.snapshot.ref).then((downloadURLs) => {
+					setURLs(prevArray => [...prevArray, downloadURLs]);
+				});
+			}
+		);
+		});
+		Promise.all(promises)
+		.then(async () => {
+			alert("All images uploaded");
+		})
+		.then((err) => console.log(err));
 	};
 
 	useEffect(() => {

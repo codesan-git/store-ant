@@ -64,6 +64,12 @@ const Navbar = () => {
     fetchCategories
   )
 
+  const {data: count, isLoading: loadingCount} = useSWR<{count : number}>(
+    `http://localhost:3000/api/notification/count/`,
+    fetchCategories,
+    { refreshInterval: 30000 }
+  )
+
   let price = 0;
   if(cartItems){
     let i:number;
@@ -80,17 +86,13 @@ const Navbar = () => {
   async function getNotif(){
     const res = await axios.get("/api/notification");
     setNotif(res.data.notifications);
-    console.log("notif: ", res.data.notifications);
+    //console.log("notif: ", res.data.notifications);
   }
 
   async function readNotif(){
     console.log("read");
     const res = await axios.put("/api/notification/read");
   }
-  
-  useEffect(()=>{
-    getNotif();
-  },[]);
 
   const onSearch = (event : React.FormEvent) => {
     event.preventDefault();
@@ -105,7 +107,7 @@ const Navbar = () => {
     //console.log(encodedSearchQuery);
   }
   
-  console.log("profile ", session?.user.image);
+  //console.log("profile ", session?.user.image);
 
   if(!categoryData?.categories){
     
@@ -217,14 +219,14 @@ const Navbar = () => {
               </div>
               
               {/* notif */}
-              <div className="dropdown dropdown-end" onClick={()=>readNotif()}>
+              <div className="dropdown dropdown-end" onClick={()=>{getNotif(); readNotif();}}>
                 <label tabIndex={0} className="btn btn-ghost m-1 text-lg">
                   <HiBell className="hidden sm:block"/>
                   <div className="indicator">                      
-                    {notif ? (
-                      <span className="badge badge-sm indicator-item">{notif.filter((x) => x.isSeen == false).length}</span>
-                    ) : (
-                      <></>
+                    {count?.count! > 0 ? (
+                        <span className="badge badge-sm indicator-item">{count?.count!}</span>
+                      ) : (
+                        <></>
                     )}
                   </div>
                 </label>
