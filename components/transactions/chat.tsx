@@ -70,6 +70,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
   const [newConversation, setNewConversation] = useState<Conversation>();
   
   const [selectedRecepient, setSelectedRecepient] = useState<User>();
+  const [newRecepient, setNewRecepient] = useState<User>();
 
   let chatDoesNotExistYet = true;
 
@@ -124,6 +125,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
         setCurrentChatroomMessages([]);
 
         setNewConversation(newConversation);
+        setNewRecepient(userToBeChatted)
       }
     }
   }
@@ -210,6 +212,13 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
     // console.log(messageForm);
   }
 
+  const newChatroomItemOnClick = () => {
+    setSelectedConversation(newConversation);
+    setSelectedRecepient(newRecepient);
+    setCurrentChatroomMessages([]);
+    setNewConversation(newConversation);
+  }
+
   const getRecepient = (latestMessage: Message) : User => {
     let recepient; //TODO: create user names variable in Conversation Model
 
@@ -271,14 +280,14 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
     );
   }
 
-  const messageElement = (message: Message) => {
+  const messageElement = (message?: Message) => {
 
     let isSender: boolean;
 
-    if (message.senderId === session?.user.id) isSender = true;
+    if (message?.senderId === session?.user.id) isSender = true;
     else isSender = false;
 
-    const messageDate = new Date(message.createdAt as Date);
+    const messageDate = new Date(message?.createdAt as Date);
 
 
     const userMessageContainerStyle = "px-4 py-2 flex justify-end";
@@ -339,15 +348,15 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
               {conversations?.map((c)=> chatroomItem(c))}
               {
                 (newConversation)
-                ? <div className="flex flex-row h-24 bg-gray-300 hover:bg-gray-500 transition hover:cursor-pointer">
+                ? <div onClick={() => newChatroomItemOnClick()} className="flex flex-row h-24 bg-gray-300 hover:bg-gray-500 transition hover:cursor-pointer">
                     <div id="recepient-image-container" className="w-1/4 flex justify-center items-center">
                       <img
-                        src={selectedRecepient?.image} 
+                        src={newRecepient?.image} 
                         className="w-14 h-14 rounded-full bg-purple-300"
                       />
                     </div>
                     <div id="chatroom-item-details" className="w-3/4 p-4 flex flex-col items-start">
-                      <h1 className="font-bold">{selectedRecepient?.name.toString()}</h1>
+                      <h1 className="font-bold">{newRecepient?.name.toString()}</h1>
                       {/* <p id="last-message" className="truncate w-64 h-48">{latestMessage?.message.toString()}</p> */}
                     </div>
                   </div>
@@ -401,9 +410,6 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
         <div id="chat-chatlist-modal" className="lg:hidden bg-gray-900 bg-opacity-75 fixed h-full w-full top-0 left-0 bottom-0 right-0 z-50 pointer-events-auto">
           <div id="chat-chatlist-box" className="h-full w-full bg-white">
             <div className="flex flex-row w-full bg-gray-400 h-16">
-              <div>
-
-              </div>
               <div id="chat-chatlist-modal-title-container" className="flex justify-start items-center w-full p-4">
                 <h1 className="font-bold text-xl">Chat</h1>
               </div>
@@ -431,14 +437,14 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
                   className="w-10 h-10 rounded-full bg-purple-300">
                 </img>  
               </div>
-              <div id="recepient-and-status" className="flex flex-col items-start w-3/4">
-                <div className="h-1/2 w-full">
+              <div id="recepient-and-status" className="flex flex-col justify-center items-start w-3/4">
+                <div className="w-full">
                   <h1 className="text-base font-bold">{selectedRecepient?.name}</h1>
                 </div>
-                <div className="h-1/2 flex flex-row justify-center items-center space-x-1">
+                {/* <div className="h-1/2 flex flex-row justify-center items-center space-x-1">
                   <div className="w-2 h-2 rounded-full bg-green-600"></div>
                   <h1 className="text-xs">Online</h1>
-                </div>
+                </div> */}
               </div>
               <div className="w-1/4 flex items-center justify-end">
                 <HiEllipsisVertical className="w-6 h-6 hover:cursor-pointer"/>
