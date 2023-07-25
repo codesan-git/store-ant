@@ -15,7 +15,7 @@ const ShopDetailCard = ({shop}: Props) => {
   const router = useRouter();
 
   const onPenjualClick = () => {
-    router.push(`/transactions?newChatId=${shop.userId}`);
+    router.push(`/transactions?newChatUserId=${shop.userId}`);
   }
 
   return (
