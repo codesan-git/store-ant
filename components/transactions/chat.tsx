@@ -280,7 +280,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
     );
   }
 
-  const messageElement = (message?: Message) => {
+  const messageElement = (message: Message) => {
 
     let isSender: boolean;
 
