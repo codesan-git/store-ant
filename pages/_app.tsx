@@ -7,6 +7,7 @@ import { SessionProvider } from "next-auth/react";
 import { NextIntlProvider } from "next-intl";
 import { AppProps } from "next/app";
 import "../styles/globals.css";
+import Script from "next/script";
 
 const App = ({
   Component,
@@ -29,11 +30,27 @@ const App = ({
   //const analytics = getAnalytics(app);
 
   return (
-    <NextIntlProvider locale="en" timeZone="Asia/Bangkok">
-      <SessionProvider session={pageProps.session}>
-        <Component {...pageProps} />
-      </SessionProvider>
-    </NextIntlProvider>
+    <>
+      <Script 
+        strategy="lazyOnload" 
+        src={`https://www.googletagmanager.com/gtag/js?id=G-E22DXYR0LM`}
+      />
+      <Script strategy="lazyOnload">
+        {
+          `window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          
+          gtag('config', 'G-E22DXYR0LM');`
+        }
+      </Script>
+
+      <NextIntlProvider locale="en" timeZone="Asia/Bangkok">
+        <SessionProvider session={pageProps.session}>
+          <Component {...pageProps} />
+        </SessionProvider>
+      </NextIntlProvider>
+    </>
   );
 };
 
