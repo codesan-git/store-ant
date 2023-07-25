@@ -1,18 +1,17 @@
 import { GetServerSideProps } from "next";
-
 import { getTypeTransactions } from "@/types";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import getDataOrders from "./action/getComplainSeller";
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { HiShoppingCart } from "react-icons/hi";
-
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import { HiOutlineCamera, HiPlus } from "react-icons/hi";
 import { HiOutlinePhoto } from "react-icons/hi2";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL  } from "firebase/storage";
 
 interface Props {
   getOrders: getTypeTransactions[]
@@ -49,6 +48,19 @@ export default function ComplainAdmin({ getOrders }: Props) {
     complainId: 0,
     description: "",
   });
+  const [urls, setURLs] = useState<string[]>([]);
+  
+  useEffect(() => {
+    console.log("images: ", urls.join(","));
+    console.log("url length: ", urls.length);
+    console.log("files length: ", selectedFiles.length);
+    console.log("condition: ", selectedFiles.length == urls.length);
+    if(urls.join(",") != "" && urls.length == selectedFiles.length){
+      const data = {complainId: form.complainId, description: form.description};
+      axios.post(`/api/complain/seller/shopComment`, data).then(() => { console.log("created!"); router.back(); });
+    }
+  },[urls]);
+
   const acceptStatus = async (id: string) => {
     try {
       const response = await axios.patch(`http://localhost:3000/api/complain/seller/accept`, {
@@ -86,16 +98,37 @@ export default function ComplainAdmin({ getOrders }: Props) {
   };
 
   const postComment = async () => {
-    try {
-      if (selectedFiles.length == 0) return;
-      const formData = new FormData();
-      selectedFiles.forEach((file) => formData.append("image", file));
-      formData.append("complainId", String(form.complainId));
-      formData.append("description", form.description);
-      await axios.post(`/api/complain/seller/shopComment`, formData)
-    } catch (error) {
-      console.error(error);
-    }
+    const promises : any[] = [];
+    const storage = getStorage();
+
+    selectedFiles.map((file) => {
+      console.log("loop");
+
+      const sotrageRef = ref(storage, `images/product/${file.name}`);
+
+      const uploadTask = uploadBytesResumable(sotrageRef, file);
+      promises.push(uploadTask);
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const prog = Math.round(
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          );
+          //setProgress(prog);
+        },
+        (error) => console.log(error),
+        async () => {
+          await getDownloadURL(uploadTask.snapshot.ref).then((downloadURLs) => {
+            setURLs(prevArray => [...prevArray, downloadURLs]);
+          });
+        }
+      );
+    });
+    Promise.all(promises)
+      .then(async () => {
+        alert("All images uploaded");
+      })
+      .then((err) => console.log(err));
     // }
     // }
   };
