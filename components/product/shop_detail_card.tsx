@@ -18,6 +18,12 @@ const ShopDetailCard = ({shop}: Props) => {
     router.push(`/transactions?newChatUserId=${shop.userId}`);
   }
 
+  const routeToShop = ()=> {
+    router.push({
+      pathname: `/shop/detail/${shop.shopName}`,
+    })
+  }
+
   return (
     <>
       <div id="shop-details" className=''>
@@ -43,7 +49,7 @@ const ShopDetailCard = ({shop}: Props) => {
             )}
           </div>
           <div id='profile-details' className='w-2/3 sm:w-full'>
-            <h1 className='text-2xl'>{shop.shopName}</h1>
+            <h1 className='text-2xl cursor-pointer' onClick={()=>routeToShop()}>{shop.shopName}</h1>
             <div className="lg:flex lg:flex-row">
               <div className="lg:flex lg:flex-row ">
                 <div id="store-rating" className="flex flex-row">
