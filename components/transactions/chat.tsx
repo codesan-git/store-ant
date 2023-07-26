@@ -364,7 +364,6 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
               </div>
             </div>
             <div id="chatroom-list" className="h-5/6 flex flex-col overflow-y-auto">
-              {conversations?.map((c)=> chatroomItem(c))}
               {
                 (newConversation)
                 ? <div onClick={() => newChatroomItemOnClick()} className="flex flex-row h-24 bg-gray-300 hover:bg-gray-500 transition hover:cursor-pointer">
@@ -381,6 +380,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
                   </div>
                 : <></>
               }
+              {conversations?.map((c)=> chatroomItem(c))}
             </div>
           </section>
           <section hidden={hidden} id="chatroom-web" className="w-3/4">
@@ -438,7 +438,6 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
               </div>
             </div>
             <div id="chatlist" className="h-5/6 flex flex-col overflow-y-auto">
-              {conversations?.map((c) => chatroomItemForModal(c))}
               {
                 (newConversation)
                 ? <div onClick={() => newChatroomItemOnClick()} className="flex flex-row h-24 bg-gray-300 hover:bg-gray-500 transition hover:cursor-pointer">
@@ -455,6 +454,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
                   </div>
                 : <></>
               }
+              {conversations?.map((c) => chatroomItemForModal(c))}
             </div>
           </div>
         </div>
