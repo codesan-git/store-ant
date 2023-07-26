@@ -53,6 +53,10 @@ interface Props {
   onClose: () => any;
 }
 
+/*Temporary solution after temporary solution after temporary solution after temporary solution.... until it bloats like this
+  - Peter D. 26 July 2023
+*/
+
 
 const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
 
@@ -181,11 +185,15 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
   
       };
 
+      if(newConversation) {
+        setLatestMessageOfNewConversation(newMessage?.message as string)
+        return;
+      };
+
       const updatedConversations = conversations.filter((c) => c.id !== selectedConversation?.id);
   
       setConversations([updatedConversation, ...updatedConversations,]);
 
-      if(newConversation) setLatestMessageOfNewConversation(newMessage?.message as string);
     }
   }
 
