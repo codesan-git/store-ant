@@ -18,9 +18,11 @@ export type getTypeTransactions = Transaction & {
   shop:Shop;
 }
 
+export type getTypeShop = Shop & {
+  product:Product[]
+}
+
+
 declare global {
-  interface Window {
-    // modalReject: ()=> void;
-    modalReject: any;
-  }
+  let getShop: getTypeShop
 }

@@ -134,6 +134,7 @@ export default function CreateShop({ product, ratings }: FetchData) {
         markedStars.push(false);
       }
     }
+
     
     return (
       <>
