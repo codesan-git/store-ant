@@ -53,6 +53,10 @@ interface Props {
   onClose: () => any;
 }
 
+/*Temporary solution after temporary solution after temporary solution after temporary solution.... until it bloats like this
+  - Peter D. 26 July 2023
+*/
+
 
 const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
 
@@ -71,6 +75,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
   
   const [selectedRecepient, setSelectedRecepient] = useState<User>();
   const [newRecepient, setNewRecepient] = useState<User>();
+  const [latestMessageOfNewConversation, setLatestMessageOfNewConversation] = useState<string>("");
 
   let chatDoesNotExistYet = true;
 
@@ -115,6 +120,8 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
           setSelectedRecepient(recepient);
           setCurrentChatroomMessages(c.messages);
 
+          setChatroomModalIsHidden(false);
+
           chatDoesNotExistYet = false;
         }
       })
@@ -126,6 +133,8 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
 
         setNewConversation(newConversation);
         setNewRecepient(userToBeChatted)
+
+        setChatroomModalIsHidden(false);
       }
     }
   }
@@ -155,19 +164,36 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
       e.preventDefault();
       socket.emit("send-message", newMessage);
       setCurrentChatroomMessages([...currentChatroomMessages as Message[], newMessage as Message]);
+
       try{
-          fetch('http://localhost:3000/api/chat/send', {
+        fetch('http://localhost:3000/api/chat/send', {
               body: JSON.stringify(newMessage),
               headers: {
-                  'Content-Type' : 'application/json'
+                'Content-Type' : 'application/json'
               },
               method: 'POST'
-          }).then()
-      }catch(error){
+            }).then()
+          }catch(error){
           //console.log(error)
       }
   
       setNewMessage({...newMessage as Message, message: ""});
+
+      const updatedConversation: Conversation = {
+        id: selectedConversation?.id,
+        messages: [...currentChatroomMessages as Message[], newMessage as Message],
+  
+      };
+
+      if(newConversation) {
+        setLatestMessageOfNewConversation(newMessage?.message as string)
+        return;
+      };
+
+      const updatedConversations = conversations.filter((c) => c.id !== selectedConversation?.id);
+  
+      setConversations([updatedConversation, ...updatedConversations,]);
+
     }
   }
 
@@ -217,6 +243,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
     setSelectedRecepient(newRecepient);
     setCurrentChatroomMessages([]);
     setNewConversation(newConversation);
+    setChatroomModalIsHidden(false);
   }
 
   const getRecepient = (latestMessage: Message) : User => {
@@ -345,7 +372,6 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
               </div>
             </div>
             <div id="chatroom-list" className="h-5/6 flex flex-col overflow-y-auto">
-              {conversations?.map((c)=> chatroomItem(c))}
               {
                 (newConversation)
                 ? <div onClick={() => newChatroomItemOnClick()} className="flex flex-row h-24 bg-gray-300 hover:bg-gray-500 transition hover:cursor-pointer">
@@ -357,11 +383,12 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
                     </div>
                     <div id="chatroom-item-details" className="w-3/4 p-4 flex flex-col items-start">
                       <h1 className="font-bold">{newRecepient?.name.toString()}</h1>
-                      {/* <p id="last-message" className="truncate w-64 h-48">{latestMessage?.message.toString()}</p> */}
+                      <p id="last-message" className="truncate w-64 h-48">{latestMessageOfNewConversation}</p>
                     </div>
                   </div>
                 : <></>
               }
+              {conversations?.map((c)=> chatroomItem(c))}
             </div>
           </section>
           <section hidden={hidden} id="chatroom-web" className="w-3/4">
@@ -419,6 +446,22 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
               </div>
             </div>
             <div id="chatlist" className="h-5/6 flex flex-col overflow-y-auto">
+              {
+                (newConversation)
+                ? <div onClick={() => newChatroomItemOnClick()} className="flex flex-row h-24 bg-gray-300 hover:bg-gray-500 transition hover:cursor-pointer">
+                    <div id="recepient-image-container" className="w-1/4 flex justify-center items-center">
+                      <img
+                        src={newRecepient?.image} 
+                        className="w-14 h-14 rounded-full bg-purple-300"
+                      />
+                    </div>
+                    <div id="chatroom-item-details" className="w-3/4 p-4 flex flex-col items-start">
+                      <h1 className="font-bold">{newRecepient?.name.toString()}</h1>
+                      <p id="last-message" className="truncate w-64 h-48">{latestMessageOfNewConversation}</p>
+                    </div>
+                  </div>
+                : <></>
+              }
               {conversations?.map((c) => chatroomItemForModal(c))}
             </div>
           </div>
