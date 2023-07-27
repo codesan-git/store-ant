@@ -8,6 +8,7 @@ import { NextIntlProvider } from "next-intl";
 import { AppProps } from "next/app";
 import "../styles/globals.css";
 import Script from "next/script";
+//import TagManager, {TagManagerArgs} from 'react-gtm-module';
 
 const App = ({
   Component,
