@@ -61,12 +61,13 @@ interface CartData {
 }
 
 export default function CreateShop({ product, ratings }: FetchData) {
-  const [count, setCount] = useState(1);
+  const [count, setCount] = useState(0);
   const [index, setIndex] = useState(0);
   const [Subtotal, setSubtotal] = useState(0);
   const [selectedImage, setSelectedImage] = useState(product.image.split(",")[0]);
   const router = useRouter();
   const { id } = router.query;
+  const [isEmpty, setIsEmpty] = useState<boolean>((product.stock.valueOf() <= 1) ? true : false);;
 
   console.log("client side: ", ratings);
 
@@ -393,7 +394,7 @@ export default function CreateShop({ product, ratings }: FetchData) {
               <div className="flex flex-row h-10 w-full rounded-lg relative bg-transparent">
                 <button
                   onClick={() => setCount(count - 1)}
-                  disabled={count == 1 ? true : false}
+                  disabled={count == 0 ? true : false}
                   className=" bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none"
                 >
                   <span className="m-auto text-2xl font-thin">−</span>
