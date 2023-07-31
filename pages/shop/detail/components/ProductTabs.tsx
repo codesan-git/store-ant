@@ -7,7 +7,8 @@ import Box from '@mui/material/Box';
 
 import { getTypeShop } from '@/types';
 import AppPagination from './AppPagination';
-
+import { BsBox2Fill, BsFillStarFill } from 'react-icons/bs';
+import { FaStore } from 'react-icons/fa';
 interface ProductListProps {
     getShop: getTypeShop
 }
@@ -51,26 +52,48 @@ const ProductTabs: FC<ProductListProps> = ({ getShop }) => {
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
-    return <div>
-        <Box sx={{ width: '100%' }}>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                    <Tab label="Beranda" className='font-bold' {...a11yProps(0)} />
-                    <Tab label="Produk" className='font-bold' {...a11yProps(1)} />
-                    <Tab label="Ulasan" className='font-bold' {...a11yProps(2)} />
-                </Tabs>
+    return <>
+        <div className='hidden lg:block'>
+            <Box sx={{ width: '100%' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                    <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                        <Tab label="Beranda" className='font-bold' {...a11yProps(0)} />
+                        <Tab label="Produk" className='font-bold' {...a11yProps(1)} />
+                        <Tab label="Ulasan" className='font-bold' {...a11yProps(2)} />
+                    </Tabs>
+                </Box>
+                <CustomTabPanel value={value} index={0}>
+                    Item One
+                </CustomTabPanel>
+                <CustomTabPanel value={value} index={1}>
+                    <AppPagination getShop={getShop} />
+                </CustomTabPanel>
+                <CustomTabPanel value={value} index={2}>
+                    Item Three
+                </CustomTabPanel>
             </Box>
-            <CustomTabPanel value={value} index={0}>
-                Item One
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={1}>
-                <AppPagination getShop={getShop} />
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={2}>
-                Item Three
-            </CustomTabPanel>
-        </Box>
-    </div>
+        </div>
+        <div className='lg:hidden'>
+            <Box sx={{ width: '100%' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                    <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                        <Tab icon={<FaStore className='w-6 h-6' />} className='font-bold' {...a11yProps(0)} />
+                        <Tab icon={<BsBox2Fill className='w-5 h-5' />} className='font-bold' {...a11yProps(1)} />
+                        <Tab icon={<BsFillStarFill className='w-5 h-5 active:text-yellow-700 focus:ring focus:ring-yellow-700 focus:text-yellow-700' />} className='font-bold' {...a11yProps(2)} />
+                    </Tabs>
+                </Box>
+                <CustomTabPanel value={value} index={0}>
+                    Item One
+                </CustomTabPanel>
+                <CustomTabPanel value={value} index={1}>
+                    <AppPagination getShop={getShop} />
+                </CustomTabPanel>
+                <CustomTabPanel value={value} index={2}>
+                    Item Three
+                </CustomTabPanel>
+            </Box>
+        </div>
+    </>
 }
 
 export default ProductTabs

@@ -56,7 +56,7 @@ export default function ComplainAdmin({ getOrders }: Props) {
     console.log("files length: ", selectedFiles.length);
     console.log("condition: ", selectedFiles.length == urls.length);
     if(urls.join(",") != "" && urls.length == selectedFiles.length){
-      const data = {complainId: form.complainId, description: form.description};
+      const data = {complainId: form.complainId, description: form.description, images: urls.join(",")};
       axios.post(`/api/complain/seller/shopComment`, data).then(() => { console.log("created!"); router.back(); });
     }
   },[urls]);
@@ -72,30 +72,29 @@ export default function ComplainAdmin({ getOrders }: Props) {
     }
   };
 
-  // const shopComment = async () => {
-  //   const data:FormData = {complainId: id,description:description, image:image};
+  const shopComment = async () => {
+    // const data:FormData = {complainId: form.complainId,description:form.description};
+    // try {
+    //   await axios.post('http://localhost:3000/api/complain/seller/shopComment', {
+    //     complainId: data.complainId,
+    //     description: data.description,
+    // })
+    // } catch (error) {
+
+    // }
+  } 
+
+
+  // const rejectStatus = async (id: string) => {
   //   try {
-  //     await axios.post('http://localhost:3000/api/complain/seller/shopComment', {
-  //       complainId:complainId,
-  //       description: description,
-  //       image: image,
-  //   })
+  //     const response = await axios.patch(`http://localhost:3000/api/complain/seller/reject`, {
+  //       id: id
+  //     }).then(() => router.refresh())
+
   //   } catch (error) {
 
   //   }
-  // } 
-
-
-  const rejectStatus = async (id: string) => {
-    try {
-      const response = await axios.patch(`http://localhost:3000/api/complain/seller/reject`, {
-        id: id
-      }).then(() => router.refresh())
-
-    } catch (error) {
-
-    }
-  };
+  // };
 
   const postComment = async () => {
     const promises : any[] = [];
@@ -253,7 +252,7 @@ export default function ComplainAdmin({ getOrders }: Props) {
                                     <p className="py-4">Press ESC key or click on ✕ button to close</p>
                                   </form>
                                 </dialog> */}
-                                <button onClick={() => rejectStatus(String(orders.Complain?.orderId))} className="btn-disabled w-16 h-8 rounded-sm">reject</button>
+                                <button className="btn-disabled w-16 h-8 rounded-sm">reject</button>
                               </div>
                             </>
                             :
@@ -315,7 +314,8 @@ export default function ComplainAdmin({ getOrders }: Props) {
                                       </form>
                                     </div>
                                     <button
-                                      onClick={() => { postComment(), rejectStatus(String(orders.Complain?.orderId)) }}
+                                      // onClick={() => { postComment(), rejectStatus(String(orders.Complain?.orderId)) }}
+                                      onClick={() => { postComment() }}
                                       className="w-16 h-8 rounded-sm bg-red-500 border border-red-500 text-white hover:bg-transparent hover:bg-white hover:text-black"
                                     >
                                       reject
@@ -392,14 +392,14 @@ export default function ComplainAdmin({ getOrders }: Props) {
                             <>
                               <div className="flex gap-2">
                                 <button onClick={() => acceptStatus(String(orders.Complain?.orderId))} className="btn-disabled btn-xs w-16 h-4 rounded-sm">accept</button>
-                                <button onClick={() => rejectStatus(String(orders.Complain?.orderId))} className="btn-disabled btn-xs w-16 h-4 rounded-sm">reject</button>
+                                <button className="btn-disabled btn-xs w-16 h-4 rounded-sm">reject</button>
                               </div>
                             </>
                             :
                             <>
                               <div className="flex gap-2">
                                 <button onClick={() => acceptStatus(String(orders.Complain?.orderId))} className="w-16 h-8 rounded-sm bg-green-500 border border-green-500 text-white hover:bg-transparent hover:bg-white hover:text-black">accept</button>
-                                <button onClick={() => rejectStatus(String(orders.Complain?.orderId))} className="w-16 h-8 rounded-sm bg-red-500 border border-red-500 text-white hover:bg-transparent hover:bg-white hover:text-black">reject</button>
+                                <button className="w-16 h-8 rounded-sm bg-red-500 border border-red-500 text-white hover:bg-transparent hover:bg-white hover:text-black">reject</button>
                               </div>
                             </>
                           }
