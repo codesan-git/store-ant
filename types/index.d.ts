@@ -17,3 +17,12 @@ export type getTypeTransactions = Transaction & {
   user:User;
   shop:Shop;
 }
+
+export type getTypeShop = Shop & {
+  product:Product[]
+}
+
+
+declare global {
+  let getShop: getTypeShop
+}

@@ -178,7 +178,7 @@ export default function Home({ events }: EventData) {
           <div id="product-carousel" className="carousel w-full rounded-lg lg:w-3/4 lg:h-96">
               <div id="slide1" className="carousel-item relative w-full transition duration-700 ease-in-out hover:cursor-pointer">
                 <img
-                  src={`http://localhost:3000/${selectedImage}`}
+                  src={selectedImage}
                   className="w-full object-cover"
                   onClick={() => window.open(events[index]?.eventPath)}                                        
                   onError={({ currentTarget }) => {

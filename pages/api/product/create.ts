@@ -5,65 +5,19 @@ import formidable from 'formidable';
 import path from 'path';
 import fs from "fs/promises"
 
-export const config = {
-    api: {
-        bodyParser: false
-    }
-};
-
-const readFile = (req: NextApiRequest, saveLocally?: boolean) 
-: Promise<{fields: formidable.Fields; files: formidable.Files}> => {
-    const options: formidable.Options = {};
-    if(saveLocally){
-        options.uploadDir = path.join(process.cwd(), "/public/images/products");
-        options.filename = (name, ext, path, form) => {
-            return Date.now().toString() + "_" + path.originalFilename;
-        }
-        options.multiples = true;
-    }
-
-    const form = formidable(options);
-    return new Promise((resolve, reject) => {
-      form.parse(req, (err, fields, files) => {
-          if(err) reject(err);
-          resolve({fields, files});
-      })
-    });
-};
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-    const { fields, files } = await readFile(req, true);
-    const {name, price, stock, categoryId, description} = fields;
-    const session = await getSession({req})
+    const {name, price, stock, image, categoryId, description} = req.body;
+    const session = await getSession({req});
+
+    console.log("image: ", image);
     const shop = await prisma.shop.findUnique({
         where: {
-        userId: session?.user?.id
+            userId: session?.user?.id
         },
     })
-
-    try {
-        await fs.readdir(path.join(process.cwd() + "/public", "/images/products"));
-    } catch (error) {
-        await fs.mkdir(path.join(process.cwd() + "/public", "/images/products"));
-    }    
-    const file = files.image;
-    let urls = Array.isArray(file) ? file.map((f) => f.filepath) : file.filepath;
-
-    let imageUrl = new Array();
-    if(urls){    
-      if(Array.isArray(urls)){
-        (urls as string[]).forEach((url) => {
-            imageUrl.push(String(url).substring(String(url).indexOf("images")));
-        })
-      } else{
-        imageUrl.push(String(urls).substring(String(urls).indexOf("images")));
-      }
-    }else{
-      imageUrl.push("");
-    }
 
     try {
         // // // CREATE
@@ -75,7 +29,7 @@ export default async function handler(
                 price: Number(price),
                 stock: Number(stock),
                 description: description as string,
-                image: imageUrl.join(",")
+                image: image
             }
         })
         res.status(200).json({ message: 'product created', data: product });

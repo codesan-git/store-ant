@@ -5,48 +5,12 @@ import formidable from 'formidable';
 import path from 'path';
 import fs from "fs/promises"
 
-export const config = {
-    api: {
-        bodyParser: false
-    }
-};
-
-const readFile = (req: NextApiRequest, saveLocally?: boolean) 
-: Promise<{fields: formidable.Fields; files: formidable.Files}> => {
-    const options: formidable.Options = {};
-    if(saveLocally){
-        options.uploadDir = path.join(process.cwd(), "/public/images/ratings");
-        options.filename = (name, ext, path, form) => {
-            return Date.now().toString() + "_" + path.originalFilename;
-        }
-        options.multiples = true;
-    }
-    
-    const form = formidable(options);
-    return new Promise((resolve, reject) => {
-      form.parse(req, (err, fields, files) => {
-          if(err) reject(err);
-          resolve({fields, files});
-      })
-    });
-};
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-    try {
-        await fs.readdir(path.join(process.cwd() + "/public", "/images/ratings"));
-    } catch (error) {
-        await fs.mkdir(path.join(process.cwd() + "/public", "/images/ratings"));
-    }    
-
-    const { fields, files } = await readFile(req, true);
-    const {orderId, star, comment} = fields;
+    const {orderId, star, comment, image} = req.body;
     let avgRating = 0, ratingTotal = 0;
-
-    const file = files.image;
-    let urls = Array.isArray(file) ? file.map((f) => f.filepath) : file?.filepath;
 
     const oldRating = await prisma.rating.findFirst({
         where: {orderId: Number(orderId)},
@@ -56,14 +20,13 @@ export default async function handler(
     });
 
     let imageUrl = new Array();
-    if(urls){    
-      if(Array.isArray(urls)){
-        (urls as string[]).forEach((url) => {
-            imageUrl.push(String(url).substring(String(url).indexOf("images")));
-            fs.unlink(path.join(process.cwd(), `public\\${oldRating?.image!}`));
+    if(image){    
+      if(Array.isArray(image.split(","))){
+        (image as string).split(",").forEach((url) => {
+            imageUrl.push(String(url));
           })
       } else{
-        imageUrl.push(String(urls).substring(String(urls).indexOf("images")));
+        imageUrl.push(String(image));
       }
     }else{
       imageUrl.push(oldRating?.image);

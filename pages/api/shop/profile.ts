@@ -5,47 +5,12 @@ import formidable from 'formidable';
 import path from 'path';
 import fs from "fs/promises"
 
-export const config = {
-    api: {
-        bodyParser: false
-    }
-};
-
-const readFile = (req: NextApiRequest, saveLocally?: boolean) 
-: Promise<{fields: formidable.Fields; files: formidable.Files}> => {
-    const options: formidable.Options = {};
-    if(saveLocally){
-        options.uploadDir = path.join(process.cwd(), "/public/images/shops");
-        options.filename = (name, ext, path, form) => {
-            return Date.now().toString() + "_" + path.originalFilename;
-        }
-    }
-    const form = formidable(options);
-    return new Promise((resolve, reject) => {
-      form.parse(req, (err, fields, files) => {
-          if(err) reject(err);
-          resolve({fields, files});
-      })
-    });
-};
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-    const { fields, files } = await readFile(req, true);
-    const {name} = fields;
-    const session = await getSession({req})
-
-    try {
-        await fs.readdir(path.join(process.cwd() + "/public", "/images/shops"));
-    } catch (error) {
-        await fs.mkdir(path.join(process.cwd() + "/public", "/images/shops"));
-    }    
-    const file = files.image;
-    let url = Array.isArray(file) ? file.map((f) => f.filepath) : file.filepath;
-    let imageUrl = String(url);
-    imageUrl = imageUrl.substring(imageUrl.indexOf("images"));
+    const {name, image} = req.body;
+    const session = await getSession({req});
 
     try {
         const shop = await prisma.shop.update({
@@ -53,7 +18,7 @@ export default async function handler(
                 userId: session?.user?.id
             },
             data:{
-                image: imageUrl,
+                image: image,
                 shopName: name as string
             }
         })

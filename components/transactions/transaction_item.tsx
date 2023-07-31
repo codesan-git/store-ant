@@ -34,10 +34,12 @@ interface Props {
   onReturn: (id: number) => Promise<void>,
   onDetail: (transaction: Transaction) => void,
   onComplain: (transaction: Transaction) => void,
+  onRating: (transaction: Transaction) => void,
   onRate: (productName: String, cartItemId: Number) => void,
+  onSentItem: (transaction: Transaction) => Promise<void>
 }
 
-const TransactionItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinish, onReturn, onDetail, onComplain }: Props) => { //TODO: re-adjust background colors based on website. the one in the wireframe are just placeholder colors.
+const TransactionItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinish, onReturn, onDetail, onComplain, onRating, onSentItem }: Props) => { //TODO: re-adjust background colors based on website. the one in the wireframe are just placeholder colors.
 
   const transactionCreatedDate = new Date(transaction.createdAt);
   const transactionLastUpdate = new Date(transaction.updatedAt);
@@ -118,6 +120,8 @@ const TransactionItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, 
     if (transaction.status === TransactionStatus.DELIVERED) return <h1 className="flex justify-end text-sm font-bold">Pesanan Sampai</h1>;
     if (transaction.status === TransactionStatus.CANCELING) return <h1 className="flex justify-end text-sm font-bold text-yellow-600">Pembatalan Diajukan</h1>;
     if (transaction.status === TransactionStatus.RETURNING) return <h1 className="flex justify-end text-sm font-bold text-yellow-600">Pengembalian Diajukan</h1>;
+    if (transaction.status === TransactionStatus.ITEM_RECEIVE) return <h1 className="flex justify-end text-sm font-bold text-green-600">Item Diterima</h1>;
+    if (transaction.status === TransactionStatus.SENT_ITEM) return <h1 className="flex justify-end text-sm font-bold text-yellow-600">Mengirim Barang</h1>;
     if (transaction.status === TransactionStatus.CANCELED) return <h1 className="flex justify-end text-sm font-bold text-red-600">Dibatalkan Sistem</h1>; //CANCELED||CANCELED_REJECTED == FAILED
     if (transaction.status === TransactionStatus.RETURNED) return <h1 className="flex justify-end text-sm font-bold text-red-600">Pesanan Dikembalikan</h1>;
     if (transaction.status === TransactionStatus.RETURN_REJECTED) return <h1 className="flex justify-end text-sm font-bold text-blue-900">Pengembalian Ditolak</h1>;
@@ -157,7 +161,7 @@ const TransactionItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, 
                     </label>
                   </li>
                   // : <li className="rounded-sm hover:bg-gray-100 transition duration-300"><div onClick={()=>onReturn(transaction.id)}>Ajukan Komplain</div></li>
-                  : <li className="rounded-sm hover:bg-gray-100 transition duration-300"><button onClick={()=>onComplain(transaction)}>Ajukan Komplain</button></li>
+                  : <li className="rounded-sm hover:bg-gray-100 transition duration-300"><button onClick={() => onComplain(transaction)}>Ajukan Komplain</button></li>
               }
               <li className="rounded-sm hover:bg-gray-100 transition duration-300"><a>Pusat Bantuan</a></li>
             </ul>
@@ -178,6 +182,27 @@ const TransactionItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, 
         </Fragment>
       );
     }
+    if (transaction.status === TransactionStatus.RETURNED) {
+      return (
+        <Fragment>
+          <label htmlFor="sentitem-modal" onClick={() => onSentItem(transaction)} className="text-xs lg:text-base flex justify-center items-center w-24 h-8 text-white bg-green-500 hover:cursor-pointer">
+            Kirim Barang
+          </label>
+          {renderExtraActionDropdown()}
+        </Fragment>
+      );
+    }
+    if (transaction.status === TransactionStatus.SENT_ITEM) {
+      return (
+        <Fragment>
+          {detailTransaksiButton()}
+          <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 text-white bg-green-500">
+            Lacak
+          </button>
+          {renderExtraActionDropdown()}
+        </Fragment>
+      );
+    }
     if (transaction.status === TransactionStatus.AWAITING_CONFIRMATION) {
       return (
         <Fragment>
@@ -193,7 +218,7 @@ const TransactionItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, 
           {/* <label htmlFor="review-modal" onClick={onRateClick} className="flex justify-center items-center text-xs lg:text-base w-32 text-white bg-green-500 hover:cursor-pointer">
             Ulas Produk
           </label> */}
-          <div className="flex justify-center items-center text-xs lg:text-base w-32 text-white bg-green-500 hover:cursor-pointer">
+          <div className="flex justify-center items-center text-xs lg:text-base w-32 text-white bg-green-500 hover:cursor-pointer" onClick={() => onRating(transaction)}>
             Ulas Produk
           </div>
           {renderExtraActionDropdown()}

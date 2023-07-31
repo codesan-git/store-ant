@@ -1,10 +1,13 @@
-import { Shop } from "@prisma/client";
+import { Shop, User } from "@prisma/client";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
 interface Props{
-    shop: Shop;
+    shop: Shop & {
+        user: User;
+    }
 }
 
 const ShopDetailCard = ({shop}: Props) => {
@@ -15,6 +18,12 @@ const ShopDetailCard = ({shop}: Props) => {
     router.push(`/transactions?newChatUserId=${shop.userId}`);
   }
 
+  const routeToShop = ()=> {
+    router.push({
+      pathname: `/shop/detail/${shop.shopName}`,
+    })
+  }
+
   return (
     <>
       <div id="shop-details" className=''>
@@ -23,7 +32,7 @@ const ShopDetailCard = ({shop}: Props) => {
             {shop.image ? (
               <img 
                 className='object-cover rounded-full w-16 h-16 sm:h-16 border-2 border-gray-600'
-                src={`http://localhost:3000/${shop.image!}`}
+                src={shop.image!}
                 onError={({ currentTarget }) => {
                     currentTarget.onerror = null; // prevents looping
                     currentTarget.src =
@@ -40,7 +49,7 @@ const ShopDetailCard = ({shop}: Props) => {
             )}
           </div>
           <div id='profile-details' className='w-2/3 sm:w-full'>
-            <h1 className='text-2xl'>{shop.shopName}</h1>
+            <h1 className='text-2xl cursor-pointer' onClick={()=>routeToShop()}>{shop.shopName}</h1>
             <div className="lg:flex lg:flex-row">
               <div className="lg:flex lg:flex-row ">
                 <div id="store-rating" className="flex flex-row">
