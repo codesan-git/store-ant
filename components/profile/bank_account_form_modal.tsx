@@ -16,7 +16,7 @@ interface BankAccountForm {
 const BankAccountFormModal = ({ banks } : Props) => {
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [accountNumber, setAccountNumber] = useState<number>()
+  const [accountNumber, setAccountNumber] = useState<string>()
 
   const modalOpenHandler = () => setModalOpen(!modalOpen);
 
@@ -45,10 +45,10 @@ const BankAccountFormModal = ({ banks } : Props) => {
   }
 
   const handleInputAccountNumberChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const result = Number(event.target.value.replace(/\D/g, ''));
+    const result = event.target.value.replace(/\D/g, '');
     setAccountNumber(result);
 
-    setForm({...form, number: result.valueOf().toString()})
+    setForm({...form, number: result})
   }
 
   return (
