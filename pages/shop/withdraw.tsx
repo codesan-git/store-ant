@@ -102,7 +102,11 @@ export default function Withdraw({ bank, shop }: Data) {
                 />
               </div>
               <div className="flex justify-center">
-                <button disabled={Number(form.amount) > Number(shop.balance) ? true : false} className="flex btn btn-md lg:w-36 items-center rounded text-white bg-indigo-700">
+                <button 
+                  disabled={Number(form.amount) > Number(shop.balance) ? true : false} 
+                  className="flex btn btn-md lg:w-36 items-center rounded text-white bg-indigo-700"
+                  onClick={handleUpload}
+                >
                   {Number(form.amount) > Number(shop.balance) ? "Saldo tidak mencukupi" : "Submit"}
                 </button>
               </div>
