@@ -28,10 +28,10 @@ const ShopDetailCard = ({shop}: Props) => {
     <>
       <div id="shop-details" className=''>
         <div id='shop-mini-profile' className='flex flex-row w-auto py-2 border-b-2 border-b-black-800'>
-          <div id='shop-profile-picture-container' className='mr-2 w-1/3 flex items-center justify-center sm:w-auto'>
+          <div id='shop-profile-picture-container' className='mr-2 w-1/3 flex items-center justify-center sm:w-24 lg:w-28'>
             {shop.image ? (
               <img 
-                className='object-cover rounded-full w-16 h-16 sm:h-16 border-2 border-gray-600'
+                className='object-cover rounded-full w-16 h-16 sm:w-16 sm:h-16 lg:w-24 lg:h-24 border-2 border-gray-600'
                 src={shop.image!}
                 onError={({ currentTarget }) => {
                     currentTarget.onerror = null; // prevents looping
@@ -42,7 +42,7 @@ const ShopDetailCard = ({shop}: Props) => {
               />
             ) : (
               <img 
-                className='object-cover rounded-full w-16 h-16 sm:h-16 border-2 border-gray-600'
+                className='object-cover rounded-full w-16 h-16 sm:w-16 sm:h-16 lg:w-24 lg:h-24 border-2 border-gray-600'
                 src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
                 alt=''
               />
@@ -72,11 +72,11 @@ const ShopDetailCard = ({shop}: Props) => {
                   </p>
                 </div>
               </div>
-              <div className="w-full lg:w-1/2 p-2 ">
-                <button onClick={onPenjualClick} className="w-full lg:w-48 p-2 bg-blue-700 hover:bg-blue-500 transition text-white">
-                  Tanya Penjual
-                </button>
-              </div>
+            </div>
+            <div className="w-full lg:w-1/2 p-2 ">
+              <button onClick={onPenjualClick} className="w-full md:w-48 p-2 bg-blue-700 hover:bg-blue-500 transition text-white">
+                Tanya Penjual
+              </button>
             </div>
           </div>
       </div>
