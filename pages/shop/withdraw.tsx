@@ -51,7 +51,7 @@ export default function Withdraw({ bank, shop }: Data) {
 
   return (
     <>
-      {/* <Navbar /> */}
+      <Navbar />
       <div className="w-full h-[80vh]">
         <div className="my-14 lg:my-20">
           <div className="mx-auto w-full lg:w-1/2">

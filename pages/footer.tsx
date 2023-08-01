@@ -5,7 +5,7 @@ const Footer = () => {
   return (
     <>
       {/* Footer */}
-      <div id="footer-desktop" className="hidden lg:block">
+      <div id="footer-desktop" className="hidden lg:block mt-14">
         <hr style={{ border: "none", height: "1px", backgroundColor: "#bfc9d9" }} /> {/* garis lebih lebar */}
         <footer className="py-10 px-96">
           <div className="footer mx-auto">
