@@ -30,7 +30,7 @@ interface Props {
   transaction: Transaction,
   onBayar: (transaction: Transaction) => Promise<void>,
   onCancel: (transaction: Transaction) => Promise<void>,
-  onFinish: (id: number) => Promise<void>,
+  onFinish: (id: string) => Promise<void>,
   onReturn: (id: number) => Promise<void>,
   onDetail: (transaction: Transaction) => void,
   onComplain: (transaction: Transaction) => void,
@@ -247,6 +247,17 @@ const TransactionItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, 
           {detailTransaksiButton()}
           <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 text-white bg-green-500">
             Lacak
+          </button>
+          {renderExtraActionDropdown()}
+        </Fragment>
+      );
+    }
+    if (transaction.status === TransactionStatus.DELIVERED) {
+      return (
+        <Fragment>
+          {detailTransaksiButton()}
+          <button onClick={()=>onFinish(transaction.id)} className="text-xs lg:text-base w-32 text-white bg-green-500">
+            Selesai
           </button>
           {renderExtraActionDropdown()}
         </Fragment>
