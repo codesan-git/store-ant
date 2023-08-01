@@ -214,7 +214,7 @@ export default function CreateShop({ product, ratings }: FetchData) {
           className="mb-10 sm:mb-0 w-full lg:w-2/3"
         >
           <div id="product-image-container" className="p-4 w-full h-auto">
-            <div className="w-full h-auto">
+            <div className="w-full h-auto relative">
               <img
                 src={selectedImage}
                 onError={({ currentTarget }) => {
@@ -225,7 +225,7 @@ export default function CreateShop({ product, ratings }: FetchData) {
                 alt=""
                 className="mx-auto my-auto h-auto"
               />           
-              <div className="absolute flex w-fit mx-10 transform -translate-y-1/4 left-5 right-5 top-1/2">
+              <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
                 <button disabled={index === 0 ? true : false} onClick={()=> onImageClick(index - 1)} className="btn btn-circle btn-sm lg:btn-md">❮</button>
                 <button disabled={index === product.image.split(",").length - 1 ? true : false} onClick={()=> onImageClick(index + 1)} className="btn btn-circle btn-sm lg:btn-md">❯</button>
               </div>
