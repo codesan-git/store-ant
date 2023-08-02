@@ -13,7 +13,15 @@ interface Props {
 export default function DetailShop({ getShop }: Props) {
     return <>
         <Navbar />
-        <div className='lg:px-44 lg:py-4'>
+        <div className='hidden lg:block lg:px-44 lg:py-4'>
+            <section>
+                <ShopHead getShop={getShop} />
+            </section>
+            <section>
+                <ProductTabs getShop={getShop} />
+            </section>
+        </div>
+        <div className='lg:hidden'>
             <section>
                 <ShopHead getShop={getShop} />
             </section>

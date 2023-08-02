@@ -11,7 +11,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
     const {complainId, description, images} = req.body;
-    
+    console.log(`body`, req.body)
     const session = await getSession({req});
     
     let imageUrl = new Array();
@@ -27,24 +27,31 @@ export default async function handler(
         imageUrl.push("");
     }
     
-    try {
-        (complainId as string).split(",").forEach( async (id:string) => {
-            const order = await prisma.order.update({
-                where:{id: Number(id)},
-                data:{
-                    OrderStatus: OrderStatus.NEED_ADMIN_REVIEW
-                }
-            })
-            const shopcomment = await prisma.shopComment.create({
-                data: {
-                    complainId: Number(id),
-                    description: description as string,
-                    image: imageUrl.join(",")
-                }
-            })
+    // (complainId as string).split(",").forEach( async (id:string) => {
+        console.log(`url image`, imageUrl)
+        const shopcomment = await prisma.shopComment.create({
+            data: {
+                complainId: Number(complainId),
+                description: description as string,
+                image: imageUrl.join(",")
+            }
         })
-        console.log((complainId as string).split(","))
-        res.status(200).json({ message: 'success' });
+        const getComplain = await prisma.complain.findFirst({
+            where:{id: Number(complainId)},
+            select:{
+                orderId:true
+            }
+        })
+        const order = await prisma.order.update({
+            where:{id: Number(getComplain?.orderId)},
+            data:{
+                OrderStatus: OrderStatus.NEED_ADMIN_REVIEW
+            }
+        })
+    // })
+    // console.log((complainId as string).split(","))
+    res.status(200).json({ message: 'success' });
+    try {
         // // // // CREATE
         // const complain = await prisma.complain.create({
         //     data: {

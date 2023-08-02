@@ -10,45 +10,47 @@ export default async function handler(
   const {id} = req.body
   const session = await getSession({req})
 
-  try {
-    const transaction = await prisma.transaction.update({
-        where:{id: String(id)},
-        data:{
-            status: TransactionStatus.FINISHED
-        }
-    })
+  console.log(`ini id`, id)
 
-    const shop = await prisma.shop.findFirst({
-      where: {id: transaction?.shopId}
-    })
+  const transaction = await prisma.transaction.update({
+      where:{id: String(id)},
+      data:{
+          status: TransactionStatus.FINISHED
+      }
+  })
 
-    const transactionData = await prisma.transaction.findFirst({
-      where: {id: id!},
-      select: {
-        order:{
-          select:{
-            product: true,
-            count: true
-          }
+  const shop = await prisma.shop.findFirst({
+    where: {id: transaction?.shopId}
+  })
+
+  const transactionData = await prisma.transaction.findFirst({
+    where: {id: id!},
+    select: {
+      order:{
+        select:{
+          product: true,
+          count: true
         }
       }
-    });
-
-    let totalPrice = 0;
-    let i: number;
-
-    for(i = 0; i < transactionData?.order?.length!; i++){
-      totalPrice += (transactionData?.order[i]?.product?.price! * transactionData?.order[i]?.count!);
     }
+  });
 
-    const shopUpdate = await prisma.shop.update({
-      where: {id: shop?.id},
-      data: {
-        balance: Number(shop?.balance) + Number(totalPrice)
-      }
-    })
+  let totalPrice = 0;
+  let i: number;
 
-    res.status(200).json({ message: "Success!" })
+  for(i = 0; i < transactionData?.order?.length!; i++){
+    totalPrice += (transactionData?.order[i]?.product?.price! * transactionData?.order[i]?.count!);
+  }
+
+  const shopUpdate = await prisma.shop.update({
+    where: {id: shop?.id},
+    data: {
+      balance: Number(shop?.balance) + Number(totalPrice)
+    }
+  })
+
+  res.status(200).json({ message: "Success!" })
+  try {
   } catch (error) {
     //console.log(error)
     res.status(400).json({ message: "Fail" })

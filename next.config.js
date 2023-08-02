@@ -37,6 +37,10 @@ const nextConfig = {
       {
         protocol: 'http',
         hostname: 'localhost:3000'
+      },
+      {
+        protocol: 'https',
+        hostname: 'firebasestorage.googleapis.com'
       }
     ],
     domains:['http://localhost:3000/public/']
