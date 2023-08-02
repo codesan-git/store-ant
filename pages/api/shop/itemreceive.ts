@@ -9,16 +9,16 @@ export default async function handler(
 ) {
   const {id} = req.body
   const session = await getSession({req})
-
   try {
     let cart = await prisma.cart.findFirst({
       where: {userId: session?.user.id}
     });
-
+  
     const transaction = await prisma.transaction.update({
         where:{id: id},
         data:{
-            status: TransactionStatus.ITEM_RECEIVE
+            status: TransactionStatus.ITEM_RECEIVE,
+            updatedAt: new Date()
         }
     })
     res.status(200).json({ message: "Success!" })

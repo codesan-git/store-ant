@@ -54,7 +54,7 @@ const ShopItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinis
   const renderTransactionDate = () => { //TODO: try using locale format function next time
     return (
       <Fragment>
-        <h1>{transactionCreatedDate.toDateString()}</h1>
+        <h1>{transactionLastUpdate.toDateString()}</h1>
       </Fragment>
     );
   }
