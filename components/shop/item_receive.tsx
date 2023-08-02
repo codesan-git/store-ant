@@ -69,7 +69,7 @@ const ItemReceiveModal = ({htmlElementId: id, selectProductCallback} : Props) =>
   async function onItemReceive() {
     const terimaTransactions = await axios.put(`http://localhost:3000/api/shop/itemreceive`, {
         id: selectedTransaction?.id
-    })
+    }).then(router.reload)
   }
 
   const onSubmit = async () => {

@@ -18,7 +18,7 @@ export default async function handler(
     const transaction = await prisma.transaction.update({
         where:{id: id},
         data:{
-            status: TransactionStatus.PACKING
+            status: TransactionStatus.PACKING,
         }
     });
     
