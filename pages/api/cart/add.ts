@@ -71,7 +71,8 @@ export default async function handler(
         shopId: product?.shopId!,
         paymentMethod: "",
         status: TransactionStatus.UNPAID,
-        userAddressId: address?.id!
+        userAddressId: address?.id!,
+        updatedAt: new Date()
       }
     });
 

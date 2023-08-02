@@ -58,7 +58,8 @@ export default async function handler(
         shopId: shops[i]?.id!,
         paymentMethod: "",
         status: TransactionStatus.UNPAID,
-        userAddressId: address?.id!
+        userAddressId: address?.id!,
+        updatedAt: new Date()
       }
     });
     transactions.push(transaction);

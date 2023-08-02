@@ -14,7 +14,8 @@ export default async function handler(
     const transaction = await prisma.transaction.updateMany({
         where:{id: id!, userId: session?.user?.id!},
         data:{
-            status: TransactionStatus.CANCELING
+            status: TransactionStatus.CANCELING,
+            updatedAt: new Date()
         }
     })
     res.status(200).json({ message: "Success!" })

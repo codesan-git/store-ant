@@ -20,7 +20,8 @@ export default async function handler(
   const transaction = await prisma.transaction.updateMany({
     where:{ id: id! },
     data:{
-      status: TransactionStatus.AWAITING_CONFIRMATION
+      status: TransactionStatus.AWAITING_CONFIRMATION,
+      updatedAt: new Date()
     }
   });
 

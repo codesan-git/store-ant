@@ -19,6 +19,7 @@ export default async function handler(
         where:{id: id},
         data:{
             status: TransactionStatus.PACKING,
+            updatedAt: new Date()
         }
     });
     

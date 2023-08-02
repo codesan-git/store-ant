@@ -14,7 +14,8 @@ export default async function handler(
         where:{id: id!},
         data:{
             status: TransactionStatus.AWAITING_CONFIRMATION,
-            paymentMethod: String(paymentType)
+            paymentMethod: String(paymentType),
+            updatedAt: new Date()
         }
     })
 

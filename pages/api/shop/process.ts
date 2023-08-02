@@ -18,7 +18,8 @@ export default async function handler(
     const transaction = await prisma.transaction.update({
         where:{id: id},
         data:{
-            status: TransactionStatus.RETURNING
+            status: TransactionStatus.RETURNING,
+            updatedAt: new Date()
         }
     })
     res.status(200).json({ message: "Success!" })

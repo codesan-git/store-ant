@@ -15,7 +15,8 @@ export default async function handler(
   const transaction = await prisma.transaction.update({
       where:{id: String(id)},
       data:{
-          status: TransactionStatus.FINISHED
+          status: TransactionStatus.FINISHED,
+          updatedAt: new Date()
       }
   })
 
