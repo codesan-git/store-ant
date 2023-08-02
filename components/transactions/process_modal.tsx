@@ -69,7 +69,7 @@ const ProcessModal = ({htmlElementId: id, selectProductCallback} : Props) => {
   async function onSentItem() {
     const terimaTransactions = await axios.put(`http://localhost:3000/api/shop/sentItem`, {
         id: selectedTransaction?.id
-    })
+    }).then(router.reload)
   }
 
   const onSubmit = async () => {
@@ -97,7 +97,7 @@ const ProcessModal = ({htmlElementId: id, selectProductCallback} : Props) => {
 
   useEffect(() => {
     getCost();
-  }, []);
+  }, [selectedTransaction]);
 
   return (
     <>
@@ -130,22 +130,30 @@ const ProcessModal = ({htmlElementId: id, selectProductCallback} : Props) => {
           </div>
           ))}
           <p className="text-lg font-bold">Detail Pengiriman</p>
-          <p>Kurir: JNE</p>
-          <p>Layanan: {cost?.service}</p>
-          <p>Estimasi Pengiriman: {cost?.cost[0].etd} hari</p>
-          <p>Biaya: {formatter.format(cost?.cost[0].value!)}</p>
-          <h1 className="text-md">Total: {formatter.format(totalPrice + cost?.cost[0].value!)}</h1>
-          <form id="review-form" action="" className="py-1 space-y-1">
-            <label>
-                <input type="checkbox" checked={isUsingBalance} onChange={handleChange}/>
-                Bayar dengan Saldo
-            </label>
-          </form>
-          <div className="" onClick={onSubmit}>
-            <label htmlFor={id} className="h-10 w-full rounded text-white bg-indigo-700 hover:bg-indigo-900 hover:cursor-pointer flex justify-center items-center">
-              Submit
-            </label>
-          </div>
+          {cost?.cost?.length! > 0 ?
+            <>
+              <p>Kurir: JNE</p>
+              <p>Layanan: {cost?.service}</p>
+              <p>Estimasi Pengiriman: {cost?.cost[0]?.etd} hari</p>
+              <p>Biaya: {formatter.format(cost?.cost[0]?.value!)}</p>
+              <h1 className="text-md">Total: {formatter.format(totalPrice + cost?.cost[0]?.value!)}</h1>
+              <form id="review-form" action="" className="py-1 space-y-1">
+                <label>
+                  <input type="checkbox" checked={isUsingBalance} onChange={handleChange} />
+                  Bayar dengan Saldo
+                </label>
+              </form>
+              <div className="" onClick={onSubmit}>
+                <label htmlFor={id} className="h-10 w-full rounded text-white bg-indigo-700 hover:bg-indigo-900 hover:cursor-pointer flex justify-center items-center">
+                  Submit
+                </label>
+              </div>
+            </>
+            :
+            <>
+              <p>{cost?.service}</p>
+            </>
+          }
         </div>
       </div>
     </>
