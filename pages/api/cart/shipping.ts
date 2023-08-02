@@ -7,16 +7,15 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { shopId, totalWeight } = req.body;
+  const { shopId, totalWeight, transactionId } = req.body;
   const session = await getSession({ req });
 
+  const transaction = await prisma.transaction.findFirst({
+    where:{id: transactionId}
+  });
+
   const userAdress = await prisma.address.findFirst({
-    where: {
-      profile: {
-        userId: session?.user.id,
-      },
-      isMainAddress: true,
-    },
+    where: {id: transaction?.userAddressId},
   });
 
   const shopAddress = await prisma.address.findFirst({

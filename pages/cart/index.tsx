@@ -5,14 +5,16 @@ import { getSession } from "next-auth/react";
 import { useState } from 'react';
 import Navbar from "../navbar";
 import { useRouter } from 'next/router'
+import { Address } from "@prisma/client";
 
-interface CartItems {
+interface Props {
   cartItems: {
     id: Number;
     product: Product;
     count: Number;
     price: Number;
   }[];
+  mainAddress: Address;
 }
 
 interface Product {
@@ -27,9 +29,9 @@ interface CartId {
   id: string[];
 }
 
-export default function Cart({ cartItems }: CartItems) {
-  console.log(cartItems)
-  const [data, setData] = useState([]); 
+export default function Cart({ cartItems, mainAddress }: Props) {
+  console.log("address: ", mainAddress);
+  const [data, setData] = useState<string[]>([]); 
   const router = useRouter();
 
   if (cartItems) {
@@ -38,7 +40,7 @@ export default function Cart({ cartItems }: CartItems) {
     });
   }
 
-  function handleChange(id) {
+  function handleChange(id: string) {
     const newData = [...data];
     const index = newData.indexOf(id);
     if (index === -1) {
@@ -106,7 +108,12 @@ export default function Cart({ cartItems }: CartItems) {
             <p>No Items in Cart</p>
           )}
         </div>
-      <button disabled={data.length === 0? true : false} onClick={()=> onCheckout()} className='w-36 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
+      {mainAddress == null? (
+        <p>Alamat utama belum diatur</p>
+      ) : (
+        <></>
+      )}
+      <button disabled={(data.length === 0 || mainAddress == null)? true : false} onClick={()=> onCheckout()} className='w-36 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
         Checkout
       </button>
     </div>
@@ -137,9 +144,19 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       count: true,
     },
   });
+
+  const mainAddress = await prisma.address.findFirst({
+    where:{
+      profile: {
+        userId: session?.user.id
+      },
+      isMainAddress: true
+    }
+  })
   return {
     props: {
       cartItems,
+      mainAddress
     },
   };
 };
