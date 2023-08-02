@@ -78,10 +78,10 @@ const AddressFormModal = ({ provinceData, cityData } : Props) => {
   
   return (
     <Fragment>
-      <Button id="open-modal-mobile" onClick={() => modalOpenHandler("xl")}>
+      <Button id="open-modal-mobile" className="lg:hidden" onClick={() => modalOpenHandler("xl")}>
         + Tambah Alamat Baru
       </Button>
-      <Button id="open-modal-web" onClick={() => modalOpenHandler("lg")}>
+      <Button id="open-modal-web" className="hidden lg:block" onClick={() => modalOpenHandler("lg")}>
         + Tambah Alamat Baru
       </Button>
       <Dialog open={modalOpen} handler={modalOpenHandler} size={modalSize}>

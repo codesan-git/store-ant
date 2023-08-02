@@ -68,7 +68,7 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
 	const productItem = (order: Order) => {
 
 		let total = 0;
-		total = order.count * order.product.price
+		total = order.count * order.product.price;
 
 		return (
 			<Fragment>
@@ -86,7 +86,7 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
 							{order?.product.name}
 						</div>
 						<div className=" p-0.5">
-							{total.toString()}
+							Total: Rp {total.toString()}
 						</div>
 					</div>
 				</div>
@@ -113,7 +113,7 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
     let total = 0;
 
     orders?.forEach((order) => {
-      total += (order.product.price)
+      total += (order.product.price * order.count)
     });
 
     return total;

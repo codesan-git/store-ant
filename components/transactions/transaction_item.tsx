@@ -70,7 +70,7 @@ const TransactionItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, 
     let total = 0;
 
     orders?.forEach((order) => {
-      total += (order.product.price)
+      total += (order.product.price * order.count)
     });
 
     return total;
