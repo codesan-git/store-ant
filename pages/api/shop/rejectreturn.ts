@@ -4,7 +4,7 @@ import { prisma } from "../../../lib/prisma";
 import formidable from "formidable";
 import path from "path";
 import fs from "fs/promises";
-import { OrderStatus } from "@prisma/client";
+import { NotifRole, NotifType, OrderStatus } from "@prisma/client";
 
 export const config = {
   api: {
@@ -75,13 +75,26 @@ export default async function handler(
         description: description as string,
         image: imageUrl.join(",")
       }
-    })
+    });
 
     const order = await prisma.order.update({
       where: { id: complain?.orderId },
       data: {
         OrderStatus: OrderStatus.NEED_ADMIN_REVIEW,
       },
+    });
+
+    const transaction = await prisma.transaction.findFirst({
+      where: { id: order.transactionId}
+    });
+    
+    const notificationUser = await prisma.notification.create({
+      data:{
+        userId: transaction?.userId!,
+        notifRole: NotifRole.USER,
+        notifType: NotifType.TRANSACTION,
+        body: `Permintaan pengembalian barang untuk transaksi ${order.transactionId} ditolak toko, menunggu persetujuan admin.`
+      }
     });
     res.status(200).json({ message: "Success!" });
   } catch (error) {

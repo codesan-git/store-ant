@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
 import { prisma } from "../../../lib/prisma"
-import { TransactionStatus } from '@prisma/client'
+import { NotifRole, NotifType, TransactionStatus } from '@prisma/client'
 
 export default async function handler(
   req: NextApiRequest,
@@ -20,6 +20,15 @@ export default async function handler(
         data:{
             status: TransactionStatus.PACKING
         }
+    });
+    
+    const notificationUser = await prisma.notification.create({
+      data:{
+        userId: transaction.userId,
+        notifRole: NotifRole.USER,
+        notifType: NotifType.TRANSACTION,
+        body: `Transaksi ${transaction.id} telah diproses penjual.`
+      }
     })
     res.status(200).json({ message: "Success!" })
   } catch (error) {

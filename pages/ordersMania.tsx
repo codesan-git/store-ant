@@ -17,6 +17,7 @@ import TerimaModal from "@/components/shop/terima_modal";
 import axios from "axios";
 import ProcessModal from "@/components/transactions/process_modal";
 import ItemReceiveModal from "@/components/shop/item_receive";
+import SellerCancelAlert from "@/components/transactions/seller_cancel_alert";
 
 
 interface Props {
@@ -215,11 +216,11 @@ const OrdersMania = ({ transactions }: { transactions: Transaction[] }, shop: Pr
           {renderItemsToDisplay()}
         </div>
       </div>
-      <ReviewModal htmlElementId={`review-modal`} selectProductCallback={getCurrentSelectedProductForRate} />
+      {/* <ReviewModal htmlElementId={`review-modal`} selectProductCallback={getCurrentSelectedProductForRate} /> */}
       <TerimaModal htmlElementId={`terima-modal`} selectProductCallback={getTransactionDetail} />
       <ProcessModal htmlElementId={`process-modal`} selectProductCallback={getTransactionDetail} />
       <ItemReceiveModal htmlElementId={`itemreceive-modal`} selectProductCallback={getTransactionDetail} />
-      <CancelAlert htmlElementId={`cancel-alert`} selectProductCallback={getTransactionDetail} />
+      <SellerCancelAlert htmlElementId={`cancel-alert`} selectProductCallback={getTransactionDetail} />
       <DetailTransactionModal detailTransactionModalArguments={detailTransactionModalArguments} />
       {/* <Footer /> */}
     </div>

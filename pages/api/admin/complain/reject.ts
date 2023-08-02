@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
 import { prisma } from "../../../../lib/prisma"
-import { ComplainStatus, OrderStatus } from '@prisma/client'
+import { ComplainStatus, NotifRole, NotifType, OrderStatus } from '@prisma/client'
 
 export default async function handler(
   req: NextApiRequest,
@@ -25,8 +25,35 @@ export default async function handler(
             }
           }
       }
+  });
+
+  const transaction = await prisma.transaction.findFirst({
+    where: {id: order.transactionId}
   })
-    res.status(200).json({ message: "Success!" })
+  
+  const notificationUser = await prisma.notification.create({
+    data:{
+      userId: transaction?.userId!,
+      notifRole: NotifRole.USER,
+      notifType: NotifType.TRANSACTION,
+      body: `Permintaan pengembalian barang untuk transaksi ${transaction?.id} telah ditolak admin.`
+    }
+  });
+
+  const shop = await prisma.shop.findFirst({
+    where: {id: transaction?.shopId!}
+  })
+  
+  const notificationSeller = await prisma.notification.create({
+    data:{
+      userId: shop?.userId!,
+      notifRole: NotifRole.SELLER,
+      notifType: NotifType.TRANSACTION,
+      body: `Permintaan pengembalian barang untuk transaksi ${transaction?.id} telah ditolak admin.`
+    }
+  });
+
+  res.status(200).json({ message: "Success!" })
   } catch (error) {
     //console.log(error)
     res.status(400).json({ message: "Fail" })

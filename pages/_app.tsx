@@ -8,7 +8,8 @@ import { NextIntlProvider } from "next-intl";
 import { AppProps } from "next/app";
 import "../styles/globals.css";
 import Script from "next/script";
-//import TagManager, {TagManagerArgs} from 'react-gtm-module';
+import { useEffect } from "react";
+import TagManager, {TagManagerArgs} from 'react-gtm-module';
 
 const App = ({
   Component,
@@ -29,6 +30,10 @@ const App = ({
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   //const analytics = getAnalytics(app);
+
+  useEffect(() => {
+    TagManager.initialize({ gtmId: 'GTM-KFR823HK' });
+  }, []);
 
   return (
     <>

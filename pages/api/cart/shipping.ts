@@ -30,22 +30,39 @@ export default async function handler(
     },
   });
 
-  console.log("origin: ", userAdress?.cityId, " destination: ", shopAddress?.cityId, " weight: ", totalWeight);
-  var options = {
-    headers: { 'key': "c6ea8e82078275e61b3a46b5e65b69f1"} 
-  };
+  console.log("shop adress: ", shopAddress, " user address: ", userAdress);
+  console.log("condition: ", shopAddress != undefined && userAdress != undefined);
+  if(shopAddress != undefined && userAdress != undefined){
+    if(shopAddress.id != userAdress.id){
+      console.log("origin: ", userAdress?.cityId, " destination: ", shopAddress?.cityId, " weight: ", totalWeight);
+      var options = {
+        headers: { 'key': "c6ea8e82078275e61b3a46b5e65b69f1"} 
+      };
 
-  const form = {
-    origin: shopAddress?.cityId,
-    destination: userAdress?.cityId,
-    weight: Number(100),
-    courier: "jne",
-  };
-  const costRes = await axios.post("https://api.rajaongkir.com/starter/cost", form, options);
-  const cost = costRes.data.rajaongkir.results[0].costs.filter((x: any) => x.service == "REG")[0];
-  console.log("COST: ", cost);
+      const form = {
+        origin: shopAddress?.cityId,
+        destination: userAdress?.cityId,
+        weight: Number(100),
+        courier: "jne",
+      };
+      const costRes = await axios.post("https://api.rajaongkir.com/starter/cost", form, options);
+      const cost = costRes.data.rajaongkir.results[0].costs.filter((x: any) => x.service == "REG")[0];
 
-  res.status(200).json({cost});
+      res.status(200).json({cost});
+    } else {
+      res.status(200).json({cost: {cost: [], service: "Alamat Pengiriman Sama"}});
+    }
+  } else {
+    const cost = {cost: undefined, service: "Alamat Toko Belum Diatur"};
+    console.log("RESPONSE: ", cost);
+
+    if(!shopAddress){      
+      res.status(200).json({cost: {cost: [], service: "Alamat Toko Belum Diatur"}});
+    }
+    if(!userAdress){      
+      res.status(200).json({cost: {cost: [], service: "Alamat Pengiriman Utama Belum Diatur"}});
+    }
+  }
   //   try {
   //   } catch (error) {
   //     //console.log(error)

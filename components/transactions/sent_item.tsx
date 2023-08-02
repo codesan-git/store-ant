@@ -130,17 +130,30 @@ const SentItemModal = ({htmlElementId: id, selectProductCallback} : Props) => {
           </div>
           ))}
           <p className="text-lg font-bold">Detail Pengiriman</p>
-          <p>Kurir: JNE</p>
-          <p>Layanan: {cost?.service}</p>
-          <p>Estimasi Pengiriman: {cost?.cost[0].etd} hari</p>
-          <p>Biaya: {formatter.format(cost?.cost[0].value!)}</p>
-          <h1 className="text-md">Total: {formatter.format(totalPrice + cost?.cost[0].value!)}</h1>
-          <form id="review-form" action="" className="py-1 space-y-1">
-            <label>
-                <input type="checkbox" checked={isUsingBalance} onChange={handleChange}/>
-                Bayar dengan Saldo
-            </label>
-          </form>
+          {cost?.cost?.length! > 0 ? (
+            <div>
+              <p>Kurir: JNE</p>
+              <p>Layanan: {cost?.service}</p>
+              <p>Estimasi Pengiriman: {cost?.cost[0]?.etd} hari</p>
+              <p>Biaya: {formatter.format(cost?.cost[0]?.value!)}</p>
+              <h1 className="text-md">Total: {formatter.format(totalPrice + cost?.cost[0]?.value!)}</h1>
+              <form id="review-form" action="" className="py-1 space-y-1">
+                <label>
+                    <input type="checkbox" checked={isUsingBalance} onChange={handleChange}/>
+                    Bayar dengan Saldo
+                </label>
+              </form>
+              <div className="" onClick={onSubmit}>
+                <label htmlFor={id} className="h-10 w-full rounded text-white bg-indigo-700 hover:bg-indigo-900 hover:cursor-pointer flex justify-center items-center">
+                  Submit
+                </label>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <p>{cost?.service}</p>
+            </div>
+          )}
           <div className="" onClick={onSubmit}>
             <label htmlFor={id} className="h-10 w-full rounded text-white bg-indigo-700 hover:bg-indigo-900 hover:cursor-pointer flex justify-center items-center">
               Submit

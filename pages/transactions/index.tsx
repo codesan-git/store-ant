@@ -257,7 +257,7 @@ const Transactions = ({ transactions, newChatUserId }: Props) => {
       <DetailTransactionModal detailTransactionModalArguments={detailTransactionModalArguments} />
       <ComplainModal complainTransactionModalArguments={complainTransactionModalArguments} />
       <RatingModal ratingTransactionModalArguments={ratingTransactionModalArguments} />
-      <SentItemModal htmlElementId={`sentitem-modal`} selectProductCallback={getTransactionDetail} />
+      {/* <SentItemModal htmlElementId={`sentitem-modal`} selectProductCallback={getTransactionDetail} /> */}
     </div>
   );
 }

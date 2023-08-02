@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 import { prisma } from "../../../../lib/prisma";
-import { BalanceType } from "@prisma/client";
+import { BalanceType, NotifRole, NotifType } from "@prisma/client";
 
 export default async function handler(
   req: NextApiRequest,
@@ -41,6 +41,15 @@ export default async function handler(
         }
       });
     }
+
+    const notificationUser = await prisma.notification.create({
+      data:{
+        userId: session?.user.id!,
+        notifRole: NotifRole.USER,
+        notifType: NotifType.TRANSACTION,
+        body: `Permintaan penarikan dana sebesar ${amount} berhasil dibuat.`
+      }
+    });
     
     res.status(200).json({bankAccount: withdrawal});
   } catch (error) {

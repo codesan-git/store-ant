@@ -1,4 +1,4 @@
-import { Product, Status } from "@prisma/client";
+import { Product, TransactionStatus} from "@prisma/client";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -13,7 +13,7 @@ interface CartItemObject {
     product: Product;
     count: number;
     price: number;
-    status: Status;
+    status: TransactionStatus;
 }
   
 interface Params {

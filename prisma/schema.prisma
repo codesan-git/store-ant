@@ -32,6 +32,8 @@ enum OrderStatus {
   RETURNED
   RETURN_REJECTED
   CANCELING
+  CANCELLED
+  CANCEL_REJECTED
 }
 
 enum ComplainStatus {
