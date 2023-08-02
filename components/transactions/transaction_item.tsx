@@ -1,6 +1,8 @@
 import { Fragment, useState } from "react";
 import { HiOutlineEllipsisVertical, HiShoppingCart } from "react-icons/hi2";
 import { Product, Order as PrismaOrder, ProductInCart, Transaction as PrismaTransaction, TransactionStatus } from "@prisma/client";
+import { useRouter } from "next/router";
+
 
 interface Order {
   id: number,
@@ -22,6 +24,7 @@ interface Transaction {
   paymentMethod: string,
   order: Order[],
   shop: {
+    userId: string,
     shopName: string
   },
 }
@@ -43,6 +46,11 @@ const TransactionItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, 
 
   const transactionCreatedDate = new Date(transaction.createdAt);
   const transactionLastUpdate = new Date(transaction.updatedAt);
+  const router = useRouter();
+
+  const onPenjualClick = () => {
+    router.push(`/transactions?newChatUserId=${transaction.shop.userId}`);
+  }
 
   const renderTransactionDate = () => { //TODO: try using locale format function next time
     return (
@@ -91,17 +99,17 @@ const TransactionItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, 
           <div id="berlangsung-modal-content">
             <ul>
               <li>
-                <div className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300">
+                <div onClick={onPenjualClick} className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300 hover:cursor-pointer">
                   <div className="flex justify-center items-center text-center lg:pl-6">
                     Tanya Penjual
                   </div>
                 </div>
-                <div className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300">
+                <div className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300 hover:cursor-pointer">
                   <label onClick={() => onCancel(transaction)} htmlFor="cancel-alert" className="flex justify-center items-center text-center lg:pl-6">
                     Batalkan
                   </label>
                 </div>
-                <div className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300">
+                <div className="flex justify-start p-1 w-auto h-12 text-sm font-normal hover:bg-gray-300 transition duration-300 hover:cursor-pointer">
                   <div className="flex justify-center items-center text-center lg:pl-6">
                     Pusat Bantuan
                   </div>
@@ -152,7 +160,7 @@ const TransactionItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, 
               <HiOutlineEllipsisVertical className="text-white" />
             </label>
             <ul tabIndex={0} className="mt-1 dropdown-content menu shadow bg-base-100 rounded-sm w-52">
-              <li className="rounded-sm hover:bg-gray-100 transition duration-300"><a>Tanya Penjual</a></li>
+              <li className="rounded-sm hover:bg-gray-100 transition duration-300"><div onClick={onPenjualClick}>Tanya Penjual</div></li>
               { //I really need to refactor this entire module
                 (transaction.status === TransactionStatus.UNPAID || transaction.status === TransactionStatus.AWAITING_CONFIRMATION || transaction.status === TransactionStatus.PACKING)
                   ? <li className="rounded-sm hover:bg-gray-100 transition duration-300">

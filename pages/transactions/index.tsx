@@ -42,8 +42,9 @@ interface Transaction {
   paymentMethod: string,
   order: Order[],
   shop: {
+    userId: string,
     shopName: string
-  }
+  },
 }
 
 interface Props {
@@ -82,8 +83,8 @@ const Transactions = ({ transactions, newChatUserId }: Props) => {
     setSelectedTransaction(transaction);
   }
 
-  async function onFinish(id: number) {
-    const cartId: CartId = { id: id };
+  async function onFinish(id: string) {
+    const cartId: CartId = { id: Number(id) };
     try {
       fetch("http://localhost:3000/api/cart/finish", {
         body: JSON.stringify(cartId),
@@ -297,6 +298,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
       shop: {
         select: {
+          userId: true,
           shopName: true
         }
       }
