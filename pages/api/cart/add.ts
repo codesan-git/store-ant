@@ -56,14 +56,22 @@ export default async function handler(
   }else{
     const product = await prisma.product.findFirst({
       where: {id: productId}
-    })
+    });
+
+    const address = await prisma.address.findFirst({
+      where: {
+        profile: { userId: session?.user.id},
+        isMainAddress: true
+      }
+    });
 
     let transaction = await prisma.transaction.create({
       data:{
         userId: session?.user.id!,
         shopId: product?.shopId!,
         paymentMethod: "",
-        status: TransactionStatus.UNPAID
+        status: TransactionStatus.UNPAID,
+        userAddressId: address?.id!
       }
     });
 

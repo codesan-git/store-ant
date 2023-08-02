@@ -43,6 +43,13 @@ export default async function handler(
         transactionDetails.push(new Array());
       }
   }
+  
+  const address = await prisma.address.findFirst({
+    where: {
+      profile: { userId: session?.user.id},
+      isMainAddress: true
+    }
+  });
 
   for(i = 0; i < shops.length; i++){   
     let transaction = await prisma.transaction.create({
@@ -50,7 +57,8 @@ export default async function handler(
         userId: session?.user.id!,
         shopId: shops[i]?.id!,
         paymentMethod: "",
-        status: TransactionStatus.UNPAID
+        status: TransactionStatus.UNPAID,
+        userAddressId: address?.id!
       }
     });
     transactions.push(transaction);

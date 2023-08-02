@@ -80,7 +80,7 @@ const PaymentModal = ({htmlElementId: id, selectProductCallback} : Props) => {
       totalWeight += selectedTransaction?.order[i].product.weight;
     }
 
-    const data = {shopId: selectedTransaction?.shopId, totalWeight: totalWeight};
+    const data = {shopId: selectedTransaction?.shopId, totalWeight: totalWeight, transactionId: selectedTransaction?.id};
     console.log("DATA: ", data);
     try {
 			const response = await axios.post(`http://localhost:3000/api/cart/shipping`, data);
