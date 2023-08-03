@@ -10,7 +10,8 @@ import Footer from '../footer'
 import ShopDashboard from '../../components/shop/shop_dashboard'
 import ProductItem from '@/components/shop/product_item'
 import Agungageng from '@/components/shop/agungageng'
-import { User } from '@prisma/client'
+import { Address, User } from '@prisma/client'
+import { Button } from '@material-tailwind/react'
 
 
 interface Props{
@@ -21,8 +22,9 @@ interface Props{
         balance: number,
         image: string,
         user: User
-    }
-    products: Product[]
+    };
+    products: Product[];
+    address: Address;
 }
 
 interface Product {
@@ -40,7 +42,7 @@ interface Category{
   category: string
 }
 
-export default function Profile({shop, products} : Props) {
+export default function Profile({shop, products, address} : Props) {
 
   const router = useRouter()
   const{data:session} = useSession();
@@ -54,6 +56,13 @@ export default function Profile({shop, products} : Props) {
     setKerangDunia(products.name)
   }
   
+  function onNewItem(){
+    if(address != null)
+      router.push('product/create');
+    else
+      alert("Silahkan atur alamat toko terlebih dahulu.");
+  }
+
   if(!shop){
     router.push('/shop/register')
   }else{
@@ -67,11 +76,11 @@ export default function Profile({shop, products} : Props) {
             <h1 className='hidden lg:block text-2xl'>Seller Home</h1>
             {/* <Agungageng shop={shop} kodok={onSelect} onKerang={onKerang} /> */}
             <div  id='new-item-input-container'className='lg:grid lg:grid-cols-5 w-full' >
-              <Link href={'product/create'}>
+              <div className='cursor-pointer' onClick={()=> onNewItem()}>
                 <div id='new-item-input' className='border-dashed border-2 border-black p-2 w-full lg:w-5/6 h-10 flex justify-center items-center'>
                   <h1>{'(+) New Item'}</h1>
                 </div>
-              </Link>
+              </div>
             </div>
             <div id='product-list' className='flex flex-row overflow-y-auto space-x-4 lg:space-x-0 lg:grid lg:grid-cols-5 lg:gap-y-10 w-full'>
               {products.map((product, i) => <ProductItem key={i} product={product}/>)}
@@ -96,7 +105,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             image: true,
             user: true
         }
-    })
+    });
+
     const products = await prisma.product.findMany({
         where:{shopId: shop?.id},
         select:{
@@ -113,6 +123,17 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             id: 'asc',
           }
         ],
+    });
+    
+    const address = await prisma.address.findFirst({
+      where:{ 
+        profile: {
+          user: {
+            shop: {id: shop?.id}
+          }
+        },
+        isShopAddress: true
+      }
     })
-    return { props: {shop, products} }
+    return { props: {shop, products, address} }
 }

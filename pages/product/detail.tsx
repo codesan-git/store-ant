@@ -6,7 +6,7 @@ import Navbar from "../navbar";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import ShopDetailCard from "@/components/product/shop_detail_card";
-import { Shop, User } from "@prisma/client";
+import { Address, Shop, User } from "@prisma/client";
 import Link from "next/link";
 
 interface FetchData {
@@ -30,6 +30,7 @@ interface FetchData {
     image: string;
     order: Order;
   }[];
+  mainAddress: Address
 }
 
 interface Order {
@@ -60,7 +61,7 @@ interface CartData {
   isCheckout: boolean;
 }
 
-export default function CreateShop({ product, ratings }: FetchData) {
+export default function CreateShop({ product, ratings, mainAddress }: FetchData) {
   const [count, setCount] = useState(0);
   const [index, setIndex] = useState(0);
   const [Subtotal, setSubtotal] = useState(0);
@@ -98,22 +99,26 @@ export default function CreateShop({ product, ratings }: FetchData) {
   }
 
   async function checkout(count: number) {
-    const data: CartData = {
-      productId: product.id,
-      count: Number(count),
-      productCount: Number(product.stock) - Number(count),
-      isCheckout: true
-    };
-    try {
-      fetch("http://localhost:3000/api/cart/add", {
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-      }).then(() => router.push("http://localhost:3000/transactions"));
-    } catch (error) {
-      //console.log(error)
+    if(mainAddress != null){
+      const data: CartData = {
+        productId: product.id,
+        count: Number(count),
+        productCount: Number(product.stock) - Number(count),
+        isCheckout: true
+      };
+      try {
+        fetch("http://localhost:3000/api/cart/add", {
+          body: JSON.stringify(data),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+        }).then(() => router.push("http://localhost:3000/transactions"));
+      } catch (error) {
+        //console.log(error)
+      }
+    } else {
+      alert("Harap atur alamat pengiriman utama");
     }
   }
 
@@ -466,6 +471,8 @@ const renderStockCount = (stockNumber: Number) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getSession(context);
+
   const product = await prisma.product.findFirst({
     where: { id: Number(context.query.id) },
     select: {
@@ -508,11 +515,19 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     },
   });
+
+  const mainAddress = await prisma.address.findFirst({
+    where:{
+      profile:{ userId: session?.user.id},
+      isMainAddress: true
+    }
+  })
   console.log("server side: ", ratings);
   return {
     props: {
       product,
       ratings,
+      mainAddress
     },
   };
 };
