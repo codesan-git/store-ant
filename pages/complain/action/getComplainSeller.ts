@@ -33,9 +33,6 @@ const getDataOrders = async (context: any) => {
 
     const safeComplain = getTransactions.map((complain) => ({
         ...complain,
-        // order: {
-        //     ...complain.order,
-        // }
     }))
     return safeComplain
 }
