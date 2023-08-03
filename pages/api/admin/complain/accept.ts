@@ -56,7 +56,8 @@ export default async function handler(
   const transaction = await prisma.transaction.update({
     where: {id: orderData?.transactionId!},
     data: {
-      status: TransactionStatus.REFUNDED
+      status: TransactionStatus.REFUNDED,
+      updatedAt: new Date()
     }
   });
   
