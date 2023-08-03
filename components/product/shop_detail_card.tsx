@@ -63,7 +63,7 @@ const ShopDetailCard = ({shop, location}: Props) => {
               />
             )}
           </div>
-          <div id='profile-details' className='w-2/3 sm:w-full'>
+          <div id='profile-details' className='w-2/3 sm:w-full '>
             <h1 className='text-2xl cursor-pointer' onClick={()=>routeToShop()}>{shop.shopName}</h1>
             <div className="lg:flex lg:flex-row">
               <div className="lg:flex lg:flex-row ">
@@ -88,7 +88,7 @@ const ShopDetailCard = ({shop, location}: Props) => {
                 </div>
               </div>
             </div>
-            <div className="w-full lg:w-1/2 p-2 ">
+            <div className="w-full lg:w-1/2  mt-2">
               <button onClick={onPenjualClick} className="w-full md:w-48 p-2 bg-blue-700 hover:bg-blue-500 transition text-white">
                 Tanya Penjual
               </button>

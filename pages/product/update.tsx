@@ -209,13 +209,13 @@ export default function CreateShop({product} : FetchData) {
           <div className='flex flex-wrap gap-2 mt-2'>
             {images.map((file, key) => {
                 return (
-                  <div key={key} className="relative overflow-hidden">
+                  <div key={key} className="relative">
                     <div
-                      onClick={() => {
-                        removeImage(file);
-                      }}
-                      className="right-1 hover:text-white cursor-pointer bg-red-400"
-                    >Remove</div>
+                      onClick={() => removeImage(file)}
+                      className="flex justify-center items-center bg-black text-white rounded-full h-4 w-4 text-xs font-bold absolute -right-2 -top-2 sm:-right-2 hover:cursor-pointer"
+                    >
+                      ✕
+                    </div>
                     <img
                       className="h-20 w-20 rounded-md"
                       src={file}
