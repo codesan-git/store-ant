@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL  } from "firebase/storage";
 
 export default function Complain() {
   const [desc, setDesc] = useState<string>("");
@@ -8,6 +9,15 @@ export default function Complain() {
   const {id: complainId} = router.query;
   const [selectedImage, setSelectedImage] = useState<string>();
   const [files, setFile] = useState<any[]>([]);
+  const [urls, setURLs] = useState<string[]>([]);
+  
+  useEffect(() => {
+    if(urls.join(",") != "" && urls.length == files.length){      
+      if(files.length == 0) return;
+      const data = {complainId: String(complainId), description: desc};
+      axios.post('/api/shop/rejectreturn', data).then(() => {router.back() });
+    }
+  },[urls]);
 
   function handleFile(target: any){
     let file = target.files;
@@ -31,17 +41,37 @@ export default function Complain() {
   };
   
   const handleUpload = async () => {
-    try {
-        if(files.length == 0) return;
-        const formData = new FormData();
-        files.forEach((file) => formData.append("image", file) );
-        //formData.append("image", selectedFile);
-        formData.append("complainId", complainId as string);
-        formData.append("description", desc);
-        await axios.post('/api/shop/rejectreturn', formData).then(() => {router.back() });
-    } catch (error: any) {
-        //console.log(error);
-    }
+    const promises : any[] = [];
+    const storage = getStorage();
+
+    files.map((file) => {
+      console.log("loop");
+
+      const sotrageRef = ref(storage, `images/product/${file.name}`);
+
+      const uploadTask = uploadBytesResumable(sotrageRef, file);
+      promises.push(uploadTask);
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const prog = Math.round(
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          );
+          //setProgress(prog);
+        },
+        (error) => console.log(error),
+        async () => {
+          await getDownloadURL(uploadTask.snapshot.ref).then((downloadURLs) => {
+            setURLs(prevArray => [...prevArray, downloadURLs]);
+          });
+        }
+      );
+    });
+    Promise.all(promises)
+      .then(async () => {
+        alert("All images uploaded");
+      })
+      .then((err) => console.log(err));
   }
 
   const renderSelectedImage = () => {
