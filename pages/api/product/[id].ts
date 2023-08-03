@@ -63,7 +63,7 @@ export default async function handler(
   }
 
   if(req.method === 'PUT'){
-    const {imageString, name, price, stock, categoryId, urls} = req.body;
+    const {imageString, name, price, stock, categoryId, urls, description} = req.body;
     const oldProduct = await prisma.product.findFirst({
       where: {id: Number(id)},
       select: {
@@ -95,7 +95,8 @@ export default async function handler(
           name: name as string,
           price: Number(price),
           stock: Number(stock),
-          image: imageUrl.join(",")
+          image: imageUrl.join(","),
+          description: description
       }
     })
     res.status(200).json({ message: 'product updated', data: product });

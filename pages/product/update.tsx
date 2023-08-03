@@ -64,11 +64,12 @@ export default function CreateShop({product} : FetchData) {
     if(isSubmit){
       if(urls.join(",") != "" ){
         if(urls.length == files.length){        
-          const data = {imageString: oldImages.join(","), name: form.name, price: form.price, stock: form.stock, categoryId: form.categoryId, urls: urls.join(",")}
+          const data = {imageString: oldImages.join(","), name: form.name, price: form.price, stock: form.stock, categoryId: form.categoryId, urls: urls.join(","), description: form.description}
           axios.put(`/api/product/${product.id}`, data).then(() => { router.back() });
         }
       } else if(oldImages.length != 0 && files.length == 0) {
-          const data = {imageString: oldImages.join(","), name: form.name, price: form.price, stock: form.stock, categoryId: form.categoryId, urls: urls.join(",")}
+          console.log("masuk else")
+          const data = {imageString: oldImages.join(","), name: form.name, price: form.price, stock: form.stock, categoryId: form.categoryId, urls: urls.join(","), description: form.description}
           axios.put(`/api/product/${product.id}`, data).then(() => { router.back() });
       }
     }
@@ -157,7 +158,7 @@ export default function CreateShop({product} : FetchData) {
       });
       Promise.all(promises)
         .then(async () => {
-          alert("All images uploaded");
+          alert("Update Success!");
         })
         .then((err) => console.log(err));
     }catch(error){
