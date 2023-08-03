@@ -123,7 +123,7 @@ const AppPagination: FC<AppPaginationProps> = ({ getShop }) => {
         </FormControl>
       </Box>
       <div className='grid grid-cols-5 gap-2'>
-        {getCurrentPageData().map((product) => (
+        {getCurrentPageData()?.map((product) => (
           <div key={product.id}>
             <Card sx={{ height: 350 }} className='flex rounded-lg'>
               <CardActionArea>
@@ -263,7 +263,7 @@ const AppPagination: FC<AppPaginationProps> = ({ getShop }) => {
       {alignment === "web" ?
         <>
           <div className='grid grid-cols-2 gap-2' >
-            {getCurrentPageData().map((product) => (
+            {getCurrentPageData()?.map((product) => (
               <div key={product.id}>
                 <Card sx={{ height: 275 }} className='flex rounded-lg'>
                   <CardActionArea>
@@ -323,7 +323,7 @@ const AppPagination: FC<AppPaginationProps> = ({ getShop }) => {
         :
         <>
           <div className='gap-2' >
-            {getCurrentPageData().map((product) => (
+            {getCurrentPageData()?.map((product) => (
               <div key={product.id}>
                 <Card sx={{}} className='flex rounded-lg justify-start mb-2'>
                   <CardActionArea
