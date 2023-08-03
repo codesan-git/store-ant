@@ -30,7 +30,7 @@ export default function DetailShop({ getShop }: Props) {
             </section>
         </div>
     </>
-}
+} 
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const shop = context.query.shopName
