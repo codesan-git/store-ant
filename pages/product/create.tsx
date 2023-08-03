@@ -48,7 +48,7 @@ export default function CreateProduct() {
     console.log("condition: ", selectedFiles.length == urls.length);
     if(urls.join(",") != "" && urls.length == selectedFiles.length){
       const data = {name: form.name, price: form.price, stock: form.stock, image: urls.join(","), description: form.description, categoryId: form.categoryId};
-      axios.post('http://localhost:3000/api/product/create', data).then(() => { console.log("created!"); router.back(); });
+      axios.post('/api/product/create', data).then(() => { console.log("created!"); router.back(); });
     }
   },[urls]);
 

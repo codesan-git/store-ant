@@ -46,7 +46,7 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
 	
 	const fetchShop = async () => {
 		try {
-			const response = await axios.get(`http://localhost:3000/api/shop/${transaction?.shopId}`, {
+			const response = await axios.get(`/api/shop/${transaction?.shopId}`, {
 				params: {
 				},
       });
@@ -75,7 +75,7 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
 				<div className="flex flex-row mt-2 space-x-1">
 					<div id="image-placeholder" className="p-1 flex items-center">
 						<img className="w-14 h-14 object-cover"
-							src={`http://localhost:3000/${order?.product?.image?.split(",")[0]}`}
+							src={order?.product?.image?.split(",")[0]}
 						/>	
 					</div>
 					<div className="p-2 flex items-center">

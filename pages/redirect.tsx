@@ -19,7 +19,7 @@ export default function Redirect() {
   async function UpdateStatus() {
     //const transactionId:TransactionId = {id: order_id as string, paymentType: };
     //console.log(transactionId);
-    //await axios.post(`http://localhost:3000/api/cart/success`, transactionId);
+    //await axios.post(`/api/cart/success`, transactionId);
   }
 
   return (
@@ -38,7 +38,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     method: "GET",
     url: `https://api.sandbox.midtrans.com/v2/${context.query.order_id}/status`,
     headers: {
-      'Access-Control-Allow-Origin': 'http://localhost:3000/',
+      'Access-Control-Allow-Origin': '/',
       "Accept": "application/json",
       "Content-Type": "application/json",
       "Authorization":
@@ -53,12 +53,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       if(response.data.status_code == 200){
         const data = {id: context.query.order_id, paymentType: response.data.payment_type};
         console.log("data: ", data);
-        axios.post(`http://localhost:3000/api/cart/success`, data);
+        axios.post(`/api/cart/success`, data);
       }
       if(response.data.status_code == 404){
         const data = {id: context.query.order_id, paymentType: "Balance"};
         console.log("data: ", data);
-        axios.post(`http://localhost:3000/api/cart/success`, data);
+        axios.post(`/api/cart/success`, data);
       }
     })
     .catch(function (error) {

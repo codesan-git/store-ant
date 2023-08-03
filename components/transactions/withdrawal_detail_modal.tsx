@@ -29,7 +29,7 @@ const WithdrawalDetail = ({htmlElementId: id, selectProductCallback} : Props) =>
   async function onSubmit() {
     const cartId: CartId = {id: Number(withdrawal?.id)};
     try{
-        fetch('http://localhost:3000/api/admin/withdrawal/confirm', {
+        fetch('/api/admin/withdrawal/confirm', {
             body: JSON.stringify(cartId),
             headers: {
                 'Content-Type' : 'application/json'

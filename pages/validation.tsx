@@ -15,7 +15,7 @@ export default function Validation({token} : Token) {
   const verifyAccount = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3000/api/profile/verified"
+        "/api/profile/verified"
       );
       console.log("dari fetchProduct", response.data);
     } catch (error) {

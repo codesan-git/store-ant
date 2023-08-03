@@ -42,7 +42,7 @@ export default function Event() {
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
           const data = {image: downloadURL, eventName: form.eventName, eventPath: form.eventPath, startDate: form.startDate, endDate: form.endDate};
-          await axios.post('http://localhost:3000/api/admin/event/create/', data).then(() => {router.back() });
+          await axios.post('/api/admin/event/create/', data).then(() => {router.back() });
         }).then(() => router.reload());
       }
     );

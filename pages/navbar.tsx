@@ -72,7 +72,7 @@ function a11yProps(index: number) {
 }
 
 async function handleGoogleSignOut() {
-  signOut({ callbackUrl: "http://localhost:3000/login" });
+  signOut({ callbackUrl: "/login" });
 }
 
 const fetchCategories = async (url: string) => {
@@ -92,7 +92,7 @@ const Navbar = () => {
     setValue(newValue);
   };
   const { data: categoryData, isLoading } = useSWR<{ categories: Array<Category> }>(
-    `http://localhost:3000/api/category/`,
+    `/api/category/`,
     fetchCategories
   )
 
@@ -103,12 +103,12 @@ const Navbar = () => {
   };
 
   const { data: cartItems, isLoading: loadingCart } = useSWR<{ productInCart: Array<CartItems> }>(
-    `http://localhost:3000/api/cart/`,
+    `/api/cart/`,
     fetchCategories
   )
 
   const {data: count, isLoading: loadingCount} = useSWR<{count : number}>(
-    `http://localhost:3000/api/notification/count/`,
+    `/api/notification/count/`,
     fetchCategories,
     { refreshInterval: 30000 }
   )
@@ -144,13 +144,13 @@ const Navbar = () => {
   const onSearch = (event: React.FormEvent) => {
     event.preventDefault();
     const encodedSearchQuery = encodeURI(query);
-    router.push(`http://localhost:3000/search?q=${encodedSearchQuery}`);
+    router.push(`/search?q=${encodedSearchQuery}`);
     //console.log(encodedSearchQuery);
   }
 
   function onFilter(categoryId: string) {
     const encodedSearchQuery = encodeURI(categoryId);
-    router.push(`http://localhost:3000/filter?q=${encodedSearchQuery}`);
+    router.push(`/filter?q=${encodedSearchQuery}`);
     //console.log(encodedSearchQuery);
   }
   
@@ -257,7 +257,7 @@ const Navbar = () => {
                     )}
                     <span className="text-info">Subtotal: Rp.{price}</span>
                     <div className="card-actions">
-                      <button onClick={() => router.push('http://localhost:3000/cart')} className="btn btn-primary btn-block">
+                      <button onClick={() => router.push('/cart')} className="btn btn-primary btn-block">
                         View cart
                       </button>
                     </div>

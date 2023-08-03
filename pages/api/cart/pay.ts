@@ -49,7 +49,7 @@ export default async function handler(
         "gross_amount": price
     },
     "callbacks": {
-      "finish": "http://localhost:3000/redirect"
+      "finish": "/redirect"
     }
   };
 

@@ -19,7 +19,7 @@ import SentItemModal from "@/components/transactions/sent_item";
 
 
 interface CartId {
-  id: Number;
+  id: string;
 }
 
 interface Order {
@@ -82,10 +82,10 @@ const Transactions = ({ transactions, newChatUserId }: Props) => {
     setSelectedTransaction(transaction);
   }
 
-  async function onFinish(id: number) {
+  async function onFinish(id: string) {
     const cartId: CartId = { id: id };
     try {
-      fetch("http://localhost:3000/api/cart/finish", {
+      fetch("/api/cart/finish", {
         body: JSON.stringify(cartId),
         headers: {
           "Content-Type": "application/json",
@@ -97,9 +97,9 @@ const Transactions = ({ transactions, newChatUserId }: Props) => {
     }
   }
 
-  async function onReturn(id: Number) {
+  async function onReturn(id: string) {
     router.push({
-      pathname: "http://localhost:3000/complain/create",
+      pathname: "/complain/create",
       query: { id: String(id) },
     });
   }
@@ -121,7 +121,7 @@ const Transactions = ({ transactions, newChatUserId }: Props) => {
 
   async function onCommentDetail(id: number) {
     router.push({
-      pathname: "http://localhost:3000/complain/response/",
+      pathname: "/complain/response/",
       query: { id: id },
     });
   }

@@ -166,7 +166,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
       setCurrentChatroomMessages([...currentChatroomMessages as Message[], newMessage as Message]);
 
       try{
-        fetch('http://localhost:3000/api/chat/send', {
+        fetch('/api/chat/send', {
               body: JSON.stringify(newMessage),
               headers: {
                 'Content-Type' : 'application/json'
@@ -202,7 +202,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
     socket.emit("send-message", newMessage);
       setCurrentChatroomMessages([...currentChatroomMessages as Message[], newMessage as Message]);
       try{
-          fetch('http://localhost:3000/api/chat/send', {
+          fetch('/api/chat/send', {
               body: JSON.stringify(newMessage),
               headers: {
                   'Content-Type' : 'application/json'

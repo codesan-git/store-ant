@@ -57,7 +57,7 @@ const AddressFormModal = ({ provinceData, cityData } : Props) => {
     if(form.cityId == '')
       form.cityId = cityData.filter((x) => x.province_id == form.provinceId)[0].city_id;
     try{
-      fetch('http://localhost:3000/api/address/create', {
+      fetch('/api/address/create', {
         body: JSON.stringify(form),
         headers: {
             'Content-Type' : 'application/json'

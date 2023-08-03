@@ -50,7 +50,7 @@ const ReviewModal = ({htmlElementId: id, selectProductCallback} : Props) => {
       formData.append("cartId", String(currentCartItemId));
       formData.append("star", String(starValue));
       formData.append("comment", comment);
-      await axios.post('http://localhost:3000/api/cart/rate/', formData);
+      await axios.post('/api/cart/rate/', formData);
     }catch(error){
       console.log(`Error in posting data. Error: ${error}`);
     }
@@ -132,7 +132,7 @@ const ReviewModal = ({htmlElementId: id, selectProductCallback} : Props) => {
             <label htmlFor={id} className="text-lg font-bold">✕</label>
           </div>
           <div id="product-box" className="p-2 space-x-2 flex flex-row bg-blue-gray-100">
-            {/* <img src={`https://localhost:3000/${product.image}`} alt="none" className="w-10 h-10 border object-cover"/> */} {/*This won't work for some reason*/}
+            {/* <img src={product.image} alt="none" className="w-10 h-10 border object-cover"/> */} {/*This won't work for some reason*/}
             <img src={`https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg`} alt="none" className="w-10 h-10 border object-cover"/> 
             <h1>{currentRateProductName}</h1>
           </div>

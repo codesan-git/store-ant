@@ -63,7 +63,7 @@ export default function ComplainAdmin({ getOrders }: Props) {
 
   const acceptStatus = async (id: string) => {
     try {
-      const response = await axios.patch(`http://localhost:3000/api/complain/seller/accept`, {
+      const response = await axios.patch(`/api/complain/seller/accept`, {
         id: id
       }).then(() => router.refresh())
 
@@ -75,7 +75,7 @@ export default function ComplainAdmin({ getOrders }: Props) {
   const shopComment = async () => {
     // const data:FormData = {complainId: form.complainId,description:form.description};
     // try {
-    //   await axios.post('http://localhost:3000/api/complain/seller/shopComment', {
+    //   await axios.post('/api/complain/seller/shopComment', {
     //     complainId: data.complainId,
     //     description: data.description,
     // })
@@ -87,7 +87,7 @@ export default function ComplainAdmin({ getOrders }: Props) {
 
   // const rejectStatus = async (id: string) => {
   //   try {
-  //     const response = await axios.patch(`http://localhost:3000/api/complain/seller/reject`, {
+  //     const response = await axios.patch(`/api/complain/seller/reject`, {
   //       id: id
   //     }).then(() => router.refresh())
 
@@ -231,7 +231,7 @@ export default function ComplainAdmin({ getOrders }: Props) {
                           {orders.Complain?.image.split(",").map((kocak: string) => (
                             <img
                               key={kocak}
-                              src={`http://localhost:3000/${kocak}`}
+                              src={kocak}
                               className="w-16 h-16"
                             />
                           ))}
@@ -365,7 +365,7 @@ export default function ComplainAdmin({ getOrders }: Props) {
                           {orders.Complain?.image.split(",").map((kocak: string) => (
                             <img
                               key={kocak}
-                              src={`http://localhost:3000/${kocak}`}
+                              src={kocak}
                               className="w-16 h-16"
                             />
                           ))}

@@ -94,7 +94,7 @@ const OrdersMania = ({ transactions }: { transactions: Transaction[] }, shop: Pr
   async function onFinish(id: number) {
     const cartId: CartId = { id: id };
     try {
-      fetch("http://localhost:3000/api/cart/finish", {
+      fetch("/api/cart/finish", {
         body: JSON.stringify(cartId),
         headers: {
           "Content-Type": "application/json",
@@ -107,14 +107,14 @@ const OrdersMania = ({ transactions }: { transactions: Transaction[] }, shop: Pr
   }
   
   async function onTolak(id:number){
-    const terimaTransactions = await axios.put(`http://localhost:3000/api/shop/tolak`, {
+    const terimaTransactions = await axios.put(`/api/shop/tolak`, {
         id: selectedTransaction?.id
     })
   }
 
   async function onReturn(id: Number) {
     router.push({
-      pathname: "http://localhost:3000/complain/create",
+      pathname: "/complain/create",
       query: { id: String(id) },
     });
   }
@@ -126,7 +126,7 @@ const OrdersMania = ({ transactions }: { transactions: Transaction[] }, shop: Pr
 
   async function onCommentDetail(id: number) {
     router.push({
-      pathname: "http://localhost:3000/complain/response/",
+      pathname: "/complain/response/",
       query: { id: id },
     });
   }

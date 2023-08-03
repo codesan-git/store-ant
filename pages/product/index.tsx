@@ -21,7 +21,7 @@ export default function ShopProduct({products} : Products) {
 
   async function deleteProduct(id:string) {
     try{
-      fetch(`http://localhost:3000/api/product/${id}`, {
+      fetch(`/api/product/${id}`, {
         body: JSON.stringify(id),
           headers: {
               'Content-Type' : 'application/json'

@@ -43,7 +43,7 @@ export default function Detail({ complain }: ComplainData) {
   async function onReturn(id: Number) {
     const cartId: CartId = {id: id};
     try{
-        fetch('http://localhost:3000/api/shop/rejectreturn', {
+        fetch('/api/shop/rejectreturn', {
             body: JSON.stringify(cartId),
             headers: {
                 'Content-Type' : 'application/json'
@@ -58,7 +58,7 @@ export default function Detail({ complain }: ComplainData) {
   async function onReject(id: Number) {
     const cartId: CartId = {id: id};
     try{
-        fetch('http://localhost:3000/api/shop/rejectreturn', {
+        fetch('/api/shop/rejectreturn', {
             body: JSON.stringify(cartId),
             headers: {
                 'Content-Type' : 'application/json'
@@ -85,7 +85,7 @@ export default function Detail({ complain }: ComplainData) {
                 {complain.image.split(",").map((image) => (
                   <img
                     className="rounded-md w-40 h-40"
-                    src={`http://localhost:3000/${image}`}
+                    src={image}
                     onError={({ currentTarget }) => {
                       currentTarget.onerror = null; // prevents looping
                       currentTarget.src =

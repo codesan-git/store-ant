@@ -130,7 +130,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
 
   async function create(data: FormData) {
     try {
-      fetch("http://localhost:3000/api/profile/setting", {
+      fetch("/api/profile/setting", {
         body: JSON.stringify(data),
         headers: {
           "Content-Type": "application/json",
@@ -151,7 +151,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
 
   const handleBankAccountDelete = () => {
     try {
-      fetch("http://localhost:3000/api/profile/bank/delete", {
+      fetch("/api/profile/bank/delete", {
         method: "DELETE"
       }).then(() => router.push(router.asPath));
     }
@@ -163,7 +163,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
   function onSetMainAddress(id: number){
     const addressId = {id: id};
     try {
-      fetch("http://localhost:3000/api/address/setmain", {
+      fetch("/api/address/setmain", {
         body: JSON.stringify(addressId),
         headers: {
           "Content-Type": "application/json",
@@ -180,7 +180,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
   function onSetShopAddress(id: number){
     const addressId = {id: id};
     try {
-      fetch("http://localhost:3000/api/address/setshop", {
+      fetch("/api/address/setshop", {
         body: JSON.stringify(addressId),
         headers: {
           "Content-Type": "application/json",
@@ -226,7 +226,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
           const data = {image: downloadURL};
-          await axios.put("http://localhost:3000/api/profile/photo", data);
+          await axios.put("/api/profile/photo", data);
         }).then(() => router.reload());
       }
     );
@@ -258,7 +258,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
   };
 
   const getToken = async () => {
-    const res = (await axios.get(`http://localhost:3000/api/validation/${session?.user.id}`)).data
+    const res = (await axios.get(`/api/validation/${session?.user.id}`)).data
     setToken(session?.user.accessToken!)
     console.log('response token', res)
   }

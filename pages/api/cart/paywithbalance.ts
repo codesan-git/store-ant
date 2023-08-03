@@ -45,7 +45,7 @@ export default async function handler(
             "gross_amount": Number(price) - Number(session?.user?.balance!)
         },
         "callbacks": {
-            "finish": "http://localhost:3000/redirect"
+            "finish": "/redirect"
         }
     };
     
@@ -72,6 +72,6 @@ export default async function handler(
             balance: currentBalance
         }
     })
-    res.status(200).json({ token: "", redirectUrl: `http://localhost:3000/redirect?order_id=${id}&status_code=200&transaction_status=settlement` })
+    res.status(200).json({ token: "", redirectUrl: `/redirect?order_id=${id}&status_code=200&transaction_status=settlement` })
   }
 }

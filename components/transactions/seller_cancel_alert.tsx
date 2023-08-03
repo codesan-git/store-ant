@@ -33,13 +33,13 @@ const SellerCancelAlert = ({htmlElementId: id, selectProductCallback} : Props) =
   async function onCancel() {
     const cartId: CartId = {id: selectedTransaction.id};
     try{
-        fetch('http://localhost:3000/api/shop/cancel', {
+        fetch('/api/shop/cancel', {
             body: JSON.stringify(cartId),
             headers: {
                 'Content-Type' : 'application/json'
             },
             method: 'PUT'
-        }).then(()=>  router.push({pathname: 'http://localhost:3000/shop/complain/refund', query: {id: selectedTransaction.id}}))
+        }).then(()=>  router.push({pathname: '/shop/complain/refund', query: {id: selectedTransaction.id}}))
       }catch(error){
           //console.log(error)
       }
@@ -48,7 +48,7 @@ const SellerCancelAlert = ({htmlElementId: id, selectProductCallback} : Props) =
   async function onReject() {
     const cartId: CartId = {id: selectedTransaction.id};
     try{
-        fetch('http://localhost:3000/api/shop/reject', {
+        fetch('/api/shop/reject', {
             body: JSON.stringify(cartId),
             headers: {
                 'Content-Type' : 'application/json'
@@ -82,7 +82,7 @@ const SellerCancelAlert = ({htmlElementId: id, selectProductCallback} : Props) =
             <div id="product-box" className="p-2 space-x-2 flex flex-row">
             <div id="product-detail-img-container" className=" flex justify-center items-center">
                 <img className="w-20 h-20 object-cover" 
-                    src={`http://localhost:3000/${order?.product.image.split(",")[0]}`}
+                    src={order?.product.image.split(",")[0]}
                     onError={({ currentTarget }) => {
                         currentTarget.onerror = null; // prevents looping
                         currentTarget.src = "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"

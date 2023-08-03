@@ -86,7 +86,7 @@ export default function CreateShop({ product, ratings, mainAddress }: FetchData)
       isCheckout: false
     };
     try {
-      fetch("http://localhost:3000/api/cart/add", {
+      fetch("/api/cart/add", {
         body: JSON.stringify(data),
         headers: {
           "Content-Type": "application/json",
@@ -107,13 +107,13 @@ export default function CreateShop({ product, ratings, mainAddress }: FetchData)
         isCheckout: true
       };
       try {
-        fetch("http://localhost:3000/api/cart/add", {
+        fetch("/api/cart/add", {
           body: JSON.stringify(data),
           headers: {
             "Content-Type": "application/json",
           },
           method: "POST",
-        }).then(() => router.push("http://localhost:3000/transactions"));
+        }).then(() => router.push("/transactions"));
       } catch (error) {
         //console.log(error)
       }

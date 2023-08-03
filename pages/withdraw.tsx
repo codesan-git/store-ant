@@ -33,7 +33,7 @@ export default function Withdraw({bank} : BankData) {
   
   const handleUpload = async () => {
     try {
-        await axios.post('http://localhost:3000/api/profile/withdrawal/create', form).then(() => {router.back() });
+        await axios.post('/api/profile/withdrawal/create', form).then(() => {router.back() });
     } catch (error: any) {
         //console.log(error);
     }

@@ -47,7 +47,7 @@ export default function Rate() {
         formData.append("cartId", String(id));
         formData.append("star", String(star));
         formData.append("comment", comment);
-        await axios.post('http://localhost:3000/api/cart/rate/', formData).then(() => { router.back() });
+        await axios.post('/api/cart/rate/', formData).then(() => { router.back() });
     }catch(error){
         //console.log(error)
     }

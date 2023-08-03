@@ -16,7 +16,7 @@ export default function CreateShop() {
   
   async function create(data:FormData) {
     try{
-        fetch('http://localhost:3000/api/shop/setting', {
+        fetch('/api/shop/setting', {
             body: JSON.stringify(data),
             headers: {
                 'Content-Type' : 'application/json'

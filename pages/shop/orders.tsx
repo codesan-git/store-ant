@@ -103,7 +103,7 @@ export default function Orders({ cartItems, shop }: InferGetServerSidePropsType<
   async function onDeliver(id: Number) {
     const cartId: CartId = {id: id};
     try{
-        fetch('http://localhost:3000/api/shop/deliver', {
+        fetch('/api/shop/deliver', {
             body: JSON.stringify(cartId),
             headers: {
                 'Content-Type' : 'application/json'
@@ -118,7 +118,7 @@ export default function Orders({ cartItems, shop }: InferGetServerSidePropsType<
   async function onCancel(id: Number) {
     const cartId: CartId = {id: id};
     try{
-        fetch('http://localhost:3000/api/shop/cancel', {
+        fetch('/api/shop/cancel', {
             body: JSON.stringify(cartId),
             headers: {
                 'Content-Type' : 'application/json'
@@ -133,7 +133,7 @@ export default function Orders({ cartItems, shop }: InferGetServerSidePropsType<
   async function onReject(id: Number) {
     const cartId: CartId = {id: id};
     try{
-        fetch('http://localhost:3000/api/shop/reject', {
+        fetch('/api/shop/reject', {
             body: JSON.stringify(cartId),
             headers: {
                 'Content-Type' : 'application/json'
@@ -147,7 +147,7 @@ export default function Orders({ cartItems, shop }: InferGetServerSidePropsType<
 
   async function onDetail(id: string) {
     router.push({
-        pathname: "http://localhost:3000/shop/complain/detail",
+        pathname: "/shop/complain/detail",
         query: {id: id}
     })
   }
@@ -175,7 +175,7 @@ export default function Orders({ cartItems, shop }: InferGetServerSidePropsType<
                                 <div className="card-body py-5">
                                     <figure className="rounded-md h-40 w-40">
                                         {cartItem.product.image? (
-                                            <img src={`http://localhost:3000/${cartItem.product.image}`}/>
+                                            <img src={cartItem.product.image}/>
                                         ) : (
                                             <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"/>
                                         )}
@@ -227,7 +227,7 @@ export default function Orders({ cartItems, shop }: InferGetServerSidePropsType<
                                 <div className="card-body py-5">
                                     <figure className="rounded-md h-40 w-40">
                                         {cartItem.product.image? (
-                                            <img src={`http://localhost:3000/${cartItem.product.image}`}/>
+                                            <img src={cartItem.product.image}/>
                                         ) : (
                                             <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"/>
                                         )}
@@ -285,7 +285,7 @@ export default function Orders({ cartItems, shop }: InferGetServerSidePropsType<
                                 <div className="card-body py-5">
                                     <figure className="rounded-md h-40 w-40">
                                         {cartItem.product.image? (
-                                            <img src={`http://localhost:3000/${cartItem.product.image}`}/>
+                                            <img src={cartItem.product.image}/>
                                         ) : (
                                             <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"/>
                                         )}
@@ -326,7 +326,7 @@ export default function Orders({ cartItems, shop }: InferGetServerSidePropsType<
                                 <div className="card-body py-5">
                                     <figure className="rounded-md h-40 w-40">
                                         {cartItem.product.image? (
-                                            <img src={`http://localhost:3000/${cartItem.product.image}`}/>
+                                            <img src={cartItem.product.image}/>
                                         ) : (
                                             <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"/>
                                         )}
@@ -367,7 +367,7 @@ export default function Orders({ cartItems, shop }: InferGetServerSidePropsType<
                                 <div className="card-body py-5">
                                     <figure className="rounded-md h-40 w-40">
                                         {cartItem.product.image? (
-                                            <img src={`http://localhost:3000/${cartItem.product.image}`}/>
+                                            <img src={cartItem.product.image}/>
                                         ) : (
                                             <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"/>
                                         )}

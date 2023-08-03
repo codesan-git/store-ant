@@ -46,7 +46,7 @@ export default function Login() {
     // console.log('form password', form.password)
     try {
       const response = await axios
-        .put(`http://localhost:3000/api/profile/resetpassword`, form)
+        .put(`/api/profile/resetpassword`, form)
         .then(() => {
           router.push("/");
         });
@@ -57,7 +57,7 @@ export default function Login() {
   };
 
   // const getEmail = async() => {
-  //   const res = await axios.get(`http://localhost:3000/api/auth/forgotpassword`)
+  //   const res = await axios.get(`/api/auth/forgotpassword`)
   //   console.log('getEmail', res)
   // }
 

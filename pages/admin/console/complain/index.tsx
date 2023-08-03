@@ -60,9 +60,7 @@ export default function Complain({ complains }: Complain) {
                     <figure className="rounded-md h-40 w-40">
                       {complain.image ? (
                         <img
-                          src={`http://localhost:3000/${
-                            complain.image.split(",")[0]
-                          }`}
+                          src={complain.image.split(",")[0]}
                           onError={({ currentTarget }) => {
                             currentTarget.onerror = null; // prevents looping
                             currentTarget.src =

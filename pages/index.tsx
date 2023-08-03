@@ -23,7 +23,7 @@ import axios from "axios";
 import CategoryListItem from "@/components/index/category_list_item";
 
 async function handleGoogleSignOut() {
-  signOut({ callbackUrl: "http://localhost:3000/login" });
+  signOut({ callbackUrl: "/login" });
 }
 
 interface Products {
@@ -94,7 +94,7 @@ export default function Home({ events }: EventData) {
 
   const fetchProduct = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/api/product", {
+      const response = await axios.get("/api/product", {
         params: {
           _sortBy: sortBy,
           _sortDir: sortDir,
@@ -108,13 +108,13 @@ export default function Home({ events }: EventData) {
   };
 
   const {data: categoryData, isLoading: categoryDataIsLoading} = useSWR<{categories: Array<Category>}>(
-    `http://localhost:3000/api/category/`, 
+    `/api/category/`, 
     fetchCategories
   );
 
   const onFilter  = (categoryId: number) =>{
     const encodedSearchQuery = encodeURI(categoryId.toString());
-    router.push(`http://localhost:3000/filter?q=${encodedSearchQuery}`);
+    router.push(`/filter?q=${encodedSearchQuery}`);
   }
 
   const routeToProduct = (productId: number) => {

@@ -291,7 +291,7 @@ const ShopItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinis
           <div id="product-details" className="flex flex-row p-2 bg-gray-300">
             <div id="product-detail-img-container" className=" flex justify-center items-center">
               <img className="w-36 h-36 object-cover"
-                src={`http://localhost:3000/${transaction?.order?.at(0)?.product?.image?.split(",")[0]}`}
+                src={transaction?.order?.at(0)?.product?.image?.split(",")[0]}
                 onError={({ currentTarget }) => {
                   currentTarget.onerror = null; // prevents looping
                   currentTarget.src = "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"

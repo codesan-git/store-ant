@@ -197,7 +197,7 @@ const SellerDashboard = ({ TransactionDashboardArguments, shop }: Props) => {
                 <div id="photo-and-details-container" className="bg-gray-300 flex flex-row lg:flex-col justify-start lg:justify-center items-center px-4 lg:px-2 py-4 lg:space-y-2 space-x-4 lg:space-x-0">
                     <div id="profile-photo-container" className="">
                         <div className="w-16 lg:w-24 rounded-full border border-black">
-                            <img src={`http://localhost:3000/${shop?.image}`} alt="" width={500} height={300} className="rounded-full" />
+                            <img src={shop?.image} alt="" width={500} height={300} className="rounded-full" />
                         </div>
                     </div>
                     <div id="shop-details-container" className="flex flex-col items-start lg:items-center lg:space-y-1">

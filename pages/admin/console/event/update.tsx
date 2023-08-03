@@ -27,7 +27,7 @@ interface Event {
   
 export default function Event({event} : Event) {
   const [form, setForm] = useState<FormData>({eventName: event.eventName, eventPath: event.eventPath, startDate: formatDate(event.startDate), endDate: formatDate(event.endDate), image: event.image});
-  const [selectedImage, setSelectedImage] = useState<string>(`http://localhost:3000/${event.image}`);
+  const [selectedImage, setSelectedImage] = useState<string>(event.image);
   const [selectedFile, setSelectedFile] = useState<any>();
   const router = useRouter()
   const {id} = router.query;
@@ -42,7 +42,7 @@ export default function Event({event} : Event) {
         formData.append("startDate", form.startDate);
         formData.append("endDate", form.endDate);
         //formData.append("image", selectedFile);
-        await axios.put(`http://localhost:3000/api/admin/event/${id}`, formData).then(() => {router.back() });
+        await axios.put(`/api/admin/event/${id}`, formData).then(() => {router.back() });
     } catch (error: any) {
         //console.log(error);
     }

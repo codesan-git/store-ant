@@ -58,7 +58,7 @@ export default function Detail({ complain }: ComplainData) {
 
   async function onCommentDetail() {
     router.push({
-      pathname: "http://localhost:3000/shop/complain/response/detail",
+      pathname: "/shop/complain/response/detail",
       query: {id: complain.id}
     })
   }
@@ -77,7 +77,7 @@ export default function Detail({ complain }: ComplainData) {
                 {complain?.image.split(",").map((image) => (
                   <img
                     className="rounded-md w-40 h-40"
-                    src={`http://localhost:3000/${image}`}
+                    src={image}
                     onError={({ currentTarget }) => {
                       currentTarget.onerror = null; // prevents looping
                       currentTarget.src =

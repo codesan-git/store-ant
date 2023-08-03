@@ -21,7 +21,7 @@ export default function Admin({ events }: EventData) {
   const router = useRouter();
 
   async function handleSignOut() {
-    signOut({ callbackUrl: "http://localhost:3000/admin/login" });
+    signOut({ callbackUrl: "/admin/login" });
   }
 
   async function onEdit(id:string) {
@@ -33,7 +33,7 @@ export default function Admin({ events }: EventData) {
   
   async function onDelete(id:string) {
     try{
-      fetch(`http://localhost:3000/api/admin/event/${id}`, {
+      fetch(`/api/admin/event/${id}`, {
         headers: {
           'Content-Type' : 'application/json'
         },
@@ -84,7 +84,7 @@ export default function Admin({ events }: EventData) {
                     <figure className="rounded-md h-40 w-40">
                       {event.image ? (
                         <img
-                          src={`http://localhost:3000/${event.image}`}                                        
+                          src={event.image}                                        
                           onError={({ currentTarget }) => {
                             currentTarget.onerror = null; // prevents looping
                             currentTarget.src =

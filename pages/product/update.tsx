@@ -65,11 +65,11 @@ export default function CreateShop({product} : FetchData) {
       if(urls.join(",") != "" ){
         if(urls.length == files.length){        
           const data = {imageString: oldImages.join(","), name: form.name, price: form.price, stock: form.stock, categoryId: form.categoryId, urls: urls.join(",")}
-          axios.put(`http://localhost:3000/api/product/${product.id}`, data).then(() => { router.back() });
+          axios.put(`/api/product/${product.id}`, data).then(() => { router.back() });
         }
       } else if(oldImages.length != 0 && files.length == 0) {
           const data = {imageString: oldImages.join(","), name: form.name, price: form.price, stock: form.stock, categoryId: form.categoryId, urls: urls.join(",")}
-          axios.put(`http://localhost:3000/api/product/${product.id}`, data).then(() => { router.back() });
+          axios.put(`/api/product/${product.id}`, data).then(() => { router.back() });
       }
     }
   },[urls, oldImages, isSubmit]);

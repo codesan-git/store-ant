@@ -57,13 +57,13 @@ export default function Cart({ cartItems, mainAddress }: Props) {
   function onCheckout(){
     const cartId:CartId = {id: data}
     try{
-      fetch('http://localhost:3000/api/cart/checkout', {
+      fetch('/api/cart/checkout', {
           body: JSON.stringify(cartId),
           headers: {
               'Content-Type' : 'application/json'
           },
           method: 'PUT'
-      }).then(()=> router.push("http://localhost:3000/transactions"))
+      }).then(()=> router.push("/transactions"))
     }catch(error){
         //console.log(error)
     }
@@ -86,7 +86,7 @@ export default function Cart({ cartItems, mainAddress }: Props) {
                       <div className="card-body py-5">
                           <figure className="rounded-md h-40 w-40">
                               {cartItem.product.image? (
-                                  <img src={`http://localhost:3000/${cartItem.product.image}`}/>
+                                  <img src={cartItem.product.image}/>
                               ) : (
                                   <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"/>
                               )}

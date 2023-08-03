@@ -31,7 +31,7 @@ export default function EditProfile({profile} : Profile) {
 
   async function create(data:FormData) {
     try{
-        fetch('http://localhost:3000/api/profile/setting', {
+        fetch('/api/profile/setting', {
             body: JSON.stringify(data),
             headers: {
                 'Content-Type' : 'application/json'

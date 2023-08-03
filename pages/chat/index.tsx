@@ -58,7 +58,7 @@ export default function Chat({messages, recipient} : Messages) {
     setMessageForm({...messageForm, message: ""});
     setAllMessage([...allMessage, messageForm]);
     try{
-        fetch('http://localhost:3000/api/chat/send', {
+        fetch('/api/chat/send', {
             body: JSON.stringify(messageForm),
             headers: {
                 'Content-Type' : 'application/json'

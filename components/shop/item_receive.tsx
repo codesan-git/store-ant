@@ -56,18 +56,18 @@ const ItemReceiveModal = ({ htmlElementId: id, selectProductCallback }: Props) =
 
   async function onBayar() {
     const params: Params = { id: selectedTransaction.id, price: totalPrice + cost?.cost[0].value! };
-    const transactionToken: TransactionToken = (await axios.post(`http://localhost:3000/api/cart/pay`, params)).data;
+    const transactionToken: TransactionToken = (await axios.post(`/api/cart/pay`, params)).data;
     window.open(transactionToken.redirectUrl);
   }
 
   async function onBayarDenganSaldo() {
     const params: Params = { id: selectedTransaction.id, price: totalPrice + cost?.cost[0].value! };
-    const transactionToken: TransactionToken = (await axios.post(`http://localhost:3000/api/cart/paywithbalance`, params)).data;
+    const transactionToken: TransactionToken = (await axios.post(`/api/cart/paywithbalance`, params)).data;
     window.open(transactionToken.redirectUrl);
   }
 
   async function onItemReceive() {
-    const terimaTransactions = await axios.put(`http://localhost:3000/api/shop/itemreceive`, {
+    const terimaTransactions = await axios.put(`/api/shop/itemreceive`, {
       id: selectedTransaction?.id
     }).then(router.reload)
   }
@@ -86,7 +86,7 @@ const ItemReceiveModal = ({ htmlElementId: id, selectProductCallback }: Props) =
     const data = { shopId: selectedTransaction?.shopId, totalWeight: totalWeight };
     console.log(data);
     try {
-      const response = await axios.post(`http://localhost:3000/api/cart/shipping`, data);
+      const response = await axios.post(`/api/cart/shipping`, data);
       const { cost: costData } = response.data;
       console.log("cost: ", costData);
       setCost(costData);
@@ -114,7 +114,7 @@ const ItemReceiveModal = ({ htmlElementId: id, selectProductCallback }: Props) =
             <div key={order.id} id="product-box" className="p-2 space-x-2 flex flex-row">
               <div id="product-detail-img-container" className=" flex justify-center items-center">
                 <img className="w-20 h-20 object-cover"
-                  src={`http://localhost:3000/${order?.product.image.split(",")[0]}`}
+                  src={`${order?.product.image.split(",")[0]}`}
                   onError={({ currentTarget }) => {
                     currentTarget.onerror = null; // prevents looping
                     currentTarget.src = "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"

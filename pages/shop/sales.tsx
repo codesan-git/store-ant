@@ -37,7 +37,7 @@ export default function Sales({finishedOrders, soldProducts, cancelled, returned
                   <div className="card-body py-5">
                       <figure className="rounded-md h-40 w-40">
                           {sold?.product.image? (
-                              <img src={`http://localhost:3000/${sold?.product.image.split(",")[0]}`}/>
+                              <img src={sold?.product.image.split(",")[0]}/>
                           ) : (
                               <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"/>
                           )}
@@ -67,7 +67,7 @@ export default function Sales({finishedOrders, soldProducts, cancelled, returned
                   <div className="card-body py-5">
                       <figure className="rounded-md h-40 w-40">
                           {returned?.product.image? (
-                              <img src={`http://localhost:3000/${returned?.product.image.split(",")[0]}`}/>
+                              <img src={returned?.product.image.split(",")[0]}/>
                           ) : (
                               <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"/>
                           )}

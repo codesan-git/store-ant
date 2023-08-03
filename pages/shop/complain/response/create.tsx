@@ -38,7 +38,7 @@ export default function Complain() {
         //formData.append("image", selectedFile);
         formData.append("complainId", complainId as string);
         formData.append("description", desc);
-        await axios.post('http://localhost:3000/api/shop/rejectreturn', formData).then(() => {router.back() });
+        await axios.post('/api/shop/rejectreturn', formData).then(() => {router.back() });
     } catch (error: any) {
         //console.log(error);
     }

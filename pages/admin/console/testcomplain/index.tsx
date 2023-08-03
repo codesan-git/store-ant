@@ -14,7 +14,7 @@ export default function ComplainAdmin({ getComplain }: Props) {
   const router = useRouter()
   const acceptStatus = async (id: string) => {
     try {
-      const response = await axios.patch(`http://localhost:3000/api/admin/complain/accept`, {
+      const response = await axios.patch(`/api/admin/complain/accept`, {
         id: id
       }).then(() => router.refresh())
 
@@ -25,7 +25,7 @@ export default function ComplainAdmin({ getComplain }: Props) {
 
   const rejectStatus = async (id: string) => {
     try {
-      const response = await axios.patch(`http://localhost:3000/api/admin/complain/reject`, {
+      const response = await axios.patch(`/api/admin/complain/reject`, {
         id: id
       }).then(() => router.refresh())
 

@@ -8,7 +8,7 @@ interface FormData {
   access_token?: string;
 }
 
-export default function Validation(props) {
+export default function Validation() {
   const router = useRouter();
   const { token: accessToken } = router.query;
   const [form, setForm] = useState<FormData>({
@@ -22,7 +22,7 @@ export default function Validation(props) {
     // console.log('form password', form.password)
     try {
       const response = await axios
-        .put(`http://localhost:3000/api/resetpassword/resetpassword`, form)
+        .put(`/api/resetpassword/resetpassword`, form)
         .then(() => {
           router.push("/login");
         });

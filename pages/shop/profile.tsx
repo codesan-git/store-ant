@@ -55,7 +55,7 @@ export default function Profile(shopData: ShopData) {
             () => {
                 getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
                     const data = { name: name, image: downloadURL };
-                    await axios.put("http://localhost:3000/api/shop/profile", data);
+                    await axios.put("/api/shop/profile", data);
                 }).then(() => router.reload());
             }
         );

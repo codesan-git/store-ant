@@ -681,7 +681,7 @@ export default function Profile({ shop, product, order }: Props) {
                                       <div id="product-detail-img-container" className=" flex justify-center items-center">
                                         <Image
                                           alt={`Product nama`}
-                                          src={`http://localhost:3000/${kecoa.product.image.split(",")[0]}`}
+                                          src={kecoa.product.image.split(",")[0]}
                                           width={800}
                                           height={400}
                                           quality={70}
