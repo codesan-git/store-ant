@@ -32,7 +32,7 @@ import { Shop, Product } from '@prisma/client'
 interface AppPaginationProps {
   getShop: Shop & {
     product: Product[]
-}
+  }
 }
 
 const Transition = forwardRef(function Transition(
@@ -46,7 +46,7 @@ const Transition = forwardRef(function Transition(
 
 const AppPagination: FC<AppPaginationProps> = ({ getShop }) => {
   const itemsPerPage = 5;
-  const totalPages = Math.ceil(getShop.product.length / itemsPerPage);
+  const totalPages = Math.ceil(getShop?.product.length / itemsPerPage);
   const [currentPage, setCurrentPage] = useState(1);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -61,8 +61,8 @@ const AppPagination: FC<AppPaginationProps> = ({ getShop }) => {
     const endIndex = startIndex + itemsPerPage;
 
     const sortedData = sortType === "DESCENDING"
-      ? getShop.product.slice().sort((a, b) => b.price - a.price)
-      : getShop.product.slice().sort((a, b) => a.price - b.price);
+      ? getShop?.product.slice().sort((a, b) => b.price - a.price)
+      : getShop?.product.slice().sort((a, b) => a.price - b.price);
 
     return sortedData.slice(startIndex, endIndex);
   };
@@ -244,7 +244,7 @@ const AppPagination: FC<AppPaginationProps> = ({ getShop }) => {
         </Dialog>
       </div>
       <div className='flex justify-between my-2'>
-        <h5 className='text-gray-600 my-auto'>{getShop.product.length.toString()} Produk</h5>
+        <h5 className='text-gray-600 my-auto'>{getShop?.product.length.toString()} Produk</h5>
         <Box >
           <ToggleButtonGroup
             color="primary"

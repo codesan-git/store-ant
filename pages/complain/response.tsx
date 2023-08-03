@@ -2,7 +2,6 @@ import { GetServerSideProps } from "next";
 import { getTypeTransactions } from "@/types";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import getDataOrders from "./action/getComplainSeller";
 import { Fragment, useState, useEffect } from "react";
 import { HiShoppingCart } from "react-icons/hi";
 import Box from '@mui/material/Box';

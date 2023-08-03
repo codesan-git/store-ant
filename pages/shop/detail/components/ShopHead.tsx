@@ -3,9 +3,12 @@ import { BiShareAlt, BiStore } from 'react-icons/bi'
 import { AiFillStar } from 'react-icons/ai'
 import { getTypeShop } from '@/types'
 import Image from 'next/image'
+import { Shop, Product } from '@prisma/client'
 
 interface ShopHeadProps {
-    getShop: getTypeShop
+    getShop: Shop & {
+        product: Product[]
+      }
 }
 
 const ShopHead: FC<ShopHeadProps> = ({ getShop }) => {
