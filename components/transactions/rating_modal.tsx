@@ -185,8 +185,12 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
             <Fragment>
                 <div className="flex flex-row mt-2 space-x-1">
                     <div id="image-placeholder" className="p-1 flex items-center">
-                        <img className="w-14 h-14 object-cover"
-                            src={order?.product?.image?.split(",")[0]}
+                        <Image
+                            alt=""
+                            width={1500}
+                            height={1500} 
+                            className="w-14 h-14 object-cover"
+                            src={String(order?.product?.image?.split(",")[0])}
                         />
                     </div>
                     <div className="p-2 flex items-center">
