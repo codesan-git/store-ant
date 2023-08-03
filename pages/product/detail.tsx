@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import ShopDetailCard from "@/components/product/shop_detail_card";
 import { Address, Shop, User } from "@prisma/client";
 import Link from "next/link";
+import Image from "next/image";
 
 interface FetchData {
   product: {
@@ -31,6 +32,9 @@ interface FetchData {
     order: Order;
   }[];
   mainAddress: Address
+  location:{
+    city: string
+  }
 }
 
 interface Order {
@@ -41,11 +45,11 @@ interface Transaction {
   user: User;
 }
 
-interface ProductInCart{
+interface ProductInCart {
   cart: Cart;
 }
 
-interface Cart{
+interface Cart {
   user: User;
 }
 
@@ -61,7 +65,7 @@ interface CartData {
   isCheckout: boolean;
 }
 
-export default function CreateShop({ product, ratings, mainAddress }: FetchData) {
+export default function CreateShop({ product, ratings, mainAddress, location }: FetchData) {
   const [count, setCount] = useState(0);
   const [index, setIndex] = useState(0);
   const [Subtotal, setSubtotal] = useState(0);
@@ -122,37 +126,37 @@ export default function CreateShop({ product, ratings, mainAddress }: FetchData)
     }
   }
 
-  function onImageClick(i: number){
+  function onImageClick(i: number) {
     let images = product.image.split(",");
     setSelectedImage(images[i]);
     setIndex(i)
   }
 
-   const renderRatingStars = (rating: Number) => { //Ugly hack, do not do this next time
+  const renderRatingStars = (rating: Number) => { //Ugly hack, do not do this next time
 
     let markedStars: Boolean[] = [];
 
-    for(let i = 1; i <= 5; i++) {
-      if(i <= rating.valueOf()){
+    for (let i = 1; i <= 5; i++) {
+      if (i <= rating.valueOf()) {
         markedStars.push(true);
       }
-      else{
+      else {
         markedStars.push(false);
       }
     }
 
-    
+
     return (
       <>
         <div className="flex flex-row">
           {markedStars.map((isMarked) => {
-            if(isMarked) return (
+            if (isMarked) return (
               <>
                 <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="w-6 h-6 fill-yellow-500"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="w-6 h-6 fill-yellow-500"
                 >
                   <path
                     fillRule="evenodd"
@@ -183,7 +187,7 @@ export default function CreateShop({ product, ratings, mainAddress }: FetchData)
         </div>
       </>
     );
-   }
+  }
 
   useEffect(() => {
     handleCount();
@@ -196,22 +200,22 @@ export default function CreateShop({ product, ratings, mainAddress }: FetchData)
       </Head>
       <Navbar />
       <div id='breadcrumb' className='breadcrumbs my-8'>
-          <ul>
-            <li>
-              <Link href={{
-                pathname: '/'
-              }}>Home</Link>
-            </li>
-            <li>
-              <Link href={{
-                pathname: '/filter',
-                query: {
-                  q: Number(product.category.id)
-                }
-              }}>{product.category.category}</Link>
-            </li>
-            <li>{product.name}</li>
-          </ul>
+        <ul>
+          <li>
+            <Link href={{
+              pathname: '/'
+            }}>Home</Link>
+          </li>
+          <li>
+            <Link href={{
+              pathname: '/filter',
+              query: {
+                q: Number(product.category.id)
+              }
+            }}>{product.category.category}</Link>
+          </li>
+          <li>{product.name}</li>
+        </ul>
       </div>
       <div className="sm:flex sm:flex-row">
         <section
@@ -220,7 +224,9 @@ export default function CreateShop({ product, ratings, mainAddress }: FetchData)
         >
           <div id="product-image-container" className="p-4 w-full h-auto">
             <div className="w-full h-auto relative">
-              <img
+              <Image
+                width={1500}
+                height={1500}
                 src={selectedImage}
                 onError={({ currentTarget }) => {
                   currentTarget.onerror = null; // prevents looping
@@ -228,19 +234,21 @@ export default function CreateShop({ product, ratings, mainAddress }: FetchData)
                     "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg";
                 }}
                 alt=""
-                className="mx-auto my-auto h-auto"
-              />           
+                className="mx-auto my-auto w-96 h-96"
+              />
               <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-                <button disabled={index === 0 ? true : false} onClick={()=> onImageClick(index - 1)} className="btn btn-circle btn-sm lg:btn-md">❮</button>
-                <button disabled={index === product.image.split(",").length - 1 ? true : false} onClick={()=> onImageClick(index + 1)} className="btn btn-circle btn-sm lg:btn-md">❯</button>
+                <button disabled={index === 0 ? true : false} onClick={() => onImageClick(index - 1)} className="btn btn-circle btn-sm lg:btn-md">❮</button>
+                <button disabled={index === product.image.split(",").length - 1 ? true : false} onClick={() => onImageClick(index + 1)} className="btn btn-circle btn-sm lg:btn-md">❯</button>
               </div>
             </div>
             <div className="flex h-40 mt-5 gap-x-5">
-              {product.image.split(",").map((image, i)=>(
-                <img
-                  key = {i}
+              {product.image.split(",").map((image, i) => (
+                <Image
+                  width={1500}
+                  height={1500}
+                  key={i}
                   src={image}
-                  onClick={()=>{onImageClick(i)}}
+                  onClick={() => { onImageClick(i) }}
                   onError={({ currentTarget }) => {
                     currentTarget.onerror = null; // prevents looping
                     currentTarget.src =
@@ -316,7 +324,7 @@ export default function CreateShop({ product, ratings, mainAddress }: FetchData)
             </p>
           </div>
           <div id="store-details" className="p-4 border-b-gray-300 border-b-2">
-            <ShopDetailCard shop={product.shop} />
+            <ShopDetailCard shop={product.shop} location={location.city} />
           </div>
           <div id="reviews" className="p-4 border-b-gray-300 border-b-2">
             <h1 className="text-2xl mb-2">Reviews</h1>
@@ -327,23 +335,29 @@ export default function CreateShop({ product, ratings, mainAddress }: FetchData)
                     className="card bg-base-100 shadow-xl text-md"
                     key={String(rating.id)}
                   >
-                      <div className="flex">
-                        <div id='rating-profile-picture-container' className='mx-5 w-1/3 flex sm:w-auto'>
+                    <div className="flex">
+                      <div id='rating-profile-picture-container' className='mx-5 w-1/3 flex sm:w-auto'>
                         {rating?.order?.transaction?.user?.image ? (
-                            <img
-                              className='mt-5 object-cover rounded-full w-16 h-16 sm:h-16 border-2 border-gray-600'
-                              src={`${rating?.order?.transaction?.user.image}`}                              
-                              onError={({ currentTarget }) => {
-                                currentTarget.onerror = null; // prevents looping
-                                currentTarget.src =
+                          <Image
+                            width={1500}
+                            height={1500}
+                            alt=""
+                            className='mt-5 object-cover rounded-full w-16 h-16 sm:h-16 border-2 border-gray-600'
+                            src={`${rating?.order?.transaction?.user.image}`}
+                            onError={({ currentTarget }) => {
+                              currentTarget.onerror = null; // prevents looping
+                              currentTarget.src =
                                 "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
-                              }}
-                            />
+                            }}
+                          />
                         ) : (
-                            <img 
-                              className='mt-5 object-cover rounded-full w-16 h-16 sm:h-16 border-2 border-gray-600'
-                              src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg" 
-                            />
+                          <Image
+                            width={1500}
+                            height={1500}
+                            alt=""
+                            className='mt-5 object-cover rounded-full w-16 h-16 sm:h-16 border-2 border-gray-600'
+                            src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
+                          />
                         )}
                       </div>
                       <div className="w-full">
@@ -355,26 +369,26 @@ export default function CreateShop({ product, ratings, mainAddress }: FetchData)
                             {renderRatingStars(rating.rate)}
                             <p>{rating?.comment}</p>
                             {rating.image ? (
-                                <div className="flex gap-x-2">
-                                  {rating.image.split(",").map((image, i) => (
-                                    <img
+                              <div className="flex gap-x-2">
+                                {rating.image.split(",").map((image, i) => (
+                                  <img
                                     key={i}
-                                      className='object-cover w-64 h-auto border-2 border-gray-600'
-                                      src={`http:\\\\localhost:3000\\\\${image}`}                              
-                                      onError={({ currentTarget }) => {
-                                        currentTarget.onerror = null; // prevents looping
-                                        currentTarget.src =
+                                    className='object-cover w-64 h-auto border-2 border-gray-600'
+                                    src={`http:\\\\localhost:3000\\\\${image}`}
+                                    onError={({ currentTarget }) => {
+                                      currentTarget.onerror = null; // prevents looping
+                                      currentTarget.src =
                                         "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
-                                      }}
-                                    />
-                                  ))}
-                                </div>
+                                    }}
+                                  />
+                                ))}
+                              </div>
                             ) : (
-                                <img 
-                                  hidden={true}
-                                  className='object-cover w-64 h-64 sm:h-16 border-2 border-gray-600'
-                                  src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg" 
-                                />
+                              <img
+                                hidden={true}
+                                className='object-cover w-64 h-64 sm:h-16 border-2 border-gray-600'
+                                src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
+                              />
                             )}
                           </div>
                         </div>
@@ -440,20 +454,20 @@ export default function CreateShop({ product, ratings, mainAddress }: FetchData)
           </div>
         </section>
         <div id='mobile-item-order-section' className='lg:hidden fixed bottom-0 left-0 bg-blue-gray-300 flex flex-row p-2 h-18 w-screen align-middle justify-center'>
-            <section id='price-section' className='w-1/2 flex flex-row justify-center'>
-              {/* <div id='text-container' className='h-10 w-auto p-1 flex items-center justify-center text-white'>
+          <section id='price-section' className='w-1/2 flex flex-row justify-center'>
+            {/* <div id='text-container' className='h-10 w-auto p-1 flex items-center justify-center text-white'>
                 <h1>Price: Rp.{product.price.toString()}</h1>
               </div> */}
-              <button className='h-10 w-40 p-1 rounded-md bg-green-800 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
-                Placeholder Button
-              </button>
-            </section>
-            <section id='button-actions-section' className='w-1/2 space-x-2 flex flex-row justify-center'>
-              <button onClick={() => checkout(1)} className='h-10 w-20 p-1 rounded-md bg-green-800 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
-                Beli
-              </button>
-              <button onClick={()=> addToCart(1)} className='h-10 w-24 p-1 rounded-md bg-green-800 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
-                Add to cart
+            <button className='h-10 w-40 p-1 rounded-md bg-green-800 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
+              Placeholder Button
+            </button>
+          </section>
+          <section id='button-actions-section' className='w-1/2 space-x-2 flex flex-row justify-center'>
+            <button onClick={() => checkout(1)} className='h-10 w-20 p-1 rounded-md bg-green-800 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
+              Beli
+            </button>
+            <button onClick={() => addToCart(1)} className='h-10 w-24 p-1 rounded-md bg-green-800 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
+              Add to cart
             </button>
           </section>
         </div>
@@ -492,6 +506,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     },
   });
 
+  const location = await prisma.address.findFirst({
+    where:{profile:{
+      userId: product?.shop.userId
+    }},
+    select:{
+      city:true
+    }
+  })
+
   console.log("product: ", product);
   const ratings = await prisma.rating.findMany({
     where: {
@@ -527,7 +550,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     props: {
       product,
       ratings,
-      mainAddress
+      mainAddress,
+      location
     },
   };
 };
