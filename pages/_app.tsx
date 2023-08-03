@@ -31,9 +31,9 @@ const App = ({
   const app = initializeApp(firebaseConfig);
   //const analytics = getAnalytics(app);
 
-  useEffect(() => {
-    TagManager.initialize({ gtmId: 'GTM-KFR823HK' });
-  }, []);
+  // useEffect(() => {
+  //   TagManager.initialize({ gtmId: 'GTM-KFR823HK' });
+  // }, []);
 
   return (
     <>
@@ -41,7 +41,7 @@ const App = ({
         strategy="lazyOnload" 
         src={`https://www.googletagmanager.com/gtag/js?id=G-E22DXYR0LM`}
       />
-      <Script strategy="lazyOnload">
+      {/* <Script strategy="lazyOnload">
         {
           `window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
@@ -49,7 +49,7 @@ const App = ({
           
           gtag('config', 'G-E22DXYR0LM');`
         }
-      </Script>
+      </Script> */}
 
       <NextIntlProvider locale="en" timeZone="Asia/Bangkok">
         <SessionProvider session={pageProps.session}>
