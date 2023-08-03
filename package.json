@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "test": "jest --watch",
     "coverage": "jest --coverage",
-    "cypress:open": "cypress open"
+    "cypress:open": "cypress open",
+    "ngrok": "ngrok http 3000"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -62,6 +63,7 @@
     "autoprefixer": "^10.4.14",
     "jest": "^25.0.0",
     "jest-environment-jsdom": "^29.5.0",
+    "ngrok": "^5.0.0-beta.2",
     "postcss": "^8.4.21",
     "prisma": "^4.11.0",
     "tailwindcss": "^3.2.7"
