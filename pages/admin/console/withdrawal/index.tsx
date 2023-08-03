@@ -3,7 +3,6 @@ import { GetServerSideProps } from "next";
 import { prisma } from "@/lib/prisma";
 import { useRouter } from "next/router";
 import { Shop, BalanceType, WithdrawalStatus } from "@prisma/client";
-import WithdrawalDetail from "@/components/transactions/withdrawal_detail_modal";
 import Image from "next/image";
 
 interface WithdrawalData {
@@ -105,7 +104,6 @@ export default function Withdrawal({ withdrawals }: WithdrawalData) {
           <p>No on going transaction</p>
         )}
       </div>
-      <WithdrawalDetail htmlElementId={`withdrawal-modal`} selectProductCallback={getWithdrawalDetail}/>
     </div>
   );
 }
