@@ -61,10 +61,10 @@ const AppPagination: FC<AppPaginationProps> = ({ getShop }) => {
     const endIndex = startIndex + itemsPerPage;
 
     const sortedData = sortType === "DESCENDING"
-      ? getShop?.product.slice().sort((a, b) => b.price - a.price)
-      : getShop?.product.slice().sort((a, b) => a.price - b.price);
+      ? getShop?.product?.slice().sort((a, b) => b.price - a.price)
+      : getShop?.product?.slice().sort((a, b) => a.price - b.price);
 
-    return sortedData.slice(startIndex, endIndex);
+    return sortedData?.slice(startIndex, endIndex);
   };
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -102,6 +102,7 @@ const AppPagination: FC<AppPaginationProps> = ({ getShop }) => {
   });
 
 
+  console.log(`getshop`, getShop)
   return (<>
     <div id='product-desktop' className='hidden lg:block'>
       <h1 className='text-2xl font-bold mb-4'>Semua Produk</h1>
