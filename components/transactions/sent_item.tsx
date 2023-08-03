@@ -97,7 +97,7 @@ const SentItemModal = ({htmlElementId: id, selectProductCallback} : Props) => {
 
   useEffect(() => {
     getCost();
-  }, []);
+  }, [selectedTransaction]);
 
   return (
     <>

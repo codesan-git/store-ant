@@ -1,16 +1,30 @@
-import { Shop, User } from "@prisma/client";
+import { Shop, User, Profile, Address } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useState } from "react";
 
 interface Props{
     shop: Shop & {
         user: User;
-    }
+    };
+    location: string
 }
 
-const ShopDetailCard = ({shop}: Props) => {
+interface Cost {
+  cost:{
+    etd: string,
+    value: number
+  }[],
+  service: string
+}
+
+const ShopDetailCard = ({shop, location}: Props) => {
+
+  // const {selectedTransaction} = shop?.user?.
+
+  // const [cost, setCost] = useState<Cost>();
 
   const router = useRouter();
 
@@ -24,6 +38,7 @@ const ShopDetailCard = ({shop}: Props) => {
     })
   }
 
+  console.log(`data shop`, location)
   return (
     <>
       <div id="shop-details" className=''>
@@ -92,7 +107,7 @@ const ShopDetailCard = ({shop}: Props) => {
               </div>
               <div id='location-information' className='px-2'>
                 <p className='font-thin flex flex-row'>
-                    Dikirim dari <span className='font-bold'>&nbsp;Jakarta Pusat</span>
+                    Dikirim dari <span className='font-bold'>&nbsp;{location}</span>
                 </p>
               </div>
             </div>
