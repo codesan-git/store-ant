@@ -182,7 +182,6 @@ export default function CreateProduct() {
         <section className="pl-4 lg:w-1/2 flex lg:flex-col lg:justify-center lg:items-center">
           <div className="lg:w-5/6 justify-start">
             <h1 className=" text-2xl  font-bold mb-2 font-bold">Add Product</h1>
-            <h1 className=" text-2xl  font-bold mb-2 font-bold">IMAGE COUNT: {urls.length}</h1>
           </div>
         </section>
       </div>
