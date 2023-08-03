@@ -1,4 +1,3 @@
-import Orders from "@/pages/shop/orders";
 import { Product, ProductInCart, Shop, TransactionStatus } from "@prisma/client";
 import axios from "axios";
 import Image from "next/image";
