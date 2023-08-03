@@ -1,7 +1,7 @@
 import { File } from "buffer";
-import React from "react";
+import React, {useState} from "react";
 
-export default function upload() {
+export default function Upload() {
   const { useState } = React;
   const [files, setFile] = useState<any[]>([]);
   const [message, setMessage] = useState("");

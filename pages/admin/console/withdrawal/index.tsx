@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { useRouter } from "next/router";
 import { Shop, BalanceType, WithdrawalStatus } from "@prisma/client";
 import WithdrawalDetail from "@/components/transactions/withdrawal_detail_modal";
+import Image from "next/image";
 
 interface WithdrawalData {
     withdrawals: Withdrawal[];
@@ -51,8 +52,11 @@ export default function Withdrawal({ withdrawals }: WithdrawalData) {
                   <div className="card-body py-5">
                     <figure className="h-20 w-20 rounded-full">
                       {withdrawal.user.image ? (
-                        <img
+                        <Image
                           src={withdrawal.user.image}
+                          alt=""
+                          width={1500}
+                          height={1500}
                           onError={({ currentTarget }) => {
                             currentTarget.onerror = null; // prevents looping
                             currentTarget.src =
@@ -60,7 +64,12 @@ export default function Withdrawal({ withdrawals }: WithdrawalData) {
                           }}
                         />
                       ) : (
-                        <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg" />
+                        <Image 
+                          src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg" 
+                          alt=""
+                          width={1500}
+                          height={1500}  
+                        />
                       )}
                     </figure>
                   </div>

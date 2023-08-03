@@ -3,6 +3,7 @@ import { GetServerSideProps } from "next";
 import { prisma } from "@/lib/prisma";
 import { useRouter } from "next/router";
 import { signOut } from "next-auth/react";
+import Image from "next/image";
 
 interface EventData {
   events: Event[];
@@ -83,8 +84,11 @@ export default function Admin({ events }: EventData) {
                   <div className="card-body py-5">
                     <figure className="rounded-md h-40 w-40">
                       {event.image ? (
-                        <img
-                          src={event.image}                                        
+                        <Image
+                          src={event.image}    
+                          alt=""
+                          width={1500}
+                          height={1500}                                    
                           onError={({ currentTarget }) => {
                             currentTarget.onerror = null; // prevents looping
                             currentTarget.src =
@@ -92,7 +96,12 @@ export default function Admin({ events }: EventData) {
                           }}
                         />
                       ) : (
-                        <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg" />
+                        <Image 
+                          src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
+                          alt=""
+                          width={1500}
+                          height={1500}
+                          />
                       )}
                     </figure>
                   </div>

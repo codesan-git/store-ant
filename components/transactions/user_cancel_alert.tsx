@@ -1,5 +1,6 @@
 import { Product, TransactionStatus} from "@prisma/client";
 import axios from "axios";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
@@ -70,16 +71,18 @@ const CancelAlert = ({htmlElementId: id, selectProductCallback} : Props) => {
                 <label htmlFor={id} className="text-lg font-bold">✕</label>
             </div>
           </div>
-          {selectedTransaction?.order.map((order)=> (
-            <div id="product-box" className="p-2 space-x-2 flex flex-row">
+          {selectedTransaction?.order.map((order:any)=> (
+            <div key={order} id="product-box" className="p-2 space-x-2 flex flex-row">
             <div id="product-detail-img-container" className=" flex justify-center items-center">
-                <img className="w-20 h-20 object-cover" 
+                <Image className="w-20 h-20 object-cover" 
                     src={order?.product.image.split(",")[0]}
                     onError={({ currentTarget }) => {
                         currentTarget.onerror = null; // prevents looping
                         currentTarget.src = "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
                     }}
                     alt=''
+                    width={1500}
+                    height={1500}
                 />
             </div>
             <div className="mx-5">                

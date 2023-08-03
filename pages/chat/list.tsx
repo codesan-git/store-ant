@@ -55,7 +55,7 @@ export default function List() {
                     </tr>
                 </thead>
                 {conversations?.map((conversation, i) => (
-                    <tbody>
+                    <tbody key={conversation.id}>
                         <td className={(i % 2 == 1 ? "bg-gray-100" : "bg-white")}>
                             {conversation.messages[0].senderId == session?.user.id ? (
                                 <div className="flex items-center space-x-3">

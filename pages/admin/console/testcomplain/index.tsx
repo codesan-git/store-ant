@@ -4,6 +4,7 @@ import { getDataComplain } from "@/types";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { Fragment } from "react";
+import Image from "next/image";
 
 interface Props {
   getComplain: getDataComplain[]
@@ -62,9 +63,12 @@ export default function ComplainAdmin({ getComplain }: Props) {
                 <th>{comp.id}</th>
                 <td className="flex gap-4">
                   {comp.image.split(",").map((kocak: string) => (
-                    <img
+                    <Image
                       key={kocak}
-                      src={`http://localhost:3000\\${kocak}`}
+                      src={kocak}
+                      alt=""
+                      width={1500}
+                      height={1500}
                       className="w-16 h-16"
                     />
                   ))}
@@ -78,9 +82,12 @@ export default function ComplainAdmin({ getComplain }: Props) {
                 <td>{comp.ShopComment.description}</td>
                 <td className="flex gap-4">
                   {comp.ShopComment.image?.split(",").map((kocak: string) => (
-                    <img
+                    <Image
                       key={kocak}
-                      src={`http://localhost:3000\\${kocak}`}
+                      src={kocak}
+                      width={1500}
+                      height={1500}
+                      alt=""
                       className="w-16 h-16"
                     />
                   ))}
