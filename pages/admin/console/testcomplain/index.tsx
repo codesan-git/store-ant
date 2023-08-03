@@ -1,10 +1,11 @@
 import { GetServerSideProps } from "next";
-import getData from "./action/getComplainAdmin";
+// import getData from "./action/getComplainAdmin";
 import { getDataComplain } from "@/types";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { Fragment } from "react";
 import Image from "next/image";
+import { prisma } from "@/lib/prisma";
 
 interface Props {
   getComplain: getDataComplain[]
@@ -123,11 +124,55 @@ export default function ComplainAdmin({ getComplain }: Props) {
   )
 }
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const complain = await getData()
+  const getComplain = await prisma.complain.findMany({
+    include: {
+        order: {
+            include: {
+                transaction: {
+                    include:{
+                        user:true,
+                        shop:true
+                    }
+                },
+                product:{
+                    select:{
+                        name:true
+                    }
+                }
+            }
+        },
+        ShopComment: true
+    }
+})
+const safeComplain = getComplain.map((complain) => ({
+    ...complain,
+    order: {
+        ...complain.order,
+        createdAt: complain.order.createdAt.toISOString(),
+        updatedAt: complain.order.updatedAt.toISOString(),
+        transaction: {
+            ...complain.order.transaction,
+            createdAt: complain.order.transaction.createdAt.toISOString(),
+            updatedAt: complain.order.transaction.updatedAt.toISOString(),
+            user:{
+                ...complain.order.transaction.user,
+            },
+            shop:{
+                ...complain.order.transaction.shop,
+            }
+        },
+        product:{
+            name: complain.order.product.name
+        }
+    },
+    ShopComment: {
+        ...complain.ShopComment
+    }
+}))
 
   return {
     props: {
-      getComplain: complain
+      getComplain: safeComplain
     },
   };
 }
