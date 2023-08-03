@@ -2,6 +2,7 @@ import { FC } from 'react'
 import { BiShareAlt, BiStore } from 'react-icons/bi'
 import { AiFillStar } from 'react-icons/ai'
 import { getTypeShop } from '@/types'
+import Image from 'next/image'
 
 interface ShopHeadProps {
     getShop: getTypeShop
@@ -13,9 +14,11 @@ const ShopHead: FC<ShopHeadProps> = ({ getShop }) => {
             <div className='grid grid-cols-2 gap-4 border border-red-900'>
                 <div className='flex p-4 gap-4'>
                     <div className='my-auto'>
-                        <img
+                        <Image
                             src={getShop.image as string}
                             alt={getShop.shopName}
+                            width={1500}
+                            height={1500}
                             className='rounded-full align-middle w-32 h-32'
                         />
                     </div>
@@ -72,9 +75,11 @@ const ShopHead: FC<ShopHeadProps> = ({ getShop }) => {
             <div className=' gap-4 border'>
                 <div className='flex py-2 gap-4'>
                     <div className='my-auto'>
-                        <img
+                        <Image
                             src={getShop.image as string}
                             alt={getShop.shopName}
+                            width={1500}
+                            height={1500}
                             className='rounded-full align-middle w-16 h-16'
                         />
                     </div>

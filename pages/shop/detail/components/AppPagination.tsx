@@ -27,8 +27,12 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import ViewModuleIcon from '@mui/icons-material/ViewModule';
 
+import { Shop, Product } from '@prisma/client'
+
 interface AppPaginationProps {
-  getShop: getTypeShop;
+  getShop: Shop & {
+    product: Product[]
+}
 }
 
 const Transition = forwardRef(function Transition(
@@ -223,14 +227,6 @@ const AppPagination: FC<AppPaginationProps> = ({ getShop }) => {
                   }}
                   className='border border-gray-600 rounded-full'
                 />
-                {/* <MenuItem
-                  value="ASCENDING"
-                  onClick={() => {
-                    handleSortChange("ASCENDING")
-                    handleCloseModal()
-                  }}
-                  className='border border-gray-600 rounded-full'
-                >Harga Terendah</MenuItem> */}
               </Grid>
               <Grid item>
                 <Chip
