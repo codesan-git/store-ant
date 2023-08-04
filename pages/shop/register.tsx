@@ -4,15 +4,18 @@ import { useState } from 'react';
 import { useRouter } from 'next/router'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useSession } from 'next-auth/react';
 
 interface FormData{
     shopname: string,
-    address: string
+    address: string,
+    image: string
 }
 
 export default function CreateShop() {
-  const [form, setForm] = useState<FormData>({shopname: '', address: ''})
-  const router = useRouter()
+  const [form, setForm] = useState<FormData>({shopname: '', address: '', image: ''});
+  const router = useRouter();
+  const {data: session} = useSession();
   
   async function create(data:FormData) {
     try{
@@ -22,7 +25,7 @@ export default function CreateShop() {
                 'Content-Type' : 'application/json'
             },
             method: 'POST'
-        }).then(()=> { setForm({shopname: '', address: ''}); router.back() })
+        }).then(()=> { setForm({shopname: '', address: '', image: session?.user.image!}); router.back() })
     }catch(error){
         //console.log(error)
     }
