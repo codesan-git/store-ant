@@ -81,27 +81,13 @@ const ShopHead: FC<ShopHeadProps> = ({ getShop }) => {
             <div className=' gap-4 border'>
                 <div className='flex py-2 gap-4'>
                     <div className='my-auto'>
-                        {getShop?.image === null || getShop?.image === "" ?
-                            <>
-                                <Image
-                                    src={session?.user.image as string}
-                                    alt=''
-                                    width={1500}
-                                    height={1500}
-                                    className='rounded-full align-middle w-16 h-16 '
-                                />
-                            </>
-                            :
-                            <>
-                                <Image
-                                    src={getShop?.image as string}
-                                    alt={getShop?.shopName}
-                                    width={1500}
-                                    height={1500}
-                                    className='rounded-full align-middle w-16 h-16'
-                                />
-                            </>
-                        }
+                        <Image
+                            src={getShop?.image as string}
+                            alt={getShop?.shopName}
+                            width={1500}
+                            height={1500}
+                            className='rounded-full align-middle w-16 h-16'
+                        />
                     </div>
                     <div>
                         <h2 className='font-bold text-xl capitalize mb-1'>{getShop?.shopName}</h2>
