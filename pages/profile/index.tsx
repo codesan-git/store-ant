@@ -198,13 +198,13 @@ export default function Profile({ profile, user, address, provinceData, cityData
     const storage = getStorage();
     const storageRef = ref(storage, `images/profile/${session?.user.email}`);
 
-    let pictureRef = ref(storage, session?.user.image!);
-    console.log(pictureRef);
-    deleteObject(pictureRef).then(() => {
-      console.log("deleted");
-    }).catch((error) => {
-      console.log("error: ", error);
-    })
+    // let pictureRef = ref(storage, session?.user.image!);
+    // console.log(pictureRef);
+    // deleteObject(pictureRef).then(() => {
+    //   console.log("deleted");
+    // }).catch((error) => {
+    //   console.log("error: ", error);
+    // })
 
     const uploadTask = uploadBytesResumable(storageRef, file);
     uploadTask.on('state_changed', 
