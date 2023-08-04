@@ -15,7 +15,7 @@ export default async function handler(
   const session = await getSession({req})
 
   try {
-    const hashedPassword = await bcrypt.hash(password, 12)
+    const hashedPassword = await bcrypt.hash(password, 12);
     await prisma.profile.upsert({
       where: {userId: session?.user?.id},
       create: {
@@ -31,7 +31,7 @@ export default async function handler(
         password: hashedPassword,
         phoneNumber: phonenumber
       }
-    })
+    });
     res.status(200).json({ message: 'Profile created' })
   } catch (error) {
     //console.log(error)
