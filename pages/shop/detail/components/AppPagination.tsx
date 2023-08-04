@@ -27,8 +27,12 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import ViewModuleIcon from '@mui/icons-material/ViewModule';
 
+import { Shop, Product } from '@prisma/client'
+
 interface AppPaginationProps {
-  getShop: getTypeShop;
+  getShop: Shop & {
+    product: Product[]
+  }
 }
 
 const Transition = forwardRef(function Transition(
@@ -42,7 +46,7 @@ const Transition = forwardRef(function Transition(
 
 const AppPagination: FC<AppPaginationProps> = ({ getShop }) => {
   const itemsPerPage = 5;
-  const totalPages = Math.ceil(getShop.product.length / itemsPerPage);
+  const totalPages = Math.ceil(getShop?.product.length / itemsPerPage);
   const [currentPage, setCurrentPage] = useState(1);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -57,10 +61,10 @@ const AppPagination: FC<AppPaginationProps> = ({ getShop }) => {
     const endIndex = startIndex + itemsPerPage;
 
     const sortedData = sortType === "DESCENDING"
-      ? getShop.product.slice().sort((a, b) => b.price - a.price)
-      : getShop.product.slice().sort((a, b) => a.price - b.price);
+      ? getShop?.product?.slice().sort((a, b) => b.price - a.price)
+      : getShop?.product?.slice().sort((a, b) => a.price - b.price);
 
-    return sortedData.slice(startIndex, endIndex);
+    return sortedData?.slice(startIndex, endIndex);
   };
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -98,6 +102,7 @@ const AppPagination: FC<AppPaginationProps> = ({ getShop }) => {
   });
 
 
+  console.log(`getshop`, getShop)
   return (<>
     <div id='product-desktop' className='hidden lg:block'>
       <h1 className='text-2xl font-bold mb-4'>Semua Produk</h1>
@@ -118,7 +123,7 @@ const AppPagination: FC<AppPaginationProps> = ({ getShop }) => {
         </FormControl>
       </Box>
       <div className='grid grid-cols-5 gap-2'>
-        {getCurrentPageData().map((product) => (
+        {getCurrentPageData()?.map((product) => (
           <div key={product.id}>
             <Card sx={{ height: 350 }} className='flex rounded-lg'>
               <CardActionArea>
@@ -223,14 +228,6 @@ const AppPagination: FC<AppPaginationProps> = ({ getShop }) => {
                   }}
                   className='border border-gray-600 rounded-full'
                 />
-                {/* <MenuItem
-                  value="ASCENDING"
-                  onClick={() => {
-                    handleSortChange("ASCENDING")
-                    handleCloseModal()
-                  }}
-                  className='border border-gray-600 rounded-full'
-                >Harga Terendah</MenuItem> */}
               </Grid>
               <Grid item>
                 <Chip
@@ -248,7 +245,7 @@ const AppPagination: FC<AppPaginationProps> = ({ getShop }) => {
         </Dialog>
       </div>
       <div className='flex justify-between my-2'>
-        <h5 className='text-gray-600 my-auto'>{getShop.product.length.toString()} Produk</h5>
+        <h5 className='text-gray-600 my-auto'>{getShop?.product.length.toString()} Produk</h5>
         <Box >
           <ToggleButtonGroup
             color="primary"
@@ -266,7 +263,7 @@ const AppPagination: FC<AppPaginationProps> = ({ getShop }) => {
       {alignment === "web" ?
         <>
           <div className='grid grid-cols-2 gap-2' >
-            {getCurrentPageData().map((product) => (
+            {getCurrentPageData()?.map((product) => (
               <div key={product.id}>
                 <Card sx={{ height: 275 }} className='flex rounded-lg'>
                   <CardActionArea>
@@ -326,7 +323,7 @@ const AppPagination: FC<AppPaginationProps> = ({ getShop }) => {
         :
         <>
           <div className='gap-2' >
-            {getCurrentPageData().map((product) => (
+            {getCurrentPageData()?.map((product) => (
               <div key={product.id}>
                 <Card sx={{}} className='flex rounded-lg justify-start mb-2'>
                   <CardActionArea

@@ -9,8 +9,12 @@ import { getTypeShop } from '@/types';
 import AppPagination from './AppPagination';
 import { BsBox2Fill, BsFillStarFill } from 'react-icons/bs';
 import { FaStore } from 'react-icons/fa';
+
+import { Shop, Product } from '@prisma/client'
 interface ProductListProps {
-    getShop: getTypeShop
+    getShop: Shop & {
+        product: Product[]
+    }
 }
 
 interface TabPanelProps {
@@ -38,7 +42,7 @@ function CustomTabPanel(props: TabPanelProps) {
         </div>
     );
 }
-
+// 
 function a11yProps(index: number) {
     return {
         id: `simple-tab-${index}`,

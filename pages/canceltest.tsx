@@ -19,7 +19,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     courier: "jne",
   };
   const costRes = await axios.post("https://api.rajaongkir.com/starter/cost", form, options);
-  const cost = costRes.data.rajaongkir.results[0].costs.filter((x) => x.service == "REG")[0].cost;
+  const cost = costRes.data.rajaongkir.results[0].costs.filter((x:any) => x.service == "REG")[0].cost;
   console.log("cost: ", cost);
   return {
     props:{

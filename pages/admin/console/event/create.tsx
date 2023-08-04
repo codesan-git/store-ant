@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/router'
 import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject  } from "firebase/storage";
 import axios from 'axios';
+import Image from 'next/image';
 
 interface FormData{
   eventName: string,
@@ -50,7 +51,7 @@ export default function Event() {
 
   const renderSelectedImage = () => {
 
-    if(selectedImage) return <img src={selectedImage} alt="Unable to display selected image" className='w-full h-1/2 object-cover'/>;
+    if(selectedImage) return <Image src={selectedImage} alt="Unable to display selected image" className='w-full h-1/2 object-cover' width={1500} height={1500}/>;
   }
 
   function formatDate(date : Date) {
@@ -72,7 +73,7 @@ export default function Event() {
       <div id='title-hack-container' className=''>
         <section className='pl-4 lg:w-1/2 flex lg:flex-col lg:justify-center lg:items-center'>
           <div className='lg:w-5/6 justify-start'>
-            <h1 className=' text-2xl  font-bold mb-2 font-bold'>Add Event</h1>
+            <h1 className=' text-2xl mb-2 font-bold'>Add Event</h1>
           </div>
         </section>
       </div>

@@ -2,7 +2,7 @@ import React from "react";
 import { GetServerSideProps } from "next";
 import { prisma } from "@/lib/prisma";
 import { useRouter } from "next/router";
-import { User, Shop, Status } from "@prisma/client";
+import Image from "next/image";
 
 interface ShopComment {
     shopComment: {
@@ -43,7 +43,11 @@ export default function Detail({ shopComment }: ShopComment) {
             {shopComment.image ? (
               <div className="rounded-md h-40 w-40 flex gap-5">
                 {shopComment.image.split(",").map((image) => (
-                  <img
+                  <Image
+                    key={image}
+                    alt=""
+                    width={1500}
+                    height={1500}
                     className="rounded-md w-40 h-40"
                     src={image}
                     onError={({ currentTarget }) => {
@@ -55,7 +59,12 @@ export default function Detail({ shopComment }: ShopComment) {
                 ))}
               </div>
             ) : (
-              <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg" />
+              <Image 
+                src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg" 
+                alt=""
+                width={1500}
+                height={1500}  
+              />
             )}
           </div>
           <div className="w-full">

@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { useRouter } from "next/router";
 import { User, Shop, OrderStatus } from "@prisma/client";
 import Navbar from "../navbar";
+import Image from "next/image";
 
 interface ComplainData {
   complain: {
@@ -83,7 +84,11 @@ export default function Detail({ complain }: ComplainData) {
             {complain.image ? (
               <div className="rounded-md h-40 w-40 flex gap-5">
                 {complain.image.split(",").map((image) => (
-                  <img
+                  <Image
+                    alt=""
+                    key={image}
+                    width={1500}
+                    height={1500}
                     className="rounded-md w-40 h-40"
                     src={image}
                     onError={({ currentTarget }) => {
@@ -95,7 +100,12 @@ export default function Detail({ complain }: ComplainData) {
                 ))}
               </div>
             ) : (
-              <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg" />
+              <Image 
+                src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg" 
+                alt=""
+                width={1500}
+                height={1500}
+              />
             )}
           </div>
           <div className="w-full">

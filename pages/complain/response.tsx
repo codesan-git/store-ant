@@ -2,7 +2,6 @@ import { GetServerSideProps } from "next";
 import { getTypeTransactions } from "@/types";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import getDataOrders from "./action/getComplainSeller";
 import { Fragment, useState, useEffect } from "react";
 import { HiShoppingCart } from "react-icons/hi";
 import Box from '@mui/material/Box';
@@ -11,10 +10,20 @@ import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import { HiOutlineCamera, HiPlus } from "react-icons/hi";
 import { HiOutlinePhoto } from "react-icons/hi2";
-import { getStorage, ref, uploadBytesResumable, getDownloadURL  } from "firebase/storage";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { prisma } from "@/lib/prisma";
+import { getSession } from "next-auth/react";
+import { Complain, Order, Transaction, User, Shop } from "@prisma/client";
 
 interface Props {
-  getOrders: getTypeTransactions[]
+  // getOrders: getTypeTransactions[]
+  getOrders: Transaction & {
+    order: Order[] & {
+      Complain: Complain
+    }
+    user: User;
+    shop: Shop;
+  }[]
 }
 
 interface FormData {
@@ -49,17 +58,17 @@ export default function ComplainAdmin({ getOrders }: Props) {
     description: "",
   });
   const [urls, setURLs] = useState<string[]>([]);
-  
+
   useEffect(() => {
     console.log("images: ", urls.join(","));
     console.log("url length: ", urls.length);
     console.log("files length: ", selectedFiles.length);
     console.log("condition: ", selectedFiles.length == urls.length);
-    if(urls.join(",") != "" && urls.length == selectedFiles.length){
-      const data = {complainId: form.complainId, description: form.description, images: urls.join(",")};
+    if (urls.join(",") != "" && urls.length == selectedFiles.length) {
+      const data = { complainId: form.complainId, description: form.description, images: urls.join(",") };
       axios.post(`/api/complain/seller/shopComment`, data).then(() => { console.log("created!"); router.back(); });
     }
-  },[urls]);
+  }, [urls]);
 
   const acceptStatus = async (id: string) => {
     try {
@@ -82,7 +91,7 @@ export default function ComplainAdmin({ getOrders }: Props) {
     // } catch (error) {
 
     // }
-  } 
+  }
 
 
   // const rejectStatus = async (id: string) => {
@@ -97,7 +106,7 @@ export default function ComplainAdmin({ getOrders }: Props) {
   // };
 
   const postComment = async () => {
-    const promises : any[] = [];
+    const promises: any[] = [];
     const storage = getStorage();
 
     selectedFiles.map((file) => {
@@ -416,11 +425,35 @@ export default function ComplainAdmin({ getOrders }: Props) {
   )
 }
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const complain = await getDataOrders(context)
+  // const complain = await getDataOrders(context)
+  const currUser = await getSession(context);
+  console.log(`currUser`, currUser?.user.id)
+  const getShop = await prisma.shop.findFirst({
+    where: {
+      userId: currUser?.user.id
+    }
+
+  })
+  console.log(`getShop`, getShop)
+  const getTransactions = await prisma.transaction.findMany({
+    where: {
+      shopId: getShop?.id
+    },
+    include: {
+      order: {
+        include: {
+          Complain: true
+        }
+      },
+      user: true,
+      shop: true
+    }
+  })
+  console.log(`getTransactions`, getTransactions)
 
   return {
     props: {
-      getOrders: JSON.parse(JSON.stringify(complain))
+      getOrders: JSON.parse(JSON.stringify(getTransactions))
     },
   };
 }
