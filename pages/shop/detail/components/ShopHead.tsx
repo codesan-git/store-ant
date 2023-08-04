@@ -81,7 +81,7 @@ const ShopHead: FC<ShopHeadProps> = ({ getShop }) => {
             <div className=' gap-4 border'>
                 <div className='flex py-2 gap-4'>
                     <div className='my-auto'>
-                        {getShop?.image === null ?
+                        {getShop?.image === null || getShop?.image === "" ?
                             <>
                                 <Image
                                     src={session?.user.image as string}
