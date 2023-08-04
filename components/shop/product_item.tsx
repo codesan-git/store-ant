@@ -3,6 +3,7 @@ import { HiLocationMarker } from "react-icons/hi";
 import { HiClipboard, HiOutlineClipboard, HiStar } from "react-icons/hi2";
 import { AiFillEdit } from "react-icons/ai";
 import Link from "next/link";
+import { Address } from "@prisma/client";
 
 interface Product {
   id: string,
@@ -20,10 +21,11 @@ interface Category{
 }
 
 interface Props {
-  product: Product
+  product: Product,
+  address: Address,
 }
 
-const ProductItem = ({ product } : Props) => {
+const ProductItem = ({ product, address } : Props) => {
   return (
     <Fragment>
       <div id="card" className="w-64 lg:w-5/6 bg-white h-96 rounded-lg shadow-lg relative">
@@ -57,7 +59,7 @@ const ProductItem = ({ product } : Props) => {
           </h1>
           <div className="text-sm flex flex-row items-center space-x-1">
             <HiLocationMarker className="fill-gray-600" />
-            Tangerang Selatan
+            {address.city}
           </div>
           <div className="flex flex-row space-x-2 text-sm">
             <div id="rating-container" className="flex flex-row items-center space-x-1">
