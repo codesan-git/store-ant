@@ -10,7 +10,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const {shopname, address} = req.body
+  const {shopname, address, image} = req.body
   const session = await getSession({req})
 
   try {
@@ -19,10 +19,12 @@ export default async function handler(
       where: {userId: session?.user?.id},
       create: {
         userId: session?.user?.id!,
-        shopName: shopname
+        shopName: shopname,
+        image: image
       },
       update: {
-        shopName: shopname
+        shopName: shopname,
+        image: image
       }
     })
     res.status(200).json({ message: 'Shop created' })
