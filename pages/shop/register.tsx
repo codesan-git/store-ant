@@ -18,6 +18,9 @@ export default function CreateShop() {
   const {data: session} = useSession();
   
   async function create(data:FormData) {
+    console.log("image: ", session?.user.image);
+    data.image = session?.user.image!;
+    console.log("data: ", data);
     try{
         fetch('/api/shop/setting', {
             body: JSON.stringify(data),
