@@ -4,14 +4,17 @@ import { AiFillStar } from 'react-icons/ai'
 import { getTypeShop } from '@/types'
 import Image from 'next/image'
 import { Shop, Product } from '@prisma/client'
+import { useSession } from "next-auth/react";
 
 interface ShopHeadProps {
     getShop: Shop & {
         product: Product[]
-      }
+    }
 }
 
 const ShopHead: FC<ShopHeadProps> = ({ getShop }) => {
+
+    const { data: session } = useSession();
     return <>
         <div id='head-desktop' className='hidden lg:block'>
             <div className='grid grid-cols-2 gap-4 border border-red-900'>
@@ -78,13 +81,27 @@ const ShopHead: FC<ShopHeadProps> = ({ getShop }) => {
             <div className=' gap-4 border'>
                 <div className='flex py-2 gap-4'>
                     <div className='my-auto'>
-                        <Image
-                            src={getShop?.image as string}
-                            alt={getShop?.shopName}
-                            width={1500}
-                            height={1500}
-                            className='rounded-full align-middle w-16 h-16'
-                        />
+                        {getShop?.image ?
+                            <>
+                                <Image
+                                    src={getShop?.image as string}
+                                    alt={getShop?.shopName}
+                                    width={1500}
+                                    height={1500}
+                                    className='rounded-full align-middle w-16 h-16'
+                                />
+                            </>
+                            :
+                            <>
+                                <Image
+                                    src={session?.user.image as string}
+                                    alt=''
+                                    width={1500}
+                                    height={1500}
+                                    className='rounded-full align-middle w-16 h-16'
+                                />
+                            </>
+                        }
                     </div>
                     <div>
                         <h2 className='font-bold text-xl capitalize mb-1'>{getShop?.shopName}</h2>
