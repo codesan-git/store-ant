@@ -83,7 +83,7 @@ export default function Profile({shop, products, address} : Props) {
               </div>
             </div>
             <div id='product-list' className='flex flex-row overflow-y-auto space-x-4 lg:space-x-0 lg:grid lg:grid-cols-5 lg:gap-y-10 w-full'>
-              {products.map((product, i) => <ProductItem key={i} product={product}/>)}
+              {products.map((product, i) => <ProductItem key={i} product={product} address={address}/>)}
             </div>
           </div>
         </div>
