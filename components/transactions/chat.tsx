@@ -163,7 +163,18 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
     if(e.key  === 'Enter'){
       e.preventDefault();
       socket.emit("send-message", newMessage);
-      setCurrentChatroomMessages([...currentChatroomMessages as Message[], newMessage as Message]);
+      
+      const messageToBeAdded: Message = {
+        id: newMessage?.id,
+        message: newMessage?.message as string,
+        senderId: newMessage?.senderId as string,
+        recipientId: newMessage?.recipientId as string,
+        sender: newMessage?.sender as User,
+        recipient: newMessage?.recipient as User,
+        createdAt: new Date(Date.now())
+      }
+  
+      setCurrentChatroomMessages([...currentChatroomMessages as Message[], messageToBeAdded]);
 
       try{
         fetch('/api/chat/send', {
@@ -200,20 +211,32 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
   const handleMobileSubmitMessage = (e: FormEvent) => {
     e.preventDefault();
     socket.emit("send-message", newMessage);
-      setCurrentChatroomMessages([...currentChatroomMessages as Message[], newMessage as Message]);
-      try{
-          fetch('/api/chat/send', {
-              body: JSON.stringify(newMessage),
-              headers: {
-                  'Content-Type' : 'application/json'
-              },
-              method: 'POST'
-          }).then()
-      }catch(error){
-          //console.log(error)
-      }
-  
-      setNewMessage({...newMessage as Message, message: ""});
+
+    const messageToBeAdded: Message = {
+      id: newMessage?.id,
+      message: newMessage?.message as string,
+      senderId: newMessage?.senderId as string,
+      recipientId: newMessage?.recipientId as string,
+      sender: newMessage?.sender as User,
+      recipient: newMessage?.recipient as User,
+      createdAt: new Date(Date.now())
+    }
+
+    setCurrentChatroomMessages([...currentChatroomMessages as Message[], messageToBeAdded]);
+
+    try{
+        fetch('/api/chat/send', {
+            body: JSON.stringify(newMessage),
+            headers: {
+                'Content-Type' : 'application/json'
+            },
+            method: 'POST'
+        }).then()
+    }catch(error){
+        //console.log(error)
+    }
+
+    setNewMessage({...newMessage as Message, message: ""});
   }
   
   const chatroomItemOnClick = (conversation: Conversation) => {
@@ -355,7 +378,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
     recipientId: String(selectedRecepient?.id),
     sender: session?.user as unknown as User,
     senderId: String(session?.user.id),
-    createdAt: new Date(Date.now())
+    // createdAt: new Date(Date.now())
   });
   
   return (
