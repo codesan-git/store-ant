@@ -81,11 +81,11 @@ const ShopHead: FC<ShopHeadProps> = ({ getShop }) => {
             <div className=' gap-4 border'>
                 <div className='flex py-2 gap-4'>
                     <div className='my-auto'>
-                        {getShop?.image ?
+                        {getShop?.image === null ?
                             <>
                                 <Image
-                                    src={getShop?.image as string}
-                                    alt={getShop?.shopName}
+                                    src={session?.user.image as string}
+                                    alt=''
                                     width={1500}
                                     height={1500}
                                     className='rounded-full align-middle w-16 h-16'
@@ -94,8 +94,8 @@ const ShopHead: FC<ShopHeadProps> = ({ getShop }) => {
                             :
                             <>
                                 <Image
-                                    src={session?.user.image as string}
-                                    alt=''
+                                    src={getShop?.image as string}
+                                    alt={getShop?.shopName}
                                     width={1500}
                                     height={1500}
                                     className='rounded-full align-middle w-16 h-16'
