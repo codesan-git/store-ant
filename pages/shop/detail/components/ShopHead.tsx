@@ -88,7 +88,7 @@ const ShopHead: FC<ShopHeadProps> = ({ getShop }) => {
                                     alt=''
                                     width={1500}
                                     height={1500}
-                                    className='rounded-full align-middle w-16 h-16'
+                                    className='rounded-full align-middle w-16 h-16 '
                                 />
                             </>
                             :
