@@ -188,6 +188,24 @@ export default function Profile({ profile, user, address, provinceData, cityData
         method: "POST",
       }).then(() => {
         router.push(router.asPath);
+        alert("address deleted!");
+      });
+    } catch (error) {
+      //console.log(error);
+    }
+  }
+
+  function onDeleteAddress(id: number){
+    const addressId = {id: id};
+    try {
+      fetch("/api/address/delete", {
+        body: JSON.stringify(addressId),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+      }).then(() => {
+        router.push(router.asPath);
       });
     } catch (error) {
       //console.log(error);
@@ -479,7 +497,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
                           </span>
                         </label>
                       </div>
-                      {profile?.username == form.username ? (
+                      {profile?.username == form.username || form.username == "" || form.username!.indexOf(" ") >= 0 ? (
                         <>
                           <div className="modal-action">
                             <a
@@ -687,7 +705,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
                             )}
                           </div>
                           <p className="text-primary hidden lg:block">|</p>
-                          <a className="text-primary-focus">Hapus</a>
+                          <a className="text-primary-focus cursor-pointer" onClick={() => onDeleteAddress(address.id)}>Hapus</a>
                         </div>
                       </div>
                     </div>
