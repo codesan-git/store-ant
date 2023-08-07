@@ -62,7 +62,7 @@ export default function (req: any, res: any) {
       <p>
         ${req.body.token}
       </p>
-      <a href="/validation?token=${req.body.token}" class="button">Verification</a>
+      <a href="http://localhost:3000/validation?token=${req.body.token}" class="button">Verification</a>
     </div>
   </body>`,
   };
