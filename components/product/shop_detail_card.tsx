@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface Props{
     shop: Shop & {
@@ -26,7 +26,10 @@ const ShopDetailCard = ({shop, location}: Props) => {
 
   // const [cost, setCost] = useState<Cost>();
 
+  const session = useSession();
   const router = useRouter();
+
+  const [isUser, setIsUser] = useState<boolean>(false);
 
   const onPenjualClick = () => {
     router.push(`/transactions?newChatUserId=${shop.userId}`);
@@ -37,6 +40,10 @@ const ShopDetailCard = ({shop, location}: Props) => {
       pathname: `/shop/detail/${shop.shopName}`,
     })
   }
+
+  useEffect(() => {
+    if(shop.userId === session.data?.user.id) setIsUser(true);
+  }, []);
 
   console.log(`data shop`, location)
   return (
@@ -89,7 +96,7 @@ const ShopDetailCard = ({shop, location}: Props) => {
               </div>
             </div>
             <div className="w-full lg:w-1/2  mt-2">
-              <button onClick={onPenjualClick} className="w-full md:w-48 p-2 bg-blue-700 hover:bg-blue-500 transition text-white">
+              <button hidden={isUser} onClick={onPenjualClick} className="w-full md:w-48 p-2 bg-blue-700 hover:bg-blue-500 transition text-white">
                 Tanya Penjual
               </button>
             </div>
