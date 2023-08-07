@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ChangeEvent } from "react";
 import styles from "../../styles/Form.module.css";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
@@ -40,6 +40,8 @@ export default function CreateProduct() {
   const [selectedImage, setSelectedImage] = useState<string>();
   const [selectedFiles, setFile] = useState<any[]>([]);
   const [urls, setURLs] = useState<string[]>([]);
+  const [productQuantity, setProductQuantitiy] = useState<number>(0);
+  const [productPrice, setProductPrice] = useState<number>(0);
   
   useEffect(() => {
     console.log("images: ", urls.join(","));
@@ -119,6 +121,24 @@ export default function CreateProduct() {
         alert("All images uploaded");
       })
       .then((err) => console.log(err));
+  }
+
+  const handleQuantityChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const quantity = Number(event.target.value);
+
+    if(quantity < 0) return;
+
+    setProductQuantitiy(quantity);
+    setForm({ ...form, stock: quantity.valueOf().toString() });
+  }
+
+  const handlePriceChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const price = Number(event.target.value);
+
+    if(price < 0) return;
+
+    setProductPrice(price);
+    setForm({ ...form, price: price.valueOf().toString() });
   }
 
   const renderInputMessage = () => {
@@ -258,8 +278,8 @@ export default function CreateProduct() {
                 name="product-quantity"
                 type="number"
                 className="p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white"
-                value={form?.stock}
-                onChange={(e) => setForm({ ...form, stock: e.target.value })}
+                value={productQuantity}
+                onChange={handleQuantityChange}
               />
             </div>
             <div className="flex flex-col space-y-1 w-full">
@@ -271,8 +291,8 @@ export default function CreateProduct() {
                 name="product-price"
                 type="number"
                 className="p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white"
-                value={form?.price}
-                onChange={(e) => setForm({ ...form, price: e.target.value })}
+                value={productPrice}
+                onChange={handlePriceChange}
               />
             </div>
             <div className="flex flex-col space-y-1 w-full">
