@@ -40,9 +40,7 @@ export default function CreateProduct() {
   const [selectedImage, setSelectedImage] = useState<string>();
   const [selectedFiles, setFile] = useState<any[]>([]);
   const [urls, setURLs] = useState<string[]>([]);
-  const [productQuantity, setProductQuantitiy] = useState<number>(0);
-  const [productPrice, setProductPrice] = useState<number>(0);
-  
+
   useEffect(() => {
     console.log("images: ", urls.join(","));
     console.log("url length: ", urls.length);
@@ -128,7 +126,7 @@ export default function CreateProduct() {
 
     if(quantity < 0) return;
 
-    setProductQuantitiy(quantity);
+
     setForm({ ...form, stock: quantity.valueOf().toString() });
   }
 
@@ -137,7 +135,6 @@ export default function CreateProduct() {
 
     if(price < 0) return;
 
-    setProductPrice(price);
     setForm({ ...form, price: price.valueOf().toString() });
   }
 
@@ -278,7 +275,7 @@ export default function CreateProduct() {
                 name="product-quantity"
                 type="number"
                 className="p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white"
-                value={productQuantity}
+                value={form.stock}
                 onChange={handleQuantityChange}
               />
             </div>
@@ -291,7 +288,7 @@ export default function CreateProduct() {
                 name="product-price"
                 type="number"
                 className="p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white"
-                value={productPrice}
+                value={form.price}
                 onChange={handlePriceChange}
               />
             </div>

@@ -1,5 +1,5 @@
 import styles from '../../styles/Form.module.css'
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ChangeEvent } from 'react';
 import { useRouter } from 'next/router'
 import { GetServerSideProps } from 'next'
 import { prisma } from "../../lib/prisma"
@@ -56,6 +56,10 @@ export default function CreateShop({product} : FetchData) {
   const productImages = product.image.split(",");
   const [images, setImages] = useState<string[]>(productImages);
   const router = useRouter();
+
+  const [productQuantity, setProductQuantitiy] = useState<number>(0);
+  const [productPrice, setProductPrice] = useState<number>(0);
+  
   
   useEffect(() => {
     console.log("condition: ", files.length == urls.length);
@@ -166,6 +170,24 @@ export default function CreateShop({product} : FetchData) {
     }
   }
 
+  const handleQuantityChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const quantity = Number(event.target.value);
+
+    if(quantity < 0) return;
+
+    setProductQuantitiy(quantity);
+    setForm({ ...form, stock: quantity.valueOf().toString() });
+  }
+
+  const handlePriceChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const price = Number(event.target.value);
+
+    if(price < 0) return;
+
+    setProductPrice(price);
+    setForm({ ...form, price: price.valueOf().toString() });
+  }
+
   const renderSelectedImage = () => {
 
     if(selectedImage) return <img src={selectedImage} alt="Unable to display selected image" className='w-full h-1/2 object-cover'/>;
@@ -250,13 +272,13 @@ export default function CreateShop({product} : FetchData) {
             <div className='flex flex-col space-y-1 w-full'> 
               <label htmlFor="product-quantity-input" className='font-bold'>Quantity</label>
               <input id='product-quantity-input' name='product-quantity' type="number" className='p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white'
-                value={form?.stock} onChange={e => setForm({...form, stock: e.target.value})}
+                value={form?.stock} onChange={handleQuantityChange}
               />
             </div>
             <div className='flex flex-col space-y-1 w-full'>
               <label htmlFor="product-price-input" className='font-bold'>Price</label>
               <input id='product-price-input' name='product-price' type="number" className='p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white'
-                value={form?.price} onChange={e => setForm({...form, price: e.target.value})}
+                value={form?.price} onChange={handlePriceChange}
               />
             </div>
             <div className='flex flex-col space-y-1 w-full'>
