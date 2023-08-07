@@ -73,23 +73,35 @@ const authOptions : NextAuthOptions = {
     },
     callbacks: {
       async jwt({ token, account, user }) {
+        console.log("masuk jwt callback, user: ", user);
         // Persist the OAuth access_token and or the user id to the token right after signin
         if (account) {
+          console.log("masuk account, account: ", account);
           token.accessToken = account.access_token;
+          console.log("account token: ", account.access_token);
           const userData = await prisma.user.findUnique({
-            where: {id: user?.id}
+            where: {id: user?.id!}
           })
           token.id = user?.id;
           token.role = userData?.Role;
+        } else {
+          const account = await prisma.account.findFirst({
+            where: {userId: user?.id!}
+          });          
+          console.log("masuk else account");
+          token.accessToken = account?.access_token!;
+          console.log("account token: ", account?.access_token!);
         }
+
         return token;
       },
       async session({ session, token, user }) {
         // Send properties to the client, like an access_token and user id from a provider.
-        session.user.accessToken = token.accessToken as string
-        session.user.id = token.id as string
+        session.user.accessToken = token.accessToken as string;
+        console.log("TOKEN: ", token);
+        session.user.id = token.id as string;
         const userData = await prisma.user.findUnique({
-          where: {id: session.user.id}
+          where: {id: session.user.id!}
         })
         if(userData?.image?.includes("images\\profiles")){
           session.user.image = `${userData.image}`;
