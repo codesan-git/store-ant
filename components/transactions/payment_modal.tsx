@@ -66,6 +66,12 @@ const PaymentModal = ({htmlElementId: id, selectProductCallback} : Props) => {
     window.open(transactionToken.redirectUrl);
   }
 
+  async function onTerima() {
+    await axios.put(`/api/shop/deliver`, {
+      id: selectedTransaction?.id
+    }).then(router.reload)
+  }
+
   const onSubmit = async () => {
     if(isUsingBalance)
         onBayarDenganSaldo();

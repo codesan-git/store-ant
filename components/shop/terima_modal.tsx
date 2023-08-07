@@ -1,5 +1,6 @@
 import { Product, TransactionStatus } from "@prisma/client";
 import axios from "axios";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -26,7 +27,7 @@ interface Cost {
   service: string
 }
 
-const TerimaModal = ({ htmlElementId: id, selectProductCallback }: Props) => {
+const PaymentModal = ({ htmlElementId: id, selectProductCallback }: Props) => {
   const {
     selectedTransaction
   } = selectProductCallback();
@@ -83,8 +84,8 @@ const TerimaModal = ({ htmlElementId: id, selectProductCallback }: Props) => {
       totalWeight += selectedTransaction?.order[i].product.weight;
     }
 
-    const data = { shopId: selectedTransaction?.shopId, totalWeight: totalWeight };
-    console.log(data);
+    const data = { shopId: selectedTransaction?.shopId, totalWeight: totalWeight, transactionId: selectedTransaction?.id };
+    console.log("DATA: ", data);
     try {
       const response = await axios.post(`/api/cart/shipping`, data);
       const { cost: costData } = response.data;
@@ -99,7 +100,6 @@ const TerimaModal = ({ htmlElementId: id, selectProductCallback }: Props) => {
     getCost();
   }, [selectedTransaction]);
 
-  console.log(`cost`, cost)
   return (
     <>
       <input type="checkbox" id={id} className="modal-toggle" />
@@ -114,7 +114,10 @@ const TerimaModal = ({ htmlElementId: id, selectProductCallback }: Props) => {
           {selectedTransaction?.order.map((order: any) => (
             <div key={order.id} id="product-box" className="p-2 space-x-2 flex flex-row">
               <div id="product-detail-img-container" className=" flex justify-center items-center">
-                <img className="w-20 h-20 object-cover"
+                <Image
+                  className="w-20 h-20 object-cover"
+                  width={1500}
+                  height={1500}
                   src={order?.product.image.split(",")[0]}
                   onError={({ currentTarget }) => {
                     currentTarget.onerror = null; // prevents looping
@@ -131,8 +134,8 @@ const TerimaModal = ({ htmlElementId: id, selectProductCallback }: Props) => {
             </div>
           ))}
           <p className="text-lg font-bold">Detail Pengiriman</p>
-          {cost?.cost?.length! > 0 ?
-            <>
+          {cost?.cost?.length! > 0 ? (
+            <div>
               <p>Kurir: JNE</p>
               <p>Layanan: {cost?.service}</p>
               <p>Estimasi Pengiriman: {cost?.cost[0]?.etd} hari</p>
@@ -146,19 +149,19 @@ const TerimaModal = ({ htmlElementId: id, selectProductCallback }: Props) => {
               </form>
               <div className="" onClick={onSubmit}>
                 <label htmlFor={id} className="h-10 w-full rounded text-white bg-indigo-700 hover:bg-indigo-900 hover:cursor-pointer flex justify-center items-center">
-                  Terima
+                  Submit
                 </label>
               </div>
-            </>
-            :
-            <>
+            </div>
+          ) : (
+            <div>
               <p>{cost?.service}</p>
-            </>
-          }
+            </div>
+          )}
         </div>
       </div>
     </>
   );
 };
 
-export default TerimaModal;
+export default PaymentModal;
