@@ -74,8 +74,7 @@ export default function Profile({shop, products, address} : Props) {
           {/* <ShopDashboard shop={shop}/> */}
           <div id='dashboard-content' className='w-full bg-gray-100 lg:p-5 space-y-2'>
             <h1 className='hidden lg:block text-2xl'>Seller Home</h1>
-            {/* <Agungageng shop={shop} kodok={onSelect} onKerang={onKerang} /> */}
-            <div  id='new-item-input-container'className='lg:grid lg:grid-cols-5 w-full' >
+            {/* <div  id='new-item-input-container'className='lg:grid lg:grid-cols-5 w-full' >
               <div className='cursor-pointer' onClick={()=> onNewItem()}>
                 <div id='new-item-input' className='border-dashed border-2 border-black p-2 w-full lg:w-5/6 h-10 flex justify-center items-center'>
                   <h1>{'(+) New Item'}</h1>
@@ -84,7 +83,7 @@ export default function Profile({shop, products, address} : Props) {
             </div>
             <div id='product-list' className='flex flex-row overflow-y-auto space-x-4 lg:space-x-0 lg:grid lg:grid-cols-5 lg:gap-y-10 w-full'>
               {products.map((product, i) => <ProductItem key={i} product={product}/>)}
-            </div>
+            </div> */}
           </div>
         </div>
         {/* <Footer /> */}
