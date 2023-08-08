@@ -21,7 +21,11 @@ interface FetchData {
     image: string;
     averageRating: number;
     shop: Shop & {
-      user: User;
+      user: {
+        id: string;
+        image: string;
+        name: string;
+      };
     }
   };
   ratings: {
@@ -500,7 +504,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       averageRating: true,
       shop: {
         include: {
-          user: true
+          user: {
+            select:{
+              id: true,
+              image: true,
+              name: true
+            }
+          }
         }
       }
     },
@@ -549,7 +559,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
       product,
-      ratings,
+      ratings: JSON.parse(JSON.stringify(ratings)),
       mainAddress,
       location
     },

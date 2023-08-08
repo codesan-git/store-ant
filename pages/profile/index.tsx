@@ -32,6 +32,7 @@ import AddressFormModal from "@/components/profile/address_form_modal";
 import { BankAccount, BankType } from "@prisma/client";
 import BankAccountFormModal from "@/components/profile/bank_account_form_modal";
 import BankAccountDeletionModal from "@/components/profile/bank_account_deletion_modal";
+import DeleteAddressAlert from "@/components/address_delete_modal";
 
 interface FormData {
   username?: string;
@@ -95,6 +96,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
   const [token, setToken] = useState("")
   const [selectedFile, setSelectedFile] = useState<File>();
   const [submitted, setSubmitted] = useState(false);
+  const [selectedAddressId, setSelectedAddressId] = useState(0);
 
   // const [photo, setPhoto] = useState<ChangePhoto>({
   //   photo: session?.user?.image!
@@ -196,20 +198,21 @@ export default function Profile({ profile, user, address, provinceData, cityData
   }
 
   function onDeleteAddress(id: number){
-    const addressId = {id: id};
-    try {
-      fetch("/api/address/delete", {
-        body: JSON.stringify(addressId),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-      }).then(() => {
-        router.push(router.asPath);
-      });
-    } catch (error) {
-      //console.log(error);
-    }
+    setSelectedAddressId(id);
+    // const addressId = {id: id};
+    // try {
+    //   fetch("/api/address/delete", {
+    //     body: JSON.stringify(addressId),
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     method: "POST",
+    //   }).then(() => {
+    //     router.push(router.asPath);
+    //   });
+    // } catch (error) {
+    //   //console.log(error);
+    // }
   }
 
   async function changePhoto(file: any){
@@ -705,7 +708,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
                             )}
                           </div>
                           <p className="text-primary hidden lg:block">|</p>
-                          <a className="text-primary-focus cursor-pointer" onClick={() => onDeleteAddress(address.id)}>Hapus</a>
+                          <label className="text-primary-focus cursor-pointer" onClick={() => onDeleteAddress(address.id)} htmlFor="address-alert">Hapus</label>
                         </div>
                       </div>
                     </div>
@@ -798,6 +801,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
           </Tabs>
         </div>
       </div>
+      <DeleteAddressAlert htmlElementId={`address-alert`} addressId={selectedAddressId}/>
       <Footer />
     </>
   );

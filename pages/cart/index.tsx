@@ -32,6 +32,7 @@ interface CartId {
 export default function Cart({ cartItems, mainAddress }: Props) {
   console.log("address: ", mainAddress);
   const [data, setData] = useState<string[]>([]); 
+  const [checkoutClick, setCheckoutClick] = useState(false);
   const router = useRouter();
 
   if (cartItems) {
@@ -55,6 +56,7 @@ export default function Cart({ cartItems, mainAddress }: Props) {
   }
 
   function onCheckout(){
+    setCheckoutClick(true);
     const cartId:CartId = {id: data}
     try{
       fetch('/api/cart/checkout', {
@@ -113,9 +115,15 @@ export default function Cart({ cartItems, mainAddress }: Props) {
       ) : (
         <></>
       )}
-      <button disabled={(data.length === 0 || mainAddress == null)? true : false} onClick={()=> onCheckout()} className='w-36 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
-        Checkout
-      </button>
+      {(data.length === 0 || mainAddress == null) ? (        
+        <button disabled={true} onClick={()=> onCheckout()} className='w-36 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
+          Checkout
+        </button>
+      ) : (        
+        <button disabled={checkoutClick} onClick={()=> onCheckout()} className='w-36 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
+          Checkout
+        </button>
+      )}
     </div>
   );
 }

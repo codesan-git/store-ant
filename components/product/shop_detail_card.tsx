@@ -7,7 +7,11 @@ import { useEffect, useState } from "react";
 
 interface Props{
     shop: Shop & {
-        user: User;
+      user: {
+        id: string;
+        image: string;
+        name: string;
+      };
     };
     location: string
 }
