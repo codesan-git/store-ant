@@ -110,15 +110,12 @@ export default function Profile({ profile, user, address, provinceData, cityData
   const [token, setToken] = useState("")
   const [selectedFile, setSelectedFile] = useState<File>();
   const [submitted, setSubmitted] = useState(false);
-<<<<<<< HEAD
   const [selectedAddressId, setSelectedAddressId] = useState(0);
-=======
   // const [gender, setGender] = useState('');
 
   const handleChange = (event: SelectChangeEvent) => {
     setForm({ ...form, gender: event.target.value });
   };
->>>>>>> 936cf6621c493b9ab43a5af6506c71bb125a921e
 
   console.log(address);
 
@@ -218,7 +215,6 @@ export default function Profile({ profile, user, address, provinceData, cityData
     }
   }
 
-<<<<<<< HEAD
   function onDeleteAddress(id: number){
     setSelectedAddressId(id);
     // const addressId = {id: id};
@@ -235,23 +231,6 @@ export default function Profile({ profile, user, address, provinceData, cityData
     // } catch (error) {
     //   //console.log(error);
     // }
-=======
-  function onDeleteAddress(id: number) {
-    const addressId = { id: id };
-    try {
-      fetch("/api/address/delete", {
-        body: JSON.stringify(addressId),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-      }).then(() => {
-        router.push(router.asPath);
-      });
-    } catch (error) {
-      //console.log(error);
-    }
->>>>>>> 936cf6621c493b9ab43a5af6506c71bb125a921e
   }
 
   async function changePhoto(file: any) {
@@ -437,7 +416,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
     }
   };
 
-  const getDate = format(new Date(profile.birthDate.replace(/-/g,",")),"d MMMM yyyy")
+  const getDate = profile.birthDate ? format(new Date(profile.birthDate?.replace(/-/g,",")),"d MMMM yyyy") : "-";
 
   const data = [
     {
