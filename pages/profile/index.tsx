@@ -33,6 +33,7 @@ import { BankAccount, BankType } from "@prisma/client";
 import BankAccountFormModal from "@/components/profile/bank_account_form_modal";
 import BankAccountDeletionModal from "@/components/profile/bank_account_deletion_modal";
 import DeleteAddressAlert from "@/components/address_delete_modal";
+import AddressUpdateFormModal from "@/components/profile/address_update_form_modal";
 
 interface FormData {
   username?: string;
@@ -80,7 +81,8 @@ interface Address {
   province: string;
   postcode: string;
   isMainAddress: boolean;
-  isShopAddress: boolean
+  isShopAddress: boolean;
+  contact: string;
 }
 
 export default function Profile({ profile, user, address, provinceData, cityData, banks }: Props) {
@@ -686,7 +688,8 @@ export default function Profile({ profile, user, address, provinceData, cityData
                         </p>
                         <p>{address.postcode}</p>
                         <div className="flex flex-col lg:flex-row gap-3 text-xs lg:text-base">
-                          <a className="text-primary-focus">Ubah Alamat</a>
+                          {/* <a className="text-primary-focus">Ubah Alamat</a> */}
+                          <AddressUpdateFormModal provinceData={provinceData} cityData={cityData} address={address}/>
                           <p className="text-primary hidden lg:block">|</p>
                           <div>
                             {address.isMainAddress ? (
@@ -846,7 +849,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         province: true,
         postcode: true,
         isMainAddress: true,
-        isShopAddress: true
+        isShopAddress: true,
+        contact: true
       },
     });
   }
