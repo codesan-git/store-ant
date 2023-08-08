@@ -214,17 +214,6 @@ const ShopItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinis
         </Fragment>
       );
     }
-    // if (transaction.status === TransactionStatus.AWAITING_CONFIRMATION) {
-    //   return (
-    //     <Fragment>
-    //       {detailTransaksiButton()}
-    //       <label htmlFor="terima-modal" className="flex justify-center items-center text-xs lg:text-base w-32 text-white bg-green-500 hover:cursor-pointer">
-    //         Terima
-    //       </label>
-    //       {renderExtraActionDropdown()}
-    //     </Fragment>
-    //   );
-    // }
     else if (transaction.status === TransactionStatus.FINISHED) { // FINISHED == SUCCESS
       return (
         <Fragment>

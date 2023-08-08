@@ -1,10 +1,11 @@
-// import { useSession } from "next-auth/react";
+import { prisma } from "../../lib/prisma";
 
 require("dotenv").config();
 
 let nodemailer = require("nodemailer");
-export default function (req: any, res: any) {
-  // const { data: session } = useSession();
+export default async function (req: any, res: any) {
+  const { email } = req.body
+
   const transporter = nodemailer.createTransport({
     port: 465, //587
     service: "gmail",
@@ -15,6 +16,16 @@ export default function (req: any, res: any) {
     },
     secure: true,
   });
+
+  const user = await prisma.user.findUnique({
+    where: { email: email },  
+  });
+
+  const account = await prisma.account.findFirst({
+    where: {userId:user?.id!}
+  })
+
+  const token = account?.access_token
   
   const mailData = {
     from: process.env.email,
@@ -58,20 +69,24 @@ export default function (req: any, res: any) {
   </head>
   <body>
     <div class="container">
-      <h1>Ganti Nomor HP</h1>
+      <h1>Reset Password make sure kamu yakin ya</h1>
       <p>
-        ${req.body.token}
+        Ganti Email Account Anda, ${token}
       </p>
-      <a href="http://localhost:3000/changenumber?token=${req.body.token}" class="button">Verification</a>
+      <a href="http://localhost:3000/changeemail?token=${token}" class="button">Verification</a>
     </div>
   </body>`,
   };
+  
+  if(user){
+    transporter.sendMail(mailData, function (err: any, info: any) {
+      if (err) console.log(err);
+      else console.log(info);
+    });
+  }if(!user){
+    return null
+  }
 
-  transporter.sendMail(mailData, function (err: any, info: any) {
-    if (err) console.log(err);
-    else console.log(info);
-  });
-
-  console.log('req body',req.body);
+  console.log(req.body);
   res.send("success");
 }

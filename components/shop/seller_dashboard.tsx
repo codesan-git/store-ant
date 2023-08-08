@@ -7,6 +7,7 @@ import {
     HiShoppingBag, HiCurrencyDollar,
     HiPencilSquare
 } from "react-icons/hi2";
+import HomeShop from "./HomeShop";
 
 interface Props {
     shop: {
@@ -54,10 +55,14 @@ const SellerDashboard = ({ TransactionDashboardArguments, shop }: Props) => {
         setCurrentSelectedSection
     } = TransactionDashboardArguments();
 
+    const [homeIsOpen, setHomeIsOpen] = useState<Boolean>(false)
     const [berlangsungIsOpen, setBerlangsungIsOpen] = useState<Boolean>(false);
     const [isSalesDropdownClosed, setIsSalesDropdownClosed] = useState<Boolean>(false);
 
-    //I'm losing my mind just to make this work - Peter D. //((semangat))
+    const homeShopOnClick = () => {
+        setCurrentSelectedSection("Home");
+    }
+
     const menungguPembayaranOnClick = () => {
         setItemsToDisplay(allTransactions?.filter((e: any) => e.status === TransactionStatus.UNPAID));
         setCurrentSelectedSection("Menunggu Pembayaran");
@@ -217,10 +222,10 @@ const SellerDashboard = ({ TransactionDashboardArguments, shop }: Props) => {
                 <div id="shop-dashboard-navigation" className="lg:p-2 lg:bg-gray-300">
                     <ul className="flex flex-row overflow-y-auto space-x-2 lg:space-x-0 lg:flex-col">
                         <li className="bg-gray-300 lg:bg-none">
-                            <Link href={'/shop'} className="flex p-2 text-base font-normal rounded-lg transition duration-200 hover:bg-gray-300">
+                            <div onClick={homeShopOnClick} className="flex p-2 text-base font-normal rounded-lg transition duration-200 hover:bg-gray-300">
                                 <HiHome className="h-6 w-6" />
                                 <span className="ml-3">Home</span>
-                            </Link>
+                            </div>
                         </li>
                         <li className="bg-gray-300 lg:bg-none">
                             <Link href={''} className="flex p-2 text-base font-normal rounded-lg transition duration-200 hover:bg-gray-300">

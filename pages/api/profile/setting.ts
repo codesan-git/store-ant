@@ -11,7 +11,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const {username, password, phonenumber, emailVerified} = req.body
+  const {username, password, phonenumber, emailVerified, birthDate, gender} = req.body
   const session = await getSession({req})
 
   try {
@@ -23,13 +23,17 @@ export default async function handler(
         username: username,
         password: hashedPassword,
         phoneNumber: phonenumber,
+        birthDate: birthDate,
+        gender: gender,
         addresses: {}
       },
       update: {
         // ...req.body
         username: username,
         password: hashedPassword,
-        phoneNumber: phonenumber
+        phoneNumber: phonenumber,
+        birthDate: birthDate,
+        gender: gender
       }
     });
     res.status(200).json({ message: 'Profile created' })
