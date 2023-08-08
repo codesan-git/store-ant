@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getSession } from 'next-auth/react'
 import { prisma } from "../../../lib/prisma"
-import bcrypt from "bcrypt"
 
 type Data = {
   message: string
@@ -11,27 +10,16 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const {address, region, cityId, city, provinceId, province, postcode, contact } = req.body
-  const session = await getSession({req})
-  let profile = await prisma.profile.findUnique({
+  const {id, address, region, cityId, city, provinceId, province, postcode, contact } = req.body;
+  const session = await getSession({req});
+  const profile = await prisma.profile.findUnique({
     where: {
       userId: session?.user?.id
     }
-  }) ;
-
-  if(!profile || profile == null){
-    const hashedPassword = await bcrypt.hash("", 12);
-    profile = await prisma.profile.create({
-      data: {
-        userId: session?.user?.id!,
-        username: "",
-        password: hashedPassword,
-      }
-    });
-  }
-
+  })  
   console.log("ADD ADDRESS 1");
-  await prisma.address.create({
+  await prisma.address.updateMany({
+    where:{id: Number(id), profileId: profile?.id},
     data: {
       profileId: profile?.id!,
       address: address,

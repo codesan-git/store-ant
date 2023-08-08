@@ -31,6 +31,7 @@ interface Props {
 const AddressFormModal = ({ provinceData, cityData } : Props) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [modalSize, setModalSize] = useState<size>();
+  const exceptThisSymbols = ["e", "E", "+", "-", "."];
 
   const modalOpenHandler = (size: size) => {
     setModalSize(size);
@@ -128,11 +129,37 @@ const AddressFormModal = ({ provinceData, cityData } : Props) => {
             </div>    
             <div className="flex flex-col space-y-1">
               <label htmlFor="address-input">Postcode</label>
-              <input id="address-input" type="text" name="postcode" onChange={e => setForm({...form, postcode: e.target.value})} className="p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white"/>
+              <input 
+                id="address-input" 
+                type="number" 
+                name="postcode"                 
+                onKeyDown={e => exceptThisSymbols.includes(e.key) && e.preventDefault()}
+                onChange={
+                  (e) => {
+                    if(e.target.value.length <= 5){
+                      setForm({...form, postcode: e.target.value})
+                    }
+                  }
+                } 
+                value={form.postcode}
+                className="p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white"/>
             </div>    
             <div className="flex flex-col space-y-1">
               <label htmlFor="address-input">Contact Number</label>
-              <input id="address-input" type="text" name="contact" onChange={e => setForm({...form, contact: e.target.value})} className="p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white"/>
+              <input 
+                id="address-input" 
+                type="number"
+                name="contact"
+                onKeyDown={e => exceptThisSymbols.includes(e.key) && e.preventDefault()}
+                onChange={
+                  (e) => {
+                    if(e.target.value.length <= 13){
+                      setForm({...form, contact: e.target.value})
+                    }
+                  }
+                } 
+                value={form.contact}
+                className="p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white"/>
             </div>
             <div className="w-full flex justify-end">
               <button type="submit" onClick={() => modalOpenHandler("xl")} className="w-24 h-8 bg-green-700 hover:bg-green-500 transition text-white rounded-md ">Save</button>

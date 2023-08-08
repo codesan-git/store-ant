@@ -121,7 +121,7 @@ model Shop {
   product       Product[]
   transaction   Transaction[]
   image         String?
-  averageRating Float @default(5.00)
+  averageRating Float @default(0.00)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

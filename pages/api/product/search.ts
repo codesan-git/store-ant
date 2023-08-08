@@ -13,10 +13,6 @@ export default async function handler(
   }
 
   const session = await getSession({req});
-  const shop = await prisma.shop.findUnique({    where: {
-      userId: session?.user?.id
-    },
-  });
 
   try {
     // // // CREATE

@@ -5,7 +5,7 @@ import { useState } from "react";
 import { HiAtSymbol, HiKey, HiUser } from "react-icons/hi";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
-import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject  } from "firebase/storage";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
 import { getSession, useSession } from "next-auth/react";
 import { prisma } from "../../lib/prisma";
 import Navbar from "../navbar";
@@ -29,14 +29,22 @@ import {
   BsFillHouseFill
 } from "react-icons/bs"
 import AddressFormModal from "@/components/profile/address_form_modal";
-import { BankAccount, BankType } from "@prisma/client";
+import { BankAccount, BankType, Gender } from "@prisma/client";
 import BankAccountFormModal from "@/components/profile/bank_account_form_modal";
 import BankAccountDeletionModal from "@/components/profile/bank_account_deletion_modal";
+
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { format } from "date-fns";
 
 interface FormData {
   username?: string;
   phonenumber?: string;
   password?: string;
+  birthDate?: string;
+  gender?: string;
 }
 
 interface Props {
@@ -57,6 +65,8 @@ interface Props {
     id: Number;
     username: string;
     phoneNumber: string;
+    birthDate: string;
+    gender: string;
   };
   address: Address[];
   provinceData: {
@@ -64,9 +74,9 @@ interface Props {
     province: string
   }[];
   cityData: {
-      city_id: string,
-      province_id: string
-      city_name: string
+    city_id: string,
+    province_id: string
+    city_name: string
   }[];
   banks: BankType[]
 }
@@ -86,6 +96,8 @@ export default function Profile({ profile, user, address, provinceData, cityData
   const [form, setForm] = useState<FormData>({
     username: profile?.username,
     phonenumber: profile?.phoneNumber,
+    birthDate: profile?.birthDate,
+    gender: profile?.gender,
     password: "",
   });
   const [show, setShow] = useState<boolean>();
@@ -95,10 +107,12 @@ export default function Profile({ profile, user, address, provinceData, cityData
   const [token, setToken] = useState("")
   const [selectedFile, setSelectedFile] = useState<File>();
   const [submitted, setSubmitted] = useState(false);
+  // const [gender, setGender] = useState('');
 
-  // const [photo, setPhoto] = useState<ChangePhoto>({
-  //   photo: session?.user?.image!
-  // })
+  const handleChange = (event: SelectChangeEvent) => {
+    setForm({ ...form, gender: event.target.value });
+  };
+
   console.log(address);
 
   const notifAlert = () => {
@@ -141,6 +155,8 @@ export default function Profile({ profile, user, address, provinceData, cityData
           username: data.username,
           password: "",
           phonenumber: data.phonenumber,
+          birthDate: data.birthDate,
+          gender: data.gender
         });
         router.push(router.asPath);
       });
@@ -155,13 +171,13 @@ export default function Profile({ profile, user, address, provinceData, cityData
         method: "DELETE"
       }).then(() => router.push(router.asPath));
     }
-    catch (error){
+    catch (error) {
       console.log(error);
     }
   }
 
-  function onSetMainAddress(id: number){
-    const addressId = {id: id};
+  function onSetMainAddress(id: number) {
+    const addressId = { id: id };
     try {
       fetch("/api/address/setmain", {
         body: JSON.stringify(addressId),
@@ -177,10 +193,28 @@ export default function Profile({ profile, user, address, provinceData, cityData
     }
   }
 
-  function onSetShopAddress(id: number){
-    const addressId = {id: id};
+  function onSetShopAddress(id: number) {
+    const addressId = { id: id };
     try {
       fetch("/api/address/setshop", {
+        body: JSON.stringify(addressId),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+      }).then(() => {
+        router.push(router.asPath);
+        alert("address deleted!");
+      });
+    } catch (error) {
+      //console.log(error);
+    }
+  }
+
+  function onDeleteAddress(id: number) {
+    const addressId = { id: id };
+    try {
+      fetch("/api/address/delete", {
         body: JSON.stringify(addressId),
         headers: {
           "Content-Type": "application/json",
@@ -194,20 +228,12 @@ export default function Profile({ profile, user, address, provinceData, cityData
     }
   }
 
-  async function changePhoto(file: any){
+  async function changePhoto(file: any) {
     const storage = getStorage();
     const storageRef = ref(storage, `images/profile/${session?.user.email}`);
 
-    let pictureRef = ref(storage, session?.user.image!);
-    console.log(pictureRef);
-    deleteObject(pictureRef).then(() => {
-      console.log("deleted");
-    }).catch((error) => {
-      console.log("error: ", error);
-    })
-
     const uploadTask = uploadBytesResumable(storageRef, file);
-    uploadTask.on('state_changed', 
+    uploadTask.on('state_changed',
       (snapshot) => {
         const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         console.log('Upload is ' + progress + '% done');
@@ -219,13 +245,13 @@ export default function Profile({ profile, user, address, provinceData, cityData
             console.log('Upload is running');
             break;
         }
-      }, 
+      },
       (error) => {
         console.log("error, ", error);
-      }, 
+      },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-          const data = {image: downloadURL};
+          const data = { image: downloadURL };
           await axios.put("/api/profile/photo", data);
         }).then(() => router.reload());
       }
@@ -241,7 +267,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
       token: session?.user.accessToken!,
     };
 
-    fetch("/api/contact", {
+    fetch("/api/changephoneNumber", {
       method: "POST",
       headers: {
         Accept: "application/json, text/plain, */*",
@@ -339,6 +365,44 @@ export default function Profile({ profile, user, address, provinceData, cityData
     });
   };
 
+  const changeEmail = (e: any) => {
+    e.preventDefault();
+    console.log("Sending");
+
+    let data = {
+      email: session?.user.email!,
+      token: token,
+    };
+
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, send it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fetch("/api/changeemail", {
+          method: "POST",
+          headers: {
+            Accept: "application/json, text/plain, */*",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }).then((res) => {
+          console.log("Response received");
+          if (res.status === 200) {
+            console.log("Response succeeded!");
+            setSubmitted(true);
+          }
+        });
+        Swal.fire("Please Check Your Email!", "Your file has been sent.", "success");
+      }
+    });
+  };
+
   const handleSubmit = async (data: FormData) => {
     try {
       create(data);
@@ -346,6 +410,8 @@ export default function Profile({ profile, user, address, provinceData, cityData
       //console.log(error);
     }
   };
+
+  const getDate = format(new Date(profile.birthDate.replace(/-/g,",")),"d MMMM yyyy")
 
   const data = [
     {
@@ -375,15 +441,19 @@ export default function Profile({ profile, user, address, provinceData, cityData
                     />
                     <div className="aspect-video rounded flex items-center justify-center border-2 border-dashed cursor-pointer">
                       {selectedImage ? (
-                        <img
+                        <Image
                           src={selectedImage}
                           alt="img-profile"
+                          width={1500}
+                          height={1500}
                           className="rounded-md w-96 h-96 object-cover"
                         />
                       ) : (
-                        <img
+                        <Image
                           src={session?.user?.image!}
                           alt="img-profile"
+                          width={1500}
+                          height={1500}
                           className="rounded-md w-96 h-96 object-cover"
                         />
                       )}
@@ -410,9 +480,9 @@ export default function Profile({ profile, user, address, provinceData, cityData
               </div>
               <div className="card card-compact lg:w-96 bg-base-100 shadow-xl mt-5">
                 <div className="card-actions justify-end">
-                  <button 
-                  className="btn btn-primary btn-outline rounded-md w-full"
-                  onClick={(e) => resetPassword(e)}
+                  <button
+                    className="btn btn-primary btn-outline rounded-md w-full"
+                    onClick={(e) => resetPassword(e)}
                   >
                     Ubah Kata Sandi
                   </button>
@@ -479,7 +549,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
                           </span>
                         </label>
                       </div>
-                      {profile?.username == form.username ? (
+                      {profile?.username == form.username || form.username == "" || form.username!.indexOf(" ") >= 0 ? (
                         <>
                           <div className="modal-action">
                             <a
@@ -511,18 +581,107 @@ export default function Profile({ profile, user, address, provinceData, cityData
                 {/* Handle Tanggal Lahir */}
                 <div className="flex gap-5">
                   <label className="my-auto mr-4 text-sm lg:text-base w-1/3 lg:w-auto">Tanggal Lahir</label>
-                  <h5 className="text-sm lg:text-base w-1/3 lg:w-auto">30 Desember 1995</h5>
+                  {profile.birthDate ?
+                    <>
+                      <h5 className="text-sm lg:text-base w-1/3 lg:w-auto">{getDate}</h5>
+                    </>
+                    :
+                    <>
+                      <h5 className="text-sm lg:text-base w-1/3 lg:w-auto">30 Desember 1995</h5>
+                    </>
+                  }
                   {/* The button to open modal */}
-                  <a href="#modal-tanggal-lahir" className="text-primary text-sm lg:text-base w-1/3 lg:w-auto">
+                  <a href="#modal-birthday" className="text-primary text-sm lg:text-base w-1/3 lg:w-auto">
                     ubah
                   </a>
+                </div>
+                <div className="modal" id="modal-birthday">
+                  <div className="modal-box">
+                    <a href="#">
+                      <label
+                        htmlFor="modal-birthday"
+                        className="btn btn-sm btn-circle btn-outline btn-primary absolute right-2 top-2"
+                      >
+                        ✕
+                      </label>
+                    </a>
+                    <h3 className="font-bold text-lg">Ubah Tanggal Lahir</h3>
+                    <p className="py-4">
+                      Kamu hanya dapat mengubah nama 1 kali lagi. Pastikan
+                      nama sudah benar.
+                    </p>
+                    <div className="form-control w-full">
+                      <label htmlFor="">
+                        <span className="label-text">Tanggal Lahir</span>
+                      </label>
+                      <input
+                        type="date"
+                        name="birthday"
+                        placeholder="Birthday"
+                        value={form?.birthDate}
+                        className="input input-bordered input-primary w-auto rounded-md"
+                        onChange={(e) =>
+                          setForm({
+                            ...form,
+                            birthDate: e.target.value,
+                          })
+                        }
+                      />
+                      <label className="label">
+                        <span className="label-text-alt">
+                          Username bisa dilihat oleh pengguna lainnya
+                        </span>
+                      </label>
+                    </div>
+                    <div className="modal-action">
+                      <button
+                        className="btn btn-primary w-full rounded-md"
+                        onClick={() => handleSubmit(form)}
+                      >
+                        save!
+                      </button>
+                    </div>
+                  </div>
                 </div>
                 {/* End Handle Tanggal Lahir */}
 
                 {/* Handle Gender */}
                 <div className="flex gap-5">
-                  <label className="my-auto lg:mr-4 text-sm lg:text-base w-1/3 lg:w-auto">Jenis Kelamin</label>
-                  <h5 className="text-sm lg:text-base w-1/3 lg:w-auto">Pria</h5>
+                  <label className="my-auto mr-4 text-sm lg:text-base w-1/3 lg:w-auto">Gender</label>
+                  <div>
+                    <FormControl sx={{ m: 1, minWidth: 100 }} size="small">
+                      <InputLabel id="demo-simple-select-autowidth-label">Gender</InputLabel>
+                      <Select
+                        labelId="demo-simple-select-autowidth-label"
+                        id="demo-simple-select-autowidth"
+                        value={form.gender}
+                        onChange={handleChange}
+                        autoWidth
+                        label="Gender"
+                      >
+                        <MenuItem value="">
+                          <em>None</em>
+                        </MenuItem>
+                        <MenuItem value={Gender.MAN}>{Gender.MAN}</MenuItem>
+                        <MenuItem value={Gender.WOMAN}>{Gender.WOMAN}</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </div>
+                  {
+                    profile.gender === form.gender || form.gender === "" ?
+                      <>
+                        <div className="textarea-disabled text-sm lg:text-base w-1/3 lg:w-auto my-auto cursor-not-allowed">
+                          save
+                        </div>
+                      </>
+                      :
+                      <>
+                        <div onClick={() => handleSubmit(form)} className="text-primary text-sm lg:text-base w-1/3 lg:w-auto my-auto cursor-pointer">
+                          save
+                        </div>
+
+                      </>
+                  }
                 </div>
                 {/* End Handle Gender */}
 
@@ -552,10 +711,10 @@ export default function Profile({ profile, user, address, provinceData, cityData
                         </label>
                       </a>
                       <h3 className="font-bold text-lg">Ubah Nomor HP</h3>
-                      <p className="py-4">
+                      <div onClick={changeEmail} className="py-4">
                         Konfirmasi perubahan Nomor HP akan dikirimkan ke E-mail{" "}
                         {session?.user?.email}
-                      </p>
+                      </div>
                       <div className="form-control w-full"></div>
                       <div className="modal-action">
                         <a
@@ -593,16 +752,17 @@ export default function Profile({ profile, user, address, provinceData, cityData
                           ✕
                         </label>
                       </a>
-                      <h3 className="font-bold text-lg">Ubah Nomor HP</h3>
-                      <p className="py-4">
+                      <h3 className="font-bold text-lg">Ubah Email</h3>
+                      <div className="py-4">
                         Konfirmasi perubahan E-mail akan dikirimkan ke E-mail{" "}
                         {session?.user?.email}
-                      </p>
+                      </div>
                       <div className="form-control w-full"></div>
                       <div className="modal-action">
                         <a
                           href="#"
                           className="btn btn-primary w-full rounded-md"
+                          onClick={(e) => changeEmail(e)}
                         >
                           Send!
                         </a>
@@ -648,7 +808,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
         <>
           <section className="mt-8 flex flex-col gap-5 bg-gray-100 p-2 lg:p-10 rounded-md">
             <div className="flex">
-              <AddressFormModal provinceData={provinceData} cityData={cityData}/>
+              <AddressFormModal provinceData={provinceData} cityData={cityData} />
             </div>
             {address ? (
               <div className="space-y-4">
@@ -687,7 +847,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
                             )}
                           </div>
                           <p className="text-primary hidden lg:block">|</p>
-                          <a className="text-primary-focus">Hapus</a>
+                          <a className="text-primary-focus cursor-pointer" onClick={() => onDeleteAddress(address.id)}>Hapus</a>
                         </div>
                       </div>
                     </div>
@@ -710,34 +870,34 @@ export default function Profile({ profile, user, address, provinceData, cityData
         <div className="mt-8 flex flex-col gap-5 bg-gray-100 p-2 lg:p-10 rounded-md">
           {
             user.bankAccount ?
-            <Fragment>
-              <div>
-                <BankAccountDeletionModal onConfirm={handleBankAccountDelete}/>
-              </div>
-              <div className="lg:w-1/2">
-                <div className="flex flex-row space-x-1">
-                  <h1 className="w-1/2">Bank</h1>
-                  <h1 className="w-1/2">: {user.bankAccount.bank.name}</h1>  
+              <Fragment>
+                <div>
+                  <BankAccountDeletionModal onConfirm={handleBankAccountDelete} />
                 </div>
-                <div className="flex flex-row space-x-1">
-                  <h1 className="w-1/2">Name</h1>
-                  <h1 className="w-1/2">: {user.bankAccount.name}</h1>  
+                <div className="lg:w-1/2">
+                  <div className="flex flex-row space-x-1">
+                    <h1 className="w-1/2">Bank</h1>
+                    <h1 className="w-1/2">: {user.bankAccount.bank.name}</h1>
+                  </div>
+                  <div className="flex flex-row space-x-1">
+                    <h1 className="w-1/2">Name</h1>
+                    <h1 className="w-1/2">: {user.bankAccount.name}</h1>
+                  </div>
+                  <div className="flex flex-row space-x-1">
+                    <h1 className="w-1/2">Account No.</h1>
+                    <h1 className="w-1/2">: {user.bankAccount.number}</h1>
+                  </div>
                 </div>
-                <div className="flex flex-row space-x-1">
-                  <h1 className="w-1/2">Account No.</h1>
-                  <h1 className="w-1/2">: {user.bankAccount.number}</h1>  
+              </Fragment>
+              :
+              <Fragment>
+                <div>
+                  <BankAccountFormModal banks={banks} />
                 </div>
-              </div>         
-            </Fragment>
-            : 
-            <Fragment>
-              <div>
-                <BankAccountFormModal  banks={banks}/>
-              </div>
-              <div>
-                <h1>No bank account has been added yet.</h1>
-              </div>
-            </Fragment>
+                <div>
+                  <h1>No bank account has been added yet.</h1>
+                </div>
+              </Fragment>
           }
         </div>
       )
@@ -795,7 +955,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       id: true,
       bankAccount: {
         include: {
-          bank:{
+          bank: {
             select: {
               name: true
             }
@@ -810,6 +970,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       id: true,
       username: true,
       phoneNumber: true,
+      birthDate: true,
+      gender: true
     },
   });
   let address = null;
@@ -832,7 +994,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   var options = {
     method: 'GET',
     url: 'https://api.rajaongkir.com/starter/province',
-    headers: {key: 'c6ea8e82078275e61b3a46b5e65b69f1'}
+    headers: { key: 'c6ea8e82078275e61b3a46b5e65b69f1' }
   };
 
   const provinceRes = await axios.request(options);
@@ -844,14 +1006,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const banks = await prisma.bankType.findMany();
 
-  return { 
-    props: { 
-      profile, 
+  return {
+    props: {
+      profile,
       user,
       address,
       cityData: city,
       provinceData: province,
       banks
-    } 
+    }
   };
 };

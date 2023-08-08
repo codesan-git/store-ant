@@ -41,6 +41,14 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'firebasestorage.googleapis.com'
+      },
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com'
+      },
+      {
+        protocol: 'https',
+        hostname: 's3-us-west-2.amazonaws.com'
       }
     ],
     domains:['http://localhost:3000/public/']

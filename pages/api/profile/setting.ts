@@ -11,11 +11,11 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const {username, password, phonenumber, emailVerified} = req.body
+  const {username, password, phonenumber, emailVerified, birthDate, gender} = req.body
   const session = await getSession({req})
 
   try {
-    const hashedPassword = await bcrypt.hash(password, 12)
+    const hashedPassword = await bcrypt.hash(password, 12);
     await prisma.profile.upsert({
       where: {userId: session?.user?.id},
       create: {
@@ -23,15 +23,19 @@ export default async function handler(
         username: username,
         password: hashedPassword,
         phoneNumber: phonenumber,
+        birthDate: birthDate,
+        gender: gender,
         addresses: {}
       },
       update: {
         // ...req.body
         username: username,
         password: hashedPassword,
-        phoneNumber: phonenumber
+        phoneNumber: phonenumber,
+        birthDate: birthDate,
+        gender: gender
       }
-    })
+    });
     res.status(200).json({ message: 'Profile created' })
   } catch (error) {
     //console.log(error)
