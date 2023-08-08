@@ -295,7 +295,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
         </div>
         <div id="chatroom-item-details" className="w-3/4 p-4 flex flex-col items-start">
           <h1 className="font-bold">{recepient?.name.toString()}</h1>
-          <p id="last-message" className="truncate w-64 h-48">{latestMessage?.message.toString()}</p>
+          <p id="last-message" className="truncate h-48">{latestMessage?.message.toString()}</p>
         </div>
       </div>
     );
@@ -431,7 +431,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
                 </div> */}
               </div>
               <div className="w-full flex items-center justify-end">
-                <HiEllipsisVertical className="w-6 h-6 hover:cursor-pointer"/>
+                {/* <HiEllipsisVertical className="w-6 h-6 hover:cursor-pointer"/> */}
               </div>
             </div>
             <div className="h-4/6 overflow-y-auto flex flex-col-reverse"> {/*I need to put justify-end so that it renders from the top but if I do so it will break the UI */}
@@ -513,7 +513,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
                 </div> */}
               </div>
               <div className="w-1/4 flex items-center justify-end">
-                <HiEllipsisVertical className="w-6 h-6 hover:cursor-pointer"/>
+                {/* <HiEllipsisVertical className="w-6 h-6 hover:cursor-pointer"/> */}
               </div>
             </div>
             <div id="chatlist" className="h-5/6 overflow-y-auto flex flex-col-reverse">
