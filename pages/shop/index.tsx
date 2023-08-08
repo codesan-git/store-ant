@@ -21,7 +21,6 @@ interface Props{
         averageRating: Number,
         balance: number,
         image: string,
-        user: User
     };
     products: Product[];
     address: Address;
@@ -102,8 +101,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             shopName: true,
             averageRating: true,
             balance: true,
-            image: true,
-            user: true
+            image: true
         }
     });
 

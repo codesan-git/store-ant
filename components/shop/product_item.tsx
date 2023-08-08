@@ -59,7 +59,7 @@ const ProductItem = ({ product, address } : Props) => {
           </h1>
           <div className="text-sm flex flex-row items-center space-x-1">
             <HiLocationMarker className="fill-gray-600" />
-            {address.city}
+            {address?.city}
           </div>
           <div className="flex flex-row space-x-2 text-sm">
             <div id="rating-container" className="flex flex-row items-center space-x-1">

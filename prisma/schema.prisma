@@ -197,7 +197,7 @@ model Product {
   stock         Int
   order         Order[]
   productInCart ProductInCart[]
-  averageRating Float @default(5.00)
+  averageRating Float @default(0.00)
   weight        Int @default(100)
 
   category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)

@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { prisma } from "../../lib/prisma";
-import { getSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import Navbar from "../navbar";
 import Head from "next/head";
 import { useEffect, useState } from "react";
@@ -76,7 +76,8 @@ export default function CreateShop({ product, ratings, mainAddress, location }: 
   const [selectedImage, setSelectedImage] = useState(product.image.split(",")[0]);
   const router = useRouter();
   const { id } = router.query;
-  const [isEmpty, setIsEmpty] = useState<boolean>((product.stock.valueOf() <= 1) ? true : false);;
+  const [isEmpty, setIsEmpty] = useState<boolean>((product.stock.valueOf() <= 1) ? true : false);
+  const {data:session} = useSession();
 
   console.log("client side: ", ratings);
 
@@ -87,27 +88,31 @@ export default function CreateShop({ product, ratings, mainAddress, location }: 
   };
 
   async function addToCart(count: number) {
-    const data: CartData = {
-      productId: product.id,
-      count: Number(count),
-      productCount: Number(product.stock) - Number(count),
-      isCheckout: false
-    };
-    try {
-      fetch("/api/cart/add", {
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-      }).then(() => router.back());
-    } catch (error) {
-      //console.log(error)
+    if(product.shop.userId != session?.user.id){
+      const data: CartData = {
+        productId: product.id,
+        count: Number(count),
+        productCount: Number(product.stock) - Number(count),
+        isCheckout: false
+      };
+      try {
+        fetch("/api/cart/add", {
+          body: JSON.stringify(data),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+        }).then(() => router.back());
+      } catch (error) {
+        //console.log(error)
+      }
+    } else {
+      alert("Tidak bisa nembambahkan barang di toko sendiri ke keranjang");
     }
   }
 
   async function checkout(count: number) {
-    if(mainAddress != null){
+    if(mainAddress != null && product.shop.userId != session?.user.id){
       const data: CartData = {
         productId: product.id,
         count: Number(count),
@@ -126,7 +131,10 @@ export default function CreateShop({ product, ratings, mainAddress, location }: 
         //console.log(error)
       }
     } else {
-      alert("Harap atur alamat pengiriman utama");
+      if(product.shop.userId == session?.user.id)
+        alert("Tidak bisa membeli barang di toko sendiri");
+      else
+        alert("Harap atur alamat pengiriman utama");
     }
   }
 

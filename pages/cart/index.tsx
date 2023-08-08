@@ -6,6 +6,7 @@ import { useState } from 'react';
 import Navbar from "../navbar";
 import { useRouter } from 'next/router'
 import { Address } from "@prisma/client";
+import DeleteCartAlert from "@/components/cart_delete_modal";
 
 interface Props {
   cartItems: {
@@ -70,6 +71,21 @@ export default function Cart({ cartItems, mainAddress }: Props) {
         //console.log(error)
     }
   }
+  
+  function onDelete(){
+    const cartId:CartId = {id: data}
+    try{
+      fetch('/api/cart/delete', {
+          body: JSON.stringify(cartId),
+          headers: {
+              'Content-Type' : 'application/json'
+          },
+          method: 'DELETE'
+      }).then(()=> router.reload());
+    }catch(error){
+        //console.log(error)
+    }
+  }
 
   return (
     <div>
@@ -124,6 +140,12 @@ export default function Cart({ cartItems, mainAddress }: Props) {
           Checkout
         </button>
       )}
+      <button disabled={data.length === 0} className='ml-5 w-36 btn bg-red-400 hover:bg-red-300 hover:border-gray-500 text-white border-transparent'>
+          <label htmlFor="cart-alert">
+            Delete
+          </label>
+      </button>
+      <DeleteCartAlert htmlElementId={`cart-alert`} data={data}/>
     </div>
   );
 }
