@@ -40,7 +40,7 @@ export default function Login() {
       callbackUrl: `${window.location.origin}`,
     });
 
-    res?.error ? //console.log("ERROR ", res?.error) : router.push("/");
+    res?.ok && router.push("/");
   }
   const forgotPassword = async (data: FormData) => {
     // //console.log('form password', form.password)

@@ -69,7 +69,7 @@ const BankAccountFormModal = ({ banks } : Props) => {
           <form onSubmit={(e) => {e.preventDefault(); createBankAccout(form)}} className="space-y-4" action="/api/profile/bank/create" method="post">
             <div id="bank-select-container" className="flex flex-col w-full space-y-1">
               <label htmlFor="bank-type-input">Bank</label>
-              <select onChange={(e) => {e.preventDefault(); setForm({...form, bankId: String(e.target.value)}); //console.log(form)}} name="bank" id="bank-type-input" className="p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white hover:cursor-pointer">
+              <select onChange={(e) => {e.preventDefault(); setForm({...form, bankId: String(e.target.value)}); }} name="bank" id="bank-type-input" className="p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white hover:cursor-pointer">
                 {
                   banks.map((bank) => 
                     <option key={bank.id} value={bank.id}>{bank.name}</option>

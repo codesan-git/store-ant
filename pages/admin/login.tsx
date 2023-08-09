@@ -26,7 +26,6 @@ export default function Login() {
   const router = useRouter();
 
   async function loginUser(data: FormData) {
-    //console.log("login");
     const res = await signIn("credentials", {
       redirect: true,
       email: data.email,
@@ -34,7 +33,7 @@ export default function Login() {
       callbackUrl: "/admin/console/",
     });
 
-    res?.error ? //console.log("ERROR ", res?.error) : router.push("/");
+    res?.ok &&  router.push("/");
   }
 
   const handleForgotPassword = (e: any) => {

@@ -122,7 +122,7 @@ const ComplainModal = ({ complainTransactionModalArguments }: Props) => {
 		.then(async () => {
 			alert("All images uploaded");
 		})
-		.then((err) => //console.log(err));
+		.then((err) => console.log(err));
 	};
 
 	useEffect(() => {

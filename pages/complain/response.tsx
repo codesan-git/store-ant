@@ -66,7 +66,7 @@ export default function ComplainAdmin({ getOrders }: Props) {
     //console.log("condition: ", selectedFiles.length == urls.length);
     if (urls.join(",") != "" && urls.length == selectedFiles.length) {
       const data = { complainId: form.complainId, description: form.description, images: urls.join(",") };
-      axios.post(`/api/complain/seller/shopComment`, data).then(() => { //console.log("created!"); router.back(); });
+      axios.post(`/api/complain/seller/shopComment`, data).then(() => { router.back(); });
     }
   }, [urls]);
 
@@ -136,7 +136,7 @@ export default function ComplainAdmin({ getOrders }: Props) {
       .then(async () => {
         alert("All images uploaded");
       })
-      .then((err) => //console.log(err));
+      .then((err) => console.log(err));
     // }
     // }
   };

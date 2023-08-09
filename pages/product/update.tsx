@@ -164,7 +164,7 @@ export default function CreateShop({product} : FetchData) {
         .then(async () => {
           alert("Update Success!");
         })
-        .then((err) => //console.log(err));
+        .then((err) => console.log(err));
     }catch(error){
         ////console.log(error)
     }

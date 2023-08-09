@@ -68,8 +68,8 @@ export default function (req: any, res: any) {
   };
 
   transporter.sendMail(mailData, function (err: any, info: any) {
-    if (err) //console.log(err);
-    else //console.log(info);
+    if (err) console.log(err);
+    else console.log(info);
   });
 
   //console.log('req body',req.body);

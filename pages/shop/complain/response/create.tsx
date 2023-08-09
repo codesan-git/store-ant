@@ -71,7 +71,7 @@ export default function Complain() {
       .then(async () => {
         alert("All images uploaded");
       })
-      .then((err) => //console.log(err));
+      .then((err) => console.log(err));
   }
 
   const renderSelectedImage = () => {
