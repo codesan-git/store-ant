@@ -21,7 +21,7 @@ const handler = async (
           shop: true,
         }
       });
-      console.log({user: user})
+      //console.log({user: user})
       res.status(200).json({user});
     }
     catch (error) {

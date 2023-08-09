@@ -22,7 +22,7 @@ interface Cart {
 
 export default function Canceltest({productInCart} : Data) {
   const router = useRouter();
-  console.log(productInCart);
+  //console.log(productInCart);
 
   return (
     <div>

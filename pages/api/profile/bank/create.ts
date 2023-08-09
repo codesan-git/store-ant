@@ -7,7 +7,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { bankId, name, number } = req.body;
-  console.log(bankId, name, number);
+  //console.log(bankId, name, number);
 
   try {
     const session = await getSession({ req });
@@ -22,6 +22,6 @@ export default async function handler(
     })
     res.status(200).json({bankAccount: bankAccount});
   } catch (error) {
-    console.log("erorr ", error);
+    //console.log("erorr ", error);
   }
 }

@@ -52,7 +52,7 @@ export default function Detail({ complain }: ComplainData) {
             method: 'PUT'
         }).then(()=> router.reload())
       }catch(error){
-          //console.log(error)
+          ////console.log(error)
       }
   }
 
@@ -67,11 +67,11 @@ export default function Detail({ complain }: ComplainData) {
             method: 'PUT'
         }).then(()=> router.reload())
       }catch(error){
-          //console.log(error)
+          ////console.log(error)
       }
   }
 
-  console.log(complain);
+  //console.log(complain);
   return (
     <div>
       <Navbar/>

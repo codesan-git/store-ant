@@ -42,13 +42,13 @@ export default function CreateProduct() {
   const [urls, setURLs] = useState<string[]>([]);
 
   useEffect(() => {
-    console.log("images: ", urls.join(","));
-    console.log("url length: ", urls.length);
-    console.log("files length: ", selectedFiles.length);
-    console.log("condition: ", selectedFiles.length == urls.length);
+    //console.log("images: ", urls.join(","));
+    //console.log("url length: ", urls.length);
+    //console.log("files length: ", selectedFiles.length);
+    //console.log("condition: ", selectedFiles.length == urls.length);
     if(urls.join(",") != "" && urls.length == selectedFiles.length){
       const data = {name: form.name, price: form.price, stock: form.stock, image: urls.join(","), description: form.description, categoryId: form.categoryId};
-      axios.post('/api/product/create', data).then(() => { console.log("created!"); router.back(); });
+      axios.post('/api/product/create', data).then(() => { //console.log("created!"); router.back(); });
     }
   },[urls]);
 
@@ -73,9 +73,9 @@ export default function CreateProduct() {
       if (validImageTypes.includes(fileType)) {
         setFile([...selectedFiles, file[i]]);
       } else {
-        console.log("only images accepted");
+        //console.log("only images accepted");
       }
-      console.log("FILES: ", selectedFiles);
+      //console.log("FILES: ", selectedFiles);
     }
   }
 
@@ -92,7 +92,7 @@ export default function CreateProduct() {
     const storage = getStorage();
 
     selectedFiles.map((file) => {
-      console.log("loop");
+      //console.log("loop");
 
       const sotrageRef = ref(storage, `images/product/${file.name}`);
 
@@ -106,7 +106,7 @@ export default function CreateProduct() {
           );
           //setProgress(prog);
         },
-        (error) => console.log(error),
+        (error) => //console.log(error),
         async () => {
           await getDownloadURL(uploadTask.snapshot.ref).then((downloadURLs) => {
             setURLs(prevArray => [...prevArray, downloadURLs]);
@@ -118,7 +118,7 @@ export default function CreateProduct() {
       .then(async () => {
         alert("All images uploaded");
       })
-      .then((err) => console.log(err));
+      .then((err) => //console.log(err));
   }
 
   const handleQuantityChange = (event: ChangeEvent<HTMLInputElement>) => {

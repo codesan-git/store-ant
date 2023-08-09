@@ -129,9 +129,9 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
     const router = useRouter()
 
 	useEffect(() => {
-        console.log("url length: ", urls.length);
-        console.log("files length: ", selectedFiles.length);
-        console.log("condition: ", selectedFiles.length == urls.length);        
+        //console.log("url length: ", urls.length);
+        //console.log("files length: ", selectedFiles.length);
+        //console.log("condition: ", selectedFiles.length == urls.length);        
 
         let isSameLength = urls.length == selectedFiles.length;
         
@@ -142,13 +142,13 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
             }
         }
 
-        console.log("is same length: ", isSameLength);
+        //console.log("is same length: ", isSameLength);
         if(isSameLength && submit){
             try {
                 const promises = form.map(async (formItem, index) => {
                     const { orderId, star, comment } = formItem;
                     const images = urls[index];
-                    console.log("urls index length: ", images.length);
+                    //console.log("urls index length: ", images.length);
                     const data = {orderId: String(orderId), star: String(star), comment: String(comment), image: images.join(",")}
     
                     axios.post(`/api/cart/rate`, data).then(() => router.refresh());
@@ -250,12 +250,12 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
                         updatedFiles[index] = images;
                         return updatedFiles;
                     } else {
-                        console.log("Max limit reached for images.");
+                        //console.log("Max limit reached for images.");
                         return prevFiles;
                     }
                 });
             } else {
-                console.log("Only images are accepted.");
+                //console.log("Only images are accepted.");
             }
         }
     };
@@ -345,7 +345,7 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
 
 		selectedFiles.map((file, index) => {
             file.map((fileData) => {
-                console.log("loop");
+                //console.log("loop");
 
                 const sotrageRef = ref(storage, `images/rating/${fileData.name}`);
     
@@ -359,12 +359,12 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
                     );
                     //setProgress(prog);
                     },
-                    (error) => console.log(error),
+                    (error) => //console.log(error),
                     async () => {
                         await getDownloadURL(uploadTask.snapshot.ref).then((downloadURLs) => {
-                            console.log("URLS ISINYA: ", urls);
+                            //console.log("URLS ISINYA: ", urls);
                             let tempUrls = urls;
-                            console.log("TEMP URLS ISINYA: ", tempUrls);
+                            //console.log("TEMP URLS ISINYA: ", tempUrls);
 
                             if(!tempUrls[index])
                                 tempUrls.push([]);
@@ -384,7 +384,7 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
 		.then(async () => {
 			alert("All images uploaded");
 		})
-		.then((err) => console.log(err));
+		.then((err) => //console.log(err));
     };
 
     useEffect(() => {
@@ -399,21 +399,21 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
     }, [transaction]);
 
 
-    // console.log(`fill`, transaction?.order[0].id)
-    console.log(`getValue`, getValue)
-    // console.log(`comment`, form.comment)
-    // console.log(`rare`, form.star)
-    // console.log(`imgUrl`, selectedImage)
-    // console.log(`formdata`, form)
+    // //console.log(`fill`, transaction?.order[0].id)
+    //console.log(`getValue`, getValue)
+    // //console.log(`comment`, form.comment)
+    // //console.log(`rare`, form.star)
+    // //console.log(`imgUrl`, selectedImage)
+    // //console.log(`formdata`, form)
     // useEffect(() => {
-    //     console.log(`rating`, { ratingDesc })
-    //     console.log(`imgUrl`, selectedImage)
+    //     //console.log(`rating`, { ratingDesc })
+    //     //console.log(`imgUrl`, selectedImage)
     //     renderSelectedProduct()
     // }, [])
-    console.log(`formData`, form)
-    console.log(`transaction`, transaction)
-    console.log(`File`, selectedFiles)
-    // console.log(`getTransactionProps`, getTransactionRating())
+    //console.log(`formData`, form)
+    //console.log(`transaction`, transaction)
+    //console.log(`File`, selectedFiles)
+    // //console.log(`getTransactionProps`, getTransactionRating())
     return (
         <Fragment>
             <div hidden={ratingModalIsHidden} id="new-modal-custom" className="bg-gray-900 bg-opacity-75 fixed h-full w-full top-0 left-0 z-50 pointer-events-auto">

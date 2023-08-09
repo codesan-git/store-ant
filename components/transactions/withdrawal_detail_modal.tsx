@@ -17,8 +17,8 @@
 //   const {selectedWithdrawal: withdrawal} = selectProductCallback();
     
 //   const onClose = () => {
-//     console.log("close"); 
-//     console.log("withdrawal modal ", withdrawal);
+//     //console.log("close"); 
+//     //console.log("withdrawal modal ", withdrawal);
 //   }
   
 //   const formatter = new Intl.NumberFormat('id-ID', {
@@ -37,7 +37,7 @@
 //             method: 'PUT'
 //         }).then(()=> router.reload())
 //       }catch(error){
-//           //console.log(error)
+//           ////console.log(error)
 //       }
 //   }
 

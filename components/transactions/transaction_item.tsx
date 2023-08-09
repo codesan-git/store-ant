@@ -148,7 +148,7 @@ const TransactionItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, 
         </button>
       );
     }
-    console.log(`transaction`, transaction)
+    //console.log(`transaction`, transaction)
     const renderExtraActionDropdown = () => { //THIS STILL CAUSES A BUG. If you enter web-view mode, and click various extra action buttons consecutively, then enter mobile mode, there will be a stack of extra actions modal
       return (
         <div className="">

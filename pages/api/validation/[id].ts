@@ -21,9 +21,9 @@ export default async function handler(
         where: {userId:user?.id!}
       })
       res.status(200).json(account?.access_token!);
-      console.log(res);
+      //console.log(res);
     } catch (error) {
-      //console.log(error);
+      ////console.log(error);
     }
   }
 }

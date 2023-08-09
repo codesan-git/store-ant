@@ -18,14 +18,14 @@ export default function Validation({token} : Token) {
         "/api/profile/verified"
       ).then(() => router.push("/profile"));
     } catch (error) {
-      console.log(error);
+      //console.log(error);
     }
   };
 
-  console.log('session user', session?.user.accessToken)
-  console.log('accesstoken', accessToken)
-  console.log('token doang', token)
-  console.log('user', session?.user)
+  //console.log('session user', session?.user.accessToken)
+  //console.log('accesstoken', accessToken)
+  //console.log('token doang', token)
+  //console.log('user', session?.user)
 
 
   return (
@@ -67,7 +67,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context);
   const id = context.query.id;
 
-  console.log("dataValidation", session);
+  //console.log("dataValidation", session);
   //   const user = await prisma.user.findUnique({
   //     where: {
   //       id: session?.user?.id,

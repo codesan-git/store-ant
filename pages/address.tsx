@@ -58,15 +58,15 @@ export default function Address({cityData, provinceData} : Data) {
             method: 'POST'
         }).then(()=> { router.back() })
     }catch(error){
-        //console.log(error)
+        ////console.log(error)
     }
   }
 
   function setCityid(city: string){
-    console.log("prov:", form.province );
+    //console.log("prov:", form.province );
     let chosenCity = cityData.filter((x) => x.city_name == city);
     setForm({...form, cityId: chosenCity[0].city_id, city: chosenCity[0].city_name});
-    console.log(chosenCity[0].city_name, chosenCity[0].city_id)
+    //console.log(chosenCity[0].city_name, chosenCity[0].city_id)
   }
 
   return (
@@ -135,8 +135,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const cityRes = await axios.request(options);
     const city = cityRes.data.rajaongkir.results;
 
-    console.log("city: ", city);
-    console.log("province: ", province);
+    //console.log("city: ", city);
+    //console.log("province: ", province);
     return {
       props:{
         cityData: city,

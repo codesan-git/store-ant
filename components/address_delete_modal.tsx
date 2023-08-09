@@ -13,8 +13,8 @@ const DeleteAddressAlert = ({htmlElementId: id, addressId} : Props) => {
   const router = useRouter();
     
   const onClose = () => {
-    console.log("close"); 
-    console.log("id ", addressId);
+    //console.log("close"); 
+    //console.log("id ", addressId);
   }
 
   async function onSubmit() {
@@ -31,7 +31,7 @@ const DeleteAddressAlert = ({htmlElementId: id, addressId} : Props) => {
         router.push(router.asPath);
       });
     } catch (error) {
-      //console.log(error);
+      ////console.log(error);
     }
   }
 

@@ -60,8 +60,8 @@ export default async function handler(
         .then((transaction : any)=>{
             // transaction token
             let transactionToken = transaction.token;
-            console.log('transactionToken:',transactionToken);
-            console.log('url:', transaction.redirect_url);
+            //console.log('transactionToken:',transactionToken);
+            //console.log('url:', transaction.redirect_url);
             res.status(200).json({ token: transactionToken, redirectUrl: transaction.redirect_url })
     })
   } else {

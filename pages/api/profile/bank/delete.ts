@@ -16,12 +16,12 @@ export default async function handler(
     }
   })
 
-  console.log("delete bank");
+  //console.log("delete bank");
 
   res.status(200).json({message: 'success delete'});
 
   // try {
   // } catch (error) {
-  //   // console.log("erorr ", error);
+  //   // //console.log("erorr ", error);
   // }
 }

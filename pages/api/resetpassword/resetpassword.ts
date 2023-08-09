@@ -13,9 +13,9 @@ export default async function handler(
 ) {
   const { password,email, access_token:token } = req.body;
 
-  console.log("password", password);
-  console.log('email reset', email)
-  console.log('tokenGan', token)
+  //console.log("password", password);
+  //console.log('email reset', email)
+  //console.log('tokenGan', token)
 
   const account = await prisma.account.findFirst({
     where: {access_token:token}
@@ -44,7 +44,7 @@ export default async function handler(
       res.status(200).json({ message: "password changed" });
     }
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     res.status(400).json({ message: "Fail" });
   }
 
@@ -60,7 +60,7 @@ export default async function handler(
   //     res.status(200).json({ message: "password changed" });
   //   }
   // } catch (error) {
-  //   console.log(error);
+  //   //console.log(error);
   //   res.status(400).json({ message: "Fail" });
   // }
 }

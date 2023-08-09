@@ -30,11 +30,11 @@ export default function Detail({ shopComment }: ShopComment) {
             method: 'PUT'
         }).then(()=> router.reload())
       }catch(error){
-          //console.log(error)
+          ////console.log(error)
       }
   }
 
-  console.log(shopComment);
+  //console.log(shopComment);
   return (
     <div>
       <div className="card bg-base-100 shadow-xl text-md">

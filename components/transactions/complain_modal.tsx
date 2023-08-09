@@ -56,10 +56,10 @@ const ComplainModal = ({ complainTransactionModalArguments }: Props) => {
 	const [urls, setURLs] = useState<string[]>([]);
 	
 	useEffect(() => {
-	  console.log("images: ", urls.join(","));
-	  console.log("url length: ", urls.length);
-	  console.log("files length: ", selectedFiles.length);
-	  console.log("condition: ", selectedFiles.length == urls.length);
+	  //console.log("images: ", urls.join(","));
+	  //console.log("url length: ", urls.length);
+	  //console.log("files length: ", selectedFiles.length);
+	  //console.log("condition: ", selectedFiles.length == urls.length);
 	  if(urls.join(",") != "" && urls.length == selectedFiles.length){		
 		// if (form.orderId.length > 0) {
 		// 	for (let i = 0; i < form.orderId.length; i++) {
@@ -96,7 +96,7 @@ const ComplainModal = ({ complainTransactionModalArguments }: Props) => {
 		const storage = getStorage();
 
 		selectedFiles.map((file) => {
-		console.log("loop");
+		//console.log("loop");
 
 		const sotrageRef = ref(storage, `images/complain/${file.name}`);
 
@@ -110,7 +110,7 @@ const ComplainModal = ({ complainTransactionModalArguments }: Props) => {
 			);
 			//setProgress(prog);
 			},
-			(error) => console.log(error),
+			(error) => //console.log(error),
 			async () => {
 				await getDownloadURL(uploadTask.snapshot.ref).then((downloadURLs) => {
 					setURLs(prevArray => [...prevArray, downloadURLs]);
@@ -122,7 +122,7 @@ const ComplainModal = ({ complainTransactionModalArguments }: Props) => {
 		.then(async () => {
 			alert("All images uploaded");
 		})
-		.then((err) => console.log(err));
+		.then((err) => //console.log(err));
 	};
 
 	useEffect(() => {
@@ -228,9 +228,9 @@ const ComplainModal = ({ complainTransactionModalArguments }: Props) => {
 			if (validImageTypes.includes(fileType)) {
 				setFile([...selectedFiles, file[i]]);
 			} else {
-				console.log("only images accepted");
+				//console.log("only images accepted");
 			}
-			console.log("FILES: ", selectedFiles);
+			//console.log("FILES: ", selectedFiles);
 		}
 	};
 
@@ -284,14 +284,14 @@ const ComplainModal = ({ complainTransactionModalArguments }: Props) => {
 
 	}
 
-	// console.log(`isOpen`, isAddProduct)
-	console.log(`fill`, form.orderId)
-	console.log(`complain`, form.description)
-	console.log(`imgUrl`, selectedImage)
-	console.log(`formdata`, form)
+	// //console.log(`isOpen`, isAddProduct)
+	//console.log(`fill`, form.orderId)
+	//console.log(`complain`, form.description)
+	//console.log(`imgUrl`, selectedImage)
+	//console.log(`formdata`, form)
 	useEffect(() => {
-		console.log(`complain`, { complainDesc })
-		console.log(`imgUrl`, selectedImage)
+		//console.log(`complain`, { complainDesc })
+		//console.log(`imgUrl`, selectedImage)
 		// transaction?.order
 		renderSelectedProduct()
 	}, [])

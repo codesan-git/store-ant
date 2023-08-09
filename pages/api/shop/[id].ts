@@ -20,7 +20,7 @@ const handler = async (
           shopName: true,
         }
       });
-      console.log({shop: shop})
+      //console.log({shop: shop})
       res.status(200).json({shop});
     }
     catch (error) {

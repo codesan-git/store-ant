@@ -18,7 +18,7 @@ export default function Upload() {
       } else {
         setMessage("only images accepted");
       }
-      console.log("FILES: ", files);
+      //console.log("FILES: ", files);
     }
   };
   const removeImage = (i: string) => {

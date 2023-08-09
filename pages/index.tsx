@@ -101,9 +101,9 @@ export default function Home({ events }: EventData) {
         },
       });
       setProducts(response.data);
-      console.log("dari fetchProduct", response.data);
+      //console.log("dari fetchProduct", response.data);
     } catch (error) {
-      //console.log(error);
+      ////console.log(error);
     }
   };
 
@@ -126,7 +126,7 @@ export default function Home({ events }: EventData) {
 
   const handleNodemailer = (e: any) => {
     e.preventDefault();
-    console.log("Sending");
+    //console.log("Sending");
 
     let data = {
       email: session?.user.email!,
@@ -151,7 +151,7 @@ export default function Home({ events }: EventData) {
   }, [sortDir, sortBy]);
 
   function navigateCarousel(i: number){
-    console.log("CLICK, INDEX: ", i);
+    //console.log("CLICK, INDEX: ", i);
     if(i >= events.length)
       i = 0;
     if(i < 0)

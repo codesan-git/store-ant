@@ -79,11 +79,11 @@ export default function CreateShop({ product, ratings, mainAddress, location }: 
   const [isEmpty, setIsEmpty] = useState<boolean>((product.stock.valueOf() <= 1) ? true : false);
   const {data:session} = useSession();
 
-  console.log("client side: ", ratings);
+  //console.log("client side: ", ratings);
 
   const handleCount = () => {
     let newSubtotal = product.price.valueOf() * count;
-    console.log("New subtotal: " + newSubtotal.toString());
+    //console.log("New subtotal: " + newSubtotal.toString());
     setSubtotal(newSubtotal);
   };
 
@@ -104,7 +104,7 @@ export default function CreateShop({ product, ratings, mainAddress, location }: 
           method: "POST",
         }).then(() => router.back());
       } catch (error) {
-        //console.log(error)
+        ////console.log(error)
       }
     } else {
       alert("Tidak bisa nembambahkan barang di toko sendiri ke keranjang");
@@ -128,7 +128,7 @@ export default function CreateShop({ product, ratings, mainAddress, location }: 
           method: "POST",
         }).then(() => router.push("/transactions"));
       } catch (error) {
-        //console.log(error)
+        ////console.log(error)
       }
     } else {
       if(product.shop.userId == session?.user.id)
@@ -533,7 +533,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
   })
 
-  console.log("product: ", product);
+  //console.log("product: ", product);
   const ratings = await prisma.rating.findMany({
     where: {
       order: {
@@ -563,7 +563,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       isMainAddress: true
     }
   })
-  console.log("server side: ", ratings);
+  //console.log("server side: ", ratings);
   return {
     props: {
       product,

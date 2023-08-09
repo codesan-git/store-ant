@@ -9,7 +9,7 @@ export default async function handler(
 ) {
   const {id, price} = req.body
   const session = await getSession({req})  
-  console.log(id);
+  //console.log(id);
 
   // const productInCart = await prisma.productInCart.findFirst({
   //   where: { id: Number(id) },
@@ -57,14 +57,14 @@ export default async function handler(
     .then((transaction : any)=>{
         // transaction token
         let transactionToken = transaction.token;
-        console.log('transactionToken:',transactionToken);
-        console.log('url:', transaction.redirect_url);
+        //console.log('transactionToken:',transactionToken);
+        //console.log('url:', transaction.redirect_url);
         res.status(200).json({ token: transactionToken, redirectUrl: transaction.redirect_url })
   })
 
   // try {
   // } catch (error) {
-  //   //console.log(error)
+  //   ////console.log(error)
   //   res.status(400).json({ message: "Fail" })
   // }
 }

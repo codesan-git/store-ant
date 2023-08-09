@@ -66,7 +66,7 @@ export default function Profile({shop, products, address} : Props) {
   if(!shop){
     router.push('/shop/register')
   }else{
-    console.log(`callback`, testCallback)
+    //console.log(`callback`, testCallback)
     return (
       <div>
         {/* <Navbar /> */}

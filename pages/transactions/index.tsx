@@ -94,7 +94,7 @@ const Transactions = ({ transactions, newChatUserId }: Props) => {
         method: "PUT",
       }).then(() => router.reload());
     } catch (error) {
-      //console.log(error)
+      ////console.log(error)
     }
   }
 
@@ -312,7 +312,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
   })
 
-  console.log(JSON.parse(JSON.stringify(transactions)));
+  //console.log(JSON.parse(JSON.stringify(transactions)));
 
   return {
     props: {

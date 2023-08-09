@@ -80,13 +80,13 @@ export default async function (req: any, res: any) {
   
   if(user){
     transporter.sendMail(mailData, function (err: any, info: any) {
-      if (err) console.log(err);
-      else console.log(info);
+      if (err) //console.log(err);
+      else //console.log(info);
     });
   }if(!user){
     return null
   }
 
-  console.log(req.body);
+  //console.log(req.body);
   res.send("success");
 }

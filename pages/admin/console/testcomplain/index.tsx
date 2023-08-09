@@ -35,7 +35,7 @@ export default function ComplainAdmin({ getComplain }: Props) {
 
     }
   };
-  console.log(getComplain[3])
+  //console.log(getComplain[3])
   return (
     <div>
       <table className="table">

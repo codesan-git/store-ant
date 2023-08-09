@@ -44,7 +44,7 @@ export default function Event({event} : Event) {
         //formData.append("image", selectedFile);
         await axios.put(`/api/admin/event/${id}`, formData).then(() => {router.back() });
     } catch (error: any) {
-        //console.log(error);
+        ////console.log(error);
     }
   }
 
@@ -107,13 +107,13 @@ export default function Event({event} : Event) {
             <div className='flex flex-col space-y-1 w-full'>
               <label htmlFor="event-path-input" className='font-bold'>Event Start Date</label>
               <input id='event-path-input' name='event-path' type="date" className='p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white'
-                value={form?.startDate} onChange={(e) => {setForm({...form, startDate: e.target.value}); console.log( formatDate(new Date(e.target.value)))}}
+                value={form?.startDate} onChange={(e) => {setForm({...form, startDate: e.target.value}); //console.log( formatDate(new Date(e.target.value)))}}
               />
             </div>
             <div className='flex flex-col space-y-1 w-full'>
               <label htmlFor="event-path-input" className='font-bold'>Event End Date</label>
               <input id='event-path-input' name='event-path' type="date" className='p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white'
-                value={form?.endDate} onChange={(e) => {setForm({...form, endDate: e.target.value}); console.log( formatDate(new Date(e.target.value)))}}
+                value={form?.endDate} onChange={(e) => {setForm({...form, endDate: e.target.value}); //console.log( formatDate(new Date(e.target.value)))}}
               />
             </div>
             <button className='h-10 lg:w-36 rounded text-white bg-indigo-700'>

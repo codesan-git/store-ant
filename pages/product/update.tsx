@@ -62,9 +62,9 @@ export default function CreateShop({product} : FetchData) {
   
   
   useEffect(() => {
-    console.log("condition: ", files.length == urls.length);
-    console.log("condition oldimage: ", oldImages.length != 0);
-    console.log("condition submit: ", isSubmit);
+    //console.log("condition: ", files.length == urls.length);
+    //console.log("condition oldimage: ", oldImages.length != 0);
+    //console.log("condition submit: ", isSubmit);
     if(isSubmit){
       if(urls.join(",") != "" ){
         if(urls.length == files.length){        
@@ -72,7 +72,7 @@ export default function CreateShop({product} : FetchData) {
           axios.put(`/api/product/${product.id}`, data).then(() => { router.back() });
         }
       } else if(oldImages.length != 0 && files.length == 0) {
-          console.log("masuk else")
+          //console.log("masuk else")
           const data = {imageString: oldImages.join(","), name: form.name, price: form.price, stock: form.stock, categoryId: form.categoryId, urls: urls.join(","), description: form.description}
           axios.put(`/api/product/${product.id}`, data).then(() => { router.back() });
       }
@@ -97,10 +97,10 @@ export default function CreateShop({product} : FetchData) {
         setFile([...files, file[i]]);
         setImages([...images, URL.createObjectURL(file[i])])
       } else {
-        console.log("only images accepted");
+        //console.log("only images accepted");
       }
-      console.log("FILES: ", files);
-      console.log("IMAGES: ", images);
+      //console.log("FILES: ", files);
+      //console.log("IMAGES: ", images);
     }
   };
   
@@ -111,11 +111,11 @@ export default function CreateShop({product} : FetchData) {
     const storage = getStorage();
 
     let pictureRef = ref(storage, i);
-    console.log(pictureRef);
+    //console.log(pictureRef);
     deleteObject(pictureRef).then(() => {
-      console.log("deleted");
+      //console.log("deleted");
     }).catch((error) => {
-      console.log("error: ", error);
+      //console.log("error: ", error);
     })
 
     for (let i = 0; i < files.length; i++) {
@@ -123,7 +123,7 @@ export default function CreateShop({product} : FetchData) {
         if(images[i] === URL.createObjectURL(tempFiles[i])) {
           setFile([...files, tempFiles[i]]);
         }
-        console.log("FILES: ", files);
+        //console.log("FILES: ", files);
     }
 
     //if(files.length >= 2)
@@ -138,7 +138,7 @@ export default function CreateShop({product} : FetchData) {
       const storage = getStorage();
   
       files.map((file) => {
-        console.log("loop");
+        //console.log("loop");
   
         const sotrageRef = ref(storage, `images/product/${file.name}`);
   
@@ -152,7 +152,7 @@ export default function CreateShop({product} : FetchData) {
             );
             //setProgress(prog);
           },
-          (error) => console.log(error),
+          (error) => //console.log(error),
           async () => {
             await getDownloadURL(uploadTask.snapshot.ref).then((downloadURLs) => {
               setURLs(prevArray => [...prevArray, downloadURLs]);
@@ -164,9 +164,9 @@ export default function CreateShop({product} : FetchData) {
         .then(async () => {
           alert("Update Success!");
         })
-        .then((err) => console.log(err));
+        .then((err) => //console.log(err));
     }catch(error){
-        //console.log(error)
+        ////console.log(error)
     }
   }
 

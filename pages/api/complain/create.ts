@@ -44,7 +44,7 @@ export default async function handler(
       imageUrl.push("");
     }
     
-    console.log((orderId as string).split(","))
+    //console.log((orderId as string).split(","))
     res.status(200).json({ message: 'complain created' });
     try {
         // // // // CREATE
