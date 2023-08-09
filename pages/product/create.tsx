@@ -9,6 +9,7 @@ import { Category } from "@prisma/client";
 import axios from "axios";
 import { HiOutlineCamera, HiOutlinePhoto } from "react-icons/hi2";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL  } from "firebase/storage";
+import Navbar from "../navbar";
 
 const fetchProducts = async (url: string) => {
   const response = await fetch(url);
@@ -194,7 +195,8 @@ export default function CreateProduct() {
   };
 
   return (
-    <div className="lg:px-36">
+    <div className="lg:px-36 space-y-4">
+      <Navbar/>
       <div id="title-hack-container" className="">
         <section className="pl-4 lg:w-1/2 flex lg:flex-col lg:justify-center lg:items-center">
           <div className="lg:w-5/6 justify-start">
