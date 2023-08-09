@@ -914,7 +914,6 @@ export default function Profile({ profile, user, address, provinceData, cityData
   }, []);
 
   console.log("user", session?.user);
-  console.log("cek emailVerification");
   return (
     <>
       <Navbar />
