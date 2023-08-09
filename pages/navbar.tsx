@@ -129,11 +129,11 @@ const Navbar = () => {
   async function getNotif() {
     const res = await axios.get("/api/notification");
     setNotif(res.data.notifications);
-    //console.log("notif: ", res.data.notifications);
+    ////console.log("notif: ", res.data.notifications);
   }
 
   async function readNotif() {
-    console.log("read");
+    //console.log("read");
     const res = await axios.put("/api/notification/read");
   }
 
@@ -145,16 +145,16 @@ const Navbar = () => {
     event.preventDefault();
     const encodedSearchQuery = encodeURI(query);
     router.push(`/search?q=${encodedSearchQuery}`);
-    //console.log(encodedSearchQuery);
+    ////console.log(encodedSearchQuery);
   }
 
   function onFilter(categoryId: string) {
     const encodedSearchQuery = encodeURI(categoryId);
     router.push(`/filter?q=${encodedSearchQuery}`);
-    //console.log(encodedSearchQuery);
+    ////console.log(encodedSearchQuery);
   }
   
-  //console.log("profile ", session?.user.image);
+  ////console.log("profile ", session?.user.image);
 
   if (!categoryData?.categories) {
 
@@ -162,7 +162,7 @@ const Navbar = () => {
   }
 
   function onNotifClick(type: NotifType, role: NotifRole) {
-    console.log("click notif");
+    //console.log("click notif");
     if (type == NotifType.CHAT) {
 
     } else {

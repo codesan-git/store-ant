@@ -18,9 +18,9 @@ export default function CreateShop() {
   const {data: session} = useSession();
   
   async function create(data:FormData) {
-    console.log("image: ", session?.user.image);
+    //console.log("image: ", session?.user.image);
     data.image = session?.user.image!;
-    console.log("data: ", data);
+    //console.log("data: ", data);
     try{
         fetch('/api/shop/setting', {
             body: JSON.stringify(data),
@@ -30,7 +30,7 @@ export default function CreateShop() {
             method: 'POST'
         }).then(()=> { setForm({shopname: '', address: '', image: session?.user.image!}); router.back() })
     }catch(error){
-        //console.log(error)
+        ////console.log(error)
     }
   }
 
@@ -38,7 +38,7 @@ export default function CreateShop() {
     try{
         create(data)
     }catch(error){
-        //console.log(error)
+        ////console.log(error)
     }
   }
 

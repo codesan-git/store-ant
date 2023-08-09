@@ -43,7 +43,7 @@ export default function Admin({ events }: EventData) {
         router.replace(router.asPath)
       })
     }catch(error){
-        //console.log(error)
+        ////console.log(error)
     }
   }
 

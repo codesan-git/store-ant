@@ -28,7 +28,7 @@ export default function Bank({data} : Bank) {
     try {
         await axios.post('/api/profile/bank/create', form).then(() => {router.back() });
     } catch (error: any) {
-        //console.log(error);
+        ////console.log(error);
     }
   }
 

@@ -11,7 +11,7 @@ export default async function handler(
   const { recipientId, message } = req.body
   const session = await getSession({req})
 
-  console.log("SEND ", message);
+  //console.log("SEND ", message);
 
   let convoId;
   
@@ -40,7 +40,7 @@ export default async function handler(
     convoId = newConvo.id;
   }
 
-  console.log("convo id: ", convoId);
+  //console.log("convo id: ", convoId);
   const messageData = await prisma.message.create({
       data: {
         conversationId: convoId,
@@ -60,7 +60,7 @@ export default async function handler(
   res.status(200).json({ message: 'message created' })
   // try {
   // } catch (error) {
-  //   //console.log(error)
+  //   ////console.log(error)
   //   res.status(400).json({ message: "Fail" })
   // }
 }

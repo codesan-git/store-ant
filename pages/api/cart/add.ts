@@ -9,8 +9,8 @@ export default async function handler(
 ) {
   const {count, productId, productCount, isCheckout} = req.body
   const session = await getSession({req})
-  console.log("PRODUCT ID = ", productId);
-  console.log("COUNT = ", count);
+  //console.log("PRODUCT ID = ", productId);
+  //console.log("COUNT = ", count);
 
   let cart = await prisma.cart.findFirst({
     where: {userId: session?.user.id}
@@ -28,14 +28,14 @@ export default async function handler(
     const existingData = await prisma.productInCart.findFirst({
       where:{productId: productId, cartId: cart.id}
     })
-    console.log("DATA: ", existingData);
+    //console.log("DATA: ", existingData);
   
     if(existingData){
       const productInCart = await prisma.productInCart.update({
         where:{id: existingData.id},
         data:{count: existingData.count + Number(count)}
       })
-      console.log("UPDATE: ", productInCart);
+      //console.log("UPDATE: ", productInCart);
     }else{
       const productInCart = await prisma.productInCart.create({
         data:{
@@ -44,7 +44,7 @@ export default async function handler(
             count: Number(count)
         },
       })
-      console.log("insert: ", productInCart);
+      //console.log("insert: ", productInCart);
     }
   
     await prisma.product.update({
@@ -83,13 +83,13 @@ export default async function handler(
         count: Number(count),
       }
     });
-    console.log("insert: ", order);
+    //console.log("insert: ", order);
   }
   res.status(200).json({ message: "Success" })
 
   // try {
   // } catch (error) {
-  //   //console.log(error)
+  //   ////console.log(error)
   //   res.status(400).json({ message: "Fail" })
   // }
 }

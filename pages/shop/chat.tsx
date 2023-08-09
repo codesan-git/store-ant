@@ -22,7 +22,7 @@ interface MessageForm {
 let socket : Socket;
 
 export default function Chat({messages, recipient, shop} : Messages) {
-  console.log(messages);
+  //console.log(messages);
   const { data: session } = useSession();
   const router = useRouter();
   const {id: recipientId} = router.query;
@@ -43,13 +43,13 @@ export default function Chat({messages, recipient, shop} : Messages) {
     await fetch("/api/socket");
 
     socket = io('ws://localhost:3000', {transports: ['websocket']});
-    console.log(session?.user.id);
+    //console.log(session?.user.id);
     socket.emit("connect-user", session?.user.id);
   }
 
   async function listen(){    
     socket.on("receive-message", (data : MessageForm) => {
-      console.log(data);
+      //console.log(data);
       setAllMessage([...allMessage, data]);
     });
   }
@@ -68,7 +68,7 @@ export default function Chat({messages, recipient, shop} : Messages) {
             method: 'POST'
         })
     }catch(error){
-        //console.log(error)
+        ////console.log(error)
     }
   }
 

@@ -32,7 +32,7 @@ export default function Rate() {
         } else {
             setMessage("only images accepted");
         }
-        console.log("FILES: ", files);
+        //console.log("FILES: ", files);
     }
   } 
   const removeImage = (i:string) => {
@@ -49,7 +49,7 @@ export default function Rate() {
         formData.append("comment", comment);
         await axios.post('/api/cart/rate/', formData).then(() => { router.back() });
     }catch(error){
-        //console.log(error)
+        ////console.log(error)
     }
   }
 

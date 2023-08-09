@@ -36,8 +36,8 @@ const CancelAlert = ({htmlElementId: id, selectProductCallback} : Props) => {
   const {selectedTransaction} = selectProductCallback();
     
   const onClose = () => {
-    console.log("close"); 
-    console.log("transaction modal ", selectedTransaction);
+    //console.log("close"); 
+    //console.log("transaction modal ", selectedTransaction);
   }
   
   const formatter = new Intl.NumberFormat('id-ID', {
@@ -56,7 +56,7 @@ const CancelAlert = ({htmlElementId: id, selectProductCallback} : Props) => {
         method: "PUT",
       }).then(() => router.reload());
     } catch (error) {
-      //console.log(error)
+      ////console.log(error)
     }
   }
 

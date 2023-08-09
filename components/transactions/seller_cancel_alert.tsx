@@ -22,8 +22,8 @@ const SellerCancelAlert = ({htmlElementId: id, selectProductCallback} : Props) =
   }
 
   const onClose = () => {
-    console.log("close"); 
-    console.log("transaction modal ", selectedTransaction);
+    //console.log("close"); 
+    //console.log("transaction modal ", selectedTransaction);
   }
   
   const formatter = new Intl.NumberFormat('id-ID', {
@@ -42,7 +42,7 @@ const SellerCancelAlert = ({htmlElementId: id, selectProductCallback} : Props) =
             method: 'PUT'
         }).then(()=>  router.push({pathname: '/shop/complain/refund', query: {id: selectedTransaction.id}}))
       }catch(error){
-          //console.log(error)
+          ////console.log(error)
       }
   }
 
@@ -57,7 +57,7 @@ const SellerCancelAlert = ({htmlElementId: id, selectProductCallback} : Props) =
             method: 'PUT'
         }).then(()=> router.reload())
       }catch(error){
-          //console.log(error)
+          ////console.log(error)
       }
   }
 

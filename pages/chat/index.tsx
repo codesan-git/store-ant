@@ -21,7 +21,7 @@ interface MessageForm {
 let socket : Socket;
 
 export default function Chat({messages, recipient} : Messages) {
-  console.log(messages);
+  //console.log(messages);
   const { data: session } = useSession();
   const router = useRouter();
   const {id: recipientId} = router.query;
@@ -47,7 +47,7 @@ export default function Chat({messages, recipient} : Messages) {
 
   async function listen(){    
     socket.on("receive-message", (data : MessageForm) => {
-      console.log(data);
+      //console.log(data);
       setAllMessage([...allMessage, data]);
     });
   }
@@ -66,7 +66,7 @@ export default function Chat({messages, recipient} : Messages) {
             method: 'POST'
         })
     }catch(error){
-        //console.log(error)
+        ////console.log(error)
     }
   }
 

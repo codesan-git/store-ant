@@ -40,8 +40,8 @@ const ItemReceiveModal = ({ htmlElementId: id, selectProductCallback }: Props) =
   }
 
   const onClose = () => {
-    console.log("close");
-    console.log("transaction modal ", selectedTransaction);
+    //console.log("close");
+    //console.log("transaction modal ", selectedTransaction);
   }
 
   const formatter = new Intl.NumberFormat('id-ID', {
@@ -51,7 +51,7 @@ const ItemReceiveModal = ({ htmlElementId: id, selectProductCallback }: Props) =
 
   const handleChange = () => {
     setUsingBalance(!isUsingBalance);
-    console.log(isUsingBalance);
+    //console.log(isUsingBalance);
   };
 
   async function onBayar() {
@@ -84,11 +84,11 @@ const ItemReceiveModal = ({ htmlElementId: id, selectProductCallback }: Props) =
     }
 
     const data = { shopId: selectedTransaction?.shopId, totalWeight: totalWeight };
-    console.log(data);
+    //console.log(data);
     try {
       const response = await axios.post(`/api/cart/shipping`, data);
       const { cost: costData } = response.data;
-      console.log("cost: ", costData);
+      //console.log("cost: ", costData);
       setCost(costData);
     } catch (error) {
 

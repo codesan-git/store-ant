@@ -26,7 +26,6 @@ export default function Login() {
   const router = useRouter();
 
   async function loginUser(data: FormData) {
-    console.log("login");
     const res = await signIn("credentials", {
       redirect: true,
       email: data.email,
@@ -34,12 +33,12 @@ export default function Login() {
       callbackUrl: "/admin/console/",
     });
 
-    res?.error ? console.log("ERROR ", res?.error) : router.push("/");
+    res?.ok &&  router.push("/");
   }
 
   const handleForgotPassword = (e: any) => {
     e.preventDefault();
-    console.log("Sending");
+    //console.log("Sending");
 
     Swal.fire({
       title: "Are you sure?",
@@ -59,9 +58,9 @@ export default function Login() {
           },
           body: JSON.stringify(formForgot),
         }).then((res) => {
-          console.log("Response received");
+          //console.log("Response received");
           if (res.status === 200) {
-            console.log("Response succeeded!");
+            //console.log("Response succeeded!");
             // setSubmitted(true);
           }
         });

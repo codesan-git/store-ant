@@ -72,6 +72,6 @@ export default function (req: any, res: any) {
     else console.log(info);
   });
 
-  console.log('req body',req.body);
+  //console.log('req body',req.body);
   res.send("success");
 }

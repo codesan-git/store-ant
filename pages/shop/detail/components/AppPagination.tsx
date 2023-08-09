@@ -102,7 +102,7 @@ const AppPagination: FC<AppPaginationProps> = ({ getShop }) => {
   });
 
 
-  console.log(`getshop`, getShop)
+  //console.log(`getshop`, getShop)
   return (<>
     <div id='product-desktop' className='hidden lg:block'>
       <h1 className='text-2xl font-bold mb-4'>Semua Produk</h1>

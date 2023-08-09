@@ -122,7 +122,7 @@ const OrdersMania = ( {shop, products, address, transactions}: Props) => {
         method: "PUT",
       }).then(() => router.reload());
     } catch (error) {
-      //console.log(error)
+      ////console.log(error)
     }
   }
 
@@ -251,11 +251,11 @@ const OrdersMania = ( {shop, products, address, transactions}: Props) => {
   //     alert("Silahkan atur alamat toko terlebih dahulu.");
   // }
 
-  console.log(`transaction`, transactions)
-  console.log(`name shop`, shop)
-  console.log(`products bang`, products)
-  console.log(`address`, address)
-  // console.log(`sellerShop`, sellerShop)
+  //console.log(`transaction`, transactions)
+  //console.log(`name shop`, shop)
+  //console.log(`products bang`, products)
+  //console.log(`address`, address)
+  // //console.log(`sellerShop`, sellerShop)
 
   return (
     <div>
@@ -320,7 +320,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       }
     ],
   });
-  console.log(`SSP products`, products)
+  //console.log(`SSP products`, products)
 
   const address = await prisma.address.findFirst({
     where:{ 
@@ -348,7 +348,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       }
     }
   })
-  console.log('shopname',shopName)
+  //console.log('shopname',shopName)
 
   const transactions = await prisma.transaction.findMany({
     where: {
@@ -393,7 +393,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   });
 
-  // console.log(JSON.parse(JSON.stringify(transactions)));
+  // //console.log(JSON.parse(JSON.stringify(transactions)));
 
   return {
     props: {

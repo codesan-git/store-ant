@@ -80,15 +80,15 @@ const AddressUpdateFormModal = ({ provinceData, cityData, address } : Props) => 
           method: 'PUT'
         }).then(() => router.reload())
       }catch(error){
-          //console.log(error)
+          ////console.log(error)
       }
   }
 
   const setCityid = (city: string) => {
-    console.log("prov:", form.province );
+    //console.log("prov:", form.province );
     let chosenCity = cityData.filter((x) => x.city_name == city);
     setForm({...form, cityId: chosenCity[0].city_id, city: chosenCity[0].city_name});
-    console.log(chosenCity[0].city_name, chosenCity[0].city_id)
+    //console.log(chosenCity[0].city_name, chosenCity[0].city_id)
   }
   
   return (

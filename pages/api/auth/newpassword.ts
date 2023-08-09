@@ -12,7 +12,7 @@ export default async function handler(
 ) {
   const { password, newPassword, confirmNewPassword } = req.body;
 
-  console.log("password", password);
+  //console.log("password", password);
 
   try {
     

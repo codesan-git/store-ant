@@ -60,13 +60,13 @@ export default function ComplainAdmin({ getOrders }: Props) {
   const [urls, setURLs] = useState<string[]>([]);
 
   useEffect(() => {
-    console.log("images: ", urls.join(","));
-    console.log("url length: ", urls.length);
-    console.log("files length: ", selectedFiles.length);
-    console.log("condition: ", selectedFiles.length == urls.length);
+    //console.log("images: ", urls.join(","));
+    //console.log("url length: ", urls.length);
+    //console.log("files length: ", selectedFiles.length);
+    //console.log("condition: ", selectedFiles.length == urls.length);
     if (urls.join(",") != "" && urls.length == selectedFiles.length) {
       const data = { complainId: form.complainId, description: form.description, images: urls.join(",") };
-      axios.post(`/api/complain/seller/shopComment`, data).then(() => { console.log("created!"); router.back(); });
+      axios.post(`/api/complain/seller/shopComment`, data).then(() => { router.back(); });
     }
   }, [urls]);
 
@@ -110,7 +110,7 @@ export default function ComplainAdmin({ getOrders }: Props) {
     const storage = getStorage();
 
     selectedFiles.map((file) => {
-      console.log("loop");
+      //console.log("loop");
 
       const sotrageRef = ref(storage, `images/product/${file.name}`);
 
@@ -124,7 +124,7 @@ export default function ComplainAdmin({ getOrders }: Props) {
           );
           //setProgress(prog);
         },
-        (error) => console.log(error),
+        (error) => //console.log(error),
         async () => {
           await getDownloadURL(uploadTask.snapshot.ref).then((downloadURLs) => {
             setURLs(prevArray => [...prevArray, downloadURLs]);
@@ -150,9 +150,9 @@ export default function ComplainAdmin({ getOrders }: Props) {
       if (validImageTypes.includes(fileType)) {
         setFile([...selectedFiles, file[i]]);
       } else {
-        console.log("only images accepted");
+        //console.log("only images accepted");
       }
-      console.log("FILES: ", selectedFiles);
+      //console.log("FILES: ", selectedFiles);
     }
   };
 
@@ -206,10 +206,10 @@ export default function ComplainAdmin({ getOrders }: Props) {
 
   }
 
-  // console.log(`getOrders`,getOrders)
-  // console.log(`getOrders`, getOrders[11].order[0].OrderStatus)
-  console.log(`desc`, form)
-  console.log(`img`, selectedImage)
+  // //console.log(`getOrders`,getOrders)
+  // //console.log(`getOrders`, getOrders[11].order[0].OrderStatus)
+  //console.log(`desc`, form)
+  //console.log(`img`, selectedImage)
   return (
     <>
       <div className="hidden lg:block">
@@ -427,14 +427,14 @@ export default function ComplainAdmin({ getOrders }: Props) {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   // const complain = await getDataOrders(context)
   const currUser = await getSession(context);
-  console.log(`currUser`, currUser?.user.id)
+  //console.log(`currUser`, currUser?.user.id)
   const getShop = await prisma.shop.findFirst({
     where: {
       userId: currUser?.user.id
     }
 
   })
-  console.log(`getShop`, getShop)
+  //console.log(`getShop`, getShop)
   const getTransactions = await prisma.transaction.findMany({
     where: {
       shopId: getShop?.id
@@ -449,7 +449,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       shop: true
     }
   })
-  console.log(`getTransactions`, getTransactions)
+  //console.log(`getTransactions`, getTransactions)
 
   return {
     props: {

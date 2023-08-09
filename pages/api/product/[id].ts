@@ -29,9 +29,9 @@ export default async function handler(
         }
       })
     res.status(200).json({product})
-    console.log(res)
+    //console.log(res)
     } catch (error) {
-      //console.log(error)
+      ////console.log(error)
     }
   }
 
@@ -44,11 +44,11 @@ export default async function handler(
 
     productData?.image?.split(",").forEach((image) => {
       let pictureRef = ref(storage, image );
-      console.log(pictureRef);
+      //console.log(pictureRef);
       deleteObject(pictureRef).then(() => {
-        console.log("deleted");
+        //console.log("deleted");
       }).catch((error) => {
-        console.log("error: ", error);
+        //console.log("error: ", error);
       });
     });
 
@@ -58,7 +58,7 @@ export default async function handler(
       })
     res.json(product)
     } catch (error) {
-      //console.log(error)
+      ////console.log(error)
     }
   }
 

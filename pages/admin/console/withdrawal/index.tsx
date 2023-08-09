@@ -27,10 +27,10 @@ interface User {
 export default function Withdrawal({ withdrawals }: WithdrawalData) {
   const [selectedWithdrawal, setSelectedWithdrawal] = useState<Withdrawal>();
   const router = useRouter();
-  console.log(withdrawals);
+  //console.log(withdrawals);
 
   const getWithdrawalDetail = () => {
-    console.log("returning: ", selectedWithdrawal);
+    //console.log("returning: ", selectedWithdrawal);
     return { selectedWithdrawal }
   }
 

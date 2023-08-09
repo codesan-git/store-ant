@@ -53,6 +53,6 @@ export default async function handler(
     
     res.status(200).json({bankAccount: withdrawal});
   } catch (error) {
-    console.log("erorr ", error);
+    //console.log("erorr ", error);
   }
 }

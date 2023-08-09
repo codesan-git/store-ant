@@ -86,7 +86,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       
     });
   
-    console.log(JSON.parse(JSON.stringify(transaction)));
+    //console.log(JSON.parse(JSON.stringify(transaction)));
   
     return {
       props: {

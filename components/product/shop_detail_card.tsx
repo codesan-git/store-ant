@@ -49,7 +49,7 @@ const ShopDetailCard = ({shop, location}: Props) => {
     if(shop.userId === session.data?.user.id) setIsUser(true);
   }, []);
 
-  console.log(`data shop`, location)
+  //console.log(`data shop`, location)
   return (
     <>
       <div id="shop-details" className=''>

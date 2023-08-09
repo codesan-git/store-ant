@@ -14,7 +14,7 @@ export default async function handler(
   const {image} = req.body
   const session = await getSession({req})
 
-  console.log("image url: ", image);
+  //console.log("image url: ", image);
   try {
     await prisma.user.update({
       where: {id: session?.user?.id},
@@ -24,7 +24,7 @@ export default async function handler(
     })
     res.status(200).json({ message: 'Photo updated' })
   } catch (error) {
-    //console.log(error)
+    ////console.log(error)
     res.status(400).json({ message: "Fail" })
   }
 }

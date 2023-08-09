@@ -41,7 +41,7 @@ export async function middleware(request: NextRequest) {
       req: request,
       secret: process.env.JWT_SECRET,
     });
-    console.log("ROLE : ", token?.role);
+    //console.log("ROLE : ", token?.role);
     //check not logged in
     if (!token) {
       const url = new URL(`/admin/login`, request.url);

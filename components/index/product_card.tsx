@@ -26,7 +26,7 @@ const ProductCard = ( {product, onClick , onEdit, onDelete} : Props ) => {
     const onCardClick = () => {
       if(onClick != null) onClick();
     }
-    console.log(product?.image?.split(",")[0]);
+    //console.log(product?.image?.split(",")[0]);
 
     return (
       <div data-testid="card" id="card" data-theme="garden" className='card glass w-30 h-96 lg:h-auto lg:w-auto hover:cursor-pointer' onClick={onCardClick}>  {/*Find a way to style cursor pointer if onClick is not null*/}
