@@ -1,6 +1,6 @@
 import { Fragment, useState } from "react";
 import { HiOutlineEllipsisVertical, HiShoppingCart } from "react-icons/hi2";
-import { Product, Order as PrismaOrder, ProductInCart, Transaction as PrismaTransaction, TransactionStatus } from "@prisma/client";
+import { Order as PrismaOrder, ProductInCart, Transaction as PrismaTransaction, TransactionStatus } from "@prisma/client";
 
 interface Order {
   id: number,
@@ -23,13 +23,28 @@ interface Transaction {
   order: Order[],
   shop: {
     shopName: string,
-    balance: number ,
+    balance: number,
     image: string,
     averageRating: number
   },
-  user:{
-    name:string
+  user: {
+    name: string
   }
+}
+
+interface Product {
+  id: string,
+  name: string,
+  price: number,
+  stock: number,
+  category: Category,
+  image: string,
+  averageRating: number
+}
+
+interface Category{
+  id: string,
+  category: string
 }
 
 interface Props {

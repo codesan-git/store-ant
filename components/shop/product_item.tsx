@@ -16,7 +16,7 @@ interface Product {
 }
 
 interface Category{
-  id: Number,
+  id: string,
   category: string
 }
 
