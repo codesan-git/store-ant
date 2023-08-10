@@ -167,7 +167,7 @@ const Navbar = () => {
 
     } else {
       if (role == NotifRole.SELLER) {
-        router.push("/ordersMania/");
+        router.push("/shop/");
       } else {
         router.push("/transactions/");
       }
