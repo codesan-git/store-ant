@@ -8,12 +8,11 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const session = await getSession({req})
-  const id = req.query.id
   
   if(req.method === 'GET'){
     try {
       const bank = await prisma.bankAccount.findFirst({
-        where: { id: Number(id), userId: session?.user.id! }
+        where: { userId: session?.user.id! }
       })
     res.status(200).json({bank})
     console.log(res)
