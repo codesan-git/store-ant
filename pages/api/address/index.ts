@@ -8,13 +8,11 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const session = await getSession({req})
-  const id = req.query.id
   
   if(req.method === 'GET'){
     try {
-      const address = await prisma.address.findFirst({
+      const address = await prisma.address.findMany({
         where: { 
-            id: Number(id), 
             profile: {
                 userId:  session?.user.id!
             }
