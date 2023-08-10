@@ -40,6 +40,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { format } from "date-fns";
+import { Address, createAddress } from "@/services/address/address";
 
 interface FormData {
   username?: string;
@@ -83,17 +84,7 @@ interface Props {
   banks: BankType[]
 }
 
-interface Address {
-  id: number;
-  address: string;
-  region: string;
-  city: string;
-  province: string;
-  postcode: string;
-  isMainAddress: boolean;
-  isShopAddress: boolean;
-  contact: string;
-}
+
 
 export default function Profile({ profile, user, address, provinceData, cityData, banks }: Props) {
   const [form, setForm] = useState<FormData>({
@@ -112,6 +103,13 @@ export default function Profile({ profile, user, address, provinceData, cityData
   const [submitted, setSubmitted] = useState(false);
   const [selectedAddressId, setSelectedAddressId] = useState(0);
   // const [gender, setGender] = useState('');
+
+  const [addresses, setAddresses] = useState<Address[]>(address);
+  const [bankAccount, setBankAccount] = useState<BankAccount>(user.bankAccount);
+
+  useEffect(() => {
+
+  }, [addresses]);
 
   const handleChange = (event: SelectChangeEvent) => {
     setForm({ ...form, gender: event.target.value });
@@ -813,11 +811,16 @@ export default function Profile({ profile, user, address, provinceData, cityData
         <>
           <section className="mt-8 flex flex-col gap-5 bg-gray-100 p-2 lg:p-10 rounded-md">
             <div className="flex">
-              <AddressFormModal provinceData={provinceData} cityData={cityData} />
+              <AddressFormModal 
+                provinceData={provinceData} 
+                cityData={cityData} 
+                createAddress={createAddress}
+                setAddressesState={setAddresses}
+              />
             </div>
-            {address ? (
+            {addresses ? (
               <div className="space-y-4">
-                {address.map((address) => (
+                {addresses.map((address) => (
                   <div
                     className="card w-full bg-base-100 shadow-xl text-md leading-loose"
                     key={String(address.id)}
@@ -875,7 +878,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
       code: (
         <div className="mt-8 flex flex-col gap-5 bg-gray-100 p-2 lg:p-10 rounded-md">
           {
-            user.bankAccount ?
+            bankAccount ?
               <Fragment>
                 <div>
                   <BankAccountDeletionModal onConfirm={handleBankAccountDelete} />
@@ -883,22 +886,25 @@ export default function Profile({ profile, user, address, provinceData, cityData
                 <div className="lg:w-1/2">
                   <div className="flex flex-row space-x-1">
                     <h1 className="w-1/2">Bank</h1>
-                    <h1 className="w-1/2">: {user.bankAccount.bank.name}</h1>
+                    <h1 className="w-1/2">: {banks.filter((bank) => bank.id === bankAccount.bankTypeId).at(0)?.name}</h1>
                   </div>
                   <div className="flex flex-row space-x-1">
                     <h1 className="w-1/2">Name</h1>
-                    <h1 className="w-1/2">: {user.bankAccount.name}</h1>
+                    <h1 className="w-1/2">: {bankAccount.name}</h1>
                   </div>
                   <div className="flex flex-row space-x-1">
                     <h1 className="w-1/2">Account No.</h1>
-                    <h1 className="w-1/2">: {user.bankAccount.number}</h1>
+                    <h1 className="w-1/2">: {bankAccount.number}</h1>
                   </div>
                 </div>
               </Fragment>
               :
               <Fragment>
                 <div>
-                  <BankAccountFormModal banks={banks} />
+                  <BankAccountFormModal 
+                    banks={banks}
+                    setBankState={setBankAccount}
+                  />
                 </div>
                 <div>
                   <h1>No bank account has been added yet.</h1>
