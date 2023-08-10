@@ -50,7 +50,7 @@ export default function Search() {
     return null;
   }
 
-  console.log(`Fetched Category data: ${categoryData?.category.category}`);
+  //console.log(`Fetched Category data: ${categoryData?.category.category}`);
 
   return (
     <div>

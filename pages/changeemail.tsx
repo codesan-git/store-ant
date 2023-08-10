@@ -16,20 +16,20 @@ export default function Validation() {
         email: "",
         access_token: accessToken as string,
     });
-    console.log("accessToken", accessToken);
+    //console.log("accessToken", accessToken);
 
-    console.log("form body", form);
+    //console.log("form body", form);
     const changeEmail = async () => {
-        // console.log('form password', form.password)
+        // //console.log('form password', form.password)
         try {
             const response = await axios
                 .put(`/api/changeemail/changeemail`, form)
                 .then(() => {
                     router.push("/login");
                 });
-            console.log("dari fetchProduct", response);
+            //console.log("dari fetchProduct", response);
         } catch (error) {
-            console.log(error);
+            //console.log(error);
         }
     };
 

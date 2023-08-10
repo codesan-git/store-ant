@@ -13,8 +13,8 @@ const DeleteCartAlert = ({htmlElementId: id, data} : Props) => {
   const router = useRouter();
     
   const onClose = () => {
-    console.log("close"); 
-    console.log("id ", data);
+    //console.log("close"); 
+    //console.log("id ", data);
   }
 
   async function onSubmit() {
@@ -28,7 +28,7 @@ const DeleteCartAlert = ({htmlElementId: id, data} : Props) => {
           method: 'DELETE'
       }).then(()=> router.reload());
     }catch(error){
-        //console.log(error)
+        ////console.log(error)
     }
   }
 

@@ -87,6 +87,6 @@ export default async function (req: any, res: any) {
     return null
   }
 
-  console.log(req.body);
+  //console.log(req.body);
   res.send("success");
 }

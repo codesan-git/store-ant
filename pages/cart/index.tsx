@@ -31,7 +31,7 @@ interface CartId {
 }
 
 export default function Cart({ cartItems, mainAddress }: Props) {
-  console.log("address: ", mainAddress);
+  //console.log("address: ", mainAddress);
   const [data, setData] = useState<string[]>([]); 
   const [checkoutClick, setCheckoutClick] = useState(false);
   const router = useRouter();
@@ -52,8 +52,8 @@ export default function Cart({ cartItems, mainAddress }: Props) {
     }
     setData(newData);
 
-    console.log(newData);
-    console.log(id);
+    //console.log(newData);
+    //console.log(id);
   }
 
   function onCheckout(){
@@ -68,7 +68,7 @@ export default function Cart({ cartItems, mainAddress }: Props) {
           method: 'PUT'
       }).then(()=> router.push("/transactions"))
     }catch(error){
-        //console.log(error)
+        ////console.log(error)
     }
   }
   
@@ -83,7 +83,7 @@ export default function Cart({ cartItems, mainAddress }: Props) {
           method: 'DELETE'
       }).then(()=> router.reload());
     }catch(error){
-        //console.log(error)
+        ////console.log(error)
     }
   }
 

@@ -10,7 +10,7 @@ export default async function handler(
   const {id} = req.body
   const session = await getSession({req})
 
-  console.log(`ini id`, id)
+  //console.log(`ini id`, id)
 
   const transaction = await prisma.transaction.update({
       where:{id: String(id)},
@@ -53,7 +53,7 @@ export default async function handler(
   res.status(200).json({ message: "Success!" })
   try {
   } catch (error) {
-    //console.log(error)
+    ////console.log(error)
     res.status(400).json({ message: "Fail" })
   }
 }

@@ -40,7 +40,7 @@ export default function DetailShop({ getShop }: Props) {
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const shop = context.query.shopName;
     //const shopGet = await getDataShop(String(shop));
-    console.log(`shop`, shop);
+    //console.log(`shop`, shop);
 
     const getShop = await prisma.shop.findFirst({
         where: { shopName: String(shop) },

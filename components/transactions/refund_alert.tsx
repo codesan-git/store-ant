@@ -16,8 +16,8 @@
 //   const {complain, isApproving} = selectProductCallback();
     
 //   const onClose = () => {
-//     console.log("close"); 
-//     console.log("transaction modal ", complain);
+//     //console.log("close"); 
+//     //console.log("transaction modal ", complain);
 //   }
   
 //   const formatter = new Intl.NumberFormat('id-ID', {
@@ -36,7 +36,7 @@
 //             method: 'PUT'
 //         }).then(()=> router.push({pathname: '/shop/complain/refund', query: {id: complain?.productInCart.id}}))
 //       }catch(error){
-//           //console.log(error)
+//           ////console.log(error)
 //       }
 //   }
 

@@ -39,7 +39,7 @@ export default function EditProfile({profile} : Profile) {
             method: 'POST'
         }).then(()=> { setForm({username:'', password:'', phonenumber:'', address:''}); router.back() })
     }catch(error){
-        //console.log(error)
+        ////console.log(error)
     }
   }
 
@@ -47,7 +47,7 @@ export default function EditProfile({profile} : Profile) {
     try{
         create(data)
     }catch(error){
-        //console.log(error)
+        ////console.log(error)
     }
   }
 

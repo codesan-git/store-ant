@@ -17,17 +17,17 @@ const ReviewModal = ({htmlElementId: id, selectProductCallback} : Props) => {
 
   const handleImageUpload = (e: any) => {
 
-    // console.log(`obj list: ${obj.target}`);
+    // //console.log(`obj list: ${obj.target}`);
 
     let files = e.target.files;
 
-    console.log(`filecount in event's target: ${files.length}`)
-    console.log(`filecount in selectedFiles Sate: ${selectedFiles.length}`)
+    //console.log(`filecount in event's target: ${files.length}`)
+    //console.log(`filecount in selectedFiles Sate: ${selectedFiles.length}`)
 
     // if((selectedFiles.length + files.length) > 5 ) return;
 
     // for (const file of files){
-    //   console.log(`filename: ${file}`);
+    //   //console.log(`filename: ${file}`);
     // }
 
     setSelectedFiles([...selectedFiles, ...files]);
@@ -52,7 +52,7 @@ const ReviewModal = ({htmlElementId: id, selectProductCallback} : Props) => {
       formData.append("comment", comment);
       await axios.post('/api/cart/rate/', formData);
     }catch(error){
-      console.log(`Error in posting data. Error: ${error}`);
+      //console.log(`Error in posting data. Error: ${error}`);
     }
 
     setStarValue(5);

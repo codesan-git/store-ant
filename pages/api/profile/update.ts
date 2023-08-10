@@ -19,12 +19,12 @@ export default async function handler(
     const findUser = await prisma.profile.findUnique({
       where: { userId:session?.user.id },
     });
-    console.log("kocak", findUser);
-    console.log("userId", userId);
+    //console.log("kocak", findUser);
+    //console.log("userId", userId);
     res.status(200).json({
       id: findUser,
     });
   } catch (error) {
-    console.log("erorr update", error);
+    //console.log("erorr update", error);
   }
 }

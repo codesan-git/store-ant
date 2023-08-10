@@ -88,7 +88,7 @@ export default async function handler(
       })
       res.json(event)
     } catch (error) {
-      //console.log(error)
+      ////console.log(error)
     }
   }
 }

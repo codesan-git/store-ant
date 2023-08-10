@@ -15,20 +15,20 @@ export default function Validation() {
     password: "",
     access_token: accessToken as string,
   });
-  console.log("accessToken", accessToken);
+  //console.log("accessToken", accessToken);
 
-  console.log("form body", form);
+  //console.log("form body", form);
   const resetPassword = async () => {
-    // console.log('form password', form.password)
+    // //console.log('form password', form.password)
     try {
       const response = await axios
         .put(`/api/resetpassword/resetpassword`, form)
         .then(() => {
           router.push("/login");
         });
-      console.log("dari fetchProduct", response);
+      //console.log("dari fetchProduct", response);
     } catch (error) {
-      console.log(error);
+      //console.log(error);
     }
   };
 

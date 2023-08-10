@@ -15,21 +15,21 @@ export default function SocketHandler(
 
         io.on("connection", (socket) =>{
             socket.on("connect-user", (userId) => {
-                console.log(userId);
+                //console.log(userId);
                 if(userId || userId != null)
                     users[userId] = socket.id;
-                console.log("users: ", users[userId]);
+                //console.log("users: ", users[userId]);
             });
 
             socket.on("send-message", (obj) => {
                 io.to(users[obj.recipientId]).emit("receive-message", obj);
-                console.log("users: ", users);
-                console.log("id: ", socket.id);
+                //console.log("users: ", users);
+                //console.log("id: ", socket.id);
             });
         });
-        console.log("setting socket");
+        //console.log("setting socket");
     } else {
-        console.log("server is already set");
+        //console.log("server is already set");
     }
     res.end();
 }

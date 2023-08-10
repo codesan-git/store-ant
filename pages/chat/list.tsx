@@ -42,7 +42,7 @@ export default function List() {
   async function fetchConversation() {
     const res = await axios.get("/api/chat");
     setConversations(res.data.conversations);
-    console.log(res.data.conversations);
+    //console.log(res.data.conversations);
   }
 
   return (

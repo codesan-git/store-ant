@@ -28,9 +28,9 @@ export default function Complain() {
       if (validImageTypes.includes(fileType)) {
         setFile([...files, file[i]]);
       } else {
-        console.log("only images accepted");
+        //console.log("only images accepted");
       }
-      console.log("FILES: ", files);
+      //console.log("FILES: ", files);
     }
   };
   
@@ -45,7 +45,7 @@ export default function Complain() {
     const storage = getStorage();
 
     files.map((file) => {
-      console.log("loop");
+      //console.log("loop");
 
       const sotrageRef = ref(storage, `images/product/${file.name}`);
 
@@ -59,7 +59,7 @@ export default function Complain() {
           );
           //setProgress(prog);
         },
-        (error) => console.log(error),
+        (error) => //console.log(error),
         async () => {
           await getDownloadURL(uploadTask.snapshot.ref).then((downloadURLs) => {
             setURLs(prevArray => [...prevArray, downloadURLs]);

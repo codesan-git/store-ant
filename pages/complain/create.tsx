@@ -18,9 +18,9 @@ export default function Complain() {
       if (validImageTypes.includes(fileType)) {
         setFile([...files, file[i]]);
       } else {
-        console.log("only images accepted");
+        //console.log("only images accepted");
       }
-      console.log("FILES: ", files);
+      //console.log("FILES: ", files);
     }
   };
   
@@ -40,7 +40,7 @@ export default function Complain() {
         formData.append("description", desc);
         await axios.post('/api/complain/create', formData).then(() => {router.back() });
     } catch (error: any) {
-        //console.log(error);
+        ////console.log(error);
     }
   }
 

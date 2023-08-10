@@ -117,7 +117,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
     setForm({ ...form, gender: event.target.value });
   };
 
-  console.log(address);
+  //console.log(address);
 
   const notifAlert = () => {
     <div className="alert shadow-lg">
@@ -165,7 +165,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
         router.push(router.asPath);
       });
     } catch (error) {
-      //console.log(error);
+      ////console.log(error);
     }
   }
 
@@ -176,7 +176,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
       }).then(() => router.push(router.asPath));
     }
     catch (error) {
-      console.log(error);
+      //console.log(error);
     }
   }
 
@@ -193,7 +193,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
         router.push(router.asPath);
       });
     } catch (error) {
-      //console.log(error);
+      ////console.log(error);
     }
   }
 
@@ -211,7 +211,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
         alert("address deleted!");
       });
     } catch (error) {
-      //console.log(error);
+      ////console.log(error);
     }
   }
 
@@ -229,7 +229,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
     //     router.push(router.asPath);
     //   });
     // } catch (error) {
-    //   //console.log(error);
+    //   ////console.log(error);
     // }
   }
 
@@ -241,18 +241,18 @@ export default function Profile({ profile, user, address, provinceData, cityData
     uploadTask.on('state_changed',
       (snapshot) => {
         const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log('Upload is ' + progress + '% done');
+        //console.log('Upload is ' + progress + '% done');
         switch (snapshot.state) {
           case 'paused':
-            console.log('Upload is paused');
+            //console.log('Upload is paused');
             break;
           case 'running':
-            console.log('Upload is running');
+            //console.log('Upload is running');
             break;
         }
       },
       (error) => {
-        console.log("error, ", error);
+        //console.log("error, ", error);
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
@@ -265,7 +265,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
 
   const changePhoneNumber = (e: any) => {
     e.preventDefault();
-    console.log("Sending");
+    //console.log("Sending");
 
     let data = {
       email: session?.user.email!,
@@ -280,9 +280,9 @@ export default function Profile({ profile, user, address, provinceData, cityData
       },
       body: JSON.stringify(data),
     }).then((res) => {
-      console.log("Response received");
+      //console.log("Response received");
       if (res.status === 200) {
-        console.log("Response succeeded!");
+        //console.log("Response succeeded!");
         setSubmitted(true);
       }
     });
@@ -291,12 +291,12 @@ export default function Profile({ profile, user, address, provinceData, cityData
   const getToken = async () => {
     const res = (await axios.get(`/api/validation/${session?.user.id}`)).data
     setToken(session?.user.accessToken!)
-    console.log('response token', res)
+    //console.log('response token', res)
   }
 
   const changeVerifyStatus = (e: any) => {
     e.preventDefault();
-    console.log("Sending");
+    //console.log("Sending");
 
     let data = {
       email: session?.user.email!,
@@ -321,9 +321,9 @@ export default function Profile({ profile, user, address, provinceData, cityData
           },
           body: JSON.stringify(data),
         }).then((res) => {
-          console.log("Response received");
+          //console.log("Response received");
           if (res.status === 200) {
-            console.log("Response succeeded!");
+            //console.log("Response succeeded!");
             setSubmitted(true);
           }
         });
@@ -334,7 +334,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
 
   const resetPassword = (e: any) => {
     e.preventDefault();
-    console.log("Sending");
+    //console.log("Sending");
 
     let data = {
       email: session?.user.email!,
@@ -359,9 +359,9 @@ export default function Profile({ profile, user, address, provinceData, cityData
           },
           body: JSON.stringify(data),
         }).then((res) => {
-          console.log("Response received");
+          //console.log("Response received");
           if (res.status === 200) {
-            console.log("Response succeeded!");
+            //console.log("Response succeeded!");
             setSubmitted(true);
           }
         });
@@ -372,7 +372,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
 
   const changeEmail = (e: any) => {
     e.preventDefault();
-    console.log("Sending");
+    //console.log("Sending");
 
     let data = {
       email: session?.user.email!,
@@ -397,9 +397,9 @@ export default function Profile({ profile, user, address, provinceData, cityData
           },
           body: JSON.stringify(data),
         }).then((res) => {
-          console.log("Response received");
+          //console.log("Response received");
           if (res.status === 200) {
-            console.log("Response succeeded!");
+            //console.log("Response succeeded!");
             setSubmitted(true);
           }
         });
@@ -412,7 +412,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
     try {
       create(data);
     } catch (error) {
-      //console.log(error);
+      ////console.log(error);
     }
   };
 
@@ -914,8 +914,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
     getToken();
   }, []);
 
-  console.log("user", session?.user);
-  console.log("cek emailVerification");
+  //console.log("user", session?.user);
   return (
     <>
       <Navbar />

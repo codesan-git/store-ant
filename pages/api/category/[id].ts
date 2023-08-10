@@ -21,7 +21,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       });
     }
     catch(e){
-      console.log(e);
+      //console.log(e);
     }
   }
 }

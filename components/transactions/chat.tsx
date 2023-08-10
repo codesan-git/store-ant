@@ -83,7 +83,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
     await fetch("/api/socket");
 
     socket = io('ws://localhost:3000', {transports: ['websocket']});
-    console.log(session?.user.id);
+    //console.log(session?.user.id);
     socket.emit("connect-user", session?.user.id);
   }
 
@@ -111,7 +111,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
       chatDoesNotExistYet = true;
 
       data.map((c) => {
-        console.log("Running map")
+        //console.log("Running map")
         const latestMessage = c.messages.at(c.messages.length-1);
         const recepient = getRecepient(latestMessage!);
 
@@ -185,7 +185,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
               method: 'POST'
             }).then()
           }catch(error){
-          //console.log(error)
+          ////console.log(error)
       }
   
       setNewMessage({...newMessage as Message, message: ""});
@@ -233,7 +233,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
             method: 'POST'
         }).then()
     }catch(error){
-        //console.log(error)
+        ////console.log(error)
     }
 
     setNewMessage({...newMessage as Message, message: ""});
@@ -246,7 +246,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
     const latestMessage = conversation.messages.at(conversation.messages.length-1);
     const recepient = getRecepient(latestMessage!);
     setSelectedRecepient(recepient);
-    console.log(recepient.id);
+    //console.log(recepient.id);
 
     setCurrentChatroomMessages(conversation?.messages);
 
@@ -258,7 +258,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
       sender: session?.user as unknown as User,
       senderId: String(session?.user.id)
     });
-    // console.log(messageForm);
+    // //console.log(messageForm);
   }
 
   const newChatroomItemOnClick = () => {

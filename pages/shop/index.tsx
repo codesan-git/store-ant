@@ -7,7 +7,7 @@ import TransactionsDashboard from "@/components/transactions/transactions_dashbo
 import PaymentModal from "@/components/transactions/payment_modal";
 import CancelAlert from "@/components/transactions/user_cancel_alert";
 import DetailTransactionModal from "@/components/transactions/detail_transaction_modal";
-import { Product, Order as PrismaOrder, Transaction as PrismaTransaction, TransactionStatus, Shop } from "@prisma/client";
+import { Order as PrismaOrder, Transaction as PrismaTransaction, TransactionStatus, Shop } from "@prisma/client";
 import ReviewModal from "@/components/transactions/review_modal";
 import Footer from "../footer";
 import Navbar from "../navbar";
@@ -19,14 +19,32 @@ import ProcessModal from "@/components/transactions/process_modal";
 import ItemReceiveModal from "@/components/shop/item_receive";
 import SellerCancelAlert from "@/components/transactions/seller_cancel_alert";
 import ProductItem from "@/components/shop/product_item";
-
+import { Address } from "@prisma/client";
 interface Props {
   shop: {
     shopName: string,
     balance: number,
     image: string,
     averageRating: number
-  }
+  },
+  products: Product[]
+  address: Address
+  transactions: Transaction[]
+}
+
+interface Product {
+  id: string,
+  name: string,
+  price: number,
+  stock: number,
+  category: Category,
+  image: string,
+  averageRating: number
+}
+
+interface Category{
+  id: string,
+  category: string
 }
 
 interface CartId {
@@ -65,7 +83,7 @@ interface Transaction {
 
 
 
-const OrdersMania = ({ transactions }: { transactions: Transaction[] }, { products }: { products: Product[] }, shop: Props) => {
+const OrdersMania = ( {shop, products, address, transactions}: Props) => {
   const router = useRouter();
 
   const [currentSelectedSection, setCurrentSelectedSection] = useState<String>("Home");
@@ -78,14 +96,14 @@ const OrdersMania = ({ transactions }: { transactions: Transaction[] }, { produc
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction>();
   const [transactionModalIsHidden, setTransactionModalIsHidden] = useState<Boolean>(true);
 
-  const [sellerShop, setSellerShop] = useState<Props>({
-    shop: {
-      shopName: shop?.shop?.shopName,
-      balance: shop?.shop?.balance,
-      image: shop?.shop?.image,
-      averageRating: shop?.shop?.averageRating
-    }
-  })
+  // const [sellerShop, setSellerShop] = useState<Props>({
+  //   shop: {
+  //     shopName: shop?.shop?.shopName,
+  //     balance: shop?.shop?.balance,
+  //     image: shop?.shop?.image,
+  //     averageRating: shop?.shop?.averageRating
+  //   }
+  // })
 
   useEffect(() => { }, [itemsToDisplay]);
 
@@ -104,7 +122,7 @@ const OrdersMania = ({ transactions }: { transactions: Transaction[] }, { produc
         method: "PUT",
       }).then(() => router.reload());
     } catch (error) {
-      //console.log(error)
+      ////console.log(error)
     }
   }
 
@@ -159,6 +177,13 @@ const OrdersMania = ({ transactions }: { transactions: Transaction[] }, { produc
     }
   };
 
+  function onNewItem(){
+    if(address != null)
+      router.push('product/create');
+    else
+      alert("Silahkan atur alamat toko terlebih dahulu.");
+  }
+
 
 
 
@@ -204,7 +229,7 @@ const OrdersMania = ({ transactions }: { transactions: Transaction[] }, { produc
       <div className='lg:flex lg:flex-row py-4 lg:space-x-2'>
         <div id='dashboard-content' className='w-full bg-gray-100 lg:p-5 space-y-2'>
           <h1 className='hidden lg:block text-2xl'>Seller Home</h1>
-          {/* <div id='new-item-input-container' className='lg:grid lg:grid-cols-5 w-full' >
+          <div id='new-item-input-container' className='lg:grid lg:grid-cols-5 w-full' >
             <div className='cursor-pointer' onClick={() => onNewItem()}>
               <div id='new-item-input' className='border-dashed border-2 border-black p-2 w-full lg:w-5/6 h-10 flex justify-center items-center'>
                 <h1>{'(+) New Item'}</h1>
@@ -212,8 +237,8 @@ const OrdersMania = ({ transactions }: { transactions: Transaction[] }, { produc
             </div>
           </div>
           <div id='product-list' className='flex flex-row overflow-y-auto space-x-4 lg:space-x-0 lg:grid lg:grid-cols-5 lg:gap-y-10 w-full'>
-            {products.map((product, i) => <ProductItem key={i} product={product} />)}
-          </div> */}
+            {products?.map((product, i) => <ProductItem key={i} product={product} address={address} />)}
+          </div>
         </div>
       </div>
     </div>
@@ -226,9 +251,11 @@ const OrdersMania = ({ transactions }: { transactions: Transaction[] }, { produc
   //     alert("Silahkan atur alamat toko terlebih dahulu.");
   // }
 
-  console.log(`transaction`, transactions)
-  console.log(`name shop`, shop)
-  console.log(`sellerShop`, sellerShop)
+  //console.log(`transaction`, transactions)
+  //console.log(`name shop`, shop)
+  //console.log(`products bang`, products)
+  //console.log(`address`, address)
+  // //console.log(`sellerShop`, sellerShop)
 
   return (
     <div>
@@ -293,6 +320,18 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       }
     ],
   });
+  //console.log(`SSP products`, products)
+
+  const address = await prisma.address.findFirst({
+    where:{ 
+      profile: {
+        user: {
+          shop: {id: shop?.id}
+        }
+      },
+      isShopAddress: true
+    }
+  })
 
   const shopName = await prisma.transaction.findMany({
     where: {
@@ -309,7 +348,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       }
     }
   })
-  console.log(shopName)
+  //console.log('shopname',shopName)
 
   const transactions = await prisma.transaction.findMany({
     where: {
@@ -354,13 +393,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   });
 
-  // console.log(JSON.parse(JSON.stringify(transactions)));
+  // //console.log(JSON.parse(JSON.stringify(transactions)));
 
   return {
     props: {
       shopName: JSON.parse(JSON.stringify(shopName)),
       transactions: JSON.parse(JSON.stringify(transactions)),
-      products
+      products,
+      address
     },
   };
 };

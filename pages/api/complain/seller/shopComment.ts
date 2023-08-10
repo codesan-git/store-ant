@@ -11,7 +11,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
     const {complainId, description, images} = req.body;
-    console.log(`body`, req.body)
+    //console.log(`body`, req.body)
     const session = await getSession({req});
     
     let imageUrl = new Array();
@@ -28,7 +28,7 @@ export default async function handler(
     }
     
     // (complainId as string).split(",").forEach( async (id:string) => {
-        console.log(`url image`, imageUrl)
+        //console.log(`url image`, imageUrl)
         const shopcomment = await prisma.shopComment.create({
             data: {
                 complainId: Number(complainId),
@@ -49,7 +49,7 @@ export default async function handler(
             }
         })
     // })
-    // console.log((complainId as string).split(","))
+    // //console.log((complainId as string).split(","))
     res.status(200).json({ message: 'success' });
     try {
         // // // // CREATE

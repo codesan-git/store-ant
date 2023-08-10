@@ -12,7 +12,7 @@ export default async function handler(
     const {name, price, stock, image, categoryId, description} = req.body;
     const session = await getSession({req});
 
-    console.log("image: ", image);
+    //console.log("image: ", image);
     const shop = await prisma.shop.findUnique({
         where: {
             userId: session?.user?.id

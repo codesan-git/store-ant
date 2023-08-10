@@ -32,7 +32,7 @@ export default function Login() {
   }
 
   async function loginUser(data: FormData) {
-    console.log("login");
+    //console.log("login");
     const res = await signIn("credentials", {
       redirect: false,
       email: data.email,
@@ -40,30 +40,30 @@ export default function Login() {
       callbackUrl: `${window.location.origin}`,
     });
 
-    res?.error ? console.log("ERROR ", res?.error) : router.push("/");
+    res?.ok && router.push("/");
   }
   const forgotPassword = async (data: FormData) => {
-    // console.log('form password', form.password)
+    // //console.log('form password', form.password)
     try {
       const response = await axios
         .put(`/api/profile/resetpassword`, form)
         .then(() => {
           router.push("/");
         });
-      console.log("dari fetchProduct", response);
+      //console.log("dari fetchProduct", response);
     } catch (error) {
-      console.log(error);
+      //console.log(error);
     }
   };
 
   // const getEmail = async() => {
   //   const res = await axios.get(`/api/auth/forgotpassword`)
-  //   console.log('getEmail', res)
+  //   //console.log('getEmail', res)
   // }
 
   const handleForgotPassword = (e: any) => {
     e.preventDefault();
-    console.log("Sending");
+    //console.log("Sending");
 
     Swal.fire({
       title: "Are you sure?",
@@ -83,9 +83,9 @@ export default function Login() {
           },
           body: JSON.stringify(formForgot),
         }).then((res) => {
-          console.log("Response received");
+          //console.log("Response received");
           if (res.status === 200) {
-            console.log("Response succeeded!");
+            //console.log("Response succeeded!");
             // setSubmitted(true);
           }
         });
