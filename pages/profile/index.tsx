@@ -40,6 +40,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { format } from "date-fns";
+import { Address, createAddress } from "@/services/address/address";
 
 interface FormData {
   username?: string;
@@ -83,17 +84,7 @@ interface Props {
   banks: BankType[]
 }
 
-interface Address {
-  id: number;
-  address: string;
-  region: string;
-  city: string;
-  province: string;
-  postcode: string;
-  isMainAddress: boolean;
-  isShopAddress: boolean;
-  contact: string;
-}
+
 
 export default function Profile({ profile, user, address, provinceData, cityData, banks }: Props) {
   const [form, setForm] = useState<FormData>({
@@ -112,6 +103,12 @@ export default function Profile({ profile, user, address, provinceData, cityData
   const [submitted, setSubmitted] = useState(false);
   const [selectedAddressId, setSelectedAddressId] = useState(0);
   // const [gender, setGender] = useState('');
+
+  const [addresses, setAddresses] = useState<Address[]>(address);
+
+  useEffect(() => {
+
+  }, [addresses]);
 
   const handleChange = (event: SelectChangeEvent) => {
     setForm({ ...form, gender: event.target.value });
@@ -813,11 +810,16 @@ export default function Profile({ profile, user, address, provinceData, cityData
         <>
           <section className="mt-8 flex flex-col gap-5 bg-gray-100 p-2 lg:p-10 rounded-md">
             <div className="flex">
-              <AddressFormModal provinceData={provinceData} cityData={cityData} />
+              <AddressFormModal 
+                provinceData={provinceData} 
+                cityData={cityData} 
+                createAddress={createAddress}
+                setAddressesState={setAddresses}
+              />
             </div>
-            {address ? (
+            {addresses ? (
               <div className="space-y-4">
-                {address.map((address) => (
+                {addresses.map((address) => (
                   <div
                     className="card w-full bg-base-100 shadow-xl text-md leading-loose"
                     key={String(address.id)}

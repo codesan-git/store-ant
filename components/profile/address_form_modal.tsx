@@ -2,33 +2,17 @@ import { Button, Dialog, DialogBody, DialogFooter, DialogHeader } from "@materia
 import { size } from "@material-tailwind/react/types/components/avatar";
 import { useRouter } from "next/router";
 import { Fragment, useState } from "react";
-
-interface FormData{
-  address: string,
-  region: string,
-  cityId: string,
-  city: string,
-  provinceId: string,
-  province: string,
-  postcode: string,
-  contact: string
-}
+import { AddressFormData, Address, createAddressParams, getAllAddress, cityData, provinceData } from "@/services/address/address";
 
 interface Props {
-  provinceData: {
-    province_id: string,
-    province: string
-  }[]
-
-  cityData: {
-      city_id: string,
-      province_id: string
-      city_name: string
-  }[]
+  provinceData: provinceData[]
+  cityData: cityData[]
+  createAddress: ({form, cityData, provinceData}: createAddressParams) => Promise<void>,
+  setAddressesState: React.Dispatch<React.SetStateAction<Address[]>>;
 }
 
 
-const AddressFormModal = ({ provinceData, cityData } : Props) => {
+const AddressFormModal = ({ provinceData, cityData, createAddress, setAddressesState } : Props) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [modalSize, setModalSize] = useState<size>();
   const exceptThisSymbols = ["e", "E", "+", "-", "."];
@@ -39,7 +23,7 @@ const AddressFormModal = ({ provinceData, cityData } : Props) => {
   };
 
 
-  const [form, setForm] = useState<FormData>({
+  const [form, setForm] = useState<AddressFormData>({
     address: '', 
     region: '', 
     cityId:'',
@@ -50,24 +34,11 @@ const AddressFormModal = ({ provinceData, cityData } : Props) => {
     contact: ''
   });
 
-  const router = useRouter();
+  const onSubmit = async () => {
+    await createAddress({form, cityData, provinceData});
+    const addresses = await getAllAddress();
 
-  const create = () => {
-    if(form.city == '')
-      form.city = cityData.filter((x) => x.province_id == form.provinceId)[0].city_name;
-    if(form.cityId == '')
-      form.cityId = cityData.filter((x) => x.province_id == form.provinceId)[0].city_id;
-    try{
-      fetch('/api/address/create', {
-        body: JSON.stringify(form),
-        headers: {
-            'Content-Type' : 'application/json'
-        },
-        method: 'POST'
-      }).then(() => router.reload())
-    }catch(error){
-        ////console.log(error)
-    }
+    setAddressesState(addresses);
   }
 
   const setCityid = (city: string) => {
@@ -95,7 +66,7 @@ const AddressFormModal = ({ provinceData, cityData } : Props) => {
           </div>
         </DialogHeader>
         <DialogBody className="">
-          <form  onSubmit={e=>{e.preventDefault(); create()}}  className="space-y-4">
+          <form onSubmit={e=>{e.preventDefault(); onSubmit()}}  className="space-y-4">
             <div className="flex flex-col space-y-1">
               <label htmlFor="address-input">Address</label>
               <input id="address-input" type="text" name="address" onChange={(e) => setForm({ ...form, address: e.target.value})} className="p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white"/>
