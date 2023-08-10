@@ -171,7 +171,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
 
   const handleBankAccountDelete = () => {
     try {
-      fetch("/api/profile/bank/delete", {
+      fetch("/api/bank/delete", {
         method: "DELETE"
       }).then(() => router.push(router.asPath));
     }

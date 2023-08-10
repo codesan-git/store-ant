@@ -31,7 +31,7 @@ const BankAccountFormModal = ({ banks } : Props) => {
   const createBankAccout = async (data: BankAccountForm) => {
     //console.log(data)
     try{
-      await fetch('/api/profile/bank/create', {
+      await fetch('/api/bank/create', {
         body: JSON.stringify(data),
         headers: {
           "Content-Type": "application/json",
