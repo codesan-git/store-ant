@@ -1,19 +1,16 @@
 import { Button, Dialog, DialogBody, DialogHeader } from "@material-tailwind/react";
-import { BankType } from "@prisma/client";
+import { BankAccount, BankType } from "@prisma/client";
 import { useRouter } from "next/router";
 import { ChangeEvent, Fragment, useState } from "react";
+import { BankAccountForm, createBankAccount, getBankAccount } from "@/services/bank/bank";
 
 interface Props {
-  banks: BankType[]
+  banks: BankType[],
+  setBankState: React.Dispatch<React.SetStateAction<BankAccount>>,
 }
 
-interface BankAccountForm {
-  bankId: string
-  name: string
-  number: string
-}
 
-const BankAccountFormModal = ({ banks } : Props) => {
+const BankAccountFormModal = ({ banks, setBankState } : Props) => {
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [accountNumber, setAccountNumber] = useState<string>()
@@ -26,29 +23,17 @@ const BankAccountFormModal = ({ banks } : Props) => {
     number:  ''
   });
 
-  const router = useRouter();
-
-  const createBankAccout = async (data: BankAccountForm) => {
-    //console.log(data)
-    try{
-      await fetch('/api/bank/create', {
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: 'POST'
-      }).then(() => router.reload())
-    }
-    catch (e) {
-      //console.log(e);
-    }
-  }
-
   const handleInputAccountNumberChange = (event: ChangeEvent<HTMLInputElement>) => {
     const result = event.target.value.replace(/\D/g, '');
     setAccountNumber(result);
 
     setForm({...form, number: result})
+  }
+
+  const onFormSubmit = async () => {
+    await createBankAccount(form);
+    const userBankAccount = await getBankAccount();
+    setBankState(userBankAccount);
   }
 
   return (
@@ -66,7 +51,7 @@ const BankAccountFormModal = ({ banks } : Props) => {
           </div>
         </DialogHeader>
         <DialogBody>
-          <form onSubmit={(e) => {e.preventDefault(); createBankAccout(form)}} className="space-y-4" action="/api/profile/bank/create" method="post">
+          <form onSubmit={(e) => {e.preventDefault(); onFormSubmit()}} className="space-y-4" action="/api/profile/bank/create" method="post">
             <div id="bank-select-container" className="flex flex-col w-full space-y-1">
               <label htmlFor="bank-type-input">Bank</label>
               <select onChange={(e) => {e.preventDefault(); setForm({...form, bankId: String(e.target.value)}); }} name="bank" id="bank-type-input" className="p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white hover:cursor-pointer">

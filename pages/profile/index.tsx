@@ -105,6 +105,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
   // const [gender, setGender] = useState('');
 
   const [addresses, setAddresses] = useState<Address[]>(address);
+  const [bankAccount, setBankAccount] = useState<BankAccount>(user.bankAccount);
 
   useEffect(() => {
 
@@ -877,7 +878,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
       code: (
         <div className="mt-8 flex flex-col gap-5 bg-gray-100 p-2 lg:p-10 rounded-md">
           {
-            user.bankAccount ?
+            bankAccount ?
               <Fragment>
                 <div>
                   <BankAccountDeletionModal onConfirm={handleBankAccountDelete} />
@@ -885,22 +886,25 @@ export default function Profile({ profile, user, address, provinceData, cityData
                 <div className="lg:w-1/2">
                   <div className="flex flex-row space-x-1">
                     <h1 className="w-1/2">Bank</h1>
-                    <h1 className="w-1/2">: {user.bankAccount.bank.name}</h1>
+                    <h1 className="w-1/2">: {banks.filter((bank) => bank.id === bankAccount.bankTypeId).at(0)?.name}</h1>
                   </div>
                   <div className="flex flex-row space-x-1">
                     <h1 className="w-1/2">Name</h1>
-                    <h1 className="w-1/2">: {user.bankAccount.name}</h1>
+                    <h1 className="w-1/2">: {bankAccount.name}</h1>
                   </div>
                   <div className="flex flex-row space-x-1">
                     <h1 className="w-1/2">Account No.</h1>
-                    <h1 className="w-1/2">: {user.bankAccount.number}</h1>
+                    <h1 className="w-1/2">: {bankAccount.number}</h1>
                   </div>
                 </div>
               </Fragment>
               :
               <Fragment>
                 <div>
-                  <BankAccountFormModal banks={banks} />
+                  <BankAccountFormModal 
+                    banks={banks}
+                    setBankState={setBankAccount}
+                  />
                 </div>
                 <div>
                   <h1>No bank account has been added yet.</h1>
