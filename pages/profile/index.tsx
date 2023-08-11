@@ -41,6 +41,7 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { format } from "date-fns";
 import { Address, createAddress } from "@/services/address/address";
+import { getBankAccount } from "@/services/bank/bank";
 
 interface FormData {
   username?: string;
@@ -167,11 +168,14 @@ export default function Profile({ profile, user, address, provinceData, cityData
     }
   }
 
-  const handleBankAccountDelete = () => {
+  const handleBankAccountDelete = async () => {
     try {
-      fetch("/api/bank/delete", {
+      await fetch("/api/bank/delete", {
         method: "DELETE"
-      }).then(() => router.push(router.asPath));
+      })
+
+      const data = await getBankAccount();
+      setBankAccount(data);
     }
     catch (error) {
       //console.log(error);
