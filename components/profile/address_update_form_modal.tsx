@@ -2,46 +2,17 @@ import { Button, Dialog, DialogBody, DialogFooter, DialogHeader } from "@materia
 import { size } from "@material-tailwind/react/types/components/avatar";
 import { useRouter } from "next/router";
 import { Fragment, useState } from "react";
-
-interface FormData{
-  id:  number,
-  address: string,
-  region: string,
-  cityId: string,
-  city: string,
-  provinceId: string,
-  province: string,
-  postcode: string,
-  contact: string
-}
-
-interface Address {
-  id: number;
-  address: string;
-  region: string;
-  city: string;
-  province: string;
-  postcode: string;
-  isMainAddress: boolean;
-  isShopAddress: boolean;
-  contact: string;
-}
+import { AddressFormData, Address, getAllAddress, cityData, provinceData, updateAddress } from "@/services/address/address";
 
 interface Props {
-  provinceData: {
-    province_id: string,
-    province: string
-  }[],
-  cityData: {
-      city_id: string,
-      province_id: string
-      city_name: string
-  }[],
+  provinceData: provinceData[]
+  cityData: cityData[]
+  setAddressesState: React.Dispatch<React.SetStateAction<Address[]>>;
   address: Address
 }
 
 
-const AddressUpdateFormModal = ({ provinceData, cityData, address } : Props) => {
+const AddressUpdateFormModal = ({ provinceData, cityData, address, setAddressesState } : Props) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [modalSize, setModalSize] = useState<size>();
   const exceptThisSymbols = ["e", "E", "+", "-", "."];
@@ -52,7 +23,7 @@ const AddressUpdateFormModal = ({ provinceData, cityData, address } : Props) => 
   };
 
 
-  const [form, setForm] = useState<FormData>({
+  const [form, setForm] = useState<AddressFormData>({
     id: address.id,
     address: address.address, 
     region: address.region, 
@@ -84,6 +55,13 @@ const AddressUpdateFormModal = ({ provinceData, cityData, address } : Props) => 
       }
   }
 
+  const onSubmit = async () => {
+    await updateAddress({form, cityData});
+    const addresses = await getAllAddress();
+
+    setAddressesState(addresses);
+  }
+
   const setCityid = (city: string) => {
     //console.log("prov:", form.province );
     let chosenCity = cityData.filter((x) => x.city_name == city);
@@ -109,7 +87,7 @@ const AddressUpdateFormModal = ({ provinceData, cityData, address } : Props) => 
           </div>
         </DialogHeader>
         <DialogBody className="">
-          <form  onSubmit={e=>{e.preventDefault(); update()}}  className="space-y-4">
+          <form onSubmit={e=>{e.preventDefault(); onSubmit()}}  className="space-y-4">
             <div className="flex flex-col space-y-1">
               <label htmlFor="address-input">Address</label>
               <input  value={form.address} id="address-input" type="text" name="address" onChange={(e) => setForm({ ...form, address: e.target.value})} className="p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white"/>

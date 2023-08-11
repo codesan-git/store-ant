@@ -1,7 +1,6 @@
-import Address from "@/pages/address";
 import axios from "axios"
 
-export interface Address {
+interface Address {
   id: number;
   address: string;
   region: string;
@@ -13,7 +12,8 @@ export interface Address {
   contact: string;
 }
 
-export interface AddressFormData{
+interface AddressFormData{
+  id?: number,
   address: string,
   region: string,
   cityId: string,
@@ -24,44 +24,43 @@ export interface AddressFormData{
   contact: string
 }
 
-export interface provinceData {
+interface provinceData {
   province_id: string,
   province: string
 }
 
-export interface cityData {
+interface cityData {
     city_id: string,
     province_id: string
     city_name: string
 }
 
-export interface createAddressParams {
-  form: AddressFormData, 
-  cityData: cityData[], 
-  provinceData: provinceData[],
-}
 
-export const getAllAddress =  async (): Promise<Address[]> => {
-
+const getAllAddress =  async (): Promise<Address[]> => {
+  
   let addresses: Address[] = [];
-
+  
   try{
     const response = await axios.get(`api/address/`);
-
+    
     addresses = response.data.address;
-
+    
     console.log(`all addresses 1: ${response.data.address}`)
-
+    
     console.log(`all addresses: ${addresses}`)
   } catch (error) {
     //console.log(error);
   }
-
+  
   return addresses;
 }
 
+interface createAddressParams {
+  form: AddressFormData, 
+  cityData: cityData[],
+}
 
-export const createAddress = async ({form, cityData, provinceData}: createAddressParams) => {
+const createAddress = async ({form, cityData}: createAddressParams) => {
   if(form.city == '')
     form.city = cityData.filter((x) => x.province_id == form.provinceId)[0].city_name;
   if(form.cityId == '')
@@ -79,3 +78,28 @@ export const createAddress = async ({form, cityData, provinceData}: createAddres
   }
 }
 
+interface updateAddressParams {
+  form: AddressFormData, 
+  cityData: cityData[],
+}
+
+const updateAddress = async ({form, cityData}: createAddressParams) => {
+  if(form.city == '')
+    form.city = cityData.filter((x) => x.province_id == form.provinceId)[0].city_name;
+  if(form.cityId == '')
+    form.cityId = cityData.filter((x) => x.province_id == form.provinceId)[0].city_id;
+  try{
+    await fetch('/api/address/update', {
+      body: JSON.stringify(form),
+      headers: {
+          'Content-Type' : 'application/json'
+      },
+      method: 'PUT'
+    })
+  }catch(error){
+      ////console.log(error)
+  }
+}
+
+export type {Address, createAddressParams, updateAddressParams, cityData, provinceData, AddressFormData}
+export {createAddress, getAllAddress, updateAddress}

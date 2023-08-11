@@ -817,8 +817,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
             <div className="flex">
               <AddressFormModal 
                 provinceData={provinceData} 
-                cityData={cityData} 
-                createAddress={createAddress}
+                cityData={cityData}
                 setAddressesState={setAddresses}
               />
             </div>
@@ -838,7 +837,12 @@ export default function Profile({ profile, user, address, provinceData, cityData
                         <p>{address.postcode}</p>
                         <div className="flex flex-col lg:flex-row gap-3 text-xs lg:text-base">
                           {/* <a className="text-primary-focus">Ubah Alamat</a> */}
-                          <AddressUpdateFormModal provinceData={provinceData} cityData={cityData} address={address}/>
+                          <AddressUpdateFormModal 
+                            provinceData={provinceData} 
+                            cityData={cityData} 
+                            address={address}
+                            setAddressesState={setAddresses}
+                          />
                           <p className="text-primary hidden lg:block">|</p>
                           <div>
                             {address.isMainAddress ? (
