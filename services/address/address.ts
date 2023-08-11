@@ -101,5 +101,22 @@ const updateAddress = async ({form, cityData}: createAddressParams) => {
   }
 }
 
+
+const deleteAddress = async (id: number) => {
+  const addressId = {id: id};
+  try{
+    fetch("/api/address/delete", {
+      body: JSON.stringify(addressId),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    });
+  }
+  catch(e){
+
+  }
+}
+
 export type {Address, createAddressParams, updateAddressParams, cityData, provinceData, AddressFormData}
-export {createAddress, getAllAddress, updateAddress}
+export {createAddress, getAllAddress, updateAddress, deleteAddress}

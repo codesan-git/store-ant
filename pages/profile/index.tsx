@@ -40,7 +40,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { format } from "date-fns";
-import { Address, createAddress } from "@/services/address/address";
+import { Address, createAddress, deleteAddress, getAllAddress } from "@/services/address/address";
 import { getBankAccount } from "@/services/bank/bank";
 
 interface FormData {
@@ -217,22 +217,10 @@ export default function Profile({ profile, user, address, provinceData, cityData
     }
   }
 
-  function onDeleteAddress(id: number){
-    setSelectedAddressId(id);
-    // const addressId = {id: id};
-    // try {
-    //   fetch("/api/address/delete", {
-    //     body: JSON.stringify(addressId),
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     method: "POST",
-    //   }).then(() => {
-    //     router.push(router.asPath);
-    //   });
-    // } catch (error) {
-    //   ////console.log(error);
-    // }
+  const onDeleteAddress = async (id: number) => {
+    await deleteAddress(id);
+    const updatedAddresses = await getAllAddress();
+    setAddresses(updatedAddresses);
   }
 
   async function changePhoto(file: any) {
