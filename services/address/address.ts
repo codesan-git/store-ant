@@ -105,7 +105,7 @@ const updateAddress = async ({form, cityData}: createAddressParams) => {
 const deleteAddress = async (id: number) => {
   const addressId = {id: id};
   try{
-    fetch("/api/address/delete", {
+    await fetch("/api/address/delete", {
       body: JSON.stringify(addressId),
       headers: {
         "Content-Type": "application/json",
