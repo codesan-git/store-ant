@@ -40,7 +40,8 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { format } from "date-fns";
-import { Address, createAddress } from "@/services/address/address";
+import { Address, createAddress, deleteAddress, getAllAddress } from "@/services/address/address";
+import { getBankAccount } from "@/services/bank/bank";
 
 interface FormData {
   username?: string;
@@ -167,11 +168,14 @@ export default function Profile({ profile, user, address, provinceData, cityData
     }
   }
 
-  const handleBankAccountDelete = () => {
+  const handleBankAccountDelete = async () => {
     try {
-      fetch("/api/bank/delete", {
+      await fetch("/api/bank/delete", {
         method: "DELETE"
-      }).then(() => router.push(router.asPath));
+      })
+
+      const data = await getBankAccount();
+      setBankAccount(data);
     }
     catch (error) {
       //console.log(error);
@@ -213,22 +217,10 @@ export default function Profile({ profile, user, address, provinceData, cityData
     }
   }
 
-  function onDeleteAddress(id: number){
-    setSelectedAddressId(id);
-    // const addressId = {id: id};
-    // try {
-    //   fetch("/api/address/delete", {
-    //     body: JSON.stringify(addressId),
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     method: "POST",
-    //   }).then(() => {
-    //     router.push(router.asPath);
-    //   });
-    // } catch (error) {
-    //   ////console.log(error);
-    // }
+  const onDeleteAddress = async (id: number) => {
+    await deleteAddress(id);
+    const updatedAddresses = await getAllAddress();
+    setAddresses(updatedAddresses);
   }
 
   async function changePhoto(file: any) {
@@ -813,8 +805,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
             <div className="flex">
               <AddressFormModal 
                 provinceData={provinceData} 
-                cityData={cityData} 
-                createAddress={createAddress}
+                cityData={cityData}
                 setAddressesState={setAddresses}
               />
             </div>
@@ -834,7 +825,12 @@ export default function Profile({ profile, user, address, provinceData, cityData
                         <p>{address.postcode}</p>
                         <div className="flex flex-col lg:flex-row gap-3 text-xs lg:text-base">
                           {/* <a className="text-primary-focus">Ubah Alamat</a> */}
-                          <AddressUpdateFormModal provinceData={provinceData} cityData={cityData} address={address}/>
+                          <AddressUpdateFormModal 
+                            provinceData={provinceData} 
+                            cityData={cityData} 
+                            address={address}
+                            setAddressesState={setAddresses}
+                          />
                           <p className="text-primary hidden lg:block">|</p>
                           <div>
                             {address.isMainAddress ? (

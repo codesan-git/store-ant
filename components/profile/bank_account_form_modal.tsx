@@ -9,7 +9,6 @@ interface Props {
   setBankState: React.Dispatch<React.SetStateAction<BankAccount>>,
 }
 
-
 const BankAccountFormModal = ({ banks, setBankState } : Props) => {
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);

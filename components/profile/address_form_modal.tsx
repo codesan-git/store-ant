@@ -2,17 +2,16 @@ import { Button, Dialog, DialogBody, DialogFooter, DialogHeader } from "@materia
 import { size } from "@material-tailwind/react/types/components/avatar";
 import { useRouter } from "next/router";
 import { Fragment, useState } from "react";
-import { AddressFormData, Address, createAddressParams, getAllAddress, cityData, provinceData } from "@/services/address/address";
+import { AddressFormData, Address, createAddressParams, getAllAddress, cityData, provinceData,  createAddress } from "@/services/address/address";
 
 interface Props {
   provinceData: provinceData[]
   cityData: cityData[]
-  createAddress: ({form, cityData, provinceData}: createAddressParams) => Promise<void>,
   setAddressesState: React.Dispatch<React.SetStateAction<Address[]>>;
 }
 
 
-const AddressFormModal = ({ provinceData, cityData, createAddress, setAddressesState } : Props) => {
+const AddressFormModal = ({ provinceData, cityData, setAddressesState } : Props) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [modalSize, setModalSize] = useState<size>();
   const exceptThisSymbols = ["e", "E", "+", "-", "."];
@@ -35,7 +34,7 @@ const AddressFormModal = ({ provinceData, cityData, createAddress, setAddressesS
   });
 
   const onSubmit = async () => {
-    await createAddress({form, cityData, provinceData});
+    await createAddress({form, cityData});
     const addresses = await getAllAddress();
 
     setAddressesState(addresses);
