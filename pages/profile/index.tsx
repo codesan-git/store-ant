@@ -622,11 +622,6 @@ export default function Profile({ profile, user, address, provinceData, cityData
                           })
                         }
                       />
-                      <label className="label">
-                        <span className="label-text-alt">
-                          Username bisa dilihat oleh pengguna lainnya
-                        </span>
-                      </label>
                     </div>
                     <div className="modal-action">
                       <button
