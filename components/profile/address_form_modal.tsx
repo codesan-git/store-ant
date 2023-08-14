@@ -31,7 +31,7 @@ interface Props {
 const AddressFormModal = ({ provinceData, cityData } : Props) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [modalSize, setModalSize] = useState<size>();
-  const exceptThisSymbols = ["e", "E", "+", "-", "."];
+  const exceptThisSymbols = ["e", "E", "+", "-", ".", ","];
 
   const modalOpenHandler = (size: size) => {
     setModalSize(size);
