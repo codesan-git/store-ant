@@ -86,6 +86,13 @@ interface Transaction {
 const OrdersMania = ({ shop, products, address, transactions }: Props) => {
   const router = useRouter();
 
+  console.log("SHOP: ", shop);
+  useEffect(()=> {
+    if (shop == null) {
+      router.push('/shop/register')
+    }
+  }, [router])
+
   const [currentSelectedSection, setCurrentSelectedSection] = useState<String>("Home");
 
   const [allTransactions, setAllTransactions] = useState<Transaction[]>(transactions);
@@ -184,9 +191,6 @@ const OrdersMania = ({ shop, products, address, transactions }: Props) => {
       alert("Silahkan atur alamat toko terlebih dahulu.");
   }
 
-
-
-
   const detailTransactionModalArguments = () => {
     return {
       transactionModalIsHidden,
@@ -222,12 +226,9 @@ const OrdersMania = ({ shop, products, address, transactions }: Props) => {
         }
       </>
     );
-
   }
+
   const homeShop = () => {
-    if (!shop) {
-      router.push('/shop/register')
-    } else {
       return <div>
         <div className='lg:flex lg:flex-row py-4 lg:space-x-2'>
           <div id='dashboard-content' className='w-full bg-gray-100 lg:p-5 space-y-2'>
@@ -245,7 +246,6 @@ const OrdersMania = ({ shop, products, address, transactions }: Props) => {
           </div>
         </div>
       </div>
-    }
   }
 
   // function onNewItem() {
@@ -263,33 +263,39 @@ const OrdersMania = ({ shop, products, address, transactions }: Props) => {
 
   return (
     <div>
-      <Navbar />
-      <div className="flex lg:flex-row flex-col py-4 space-y-2 lg:space-y-0 lg:space-x-2">
-        <div id="transactions-dashboard-container" className="lg:w-1/6 lg:h-full lg:sticky lg:top-24">
-          <SellerDashboard TransactionDashboardArguments={TransactionDashboardArguments} shop={{ shopName: transactions[0].shop.shopName, image: transactions[0].shop.image, balance: transactions[0].shop.balance, averageRating: transactions[0].shop.averageRating }} />
-        </div>
-        {
-          currentSelectedSection !== "Home" ?
-            <div className="w-full p-2 space-y-2 bg-gray-100">
-              <div className="w-full p-2 text-3xl">
-                <h1>{currentSelectedSection}</h1>
-              </div>
-              {renderItemsToDisplay()}
+      {shop ? (
+        <div>
+          <Navbar />
+          <div className="flex lg:flex-row flex-col py-4 space-y-2 lg:space-y-0 lg:space-x-2">
+            <div id="transactions-dashboard-container" className="lg:w-1/6 lg:h-full lg:sticky lg:top-24">
+              <SellerDashboard TransactionDashboardArguments={TransactionDashboardArguments} shop={{ shopName: transactions[0].shop.shopName, image: transactions[0].shop.image, balance: transactions[0].shop.balance, averageRating: transactions[0].shop.averageRating }} />
             </div>
-            :
-            <>
-              {homeShop()}
-            </>
+            {
+              currentSelectedSection !== "Home" ?
+                <div className="w-full p-2 space-y-2 bg-gray-100">
+                  <div className="w-full p-2 text-3xl">
+                    <h1>{currentSelectedSection}</h1>
+                  </div>
+                  {renderItemsToDisplay()}
+                </div>
+                :
+                <>
+                  {homeShop()}
+                </>
 
-        }
-      </div>
-      {/* <ReviewModal htmlElementId={`review-modal`} selectProductCallback={getCurrentSelectedProductForRate} /> */}
-      <TerimaModal htmlElementId={`terima-modal`} selectProductCallback={getTransactionDetail} />
-      <ProcessModal htmlElementId={`process-modal`} selectProductCallback={getTransactionDetail} />
-      <ItemReceiveModal htmlElementId={`itemreceive-modal`} selectProductCallback={getTransactionDetail} />
-      <SellerCancelAlert htmlElementId={`cancel-alert`} selectProductCallback={getTransactionDetail} />
-      <DetailTransactionModal detailTransactionModalArguments={detailTransactionModalArguments} />
-      {/* <Footer /> */}
+            }
+          </div>
+          {/* <ReviewModal htmlElementId={`review-modal`} selectProductCallback={getCurrentSelectedProductForRate} /> */}
+          <TerimaModal htmlElementId={`terima-modal`} selectProductCallback={getTransactionDetail} />
+          <ProcessModal htmlElementId={`process-modal`} selectProductCallback={getTransactionDetail} />
+          <ItemReceiveModal htmlElementId={`itemreceive-modal`} selectProductCallback={getTransactionDetail} />
+          <SellerCancelAlert htmlElementId={`cancel-alert`} selectProductCallback={getTransactionDetail} />
+          <DetailTransactionModal detailTransactionModalArguments={detailTransactionModalArguments} />
+          {/* <Footer /> */}
+        </div>
+      ) : (
+        <></>
+      )}
     </div>
   );
 }
@@ -404,7 +410,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       shopName: JSON.parse(JSON.stringify(shopName)),
       transactions: JSON.parse(JSON.stringify(transactions)),
       products,
-      address
+      address,
+      shop: JSON.parse(JSON.stringify(shop))
     },
   };
 };

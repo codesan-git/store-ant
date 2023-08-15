@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react';
+import Navbar from '../navbar';
 
 interface FormData{
     shopname: string,
@@ -44,6 +45,7 @@ export default function CreateShop() {
 
   return (
     <div>
+        <Navbar/>
         <section className="w-3/4 mx-auto flex flex-col gap-10">
             <div className="title">
                 <h1 className="text-gray-800 text-4xl font-bold py-4">Register Shop</h1>
