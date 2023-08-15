@@ -8,8 +8,6 @@ import { NextIntlProvider } from "next-intl";
 import { AppProps } from "next/app";
 import "../styles/globals.css";
 import Script from "next/script";
-import { useEffect } from "react";
-import TagManager, {TagManagerArgs} from 'react-gtm-module';
 
 const App = ({
   Component,
@@ -29,27 +27,12 @@ const App = ({
   
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
-  //const analytics = getAnalytics(app);
-
-  // useEffect(() => {
-  //   TagManager.initialize({ gtmId: 'GTM-KFR823HK' });
-  // }, []);
-
   return (
     <>
       <Script 
         strategy="lazyOnload" 
         src={`https://www.googletagmanager.com/gtag/js?id=G-E22DXYR0LM`}
       />
-      {/* <Script strategy="lazyOnload">
-        {
-          `window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          
-          gtag('config', 'G-E22DXYR0LM');`
-        }
-      </Script> */}
 
       <NextIntlProvider locale="en" timeZone="Asia/Bangkok">
         <SessionProvider session={pageProps.session}>

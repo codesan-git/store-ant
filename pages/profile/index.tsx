@@ -409,7 +409,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
     }
   };
 
-  const getDate = profile.birthDate ? format(new Date(profile.birthDate?.replace(/-/g,",")),"d MMMM yyyy") : "-";
+  const getDate = profile?.birthDate ? format(new Date(profile?.birthDate?.replace(/-/g,",")),"d MMMM yyyy") : "-";
 
   const data = [
     {
@@ -579,7 +579,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
                 {/* Handle Tanggal Lahir */}
                 <div className="flex gap-5">
                   <label className="my-auto mr-4 text-sm lg:text-base w-1/3 lg:w-auto">Tanggal Lahir</label>
-                  {profile.birthDate ?
+                  {profile?.birthDate ?
                     <>
                       <h5 className="text-sm lg:text-base w-1/3 lg:w-auto">{getDate}</h5>
                     </>
@@ -666,7 +666,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
                     </FormControl>
                   </div>
                   {
-                    profile.gender === form.gender || form.gender === "" ?
+                    profile?.gender === form.gender || form.gender === "" ?
                       <>
                         <div className="textarea-disabled text-sm lg:text-base w-1/3 lg:w-auto my-auto cursor-not-allowed">
                           save
