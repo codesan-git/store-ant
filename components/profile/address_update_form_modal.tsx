@@ -71,7 +71,7 @@ const AddressUpdateFormModal = ({ provinceData, cityData, address, setAddressesS
   
   return (
     <Fragment>
-      <a id="open-modal-mobile" className="lg:hidden text-primary-focus" onClick={() => modalOpenHandler("xl")}>
+      <a id="open-modal-mobile" className="lg:hidden text-primary-focus cursor-pointer" onClick={() => modalOpenHandler("xl")}>
         Ubah Alamat
       </a>
       <a id="open-modal-web" className="hidden lg:block text-primary-focus" onClick={() => modalOpenHandler("lg")}>
@@ -117,7 +117,7 @@ const AddressUpdateFormModal = ({ provinceData, cityData, address, setAddressesS
             </div>
             <div className="flex flex-col space-y-1">
               <label htmlFor="address-input">Region</label>
-              <input value={address.region} id="address-input" type="text" name="region" onChange={e => setForm({...form, region: e.target.value})} className="p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white"/>
+              <input value={form.region} id="address-input" type="text" name="region" onChange={e => setForm({...form, region: e.target.value})} className="p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white"/>
             </div>    
             <div className="flex flex-col space-y-1">
               <label htmlFor="address-input">Postcode</label>

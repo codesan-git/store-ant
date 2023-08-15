@@ -103,6 +103,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
   const [selectedFile, setSelectedFile] = useState<File>();
   const [submitted, setSubmitted] = useState(false);
   const [selectedAddressId, setSelectedAddressId] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   // const [gender, setGender] = useState('');
 
   const [addresses, setAddresses] = useState<Address[]>(address);
@@ -147,6 +148,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
 
   async function create(data: FormData) {
     try {
+      setIsLoading(true);
       fetch("/api/profile/setting", {
         body: JSON.stringify(data),
         headers: {
@@ -154,6 +156,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
         },
         method: "POST",
       }).then(() => {
+        setIsLoading(false);
         setForm({
           username: data.username,
           password: "",
@@ -914,13 +917,18 @@ export default function Profile({ profile, user, address, provinceData, cityData
   //console.log("user", session?.user);
   return (
     <>
-      <Navbar />
+      <Navbar />      
       <div className="lg:flex w-full my-5 lg:w-3/4 mx-auto">
         <div className="w-full lg:mx-10">
           <span className="flex gap-2">
             <HiUser className="my-auto w-5 h-5" />
             <h5>{session?.user?.name}</h5>
-          </span>
+          </span>          
+          { isLoading? (
+            <div className="text-red-500">LOADING...</div>
+          ) : (
+            <></>
+          )}
           <Tabs value="datadiri">
             <TabsHeader>
               {data.map(({ label, value, icon }) => (
