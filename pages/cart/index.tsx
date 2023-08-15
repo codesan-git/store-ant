@@ -34,6 +34,7 @@ export default function Cart({ cartItems, mainAddress }: Props) {
   //console.log("address: ", mainAddress);
   const [data, setData] = useState<string[]>([]); 
   const [checkoutClick, setCheckoutClick] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   if (cartItems) {
@@ -58,6 +59,7 @@ export default function Cart({ cartItems, mainAddress }: Props) {
 
   function onCheckout(){
     setCheckoutClick(true);
+    setIsLoading(true);
     const cartId:CartId = {id: data}
     try{
       fetch('/api/cart/checkout', {
@@ -91,6 +93,11 @@ export default function Cart({ cartItems, mainAddress }: Props) {
     <div>
         <Navbar />
         <div className="px-8 my-8 flex-col gap-10 cursor-pointer">
+          { isLoading? (
+            <div className="text-red-500">LOADING...</div>
+          ) : (
+            <></>
+          )}
           {cartItems ? (
             <div>
               {cartItems.map((cartItem) => (

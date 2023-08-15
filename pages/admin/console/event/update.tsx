@@ -5,6 +5,7 @@ import { GetServerSideProps } from 'next';
 import { getSession } from "next-auth/react";
 import { prisma } from "@/lib/prisma";
 import axios from 'axios';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject  } from "firebase/storage";
 
 interface FormData{
   eventName: string,
@@ -33,19 +34,37 @@ export default function Event({event} : Event) {
   const {id} = router.query;
 
   const handleUpload = async () => {
-    try {
-        const formData = new FormData();
-        formData.append("image", selectedFile);
-        formData.append("oldImage", event.image);
-        formData.append("eventName", form.eventName);
-        formData.append("eventPath", form.eventPath);
-        formData.append("startDate", form.startDate);
-        formData.append("endDate", form.endDate);
-        //formData.append("image", selectedFile);
-        await axios.put(`/api/admin/event/${id}`, formData).then(() => {router.back() });
-    } catch (error: any) {
-        ////console.log(error);
-    }
+    const storage = getStorage();
+    const storageRef = ref(storage, `images/event/${form.eventName}`);
+
+    const uploadTask = uploadBytesResumable(storageRef, selectedFile);
+    uploadTask.on('state_changed', 
+      (snapshot) => {
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        //console.log('Upload is ' + progress + '% done');
+        switch (snapshot.state) {
+          case 'paused':
+            //console.log('Upload is paused');
+            break;
+          case 'running':
+            //console.log('Upload is running');
+            break;
+        }
+      }, 
+      (error) => {
+        //console.log("error, ", error);
+      }, 
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+          try {
+            const data = {image: downloadURL, oldImage: event.image, eventName: form.eventName, eventPath: form.eventPath, startDate: form.startDate, endDate: form.endDate};
+            await axios.put(`/api/admin/event/${id}`, data).then(() => {router.back() });
+          } catch (error: any) {
+              ////console.log(error);
+          }
+        }).then(() => router.reload());
+      }
+    );
   }
 
   const renderSelectedImage = () => {

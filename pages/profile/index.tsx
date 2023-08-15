@@ -40,6 +40,8 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { format } from "date-fns";
+import { Address, createAddress, deleteAddress, getAllAddress } from "@/services/address/address";
+import { getBankAccount } from "@/services/bank/bank";
 
 interface FormData {
   username?: string;
@@ -83,17 +85,7 @@ interface Props {
   banks: BankType[]
 }
 
-interface Address {
-  id: number;
-  address: string;
-  region: string;
-  city: string;
-  province: string;
-  postcode: string;
-  isMainAddress: boolean;
-  isShopAddress: boolean;
-  contact: string;
-}
+
 
 export default function Profile({ profile, user, address, provinceData, cityData, banks }: Props) {
   const [form, setForm] = useState<FormData>({
@@ -111,7 +103,15 @@ export default function Profile({ profile, user, address, provinceData, cityData
   const [selectedFile, setSelectedFile] = useState<File>();
   const [submitted, setSubmitted] = useState(false);
   const [selectedAddressId, setSelectedAddressId] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   // const [gender, setGender] = useState('');
+
+  const [addresses, setAddresses] = useState<Address[]>(address);
+  const [bankAccount, setBankAccount] = useState<BankAccount>(user.bankAccount);
+
+  useEffect(() => {
+
+  }, [addresses]);
 
   const handleChange = (event: SelectChangeEvent) => {
     setForm({ ...form, gender: event.target.value });
@@ -148,6 +148,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
 
   async function create(data: FormData) {
     try {
+      setIsLoading(true);
       fetch("/api/profile/setting", {
         body: JSON.stringify(data),
         headers: {
@@ -155,6 +156,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
         },
         method: "POST",
       }).then(() => {
+        setIsLoading(false);
         setForm({
           username: data.username,
           password: "",
@@ -169,11 +171,14 @@ export default function Profile({ profile, user, address, provinceData, cityData
     }
   }
 
-  const handleBankAccountDelete = () => {
+  const handleBankAccountDelete = async () => {
     try {
-      fetch("/api/profile/bank/delete", {
+      await fetch("/api/bank/delete", {
         method: "DELETE"
-      }).then(() => router.push(router.asPath));
+      })
+
+      const data = await getBankAccount();
+      setBankAccount(data);
     }
     catch (error) {
       //console.log(error);
@@ -215,22 +220,10 @@ export default function Profile({ profile, user, address, provinceData, cityData
     }
   }
 
-  function onDeleteAddress(id: number){
-    setSelectedAddressId(id);
-    // const addressId = {id: id};
-    // try {
-    //   fetch("/api/address/delete", {
-    //     body: JSON.stringify(addressId),
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     method: "POST",
-    //   }).then(() => {
-    //     router.push(router.asPath);
-    //   });
-    // } catch (error) {
-    //   ////console.log(error);
-    // }
+  const onDeleteAddress = async (id: number) => {
+    await deleteAddress(id);
+    const updatedAddresses = await getAllAddress();
+    setAddresses(updatedAddresses);
   }
 
   async function changePhoto(file: any) {
@@ -632,11 +625,6 @@ export default function Profile({ profile, user, address, provinceData, cityData
                           })
                         }
                       />
-                      <label className="label">
-                        <span className="label-text-alt">
-                          Username bisa dilihat oleh pengguna lainnya
-                        </span>
-                      </label>
                     </div>
                     <div className="modal-action">
                       <button
@@ -813,11 +801,15 @@ export default function Profile({ profile, user, address, provinceData, cityData
         <>
           <section className="mt-8 flex flex-col gap-5 bg-gray-100 p-2 lg:p-10 rounded-md">
             <div className="flex">
-              <AddressFormModal provinceData={provinceData} cityData={cityData} />
+              <AddressFormModal 
+                provinceData={provinceData} 
+                cityData={cityData}
+                setAddressesState={setAddresses}
+              />
             </div>
-            {address ? (
+            {addresses ? (
               <div className="space-y-4">
-                {address.map((address) => (
+                {addresses.map((address) => (
                   <div
                     className="card w-full bg-base-100 shadow-xl text-md leading-loose"
                     key={String(address.id)}
@@ -831,7 +823,12 @@ export default function Profile({ profile, user, address, provinceData, cityData
                         <p>{address.postcode}</p>
                         <div className="flex flex-col lg:flex-row gap-3 text-xs lg:text-base">
                           {/* <a className="text-primary-focus">Ubah Alamat</a> */}
-                          <AddressUpdateFormModal provinceData={provinceData} cityData={cityData} address={address}/>
+                          <AddressUpdateFormModal 
+                            provinceData={provinceData} 
+                            cityData={cityData} 
+                            address={address}
+                            setAddressesState={setAddresses}
+                          />
                           <p className="text-primary hidden lg:block">|</p>
                           <div>
                             {address.isMainAddress ? (
@@ -875,7 +872,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
       code: (
         <div className="mt-8 flex flex-col gap-5 bg-gray-100 p-2 lg:p-10 rounded-md">
           {
-            user.bankAccount ?
+            bankAccount ?
               <Fragment>
                 <div>
                   <BankAccountDeletionModal onConfirm={handleBankAccountDelete} />
@@ -883,22 +880,25 @@ export default function Profile({ profile, user, address, provinceData, cityData
                 <div className="lg:w-1/2">
                   <div className="flex flex-row space-x-1">
                     <h1 className="w-1/2">Bank</h1>
-                    <h1 className="w-1/2">: {user.bankAccount.bank.name}</h1>
+                    <h1 className="w-1/2">: {banks.filter((bank) => bank.id === bankAccount.bankTypeId).at(0)?.name}</h1>
                   </div>
                   <div className="flex flex-row space-x-1">
                     <h1 className="w-1/2">Name</h1>
-                    <h1 className="w-1/2">: {user.bankAccount.name}</h1>
+                    <h1 className="w-1/2">: {bankAccount.name}</h1>
                   </div>
                   <div className="flex flex-row space-x-1">
                     <h1 className="w-1/2">Account No.</h1>
-                    <h1 className="w-1/2">: {user.bankAccount.number}</h1>
+                    <h1 className="w-1/2">: {bankAccount.number}</h1>
                   </div>
                 </div>
               </Fragment>
               :
               <Fragment>
                 <div>
-                  <BankAccountFormModal banks={banks} />
+                  <BankAccountFormModal 
+                    banks={banks}
+                    setBankState={setBankAccount}
+                  />
                 </div>
                 <div>
                   <h1>No bank account has been added yet.</h1>
@@ -917,13 +917,18 @@ export default function Profile({ profile, user, address, provinceData, cityData
   //console.log("user", session?.user);
   return (
     <>
-      <Navbar />
+      <Navbar />      
       <div className="lg:flex w-full my-5 lg:w-3/4 mx-auto">
         <div className="w-full lg:mx-10">
           <span className="flex gap-2">
             <HiUser className="my-auto w-5 h-5" />
             <h5>{session?.user?.name}</h5>
-          </span>
+          </span>          
+          { isLoading? (
+            <div className="text-red-500">LOADING...</div>
+          ) : (
+            <></>
+          )}
           <Tabs value="datadiri">
             <TabsHeader>
               {data.map(({ label, value, icon }) => (
