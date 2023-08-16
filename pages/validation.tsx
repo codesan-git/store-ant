@@ -2,6 +2,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { getSession, useSession } from "next-auth/react";
+import Image from "next/image";
 
 interface Token {
   token: string
@@ -22,21 +23,17 @@ export default function Validation({token} : Token) {
     }
   };
 
-  //console.log('session user', session?.user.accessToken)
-  //console.log('accesstoken', accessToken)
-  //console.log('token doang', token)
-  //console.log('user', session?.user)
-
-
   return (
     <>
       {accessToken === token /*session?.user.accessToken!*/ ? (
         <>
           <div className="card lg:w-96 bg-base-100 shadow-xl mx-auto lg:my-36">
             <figure className="px-10 pt-10">
-              <img
+              <Image
                 src="https://s3-us-west-2.amazonaws.com/shipsy-public-assets/shipsy/SHIPSY_LOGO_BIRD_BLUE.png"
                 alt="Shoes"
+                width={1500}
+                height={1500}
                 className="rounded-xl"
               />
             </figure>

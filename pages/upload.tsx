@@ -1,4 +1,5 @@
 import { File } from "buffer";
+import Image from "next/image";
 import React, {useState} from "react";
 
 export default function Upload() {
@@ -57,9 +58,12 @@ export default function Upload() {
                     }}
                     className="right-1 hover:text-white cursor-pointer bg-red-400"
                   >Remove</div>
-                  <img
+                  <Image
                     className="h-20 w-20 rounded-md"
                     src={URL.createObjectURL(file)}
+                    alt=""
+                    width={1500}
+                    height={1500}
                   />
                 </div>
               );

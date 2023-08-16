@@ -3,6 +3,7 @@ import React from 'react'
 import { prisma } from "../../lib/prisma"
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import Image from 'next/image'
 
 interface Products {
   products:{
@@ -51,7 +52,14 @@ export default function ShopProduct({products} : Products) {
       <div className='w-4/5 py-5 mx-auto flex-col grid lg:grid-cols-3 gap-10'>
           {products.map(product =>(
             <div data-theme="garden" className="card w-auto glass" key={product.id}>
-              <figure><img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg" alt="image!"/></figure>
+              <figure>
+                <Image 
+                  src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg" 
+                  alt="image!"
+                  width={1500}
+                  height={1500}
+                />
+              </figure>
               <div className="card-body py-3">
                 <h2 className="card-title">{product.name}</h2>
                 <p className='text-md'>Rp. {product.price}</p>                

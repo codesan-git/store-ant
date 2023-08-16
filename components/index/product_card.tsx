@@ -1,4 +1,5 @@
 import { Rating } from "@prisma/client"
+import Image from "next/image"
 
 interface Props{
   product: Product,
@@ -31,9 +32,11 @@ const ProductCard = ( {product, onClick , onEdit, onDelete} : Props ) => {
     return (
       <div data-testid="card" id="card" data-theme="garden" className='card glass w-30 h-96 lg:h-auto lg:w-auto hover:cursor-pointer' onClick={onCardClick}>  {/*Find a way to style cursor pointer if onClick is not null*/}
         {product.image? (
-          <img 
+          <Image 
             src={product.image.split(",")[0]} 
-            alt="no image available" 
+            alt="no image available"
+            width={1500}
+            height={1500} 
             className="w-full h-44 lg:h-44 object-cover rounded-t-2xl"                                         
             onError={({ currentTarget }) => {
               currentTarget.onerror = null; // prevents looping
@@ -42,7 +45,12 @@ const ProductCard = ( {product, onClick , onEdit, onDelete} : Props ) => {
             }}
           />
         ) : (
-          <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"/>
+          <Image 
+          src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
+          alt=""
+          width={1500}
+          height={1500}
+          />
         )}
         <div className=" card-body p-4">
           <h1 data-testid="product-title" className="truncate font-bold text-lg">{product.name}</h1>

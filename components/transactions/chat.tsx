@@ -9,6 +9,7 @@ import { useSession } from "next-auth/react";
 import { Socket, io } from 'socket.io-client'
 import { useRouter } from "next/router";
 import { Textarea } from "@material-tailwind/react";
+import Image from "next/image";
 
 interface Conversation {
   recepient?: User;
@@ -288,8 +289,11 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
     return (
       <div onClick={() => chatroomItemOnClick(conversation)} className="flex flex-row h-24 bg-gray-300 hover:bg-gray-500 transition hover:cursor-pointer">
         <div id="recepient-image-container" className="w-1/4 flex justify-center items-center">
-          <img
-            src={recepient?.image} 
+          <Image
+            src={recepient?.image}
+            alt=""
+            width={1500}
+            height={1500} 
             className="w-14 h-14 rounded-full bg-purple-300"
           />
         </div>
@@ -312,8 +316,11 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
     return (
       <div onClick={() => chatroomItemOnClick(conversation)} className="flex flex-row h-24 bg-gray-300 hover:bg-gray-500 transition hover:cursor-pointer">
         <div id="recepient-image-container" className="w-1/4 flex justify-center items-center">
-          <img
-            src={recepient?.image} 
+          <Image
+            src={recepient?.image}
+            alt=""
+            width={1500}
+            height={1500} 
             className="w-14 h-14 rounded-full bg-purple-300"
           />
         </div>
@@ -399,8 +406,11 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
                 (newConversation)
                 ? <div onClick={() => newChatroomItemOnClick()} className="flex flex-row h-24 bg-gray-300 hover:bg-gray-500 transition hover:cursor-pointer">
                     <div id="recepient-image-container" className="w-1/4 flex justify-center items-center">
-                      <img
-                        src={newRecepient?.image} 
+                      <Image
+                        src={newRecepient?.image as string}
+                        alt=""
+                        width={1500}
+                        height={1500} 
                         className="w-14 h-14 rounded-full bg-purple-300"
                       />
                     </div>
@@ -417,10 +427,13 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
           <section hidden={hidden} id="chatroom-web" className="w-3/4">
             <div id="chat-chatroom-details" className="h-1/6 p-2 bg-gray-400 flex flex-row space-x-4">
               <div className="w-16 flex justify-center items-center">
-                <img 
-                  src={selectedRecepient?.image}
-                  className="w-10 h-10 rounded-full bg-purple-300">
-                </img>  
+                <Image 
+                  src={selectedRecepient?.image as string}
+                  alt=""
+                  width={1500}
+                  height={1500}
+                  className="w-10 h-10 rounded-full bg-purple-300"
+                />  
               </div>
               {/* <div id="recepient-and-status" className="flex flex-col items-start w-1/2"> */}
               <div id="recepient-and-status" className="flex flex-col justify-center w-1/2">
@@ -473,8 +486,11 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
                 (newConversation)
                 ? <div onClick={() => newChatroomItemOnClick()} className="flex flex-row h-24 bg-gray-300 hover:bg-gray-500 transition hover:cursor-pointer">
                     <div id="recepient-image-container" className="w-1/4 flex justify-center items-center">
-                      <img
-                        src={newRecepient?.image} 
+                      <Image
+                        src={newRecepient?.image as string}
+                        alt="" 
+                        width={1500}
+                        height={1500}
                         className="w-14 h-14 rounded-full bg-purple-300"
                       />
                     </div>
@@ -498,10 +514,13 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
                 <MdArrowBack className="w-6 h-6"/>
               </button>
               <div className="w-16 flex justify-center items-center">
-                <img 
-                  src={selectedRecepient?.image}
+                <Image 
+                  src={selectedRecepient?.image as string}
+                  alt=""
+                  width={1500}
+                  height={1500}
                   className="w-10 h-10 rounded-full bg-purple-300">
-                </img>  
+                </Image>  
               </div>
               <div id="recepient-and-status" className="flex flex-col justify-center items-start w-3/4">
                 <div className="w-full">

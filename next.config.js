@@ -49,6 +49,10 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 's3-us-west-2.amazonaws.com'
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com'
       }
     ],
     domains:['http://localhost:3000/public/']

@@ -146,29 +146,56 @@ export default function Profile({ profile, user, address, provinceData, cityData
     </div>;
   };
 
+  // async function create(data: FormData) {
+  //   try {
+  //     setIsLoading(true);
+  //     fetch("/api/profile/setting", {
+  //       body: JSON.stringify(data),
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       method: "POST",
+  //     }).then(() => {
+  //       setIsLoading(false);
+  //       setForm({
+  //         username: data.username,
+  //         password: "",
+  //         phonenumber: data.phonenumber,
+  //         birthDate: data.birthDate,
+  //         gender: data.gender
+  //       });
+  //       router.push(router.asPath);
+  //     });
+  //   } catch (error) {
+  //     ////console.log(error);
+  //   }
+  // }
+
   async function create(data: FormData) {
+    setIsLoading(true);
+  
     try {
-      setIsLoading(true);
-      fetch("/api/profile/setting", {
-        body: JSON.stringify(data),
+      const response = await axios.post("/api/profile/setting", data, {
         headers: {
           "Content-Type": "application/json",
         },
-        method: "POST",
-      }).then(() => {
-        setIsLoading(false);
+      });
+  
+      if (response.status === 200) {
         setForm({
           username: data.username,
           password: "",
           phonenumber: data.phonenumber,
           birthDate: data.birthDate,
-          gender: data.gender
+          gender: data.gender,
         });
         router.push(router.asPath);
-      });
+      }
     } catch (error) {
-      ////console.log(error);
+      //console.log(error);
     }
+  
+    setIsLoading(false);
   }
 
   const handleBankAccountDelete = async () => {

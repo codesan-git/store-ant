@@ -14,6 +14,7 @@ import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/
 import { prisma } from "@/lib/prisma";
 import { getSession } from "next-auth/react";
 import { Complain, Order, Transaction, User, Shop } from "@prisma/client";
+import Image from "next/image";
 
 interface Props {
   // getOrders: getTypeTransactions[]
@@ -196,7 +197,7 @@ export default function ComplainAdmin({ getOrders }: Props) {
                   <div onClick={() => removeImage(file.name)} className="flex justify-center items-center bg-black text-white rounded-full h-4 w-4 text-xs font-bold absolute -right-2 -top-2 sm:-right-2 hover:cursor-pointer">
                     ✕
                   </div>
-                  <img src={URL.createObjectURL(file)} alt="" className="w-12 h-12 sm:w-16 sm:h-16 object-cover border border-gray-600" />
+                  <Image src={URL.createObjectURL(file)} alt="" width={1500} height={1500} className="w-12 h-12 sm:w-16 sm:h-16 object-cover border border-gray-600" />
                 </div>
             )
           }
@@ -238,9 +239,12 @@ export default function ComplainAdmin({ getOrders }: Props) {
                         <th>{orders.Complain?.orderId}</th>
                         <td className="flex gap-4">
                           {orders.Complain?.image.split(",").map((kocak: string) => (
-                            <img
+                            <Image
                               key={kocak}
                               src={kocak}
+                              alt=""
+                              width={1500}
+                              height={1500}
                               className="w-16 h-16"
                             />
                           ))}
@@ -372,9 +376,12 @@ export default function ComplainAdmin({ getOrders }: Props) {
                       <div id="product-details" className="flex flex-row p-2 bg-gray-300">
                         <div id="product-detail-img-container" className=" flex justify-center items-center">
                           {orders.Complain?.image.split(",").map((kocak: string) => (
-                            <img
+                            <Image
                               key={kocak}
                               src={kocak}
+                              alt=""
+                              width={1500}
+                              height={1500}
                               className="w-16 h-16"
                             />
                           ))}

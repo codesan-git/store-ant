@@ -1,5 +1,6 @@
 import { Product, ProductInCart, Shop, TransactionStatus } from "@prisma/client";
 import axios from "axios";
+import Image from "next/image";
 import { Fragment, useEffect, useState } from "react";
 import { BiStoreAlt } from "react-icons/bi";
 import useSWR from 'swr';
@@ -74,8 +75,12 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
 			<Fragment>
 				<div className="flex flex-row mt-2 space-x-1">
 					<div id="image-placeholder" className="p-1 flex items-center">
-						<img className="w-14 h-14 object-cover"
-							src={order?.product?.image?.split(",")[0]}
+						<Image 
+							className="w-14 h-14 object-cover"
+							src={order?.product?.image?.split(",")[0] as string}
+							alt=""
+							width={1500}
+							height={1500}
 						/>	
 					</div>
 					<div className="p-2 flex items-center">
