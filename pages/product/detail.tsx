@@ -383,10 +383,13 @@ export default function CreateShop({ product, ratings, mainAddress, location }: 
                             {rating.image ? (
                               <div className="flex gap-x-2">
                                 {rating.image.split(",").map((image, i) => (
-                                  <img
+                                  <Image
                                     key={i}
                                     className='object-cover w-64 h-auto border-2 border-gray-600'
                                     src={`http:\\\\localhost:3000\\\\${image}`}
+                                    alt=""
+                                    width={1500}
+                                    height={1500}
                                     onError={({ currentTarget }) => {
                                       currentTarget.onerror = null; // prevents looping
                                       currentTarget.src =
@@ -396,10 +399,13 @@ export default function CreateShop({ product, ratings, mainAddress, location }: 
                                 ))}
                               </div>
                             ) : (
-                              <img
+                              <Image
                                 hidden={true}
                                 className='object-cover w-64 h-64 sm:h-16 border-2 border-gray-600'
                                 src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
+                                alt=""
+                                width={1500}
+                                height={1500}
                               />
                             )}
                           </div>

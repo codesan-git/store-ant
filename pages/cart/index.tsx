@@ -7,6 +7,7 @@ import Navbar from "../navbar";
 import { useRouter } from 'next/router'
 import { Address } from "@prisma/client";
 import DeleteCartAlert from "@/components/cart_delete_modal";
+import Image from "next/image";
 
 interface Props {
   cartItems: {
@@ -34,6 +35,7 @@ export default function Cart({ cartItems, mainAddress }: Props) {
   //console.log("address: ", mainAddress);
   const [data, setData] = useState<string[]>([]); 
   const [checkoutClick, setCheckoutClick] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   if (cartItems) {
@@ -58,6 +60,7 @@ export default function Cart({ cartItems, mainAddress }: Props) {
 
   function onCheckout(){
     setCheckoutClick(true);
+    setIsLoading(true);
     const cartId:CartId = {id: data}
     try{
       fetch('/api/cart/checkout', {
@@ -91,6 +94,11 @@ export default function Cart({ cartItems, mainAddress }: Props) {
     <div>
         <Navbar />
         <div className="px-8 my-8 flex-col gap-10 cursor-pointer">
+          { isLoading? (
+            <div className="text-red-500">LOADING...</div>
+          ) : (
+            <></>
+          )}
           {cartItems ? (
             <div>
               {cartItems.map((cartItem) => (
@@ -104,9 +112,19 @@ export default function Cart({ cartItems, mainAddress }: Props) {
                       <div className="card-body py-5">
                           <figure className="rounded-md h-40 w-40">
                               {cartItem.product.image? (
-                                  <img src={cartItem.product.image}/>
+                                  <Image 
+                                    src={cartItem.product.image}
+                                    alt=""
+                                    width={1500}
+                                    height={1500}  
+                                  />
                               ) : (
-                                  <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"/>
+                                  <Image 
+                                    src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
+                                    alt=""
+                                    width={1500}
+                                    height={1500}  
+                                  />
                               )}
                           </figure>
                       </div>

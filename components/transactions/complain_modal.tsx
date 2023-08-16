@@ -4,6 +4,7 @@ import { Fragment, useEffect, useState, useRef } from "react";
 import { HiOutlineCamera, HiPlus } from "react-icons/hi";
 import { HiOutlinePhoto } from "react-icons/hi2";
 import { getStorage, uploadBytesResumable, getDownloadURL, ref  } from "firebase/storage";
+import Image from "next/image";
 
 interface Props {
 	complainTransactionModalArguments: () => any;
@@ -141,8 +142,12 @@ const ComplainModal = ({ complainTransactionModalArguments }: Props) => {
 			<Fragment>
 				<div className="flex flex-row mt-2 space-x-1">
 					<div id="image-placeholder" className="p-1 flex items-center">
-						<img className="w-14 h-14 object-cover"
-							src={order?.product?.image?.split(",")[0]}
+						<Image 
+							className="w-14 h-14 object-cover"
+							src={order?.product?.image?.split(",")[0] as string}
+							alt=""
+							width={1500}
+							height={1500}
 						/>
 					</div>
 					<div className="p-2 flex items-center">
@@ -192,9 +197,11 @@ const ComplainModal = ({ complainTransactionModalArguments }: Props) => {
 			if (form.orderId.includes(orders.id)) {
 				return (
 					<div key={orders.id} className="flex gap-4">
-						<img
+						<Image
 							src={orders?.product.image || ""}
 							alt=""
+							width={1500}
+							height={1500}
 							className="w-16 h-16 border border-dotted bg-gray-300 border-green-800"
 						/>
 						<div className="my-auto font-bold">
@@ -274,7 +281,13 @@ const ComplainModal = ({ complainTransactionModalArguments }: Props) => {
 									<div onClick={() => removeImage(file.name)} className="flex justify-center items-center bg-black text-white rounded-full h-4 w-4 text-xs font-bold absolute -right-2 -top-2 sm:-right-2 hover:cursor-pointer">
 										✕
 									</div>
-									<img src={URL.createObjectURL(file)} alt="" className="w-12 h-12 sm:w-16 sm:h-16 object-cover border border-gray-600" />
+									<Image 
+										src={URL.createObjectURL(file)} 
+										alt=""
+										width={1500}
+										height={1500} 
+										className="w-12 h-12 sm:w-16 sm:h-16 object-cover border border-gray-600" 
+									/>
 								</div>
 						)
 					}
@@ -319,31 +332,6 @@ const ComplainModal = ({ complainTransactionModalArguments }: Props) => {
 								</div>
 								<div className="gap-4">
 									{renderSelectedProduct()}
-									{/* {transaction?.order.map((orders) => (
-										<>
-											{
-												fillProduct.includes(orders.id) &&
-												<>
-													<div className="flex gap-4">
-														<img
-															src={orders?.product.image || ""}
-															alt=""
-															className="w-16 h-16 border border-dotted bg-gray-300 border-green-800"
-														/>
-														<div className="my-auto font-bold">
-															<p>{orders?.product.name}</p>
-														</div>
-														<div className="my-auto font-bold cursor-pointer" onClick={
-															()=>{const obj = fillProduct.findIndex(object => {
-															return object === orders.id;
-														})
-														fillProduct.splice(obj,1)
-														}}>X</div>
-												</div>
-										</>
-											}
-								</>
-									))} */}
 								</div>
 							</div>
 							<div id="select-orders" className="">

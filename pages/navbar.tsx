@@ -14,6 +14,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import Image from "next/image";
 
 interface CartItems {
   id: Number;
@@ -333,9 +334,15 @@ const Navbar = () => {
                   tabIndex={0}
                   className="dropdown-content card card-compact w-96 p-2 shadow bg-primary text-primary-content glass"
                 >
-                  <figure>
-                    <img className="p-16" src="/assets/food.png" alt="car!" />
-                  </figure>
+                  {/* <figure>
+                    <Image 
+                      className="p-16" 
+                      src="/assets/food.png" 
+                      alt="car!" 
+                      width={1500}
+                      height={1500}  
+                    />
+                  </figure> */}
                   <div className="card-body bg-primary rounded-lg">
                     <h2 className="card-title">Life hack</h2>
                     <p>How to park your car at your garage?</p>

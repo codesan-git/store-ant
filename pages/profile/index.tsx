@@ -103,6 +103,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
   const [selectedFile, setSelectedFile] = useState<File>();
   const [submitted, setSubmitted] = useState(false);
   const [selectedAddressId, setSelectedAddressId] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   // const [gender, setGender] = useState('');
 
   const [addresses, setAddresses] = useState<Address[]>(address);
@@ -145,27 +146,56 @@ export default function Profile({ profile, user, address, provinceData, cityData
     </div>;
   };
 
+  // async function create(data: FormData) {
+  //   try {
+  //     setIsLoading(true);
+  //     fetch("/api/profile/setting", {
+  //       body: JSON.stringify(data),
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       method: "POST",
+  //     }).then(() => {
+  //       setIsLoading(false);
+  //       setForm({
+  //         username: data.username,
+  //         password: "",
+  //         phonenumber: data.phonenumber,
+  //         birthDate: data.birthDate,
+  //         gender: data.gender
+  //       });
+  //       router.push(router.asPath);
+  //     });
+  //   } catch (error) {
+  //     ////console.log(error);
+  //   }
+  // }
+
   async function create(data: FormData) {
+    setIsLoading(true);
+  
     try {
-      fetch("/api/profile/setting", {
-        body: JSON.stringify(data),
+      const response = await axios.post("/api/profile/setting", data, {
         headers: {
           "Content-Type": "application/json",
         },
-        method: "POST",
-      }).then(() => {
+      });
+  
+      if (response.status === 200) {
         setForm({
           username: data.username,
           password: "",
           phonenumber: data.phonenumber,
           birthDate: data.birthDate,
-          gender: data.gender
+          gender: data.gender,
         });
         router.push(router.asPath);
-      });
+      }
     } catch (error) {
-      ////console.log(error);
+      //console.log(error);
     }
+  
+    setIsLoading(false);
   }
 
   const handleBankAccountDelete = async () => {
@@ -406,7 +436,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
     }
   };
 
-  const getDate = profile.birthDate ? format(new Date(profile.birthDate?.replace(/-/g,",")),"d MMMM yyyy") : "-";
+  const getDate = profile?.birthDate ? format(new Date(profile?.birthDate?.replace(/-/g,",")),"d MMMM yyyy") : "-";
 
   const data = [
     {
@@ -576,7 +606,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
                 {/* Handle Tanggal Lahir */}
                 <div className="flex gap-5">
                   <label className="my-auto mr-4 text-sm lg:text-base w-1/3 lg:w-auto">Tanggal Lahir</label>
-                  {profile.birthDate ?
+                  {profile?.birthDate ?
                     <>
                       <h5 className="text-sm lg:text-base w-1/3 lg:w-auto">{getDate}</h5>
                     </>
@@ -658,7 +688,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
                     </FormControl>
                   </div>
                   {
-                    profile.gender === form.gender || form.gender === "" ?
+                    profile?.gender === form.gender || form.gender === "" ?
                       <>
                         <div className="textarea-disabled text-sm lg:text-base w-1/3 lg:w-auto my-auto cursor-not-allowed">
                           save
@@ -914,13 +944,18 @@ export default function Profile({ profile, user, address, provinceData, cityData
   //console.log("user", session?.user);
   return (
     <>
-      <Navbar />
+      <Navbar />      
       <div className="lg:flex w-full my-5 lg:w-3/4 mx-auto">
         <div className="w-full lg:mx-10">
           <span className="flex gap-2">
             <HiUser className="my-auto w-5 h-5" />
             <h5>{session?.user?.name}</h5>
-          </span>
+          </span>          
+          { isLoading? (
+            <div className="text-red-500">LOADING...</div>
+          ) : (
+            <></>
+          )}
           <Tabs value="datadiri">
             <TabsHeader>
               {data.map(({ label, value, icon }) => (

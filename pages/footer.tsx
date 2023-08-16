@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 
 
@@ -83,12 +84,12 @@ const Footer = () => {
             </div>
             <div className="mx-auto">
               {/* <figure>
-                <img
-                  width="200"
-                  height="200"
+                <Image
                   className="fill-current"
                   src="/assets/player.png"
                   alt="car!"
+                  width={1500}
+                  height={1500}
                 />
               </figure> */}
               <p>
@@ -188,15 +189,6 @@ const Footer = () => {
               </div>
             </div>
             <div className="mx-auto">
-              {/* <figure>
-                <img
-                  width="200"
-                  height="200"
-                  className="fill-current"
-                  src="/assets/player.png"
-                  alt="car!"
-                />
-              </figure> */}
               <p>
                 ACME Industries Ltd.
                 <br />

@@ -1,6 +1,7 @@
 import { Fragment, useState } from "react";
 import { HiOutlineEllipsisVertical, HiShoppingCart } from "react-icons/hi2";
 import { Order as PrismaOrder, ProductInCart, Transaction as PrismaTransaction, TransactionStatus } from "@prisma/client";
+import Image from "next/image";
 
 interface Order {
   id: number,
@@ -275,7 +276,7 @@ const ShopItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinis
       {renderExtraActionDropdown()}
     </Fragment>;
   }
-
+  let imgSrc:string = transaction?.order?.at(0)?.product?.image?.split(",")[0] as string;
   return (
     <Fragment>
       <div className="">
@@ -294,8 +295,10 @@ const ShopItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinis
         <div id="lower-detail">
           <div id="product-details" className="flex flex-row p-2 bg-gray-300">
             <div id="product-detail-img-container" className=" flex justify-center items-center">
-              <img className="w-36 h-36 object-cover"
-                src={transaction?.order?.at(0)?.product?.image?.split(",")[0]}
+              <Image className="w-36 h-36 object-cover"
+                src={imgSrc}
+                width={1500}
+                height={1500}
                 onError={({ currentTarget }) => {
                   currentTarget.onerror = null; // prevents looping
                   currentTarget.src = "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"

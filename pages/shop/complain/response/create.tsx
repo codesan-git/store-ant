@@ -2,6 +2,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL  } from "firebase/storage";
+import Image from "next/image";
 
 export default function Complain() {
   const [desc, setDesc] = useState<string>("");
@@ -76,7 +77,7 @@ export default function Complain() {
 
   const renderSelectedImage = () => {
 
-    if(selectedImage) return <img src={selectedImage} alt="Unable to display selected image" className='w-full h-1/2 object-cover'/>;
+    if(selectedImage) return <Image src={selectedImage} alt="Unable to display selected image" width={1500} height={1500} className='w-full h-1/2 object-cover'/>;
     
     return (
       <>
@@ -95,7 +96,7 @@ export default function Complain() {
       <div id="title-hack-container" className="">
         <section className="pl-4 lg:w-1/2 flex lg:flex-col lg:justify-center lg:items-center">
           <div className="lg:w-5/6 justify-start">
-            <h1 className=" text-2xl  font-bold mb-2 font-bold">Form Pengembalian</h1>
+            <h1 className=" text-2xl mb-2 font-bold">Form Pengembalian</h1>
           </div>
         </section>
       </div>
@@ -137,9 +138,12 @@ export default function Complain() {
                   >
                     Remove
                   </div>
-                  <img
+                  <Image
                     className="h-20 w-20 rounded-md"
                     src={URL.createObjectURL(file)}
+                    alt=""
+                    width={1500}
+                    height={1500}
                   />
                 </div>
               );

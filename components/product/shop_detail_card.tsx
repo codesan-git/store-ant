@@ -56,9 +56,11 @@ const ShopDetailCard = ({shop, location}: Props) => {
         <div id='shop-mini-profile' className='flex flex-row w-auto py-2 border-b-2 border-b-black-800'>
           <div id='shop-profile-picture-container' className='mr-2 w-1/3 flex items-center justify-center sm:w-24 lg:w-28'>
             {shop.image ? (
-              <img 
+              <Image 
                 className='object-cover rounded-full w-16 h-16 sm:w-16 sm:h-16 lg:w-24 lg:h-24 border-2 border-gray-600'
-                src={shop.image!}
+                src={shop?.user.image}
+                width={1500}
+                height={1500}
                 onError={({ currentTarget }) => {
                     currentTarget.onerror = null; // prevents looping
                     currentTarget.src =
@@ -67,10 +69,12 @@ const ShopDetailCard = ({shop, location}: Props) => {
                 alt=''
               />
             ) : (
-              <img 
+              <Image 
                 className='object-cover rounded-full w-16 h-16 sm:w-16 sm:h-16 lg:w-24 lg:h-24 border-2 border-gray-600'
                 src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
                 alt=''
+                width={1500}
+                height={1500}
               />
             )}
           </div>
