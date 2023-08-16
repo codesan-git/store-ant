@@ -2,6 +2,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
 import { useState } from "react";
+import Image from "next/image";
 
 interface FormData {
   password?: string;
@@ -34,35 +35,14 @@ export default function Validation() {
 
   return (
     <>
-      {/* <label htmlFor="">
-        <span className="label-text">Password</span>
-      </label>
-      <input
-        type="text"
-        name="password"
-        placeholder="Password"
-        value={form?.password}
-        className="input input-bordered input-primary w-auto rounded-md"
-        onChange={(e) =>
-          setForm({
-            ...form,
-            password: e.target.value,
-            access_token: accessToken as string,
-          })
-        }
-      />
-      <button
-        className="btn btn-outline btn-primary w-full btn-md rounded-lg"
-        onClick={resetPassword}
-      >
-        Reset Password
-      </button> */}
 
       <div className="card lg:w-96 bg-base-100 shadow-xl mx-auto lg:my-36">
         <figure className="px-10 pt-10">
-          <img
+          <Image
             src="https://s3-us-west-2.amazonaws.com/shipsy-public-assets/shipsy/SHIPSY_LOGO_BIRD_BLUE.png"
             alt="Shoes"
+            width={1500}
+            height={1500}
             className="rounded-xl"
           />
         </figure>

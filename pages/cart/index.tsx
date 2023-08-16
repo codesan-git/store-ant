@@ -7,6 +7,7 @@ import Navbar from "../navbar";
 import { useRouter } from 'next/router'
 import { Address } from "@prisma/client";
 import DeleteCartAlert from "@/components/cart_delete_modal";
+import Image from "next/image";
 
 interface Props {
   cartItems: {
@@ -111,9 +112,19 @@ export default function Cart({ cartItems, mainAddress }: Props) {
                       <div className="card-body py-5">
                           <figure className="rounded-md h-40 w-40">
                               {cartItem.product.image? (
-                                  <img src={cartItem.product.image}/>
+                                  <Image 
+                                    src={cartItem.product.image}
+                                    alt=""
+                                    width={1500}
+                                    height={1500}  
+                                  />
                               ) : (
-                                  <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"/>
+                                  <Image 
+                                    src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
+                                    alt=""
+                                    width={1500}
+                                    height={1500}  
+                                  />
                               )}
                           </figure>
                       </div>

@@ -190,7 +190,7 @@ export default function CreateShop({product} : FetchData) {
 
   const renderSelectedImage = () => {
 
-    if(selectedImage) return <img src={selectedImage} alt="Unable to display selected image" className='w-full h-1/2 object-cover'/>;
+    if(selectedImage) return <Image src={selectedImage} alt="Unable to display selected image" width={1500} height={1500} className='w-full h-1/2 object-cover'/>;
     
     return (
       <>
@@ -209,7 +209,7 @@ export default function CreateShop({product} : FetchData) {
       <div id='title-hack-container' className=''>
         <section className='pl-4 lg:w-1/2 flex lg:flex-col lg:justify-center lg:items-center'>
           <div className='lg:w-5/6 justify-start'>
-            <h1 className=' text-2xl  font-bold mb-2 font-bold'>Update Product</h1>
+            <h1 className=' text-2xl  font-bold mb-2'>Update Product</h1>
           </div>
         </section>
       </div>
@@ -238,9 +238,12 @@ export default function CreateShop({product} : FetchData) {
                     >
                       ✕
                     </div>
-                    <img
+                    <Image
                       className="h-20 w-20 rounded-md"
                       src={file}
+                      alt=''
+                      width={1500}
+                      height={1500}
                       onError={({ currentTarget }) => {
                         currentTarget.onerror = null; // prevents looping
                         currentTarget.src = `${file}`;

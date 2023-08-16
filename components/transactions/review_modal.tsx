@@ -1,5 +1,6 @@
 import { Product } from "@prisma/client";
 import axios from "axios";
+import Image from "next/image";
 import { useState } from "react";
 
 interface Props {
@@ -94,11 +95,16 @@ const ReviewModal = ({htmlElementId: id, selectProductCallback} : Props) => {
             selectedFiles.map( 
               (file, key) => 
                 <div key={key} className="relative">
-                  {/* <img src={URL.createObjectURL(file)} alt="" /> */}
                   <div onClick={() => handleRemoveImage(file.name)} className="flex justify-center items-center bg-black text-white rounded-full h-4 w-4 text-xs font-bold absolute -right-0 -top-2 sm:right-3 hover:cursor-pointer">
                     ✕
                   </div>
-                  <img src={URL.createObjectURL(file)} alt="" className="w-12 h-12 sm:w-16 sm:h-16 object-cover border border-gray-600" />
+                  <Image 
+                    src={URL.createObjectURL(file)} 
+                    alt="" 
+                    className="w-12 h-12 sm:w-16 sm:h-16 object-cover border border-gray-600" 
+                    width={1500}
+                    height={1500}
+                  />
                 </div>
             )
           }
@@ -132,8 +138,13 @@ const ReviewModal = ({htmlElementId: id, selectProductCallback} : Props) => {
             <label htmlFor={id} className="text-lg font-bold">✕</label>
           </div>
           <div id="product-box" className="p-2 space-x-2 flex flex-row bg-blue-gray-100">
-            {/* <img src={product.image} alt="none" className="w-10 h-10 border object-cover"/> */} {/*This won't work for some reason*/}
-            <img src={`https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg`} alt="none" className="w-10 h-10 border object-cover"/> 
+            <Image 
+              src={`https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg`} 
+              alt="none" 
+              className="w-10 h-10 border object-cover"
+              width={1500}
+              height={1500}
+            /> 
             <h1>{currentRateProductName}</h1>
           </div>
           <form id="review-form" action="" className="pt-4 space-y-1">

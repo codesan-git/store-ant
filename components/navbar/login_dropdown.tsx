@@ -1,5 +1,6 @@
 import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 import Link from "next/link";
 import { Fragment, useState } from "react";
 
@@ -25,13 +26,24 @@ const LoginDropdown = ({session, onLogoutClick}: Props) => {
       <div className="dropdown dropdown-end">
         <label tabIndex={0} className="btn btn-ghost btn-circle avatar mr-3" onClick={() => setDropdownOpen(true)}>
           <div className="w-10 rounded-full">
-            <img src={session?.user?.image!} />
+            <Image 
+              src={session?.user?.image!} 
+              alt=""
+              width={1500}
+              height={1500}  
+            />
           </div>
         </label>
         <ul tabIndex={0} className="menu menu-compact dropdown-content p-2 shadow bg-base-100 rounded-box w-52">
           <div id="mini-profile-dropdown" className="flex flex-col justify-center items-center space-y-2 p-2">
             <div className="avatar w-10">
-              <img src={session?.user?.image!}  className="rounded-full" />
+              <Image 
+                src={session?.user?.image!}  
+                alt=""
+                width={1500}
+                height={1500}
+                className="rounded-full" 
+              />
             </div>
             <h1 className="text-sm text-center">{session.user.name}</h1>
           </div>
@@ -77,7 +89,13 @@ const LoginDropdown = ({session, onLogoutClick}: Props) => {
           <div id="user-mini-profile" className="flex flex-row items-center p-2 space-x-2 bg-blue-gray-50">
             <div id="modal-profile-photo-container" className="flex align-middle">
               <div className="avatar w-10">
-                <img src={session?.user?.image!}  className="rounded-full" />
+                <Image 
+                  src={session?.user?.image!}  
+                  alt=""
+                  width={1500}
+                  height={1500}
+                  className="rounded-full" 
+                />
               </div>
             </div>
             <div>

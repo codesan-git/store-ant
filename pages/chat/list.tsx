@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useSession, getSession } from 'next-auth/react';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, {useState, useEffect, FormEvent} from 'react';
 import { Socket, io } from 'socket.io-client';
@@ -61,7 +62,12 @@ export default function List() {
                                 <div className="flex items-center space-x-3">
                                     <div className="avatar">
                                         <div className="mask mask-squircle w-12 h-12">
-                                            <img src={conversation.messages[0].recipient.image} alt="Avatar Tailwind CSS Component" />
+                                            <Image 
+                                                src={conversation.messages[0].recipient.image} 
+                                                alt="Avatar Tailwind CSS Component" 
+                                                width={1500}
+                                                height={1500}    
+                                            />
                                         </div>
                                     </div>
                                     <div>
@@ -73,7 +79,12 @@ export default function List() {
                                 <div className="flex items-center space-x-3">
                                     <div className="avatar">
                                         <div className="mask mask-squircle w-12 h-12">
-                                            <img src={conversation.messages[0].sender.image} alt="Avatar Tailwind CSS Component" />
+                                            <Image 
+                                                src={conversation.messages[0].sender.image} 
+                                                alt="Avatar Tailwind CSS Component" 
+                                                width={1500}
+                                                height={1500}    
+                                            />
                                         </div>
                                     </div>
                                     <div>

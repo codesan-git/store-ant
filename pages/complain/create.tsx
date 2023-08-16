@@ -1,4 +1,5 @@
 import axios from "axios";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 
@@ -46,7 +47,7 @@ export default function Complain() {
 
   const renderSelectedImage = () => {
 
-    if(selectedImage) return <img src={selectedImage} alt="Unable to display selected image" className='w-full h-1/2 object-cover'/>;
+    if(selectedImage) return <Image src={selectedImage} alt="Unable to display selected image" width={1500} height={1500} className='w-full h-1/2 object-cover'/>;
     
     return (
       <>
@@ -107,9 +108,12 @@ export default function Complain() {
                   >
                     Remove
                   </div>
-                  <img
+                  <Image
                     className="h-20 w-20 rounded-md"
                     src={URL.createObjectURL(file)}
+                    alt=""
+                    width={1500}
+                    height={1500}
                   />
                 </div>
               );

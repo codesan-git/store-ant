@@ -2,6 +2,7 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import { useState } from 'react';
 import axios from 'axios';
+import Image from 'next/image';
 
 interface Rating{
     cartId: number;
@@ -111,35 +112,19 @@ export default function Rate() {
                                             }}
                                             className="right-1 hover:text-white cursor-pointer bg-red-400"
                                         >Remove</div>            
-                                        <img className="h-20 w-20 rounded-md" src={URL.createObjectURL(file)}/>
+                                        <Image 
+                                            className="h-20 w-20 rounded-md" 
+                                            src={URL.createObjectURL(file)}
+                                            alt=''
+                                            width={1500}
+                                            height={1500}    
+                                        />
                                     </div>
                                 )
                             })}
                         </div>
                     </div> 
                 </div>
-                {/* <div className='max-w-4xl space-y-6'>
-                    <label>
-                        <input 
-                            type='file' 
-                            hidden 
-                            onChange={({target}) => {
-                                if(target.files){
-                                    const file = target.files[0];
-                                    setSelectedImage(URL.createObjectURL(file));
-                                    setSelectedFile(file);
-                                }
-                            }}
-                        />
-                        <div className='w-80 aspect-video rounded flex border-2 border-dashed cursor-pointer'>
-                            {selectedImage? (
-                                <img src={selectedImage} alt=""/>
-                            ) : (
-                                <span>Select Image</span>
-                            )}
-                        </div>
-                    </label>
-                </div> */}
                 <div className="w-32 btn btn-primary">
                     <button onClick={()=>rate()}>Save</button>
                 </div>

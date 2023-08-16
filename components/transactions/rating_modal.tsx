@@ -306,9 +306,11 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
                                     >
                                         ✕
                                     </div>
-                                    <img
+                                    <Image
                                         src={URL.createObjectURL(file)}
                                         alt=""
+                                        width={1500}
+                                        height={1500}
                                         className="w-12 h-12 sm:w-16 sm:h-16 object-cover border border-gray-600"
                                     />
                                 </div>

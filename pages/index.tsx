@@ -21,6 +21,7 @@ import useSWR from "swr";
 import { useSearchParams } from "next/navigation";
 import axios from "axios";
 import CategoryListItem from "@/components/index/category_list_item";
+import Image from "next/image";
 
 async function handleGoogleSignOut() {
   signOut({ callbackUrl: "/login" });
@@ -177,8 +178,11 @@ export default function Home({ events }: EventData) {
         <div id="product-carousel-container" className="relative flex justify-center">
           <div id="product-carousel" className="carousel w-full rounded-lg lg:w-3/4 lg:h-96">
               <div id="slide1" className="carousel-item relative w-full transition duration-700 ease-in-out hover:cursor-pointer">
-                <img
-                  src={selectedImage}
+                <Image
+                  src={"https://images.unsplash.com/photo-1689542901884-4fe1715af46d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80"}
+                  alt=""
+                  width={1500}
+                  height={1500}
                   className="w-full object-cover"
                   onClick={() => window.open(events[index]?.eventPath)}                                        
                   onError={({ currentTarget }) => {

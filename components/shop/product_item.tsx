@@ -4,6 +4,7 @@ import { HiClipboard, HiOutlineClipboard, HiStar } from "react-icons/hi2";
 import { AiFillEdit } from "react-icons/ai";
 import Link from "next/link";
 import { Address } from "@prisma/client";
+import Image from "next/image";
 
 interface Product {
   id: string,
@@ -39,8 +40,10 @@ const ProductItem = ({ product, address } : Props) => {
           <AiFillEdit className="fill-white w-10 h-10"/>
         </Link>
         {/* <div id="product-image-container" className="object-cover rounded-t-lg bg-green-500 h-1/2"></div> */}
-        <img 
-          src={product.image.split(",")[0]} 
+        <Image 
+          src={product.image.split(",")[0]}
+          width={1500}
+          height={1500} 
           alt="no image available" 
           onError={({ currentTarget }) => {
               currentTarget.onerror = null; // prevents looping

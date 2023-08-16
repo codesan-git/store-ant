@@ -14,6 +14,8 @@ export default async function handler(
   const {username, password, phonenumber, emailVerified, birthDate, gender} = req.body
   const session = await getSession({req})
 
+  console.log("session profile", session)
+
   try {
     const hashedPassword = await bcrypt.hash(password, 12);
     await prisma.profile.upsert({
