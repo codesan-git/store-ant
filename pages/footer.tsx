@@ -189,15 +189,6 @@ const Footer = () => {
               </div>
             </div>
             <div className="mx-auto">
-              {/* <figure>
-                <Image
-                  className="fill-current"
-                  src="/assets/player.png"
-                  alt="car!"
-                  width={1500}
-                  height={1500}
-                />
-              </figure> */}
               <p>
                 ACME Industries Ltd.
                 <br />
