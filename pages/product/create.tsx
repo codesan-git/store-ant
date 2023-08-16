@@ -41,6 +41,7 @@ export default function CreateProduct() {
   const [selectedImage, setSelectedImage] = useState<string>();
   const [selectedFiles, setFile] = useState<any[]>([]);
   const [urls, setURLs] = useState<string[]>([]);
+  const exceptThisSymbols = ["e", "E", "+", "-", ".", ","];
 
   useEffect(() => {
     //console.log("images: ", urls.join(","));
@@ -275,7 +276,8 @@ export default function CreateProduct() {
               <input
                 id="product-quantity-input"
                 name="product-quantity"
-                type="number"
+                type="number"                
+                onKeyDown={e => exceptThisSymbols.includes(e.key) && e.preventDefault()}
                 className="p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white"
                 value={form.stock}
                 onChange={handleQuantityChange}
@@ -290,7 +292,8 @@ export default function CreateProduct() {
                 name="product-price"
                 type="number"
                 className="p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white"
-                value={form.price}
+                value={form.price}                
+                onKeyDown={e => exceptThisSymbols.includes(e.key) && e.preventDefault()}
                 onChange={handlePriceChange}
               />
             </div>
