@@ -77,6 +77,7 @@ export default function CreateShop({ product, ratings, mainAddress, location }: 
   const router = useRouter();
   const { id } = router.query;
   const [isEmpty, setIsEmpty] = useState<boolean>((product.stock.valueOf() <= 1) ? true : false);
+  const [isLoading, setIsLoading] = useState(false);
   const {data:session} = useSession();
 
   //console.log("client side: ", ratings);
@@ -96,6 +97,7 @@ export default function CreateShop({ product, ratings, mainAddress, location }: 
         isCheckout: false
       };
       try {
+        setIsLoading(true);
         fetch("/api/cart/add", {
           body: JSON.stringify(data),
           headers: {
@@ -120,6 +122,7 @@ export default function CreateShop({ product, ratings, mainAddress, location }: 
         isCheckout: true
       };
       try {
+        setIsLoading(true);
         fetch("/api/cart/add", {
           body: JSON.stringify(data),
           headers: {
@@ -210,7 +213,12 @@ export default function CreateShop({ product, ratings, mainAddress, location }: 
       <Head>
         <title>{product.name} | Store.ant</title>
       </Head>
-      <Navbar />
+      <Navbar />         
+          { isLoading? (
+            <div className="text-red-500">LOADING...</div>
+          ) : (
+            <></>
+          )}
       <div id='breadcrumb' className='breadcrumbs my-8'>
         <ul>
           <li>
