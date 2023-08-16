@@ -82,7 +82,7 @@ const Footer = () => {
               </div>
             </div>
             <div className="mx-auto">
-              <figure>
+              {/* <figure>
                 <img
                   width="200"
                   height="200"
@@ -90,7 +90,7 @@ const Footer = () => {
                   src="/assets/player.png"
                   alt="car!"
                 />
-              </figure>
+              </figure> */}
               <p>
                 ACME Industries Ltd.
                 <br />
@@ -188,7 +188,7 @@ const Footer = () => {
               </div>
             </div>
             <div className="mx-auto">
-              <figure>
+              {/* <figure>
                 <img
                   width="200"
                   height="200"
@@ -196,7 +196,7 @@ const Footer = () => {
                   src="/assets/player.png"
                   alt="car!"
                 />
-              </figure>
+              </figure> */}
               <p>
                 ACME Industries Ltd.
                 <br />
