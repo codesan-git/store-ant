@@ -299,7 +299,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
         </div>
         <div id="chatroom-item-details" className="w-3/4 p-4 flex flex-col items-start">
           <h1 className="font-bold">{recepient?.name.toString()}</h1>
-          <p id="last-message" className="truncate w-64 h-48">{latestMessage?.message.toString()}</p>
+          <p id="last-message" className="truncate w-16 sm:w-16 lg:w-32 2xl:w-48 h-48">{latestMessage?.message.toString()}</p>
         </div>
       </div>
     );
