@@ -395,10 +395,10 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
           <section hidden={hidden} id="chatlist-web" className="w-1/4">
             <div id="search-container" className="bg-gray-500 h-1/6 flex justify-center items-center">
               <div className="w-5/6 relative">
-                <div className="absolute top-1 bottom-1 left-1">
+                {/* <div className="absolute top-1 bottom-1 left-1">
                   <HiMagnifyingGlass />
                 </div>
-                <input type="text" className="w-full pl-6"/>
+                <input type="text" className="w-full pl-6"/> */}
               </div>
             </div>
             <div id="chatroom-list" className="h-5/6 flex flex-col overflow-y-auto">
