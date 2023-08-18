@@ -299,7 +299,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
         </div>
         <div id="chatroom-item-details" className="w-3/4 p-4 flex flex-col items-start">
           <h1 className="font-bold">{recepient?.name.toString()}</h1>
-          <p id="last-message" className="truncate h-48">{latestMessage?.message.toString()}</p>
+          <p id="last-message" className="truncate w-16 sm:w-16 lg:w-32 2xl:w-48 h-48">{latestMessage?.message.toString()}</p>
         </div>
       </div>
     );
@@ -457,7 +457,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
             <form className="h-1/6 flex flex-row bg-gray-400">
               <div className="w-full flex flex-row justify-center items-center p-2 relative">
                 {/* <textarea aria-multiline="true" value={newMessage?.message} name="" id="" className="w-full h-full items-start pr-10" onKeyDown={(e) => handleSubmitMessage(e)} onChange={handleMessageChange}/> */}
-                <textarea aria-multiline="true" value={newMessage?.message} name="" id="" className="w-full h-full items-start " onKeyDown={(e) => handleSubmitMessage(e)} onChange={handleMessageChange}/>
+                <textarea aria-multiline="true" value={newMessage?.message} name="" id="" className="w-full h-full items-start resize-none" onKeyDown={(e) => handleSubmitMessage(e)} onChange={handleMessageChange}/>
                 {/* <GrAttachment className="absolute right-6"/> */}
               </div>
               <div className="flex justify-center items-center w-24">
@@ -546,7 +546,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
               <form onSubmit={(e) => handleMobileSubmitMessage(e)} className="w-full flex flex-row relative bg-gray-400">
                 <div className="w-full flex flex-row justify-center items-center p-2 relative">
                   {/* <textarea aria-multiline="true" value={newMessage?.message} name="" id="" className="w-full h-full items-start" onKeyDown={(e) => handleSubmitMessage(e)} onChange={handleMessageChange}/> */}
-                  <textarea aria-multiline="true" value={newMessage?.message} name="" id="" className="w-full h-full items-start" onKeyDown={(e) => handleSubmitMessage(e)} onChange={handleMessageChange}/>
+                  <textarea aria-multiline="true" value={newMessage?.message} name="" id="" className="w-full h-full items-start resize-none" onKeyDown={(e) => handleSubmitMessage(e)} onChange={handleMessageChange}/>
                   {/* <GrAttachment className="absolute right-6"/> */}
                 </div>
                 <div className="flex justify-center items-center w-24">
