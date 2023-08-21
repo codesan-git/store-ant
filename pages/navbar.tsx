@@ -210,8 +210,8 @@ const Navbar = () => {
             {/* End Dropdown */}
           </div>
         </div>
-        <div className="navbar-center hidden sm:inline lg:flex">
-          <form onSubmit={onSearch}>
+        <div className="navbar-center hidden sm:inline lg:flex w-1/4">
+          <form onSubmit={onSearch} className="w-full">
             <input
               type="text"
               placeholder="Shop now"

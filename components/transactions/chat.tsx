@@ -451,7 +451,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
               {
                 (selectedConversation) 
                 ? renderMessages() 
-                : <div>No Conversation</div>
+                : <div className="h-full flex justify-center items-center">No Conversation</div>
               }
             </div>
             <form className="h-1/6 flex flex-row bg-gray-400">

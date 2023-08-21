@@ -344,12 +344,12 @@ const SellerDashboard = ({ TransactionDashboardArguments, shop }: Props) => {
 								</ul>
 							}
 						</li>
-						<li className="bg-gray-300 lg:bg-none">
+						{/* <li className="bg-gray-300 lg:bg-none">
 							<Link href={''} className="flex p-2 text-base font-normal rounded-lg transition duration-200 hover:bg-gray-300">
 								<HiChartPie className="h-6 w-6" />
 								<span className="ml-3">Stats</span>
 							</Link>
-						</li>
+						</li> */}
 						<li className="bg-gray-300 lg:bg-none">
 							<Link href={'/shop/withdrawals'} className="flex p-2 text-base font-normal rounded-lg transition duration-200 hover:bg-gray-300">
 								<HiChatBubbleBottomCenterText className="h-6 w-6" />
