@@ -451,7 +451,7 @@ const Chat = ({ newChatUserId, hidden, onClose }: Props) => {
               {
                 (selectedConversation)
                   ? renderMessages()
-                  : <div className="h-full flex justify-center items-center">No Conversation</div>
+                  : <div className="h-full flex justify-center items-center">Belum ada percakapan</div>
               }
             </div>
             <form className="h-1/6 flex flex-row bg-gray-400">
@@ -539,7 +539,7 @@ const Chat = ({ newChatUserId, hidden, onClose }: Props) => {
               {
                 (selectedConversation)
                   ? renderMessages()
-                  : <div>No Conversation</div>
+                  : <div>Belum ada percakapan</div>
               }
             </div>
             <div className="flex flex-row w-full bg-gray-400">
