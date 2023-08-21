@@ -361,7 +361,7 @@ const Chat = ({ newChatUserId, hidden, onClose }: Props) => {
           </div>
           <div id="message-date" className="flex justify-end items-center space-x-2">
             {(message.isSeen) ? <BsCheck2All className="w-4 h-4 lg:w-6 lg:h-6" /> : <BsCheck2 className="w-4 h-4 lg:w-6 lg:h-6" />}
-            <h1 className="text-xs lg:text-base">{messageDate?.toDateString()}</h1>
+            <h1 className="text-xs lg:text-base">{messageDate?.toDateString()}, {messageDate.getHours().toString()}:{(messageDate.getMinutes() < 10) ? "0" : ''}{messageDate.getMinutes().toString()}</h1>
           </div>
         </div>
       </div>
