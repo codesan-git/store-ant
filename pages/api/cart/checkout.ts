@@ -13,16 +13,6 @@ export default async function handler(
   let shops = new Array();
   let transactionDetails = new Array();
   let transactions = new Array();
-  const productInCart = await prisma.productInCart.findFirst({
-    where: { id: Number(id[0]) },
-    select: {
-      productId: true,
-      count: true,
-      product: {
-        select: { shop: true}
-      }
-    }
-  });
 
   let i: number;
   let j: number;

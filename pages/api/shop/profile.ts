@@ -9,8 +9,10 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-    const {name, image} = req.body;
+    const {name, image, oldImage} = req.body;
     const session = await getSession({req});
+
+    console.log(image);
 
     try {
         const shop = await prisma.shop.update({

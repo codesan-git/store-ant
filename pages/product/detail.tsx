@@ -394,7 +394,7 @@ export default function CreateShop({ product, ratings, mainAddress, location }: 
                                   <img
                                     key={i}
                                     className='object-cover w-64 h-auto border-2 border-gray-600'
-                                    src={`http:\\\\localhost:3000\\\\${image}`}
+                                    src={image}
                                     onError={({ currentTarget }) => {
                                       currentTarget.onerror = null; // prevents looping
                                       currentTarget.src =

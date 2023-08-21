@@ -466,6 +466,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
                     <button
                       onClick={() => changePhoto(selectedFile)}
                       className="btn btn-primary btn-outline rounded-md w-full"
+                      disabled = {!selectedFile}
                     >
                       Simpan Foto
                     </button>

@@ -62,7 +62,7 @@ export default function (req: any, res: any) {
       <p>
         ${req.body.token}
       </p>
-      <a href="http://localhost:3000/changenumber?token=${req.body.token}" class="button">Verification</a>
+      <a href=https://www.tigaorang.dev/changenumber?token=${req.body.token}" class="button">Verification</a>
     </div>
   </body>`,
   };

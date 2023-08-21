@@ -11,7 +11,7 @@ export default function Register() {
   const [show, setShow] = useState<boolean>();
 
   async function handleGoogleSignIn() {
-    signIn('google', {callbackUrl: "http://localhost:3000"})
+    signIn('google', {callbackUrl: "https://www.tigaorang.dev/"})
   }
 
   return (

@@ -73,7 +73,7 @@ export default async function (req: any, res: any) {
       <p>
         Ganti Nomor Telefon Anda, ${token}
       </p>
-      <a href="http://localhost:3000/changephoneNumber?token=${token}" class="button">Verification</a>
+      <a href="https://www.tigaorang.dev/changephoneNumber?token=${token}" class="button">Verification</a>
     </div>
   </body>`,
   };

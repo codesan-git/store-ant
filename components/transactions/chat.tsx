@@ -82,7 +82,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
   const socketInitializer = async () => {
     await fetch("/api/socket");
 
-    socket = io('ws://localhost:3000', {transports: ['websocket']});
+    socket = io('ws://www.tigaorang.dev/', {transports: ['websocket']});
     //console.log(session?.user.id);
     socket.emit("connect-user", session?.user.id);
   }
