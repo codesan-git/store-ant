@@ -71,7 +71,7 @@ export default function Cart({ cartItems, mainAddress }: Props) {
           method: 'PUT'
       }).then(()=> router.push("/transactions"))
     }catch(error){
-        ////console.log(error)
+        console.log(error)
     }
   }
   
