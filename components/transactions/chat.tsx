@@ -50,8 +50,8 @@ let socket: Socket;
 
 interface Props {
   newChatUserId?: string;
-  hidden: boolean;
-  onClose: () => any;
+  hidden?: boolean;
+  onClose?: () => any;
 }
 
 /*Temporary solution after temporary solution after temporary solution after temporary solution.... until it bloats like this

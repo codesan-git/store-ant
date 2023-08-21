@@ -249,7 +249,7 @@ const Transactions = ({ transactions, newChatUserId }: Props) => {
             <h1>{currentSelectedSection}</h1>
           </div>
           {renderItemsToDisplay()}
-          <Chat newChatUserId={newChatUserId} hidden={chatIsHidden} onClose={() => setChatIsHidden(true)} />
+          {/* <Chat newChatUserId={newChatUserId} hidden={chatIsHidden} onClose={() => setChatIsHidden(true)} /> */}
         </div>
       </div>
       <ReviewModal htmlElementId={`review-modal`} selectProductCallback={getCurrentSelectedProductForRate} />

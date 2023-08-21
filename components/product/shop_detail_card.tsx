@@ -36,7 +36,7 @@ const ShopDetailCard = ({shop, location}: Props) => {
   const [isUser, setIsUser] = useState<boolean>(false);
 
   const onPenjualClick = () => {
-    router.push(`/transactions?newChatUserId=${shop.userId}`);
+    router.push(`/chat?newChatUserId=${shop.userId}`);
   }
 
   const routeToShop = ()=> {
