@@ -13,6 +13,21 @@ export default async function handler(
   let i: number;
   let j: number;
   for(i=0; i < id.length; i++){
+      let cart = await prisma.productInCart.findFirst({
+        where: {id: Number(id[i])}
+      })
+
+      let product = await prisma.product.findFirst({
+        where:{ id: cart?.productId}
+      });
+
+      await prisma.product.update({
+        where: {id: product?.id},
+        data:{
+          stock: Number(product?.stock) + Number(cart?.count)
+        }
+      })
+
       await prisma.productInCart.delete({
         where:{id: Number(id[i])}
       })

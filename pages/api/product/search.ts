@@ -33,7 +33,8 @@ export default async function handler(
                     }
                 }
             }
-        ]
+        ],
+        stock: {not: 0}
       },
       include: {
         shop: true

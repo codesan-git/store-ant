@@ -41,7 +41,7 @@ export default function Chat({messages, recipient} : Messages) {
   async function socketInitializer() {
     await fetch("/api/socket");
 
-    socket = io('ws://localhost:3000', {transports: ['websocket']});
+    socket = io('ws://www.tigaorang.dev/', {transports: ['websocket']});
     socket.emit("connect-user", session?.user.id);
   }
 

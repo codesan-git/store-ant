@@ -2,6 +2,7 @@ import { Fragment, useState } from "react";
 import { HiOutlineEllipsisVertical, HiShoppingCart } from "react-icons/hi2";
 import { Order as PrismaOrder, ProductInCart, Transaction as PrismaTransaction, TransactionStatus } from "@prisma/client";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 interface Order {
   id: number,
@@ -66,6 +67,7 @@ const ShopItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinis
 
   const transactionCreatedDate = new Date(transaction.createdAt);
   const transactionLastUpdate = new Date(transaction.updatedAt);
+  const router = useRouter();
 
   const renderTransactionDate = () => { //TODO: try using locale format function next time
     return (
@@ -264,7 +266,7 @@ const ShopItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinis
       return (
         <Fragment>
           {detailTransaksiButton()}
-          <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 text-white bg-green-500">
+          <button onClick={(e) => {e.preventDefault(); router.push({pathname: "/transactions/track", query: {id: transaction.id}})}} className="text-xs lg:text-base w-32 text-white bg-green-500">
             Lacak
           </button>
           {renderExtraActionDropdown()}

@@ -42,12 +42,13 @@ export default function CreateProduct() {
   const [selectedFiles, setFile] = useState<any[]>([]);
   const [urls, setURLs] = useState<string[]>([]);
   const exceptThisSymbols = ["e", "E", "+", "-", ".", ","];
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
-    //console.log("images: ", urls.join(","));
-    //console.log("url length: ", urls.length);
-    //console.log("files length: ", selectedFiles.length);
-    //console.log("condition: ", selectedFiles.length == urls.length);
+    console.log("images: ", urls.join(","));
+    console.log("url length: ", urls.length);
+    console.log("files length: ", selectedFiles.length);
+    console.log("condition: ", selectedFiles.length == urls.length);
     if(urls.join(",") != "" && urls.length == selectedFiles.length){
       const data = {name: form.name, price: form.price, stock: form.stock, image: urls.join(","), description: form.description, categoryId: form.categoryId};
       axios.post('/api/product/create', data).then(() => { router.back(); });
@@ -90,6 +91,7 @@ export default function CreateProduct() {
   };
 
   async function handleUpload() {
+    setIsProcessing(true);
     const promises : any[] = [];
     const storage = getStorage();
 
@@ -108,10 +110,12 @@ export default function CreateProduct() {
           );
           //setProgress(prog);
         },
-        (error) => //console.log(error),
+        (error) => console.log(error),
         async () => {
           await getDownloadURL(uploadTask.snapshot.ref).then((downloadURLs) => {
+            console.log("url: ", downloadURLs);
             setURLs(prevArray => [...prevArray, downloadURLs]);
+            console.log("urls: ", urls);
           });
         }
       );
@@ -200,6 +204,11 @@ export default function CreateProduct() {
   return (
     <div className="lg:px-36 space-y-4">
       <Navbar/>
+      { isLoading? (
+            <div className="text-red-500">LOADING...</div>
+          ) : (
+            <></>
+          )}
       <div id="title-hack-container" className="">
         <section className="pl-4 lg:w-1/2 flex lg:flex-col lg:justify-center lg:items-center">
           <div className="lg:w-5/6 justify-start">

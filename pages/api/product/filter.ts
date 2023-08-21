@@ -25,7 +25,8 @@ export default async function handler(
       where: {
         category:{
             id: Number(categoryId)
-        }
+        },
+        stock: {not: 0}
       }
     })
     // //console.log(products);

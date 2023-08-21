@@ -14,12 +14,19 @@ export default async function handler(
   const session = await getSession({req})
 
   try {
+    await prisma.address.updateMany({
+      where:{ isShopAddress: true},
+      data: {
+        isShopAddress: false
+      }
+    });
+
     await prisma.address.update({
       where:{ id: id!},
       data: {
         isShopAddress: true
       }
-    })
+    });
     res.status(200).json({ message: 'shop address set' })
   } catch (error) {
     ////console.log(error)

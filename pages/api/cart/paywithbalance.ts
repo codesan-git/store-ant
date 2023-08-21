@@ -17,13 +17,13 @@ export default async function handler(
   //   }
   // });
   
-  const transaction = await prisma.transaction.updateMany({
-    where:{ id: id! },
-    data:{
-      status: TransactionStatus.AWAITING_CONFIRMATION,
-      updatedAt: new Date()
-    }
-  });
+  // const transaction = await prisma.transaction.updateMany({
+  //   where:{ id: id! },
+  //   data:{
+  //     status: TransactionStatus.AWAITING_CONFIRMATION,
+  //     updatedAt: new Date()
+  //   }
+  // });
 
   const transactionData = await prisma.transaction.findFirst({
     where: {id: id!}
@@ -45,7 +45,7 @@ export default async function handler(
             "gross_amount": Number(price) - Number(session?.user?.balance!)
         },
         "callbacks": {
-            "finish": "/redirect"
+            "finish": "https://tigaorang.dev/redirect"
         }
     };
     
