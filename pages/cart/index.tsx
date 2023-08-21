@@ -68,7 +68,7 @@ export default function Cart({ cartItems, mainAddress }: Props) {
           headers: {
               'Content-Type' : 'application/json'
           },
-          method: 'PUT'
+          method: 'POST'
       }).then(()=> router.push("/transactions"))
     }catch(error){
         console.log(error)
