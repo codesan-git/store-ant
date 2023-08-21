@@ -1,7 +1,7 @@
 import { HiEllipsisVertical, HiMagnifyingGlass } from "react-icons/hi2";
 import { BsCheck2, BsCheck2All } from "react-icons/bs"
 import { AiOutlineSend } from "react-icons/ai";
-import { GrAttachment }  from "react-icons/gr"
+import { GrAttachment } from "react-icons/gr"
 import { MdArrowBack } from "react-icons/md"
 import { ChangeEvent, FormEvent, Fragment, KeyboardEvent, useEffect, useState } from "react";
 import axios from 'axios';
@@ -46,10 +46,10 @@ interface MessageForm {
   message: string;
 }
 
-let socket : Socket;
+let socket: Socket;
 
 interface Props {
-  newChatUserId? : string;
+  newChatUserId?: string;
   hidden: boolean;
   onClose: () => any;
 }
@@ -59,11 +59,11 @@ interface Props {
 */
 
 
-const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
+const Chat = ({ newChatUserId, hidden, onClose }: Props) => {
 
   const router = useRouter();
 
-  const {data: session} = useSession();
+  const { data: session } = useSession();
 
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [chatroomModalIsHidden, setChatroomModalIsHidden] = useState<boolean>(true);
@@ -73,7 +73,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
   //const [messageForm, setMessageForm] = useState<MessageForm>({senderId: String(session?.user.id), recipientId: "1", message:""});
   const [newMessage, setNewMessage] = useState<Message>();
   const [newConversation, setNewConversation] = useState<Conversation>();
-  
+
   const [selectedRecepient, setSelectedRecepient] = useState<User>();
   const [newRecepient, setNewRecepient] = useState<User>();
   const [latestMessageOfNewConversation, setLatestMessageOfNewConversation] = useState<string>("");
@@ -83,13 +83,13 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
   const socketInitializer = async () => {
     await fetch("/api/socket");
 
-    socket = io('ws://localhost:3000', {transports: ['websocket']});
+    socket = io('ws://localhost:3000', { transports: ['websocket'] });
     //console.log(session?.user.id);
     socket.emit("connect-user", session?.user.id);
   }
 
-  const listen = () => {    
-    socket.on("receive-message", (data : Message) => {
+  const listen = () => {
+    socket.on("receive-message", (data: Message) => {
       setCurrentChatroomMessages([...currentChatroomMessages as Message[], data]);
     });
   }
@@ -99,10 +99,10 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
     const data: Conversation[] = conversationsRes.data.conversations;
     setConversations(data);
 
-    if(newChatUserId) {
+    if (newChatUserId) {
       const res = await axios.get(`/api/user/${newChatUserId}`);
 
-      const {user: userToBeChatted} : {user: User} = res.data;
+      const { user: userToBeChatted }: { user: User } = res.data;
 
       const newConversation: Conversation = {
 
@@ -113,10 +113,10 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
 
       data.map((c) => {
         //console.log("Running map")
-        const latestMessage = c.messages.at(c.messages.length-1);
+        const latestMessage = c.messages.at(c.messages.length - 1);
         const recepient = getRecepient(latestMessage!);
 
-        if(recepient.id == userToBeChatted.id) {
+        if (recepient.id == userToBeChatted.id) {
           setSelectedConversation(c);
           setSelectedRecepient(recepient);
           setCurrentChatroomMessages(c.messages);
@@ -127,7 +127,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
         }
       })
 
-      if(chatDoesNotExistYet) {
+      if (chatDoesNotExistYet) {
         setSelectedConversation(newConversation);
         setSelectedRecepient(userToBeChatted);
         setCurrentChatroomMessages([]);
@@ -140,13 +140,13 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
     }
   }
 
-  
+
   useEffect(() => {
     socketInitializer();
   }, [session?.user.id]);
 
   useEffect(() => {
-    if(socket) listen();
+    if (socket) listen();
   });
 
   useEffect(() => {
@@ -154,17 +154,17 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
     // if(newChatUserId){
     //   fetchNewRecepientDetails();
     // }
-  },[]);
+  }, []);
 
 
-  
-  
+
+
   const handleSubmitMessage = (e: KeyboardEvent<HTMLTextAreaElement> | KeyboardEvent<HTMLInputElement>) => {
-    
-    if(e.key  === 'Enter'){
+
+    if (e.key === 'Enter') {
       e.preventDefault();
       socket.emit("send-message", newMessage);
-      
+
       const messageToBeAdded: Message = {
         id: newMessage?.id,
         message: newMessage?.message as string,
@@ -174,36 +174,36 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
         recipient: newMessage?.recipient as User,
         createdAt: new Date(Date.now())
       }
-  
+
       setCurrentChatroomMessages([...currentChatroomMessages as Message[], messageToBeAdded]);
 
-      try{
+      try {
         fetch('/api/chat/send', {
-              body: JSON.stringify(newMessage),
-              headers: {
-                'Content-Type' : 'application/json'
-              },
-              method: 'POST'
-            }).then()
-          }catch(error){
-          ////console.log(error)
+          body: JSON.stringify(newMessage),
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          method: 'POST'
+        }).then()
+      } catch (error) {
+        ////console.log(error)
       }
-  
-      setNewMessage({...newMessage as Message, message: ""});
+
+      setNewMessage({ ...newMessage as Message, message: "" });
 
       const updatedConversation: Conversation = {
         id: selectedConversation?.id,
         messages: [...currentChatroomMessages as Message[], newMessage as Message],
-  
+
       };
 
-      if(newConversation) {
+      if (newConversation) {
         setLatestMessageOfNewConversation(newMessage?.message as string)
         return;
       };
 
       const updatedConversations = conversations.filter((c) => c.id !== selectedConversation?.id);
-  
+
       setConversations([updatedConversation, ...updatedConversations,]);
 
     }
@@ -225,26 +225,26 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
 
     setCurrentChatroomMessages([...currentChatroomMessages as Message[], messageToBeAdded]);
 
-    try{
-        fetch('/api/chat/send', {
-            body: JSON.stringify(newMessage),
-            headers: {
-                'Content-Type' : 'application/json'
-            },
-            method: 'POST'
-        }).then()
-    }catch(error){
-        ////console.log(error)
+    try {
+      fetch('/api/chat/send', {
+        body: JSON.stringify(newMessage),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: 'POST'
+      }).then()
+    } catch (error) {
+      ////console.log(error)
     }
 
-    setNewMessage({...newMessage as Message, message: ""});
+    setNewMessage({ ...newMessage as Message, message: "" });
   }
-  
+
   const chatroomItemOnClick = (conversation: Conversation) => {
     setChatroomModalIsHidden(false);
     setSelectedConversation(conversation);
 
-    const latestMessage = conversation.messages.at(conversation.messages.length-1);
+    const latestMessage = conversation.messages.at(conversation.messages.length - 1);
     const recepient = getRecepient(latestMessage!);
     setSelectedRecepient(recepient);
     //console.log(recepient.id);
@@ -270,10 +270,10 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
     setChatroomModalIsHidden(false);
   }
 
-  const getRecepient = (latestMessage: Message) : User => {
+  const getRecepient = (latestMessage: Message): User => {
     let recepient; //TODO: create user names variable in Conversation Model
 
-    if(latestMessage?.recipientId === session?.user.id) recepient = latestMessage?.sender;
+    if (latestMessage?.recipientId === session?.user.id) recepient = latestMessage?.sender;
     else recepient = latestMessage?.recipient;
 
     return recepient;
@@ -282,7 +282,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
 
   const chatroomItem = (conversation: Conversation) => {
 
-    const latestMessage = conversation.messages.at(conversation.messages.length-1);
+    const latestMessage = conversation.messages.at(conversation.messages.length - 1);
 
     const recepient = getRecepient(latestMessage!);
 
@@ -293,7 +293,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
             src={recepient?.image}
             alt=""
             width={1500}
-            height={1500} 
+            height={1500}
             className="w-14 h-14 rounded-full bg-purple-300"
           />
         </div>
@@ -307,7 +307,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
 
   const chatroomItemForModal = (conversation: Conversation) => {
 
-    const latestMessage = conversation.messages.at(conversation.messages.length-1);
+    const latestMessage = conversation.messages.at(conversation.messages.length - 1);
 
     const recepient = getRecepient(latestMessage!);
 
@@ -320,7 +320,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
             src={recepient?.image}
             alt=""
             width={1500}
-            height={1500} 
+            height={1500}
             className="w-14 h-14 rounded-full bg-purple-300"
           />
         </div>
@@ -352,7 +352,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
 
     const recieverMessageContainerStyle = "px-4 py-2";
     const recieverMessageBoxStyle = "rounded-lg w-2/3 p-4 bg-gray-400 shadow-xl space-y-2";
-    
+
     return (
       <div id="message-container" className={(isSender) ? userMessageContainerStyle : recieverMessageContainerStyle}>
         <div id="message-box" className={(isSender) ? userMessageBoxStyle : recieverMessageBoxStyle}>
@@ -360,8 +360,8 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
             <p className="break-words h-auto">{message.message}</p>
           </div>
           <div id="message-date" className="flex justify-end items-center space-x-2">
-            {(message.isSeen) ? <BsCheck2All className="w-4 h-4 lg:w-6 lg:h-6"/> : <BsCheck2 className="w-4 h-4 lg:w-6 lg:h-6"/>}
-            <h1 className="text-xs lg:text-base">{messageDate?.toDateString()}</h1>
+            {(message.isSeen) ? <BsCheck2All className="w-4 h-4 lg:w-6 lg:h-6" /> : <BsCheck2 className="w-4 h-4 lg:w-6 lg:h-6" />}
+            <h1 className="text-xs lg:text-base">{messageDate?.toDateString()}, {messageDate.getHours().toString()}:{(messageDate.getMinutes() < 10) ? "0" : ''}{messageDate.getMinutes().toString()}</h1>
           </div>
         </div>
       </div>
@@ -371,7 +371,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
   const renderMessages = () => {
     const cloneMessages = currentChatroomMessages?.slice();
     const reversedMessages = cloneMessages?.reverse();
-    
+
     return (
       <>
         {reversedMessages?.map((m) => messageElement(m))}
@@ -380,38 +380,38 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
   }
 
   const handleMessageChange = (e: ChangeEvent<HTMLTextAreaElement>) => setNewMessage({
-    message:  e.target.value,
+    message: e.target.value,
     recipient: selectedRecepient as User,
     recipientId: String(selectedRecepient?.id),
     sender: session?.user as unknown as User,
     senderId: String(session?.user.id),
     // createdAt: new Date(Date.now())
   });
-  
+
   return (
-    <Fragment>  
+    <Fragment>
       <div hidden={hidden} className="">
         <div className="h-96 flex flex-row">
-          <section hidden={hidden} id="chatlist-web" className="w-1/4">
+          <section hidden={hidden} id="chatlist-web" className="w-1/3">
             <div id="search-container" className="bg-gray-500 h-1/6 flex justify-center items-center">
               <div className="w-5/6 relative">
-                <div className="absolute top-1 bottom-1 left-1">
+                {/* <div className="absolute top-1 bottom-1 left-1">
                   <HiMagnifyingGlass />
                 </div>
-                <input type="text" className="w-full pl-6"/>
+                <input type="text" className="w-full pl-6"/> */}
               </div>
             </div>
             <div id="chatroom-list" className="h-5/6 flex flex-col overflow-y-auto">
               {
                 (newConversation)
-                ? <div onClick={() => newChatroomItemOnClick()} className="flex flex-row h-24 bg-gray-300 hover:bg-gray-500 transition hover:cursor-pointer">
+                  ? <div onClick={() => newChatroomItemOnClick()} className="flex flex-row h-24 bg-gray-300 hover:bg-gray-500 transition hover:cursor-pointer">
                     <div id="recepient-image-container" className="w-1/4 flex justify-center items-center">
                       <Image
                         src={newRecepient?.image as string}
                         alt=""
                         width={1500}
-                        height={1500} 
-                        className="w-14 h-14 rounded-full bg-purple-300"
+                        height={1500}
+                        className="w-16 h-16 rounded-full bg-purple-300"
                       />
                     </div>
                     <div id="chatroom-item-details" className="w-3/4 p-4 flex flex-col items-start">
@@ -419,50 +419,50 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
                       <p id="last-message" className="truncate w-64 h-48">{latestMessageOfNewConversation}</p>
                     </div>
                   </div>
-                : <></>
+                  : <></>
               }
-              {conversations?.map((c)=> chatroomItem(c))}
+              {conversations?.map((c) => chatroomItem(c))}
             </div>
           </section>
-          <section hidden={hidden} id="chatroom-web" className="w-3/4">
-            <div id="chat-chatroom-details" className="h-1/6 p-2 bg-gray-400 flex flex-row space-x-4">
-              <div className="w-16 flex justify-center items-center">
-                <Image 
+          <section hidden={hidden} id="chatroom-web" className="w-2/3">
+            <div id="chat-chatroom-details" className="h-1/6 p-2 bg-gray-400 flex flex-row space-x-2">
+              <div className="w-16 flex justify-center items-center ">
+                <Image
                   src={selectedRecepient?.image as string}
                   alt=""
                   width={1500}
                   height={1500}
                   className="w-10 h-10 rounded-full bg-purple-300"
-                />  
+                />
               </div>
               {/* <div id="recepient-and-status" className="flex flex-col items-start w-1/2"> */}
-              <div id="recepient-and-status" className="flex flex-col justify-center w-1/2">
+              <div id="recepient-and-status" className="flex flex-col justify-center w-3/4">
                 <h1 className="text-xl">{selectedRecepient?.name.toString()}</h1>
                 {/* <div className="flex flex-row justify-center items-center space-x-1">
                   <div className="w-2 h-2 rounded-full bg-green-600"></div>
                   <h1 className="text-xs">Online</h1>
                 </div> */}
               </div>
-              <div className="w-full flex items-center justify-end">
+              <div className="w-1/4 flex items-center justify-end">
                 {/* <HiEllipsisVertical className="w-6 h-6 hover:cursor-pointer"/> */}
               </div>
             </div>
             <div className="h-4/6 overflow-y-auto flex flex-col-reverse"> {/*I need to put justify-end so that it renders from the top but if I do so it will break the UI */}
               {
-                (selectedConversation) 
-                ? renderMessages() 
-                : <div>No Conversation</div>
+                (selectedConversation)
+                  ? renderMessages()
+                  : <div className="h-full flex justify-center items-center">No Conversation</div>
               }
             </div>
             <form className="h-1/6 flex flex-row bg-gray-400">
               <div className="w-full flex flex-row justify-center items-center p-2 relative">
                 {/* <textarea aria-multiline="true" value={newMessage?.message} name="" id="" className="w-full h-full items-start pr-10" onKeyDown={(e) => handleSubmitMessage(e)} onChange={handleMessageChange}/> */}
-                <textarea aria-multiline="true" value={newMessage?.message} name="" id="" className="w-full h-full items-start resize-none" onKeyDown={(e) => handleSubmitMessage(e)} onChange={handleMessageChange}/>
+                <textarea aria-multiline="true" value={newMessage?.message} name="" id="" className="w-full h-full items-start resize-none" onKeyDown={(e) => handleSubmitMessage(e)} onChange={handleMessageChange} />
                 {/* <GrAttachment className="absolute right-6"/> */}
               </div>
               <div className="flex justify-center items-center w-24">
                 <button type="submit" className="bg-green-500 rounded-full w-12 h-12 flex justify-center items-center">
-                  <AiOutlineSend className="w-6 h-6 fill-white"/>
+                  <AiOutlineSend className="w-6 h-6 fill-white" />
                 </button>
               </div>
             </form>
@@ -478,17 +478,17 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
               </div>
               <div id="actions-container" className="flex flex-row items-center p-4 space-x-4">
                 <HiMagnifyingGlass />
-								<button onClick={onClose} className="text-2xl font-bold float-right">✕</button>
+                <button onClick={onClose} className="text-2xl font-bold float-right">✕</button>
               </div>
             </div>
             <div id="chatlist" className="h-5/6 flex flex-col overflow-y-auto">
               {
                 (newConversation)
-                ? <div onClick={() => newChatroomItemOnClick()} className="flex flex-row h-24 bg-gray-300 hover:bg-gray-500 transition hover:cursor-pointer">
+                  ? <div onClick={() => newChatroomItemOnClick()} className="flex flex-row h-24 bg-gray-300 hover:bg-gray-500 transition hover:cursor-pointer">
                     <div id="recepient-image-container" className="w-1/4 flex justify-center items-center">
                       <Image
                         src={newRecepient?.image as string}
-                        alt="" 
+                        alt=""
                         width={1500}
                         height={1500}
                         className="w-14 h-14 rounded-full bg-purple-300"
@@ -499,7 +499,7 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
                       <p id="last-message" className="truncate w-64 h-48">{latestMessageOfNewConversation}</p>
                     </div>
                   </div>
-                : <></>
+                  : <></>
               }
               {conversations?.map((c) => chatroomItemForModal(c))}
             </div>
@@ -511,16 +511,16 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
           <div id="chat-chatlist-box" className="h-full w-full bg-white">
             <div className="flex flex-row p-2 w-full bg-gray-400 h-16 space-x-2">
               <button onClick={() => setChatroomModalIsHidden(true)} className="flex justify-center items-center">
-                <MdArrowBack className="w-6 h-6"/>
+                <MdArrowBack className="w-6 h-6" />
               </button>
               <div className="w-16 flex justify-center items-center">
-                <Image 
+                <Image
                   src={selectedRecepient?.image as string}
                   alt=""
                   width={1500}
                   height={1500}
                   className="w-10 h-10 rounded-full bg-purple-300">
-                </Image>  
+                </Image>
               </div>
               <div id="recepient-and-status" className="flex flex-col justify-center items-start w-3/4">
                 <div className="w-full">
@@ -537,21 +537,21 @@ const Chat = ({ newChatUserId, hidden, onClose } : Props) => {
             </div>
             <div id="chatlist" className="h-5/6 overflow-y-auto flex flex-col-reverse">
               {
-                (selectedConversation) 
-                ? renderMessages() 
-                : <div>No Conversation</div>
+                (selectedConversation)
+                  ? renderMessages()
+                  : <div>No Conversation</div>
               }
             </div>
             <div className="flex flex-row w-full bg-gray-400">
               <form onSubmit={(e) => handleMobileSubmitMessage(e)} className="w-full flex flex-row relative bg-gray-400">
                 <div className="w-full flex flex-row justify-center items-center p-2 relative">
                   {/* <textarea aria-multiline="true" value={newMessage?.message} name="" id="" className="w-full h-full items-start" onKeyDown={(e) => handleSubmitMessage(e)} onChange={handleMessageChange}/> */}
-                  <textarea aria-multiline="true" value={newMessage?.message} name="" id="" className="w-full h-full items-start resize-none" onKeyDown={(e) => handleSubmitMessage(e)} onChange={handleMessageChange}/>
+                  <textarea aria-multiline="true" value={newMessage?.message} name="" id="" className="w-full h-full items-start resize-none" onKeyDown={(e) => handleSubmitMessage(e)} onChange={handleMessageChange} />
                   {/* <GrAttachment className="absolute right-6"/> */}
                 </div>
                 <div className="flex justify-center items-center w-24">
                   <button type="submit" className="bg-green-500 rounded-full w-12 h-12 flex justify-center items-center">
-                    <AiOutlineSend className="w-6 h-6 fill-white"/>
+                    <AiOutlineSend className="w-6 h-6 fill-white" />
                   </button>
                 </div>
               </form>
