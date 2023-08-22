@@ -30,11 +30,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
   })
 
-  //console.log(JSON.parse(JSON.stringify(transactions)));
-
   return {
     props: {
-      // transactions: JSON.parse(JSON.stringify(transactions)),
       newChatUserId: newChatUserId,
     },
   };

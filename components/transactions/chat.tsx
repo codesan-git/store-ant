@@ -83,7 +83,7 @@ const Chat = ({ newChatUserId, hidden, onClose }: Props) => {
   const socketInitializer = async () => {
     await fetch("/api/socket");
 
-    socket = io('ws://www.tigaorang.dev/', {transports: ['websocket']});
+    socket = io('ws://localhost:3000', { transports: ['websocket'] });
     //console.log(session?.user.id);
     socket.emit("connect-user", session?.user.id);
   }
@@ -451,7 +451,7 @@ const Chat = ({ newChatUserId, hidden, onClose }: Props) => {
               {
                 (selectedConversation)
                   ? renderMessages()
-                  : <div className="h-full flex justify-center items-center">Belum ada percakapan</div>
+                  : <div className="h-full flex justify-center items-center">Belum ada percakapan yang dipilih</div>
               }
             </div>
             <form className="h-1/6 flex flex-row bg-gray-400">
@@ -539,7 +539,7 @@ const Chat = ({ newChatUserId, hidden, onClose }: Props) => {
               {
                 (selectedConversation)
                   ? renderMessages()
-                  : <div>Belum ada percakapan</div>
+                  : <div className="h-full flex justify-center items-center">Belum ada percakapan yang dipilih</div>
               }
             </div>
             <div className="flex flex-row w-full bg-gray-400">
