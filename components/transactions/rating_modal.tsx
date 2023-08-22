@@ -107,31 +107,17 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
     }))
     const initialOrders = transaction?.order ? transaction.order.map(orders => String(orders.id)) : [];
     const [shop, setShop] = useState<Shop>();
-    const [fillProduct, setFillProduct] = useState<number[]>([]);
-    const [ratingDesc, setratingDesc] = useState<string>("")
-    const [isAddProduct, setIsAddProduct] = useState(false)
-    const [selectedImage, setSelectedImage] = useState<string>();
-    // const [selectedFiles, setFile] = useState<any[]>([]);
     const [selectedFiles, setSelectedFiles] = useState<Array<Array<File>>>([]);
     const [getValue, setGetValue] = useState<string[]>(initialOrders);
 	const [urls, setURLs] = useState<Array<Array<string>>>([]);
-    // const [form, setForm] = useState<FormData>({
-    //     orderId: 0,
-    //     star: 0,
-    //     comment: ""
-    // });
     const [form, setForm] = useState<FormData[]>([]);
     const [value, setValue] = useState<number | null>(2);
     const [hover, setHover] = useState(-1);
     const [submit, setSubmit] = useState(false);
 
-    //const ref = useRef<any>(null)
     const router = useRouter()
 
 	useEffect(() => {
-        //console.log("url length: ", urls.length);
-        //console.log("files length: ", selectedFiles.length);
-        //console.log("condition: ", selectedFiles.length == urls.length);        
 
         let isSameLength = urls.length == selectedFiles.length;
         
@@ -142,7 +128,6 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
             }
         }
 
-        //console.log("is same length: ", isSameLength);
         if(isSameLength && submit){
             try {
                 const promises = form.map(async (formItem, index) => {
@@ -250,12 +235,12 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
                         updatedFiles[index] = images;
                         return updatedFiles;
                     } else {
-                        //console.log("Max limit reached for images.");
+                        console.log("Max limit reached for images.");
                         return prevFiles;
                     }
                 });
             } else {
-                //console.log("Only images are accepted.");
+                console.log("Only images are accepted.");
             }
         }
     };
@@ -359,9 +344,9 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
                     const prog = Math.round(
                         (snapshot.bytesTransferred / snapshot.totalBytes) * 100
                     );
-                    //setProgress(prog);
+                    // setProgress(prog);
                     },
-                    (error) => //console.log(error),
+                    (error) => console.log(error),
                     async () => {
                         await getDownloadURL(uploadTask.snapshot.ref).then((downloadURLs) => {
                             //console.log("URLS ISINYA: ", urls);
@@ -400,22 +385,6 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
         }
     }, [transaction]);
 
-
-    // //console.log(`fill`, transaction?.order[0].id)
-    //console.log(`getValue`, getValue)
-    // //console.log(`comment`, form.comment)
-    // //console.log(`rare`, form.star)
-    // //console.log(`imgUrl`, selectedImage)
-    // //console.log(`formdata`, form)
-    // useEffect(() => {
-    //     //console.log(`rating`, { ratingDesc })
-    //     //console.log(`imgUrl`, selectedImage)
-    //     renderSelectedProduct()
-    // }, [])
-    //console.log(`formData`, form)
-    //console.log(`transaction`, transaction)
-    //console.log(`File`, selectedFiles)
-    // //console.log(`getTransactionProps`, getTransactionRating())
     return (
         <Fragment>
             <div hidden={ratingModalIsHidden} id="new-modal-custom" className="bg-gray-900 bg-opacity-75 fixed h-full w-full top-0 left-0 z-50 pointer-events-auto">
