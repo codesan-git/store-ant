@@ -16,7 +16,7 @@ import SentimentSatisfiedIcon from '@mui/icons-material/SentimentSatisfied';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAltOutlined';
 import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfied';
 import router, { useRouter } from "next/navigation";
-import { getStorage, uploadBytesResumable, getDownloadURL, ref  } from "firebase/storage";
+import { getStorage, uploadBytesResumable, getDownloadURL, ref } from "firebase/storage";
 
 
 interface Props {
@@ -108,41 +108,38 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
     const initialOrders = transaction?.order ? transaction.order.map(orders => String(orders.id)) : [];
     const [shop, setShop] = useState<Shop>();
     const [selectedFiles, setSelectedFiles] = useState<Array<Array<File>>>([]);
-    const [getValue, setGetValue] = useState<string[]>(initialOrders);
-	const [urls, setURLs] = useState<Array<Array<string>>>([]);
+    const [urls, setURLs] = useState<Array<Array<string>>>([]);
     const [form, setForm] = useState<FormData[]>([]);
-    const [value, setValue] = useState<number | null>(2);
-    const [hover, setHover] = useState(-1);
     const [submit, setSubmit] = useState(false);
 
     const router = useRouter()
 
-	useEffect(() => {
+    useEffect(() => {
 
         let isSameLength = urls.length == selectedFiles.length;
-        
-        if(isSameLength){
-            for (let i=0;i< urls.length; i++){
-                if(urls[i].length != selectedFiles[i].length)
+
+        if (isSameLength) {
+            for (let i = 0; i < urls.length; i++) {
+                if (urls[i].length != selectedFiles[i].length)
                     isSameLength = false;
             }
         }
 
-        if(isSameLength && submit){
+        if (isSameLength && submit) {
             try {
                 const promises = form.map(async (formItem, index) => {
                     const { orderId, star, comment } = formItem;
                     const images = urls[index];
                     //console.log("urls index length: ", images.length);
-                    const data = {orderId: String(orderId), star: String(star), comment: String(comment), image: images.join(",")}
-    
+                    const data = { orderId: String(orderId), star: String(star), comment: String(comment), image: images.join(",") }
+
                     axios.post(`/api/cart/rate`, data).then(() => router.refresh());
                 });
             } catch (error) {
                 console.error(error);
             }
         }
-    },[urls, submit]);
+    }, [urls, submit]);
 
     const fetchShop = async () => {
         try {
@@ -173,7 +170,7 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
                         <Image
                             alt=""
                             width={1500}
-                            height={1500} 
+                            height={1500}
                             className="w-14 h-14 object-cover"
                             src={String(order?.product?.image?.split(",")[0])}
                         />
@@ -276,28 +273,32 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
 
     const renderSelectedImages = () => {
         return (
-            <div className="flex flex-row gap-x-4 justify-around">
+            <div className="gap-x-4 my-auto">
                 {selectedFiles.map((imageArray, fileIndex) => (
-                    <div key={fileIndex}>
-                        <div className="w-full font-bold block mb-3">
-                            <p>Image For Product {transaction?.order[fileIndex]?.id}</p>
-                        </div>
-                        <div className="flex flex-row gap-2">
+                    <div key={fileIndex} className="border border-black  space-y-10 p-5 rounded-md mb-5 ">
+                        {/* <div className="w-full mx-auto block">
+                            <p>{transaction?.order[fileIndex]?.id}</p>
+                        </div> */}
+                        <div className="flex flex-row gap-2 justify-around">
                             {imageArray.map((file, imageIndex) => (
-                                <div key={imageIndex} className="relative flex">
-                                    <div
-                                        onClick={() => removeImage(fileIndex, imageIndex)}
-                                        className="flex justify-center items-center bg-black text-white rounded-full h-4 w-4 text-xs font-bold absolute -right-2 -top-2 sm:-right-2 hover:cursor-pointer"
-                                    >
-                                        ✕
+                                <div key={imageIndex} className="relative">
+                                    <div className="flex">
+                                        <div
+                                            onClick={() => removeImage(fileIndex, imageIndex)}
+                                            className="flex justify-center items-center bg-black text-white rounded-full h-4 w-4 text-xs font-bold absolute -right-2 -top-2 sm:-right-2 cursor-pointer"
+                                        >
+                                            ✕
+                                        </div>
+                                        <div>
+                                            <Image
+                                                src={URL.createObjectURL(file)}
+                                                alt=""
+                                                width={1500}
+                                                height={1500}
+                                                className="w-12 h-12 sm:w-16 sm:h-16 object-cover border border-gray-600 rounded-md"
+                                            />
+                                        </div>
                                     </div>
-                                    <Image
-                                        src={URL.createObjectURL(file)}
-                                        alt=""
-                                        width={1500}
-                                        height={1500}
-                                        className="w-12 h-12 sm:w-16 sm:h-16 object-cover border border-gray-600"
-                                    />
                                 </div>
                             ))}
                         </div>
@@ -326,25 +327,25 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
         });
     };
     const handleSubmit = async () => {
-        const promises : any[] = [];
-		const storage = getStorage();
+        const promises: any[] = [];
+        const storage = getStorage();
         setSubmit(true);
 
-		selectedFiles.map((file, index) => {
+        selectedFiles.map((file, index) => {
             file.map((fileData) => {
                 //console.log("loop");
 
                 const sotrageRef = ref(storage, `images/rating/${fileData.name}`);
-    
+
                 const uploadTask = uploadBytesResumable(sotrageRef, fileData);
                 promises.push(uploadTask);
                 uploadTask.on(
                     "state_changed",
                     (snapshot) => {
-                    const prog = Math.round(
-                        (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-                    );
-                    // setProgress(prog);
+                        const prog = Math.round(
+                            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                        );
+                        // setProgress(prog);
                     },
                     (error) => console.log(error),
                     async () => {
@@ -353,7 +354,7 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
                             let tempUrls = urls;
                             //console.log("TEMP URLS ISINYA: ", tempUrls);
 
-                            if(!tempUrls[index])
+                            if (!tempUrls[index])
                                 tempUrls.push([]);
 
                             let url = tempUrls[index];
@@ -366,12 +367,12 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
                     }
                 );
             })
-		});
-		Promise.all(promises)
-		.then(async () => {
-			alert("All images uploaded");
-		})
-		.then((err) => console.log(err));
+        });
+        Promise.all(promises)
+            .then(async () => {
+                alert("All images uploaded");
+            })
+            .then((err) => console.log(err));
     };
 
     useEffect(() => {
@@ -399,63 +400,72 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
                             </div>
                         </div>
                         <div id="contents" className="px-4 pb-14 lg:pb-0 h-full lg:h-5/6 space-y-4 overflow-y-auto overflow-x-auto">
-                            <div id="invoice-details">
-                                <h1 className="text-xl font-bold">No. Invoice</h1>
-                                <p>{transaction?.id.toString()}</p>
+                            <div id="invoice-details" className="bg-blue-gray-100 rounded-md">
+                                <div className="mx-5 py-2 flex space-x-3">
+                                    <h1 className="text-xl font-bold">No. Invoice</h1>
+                                    <p className="text-xl">{transaction?.id.toString()}</p>
+                                </div>
                             </div>
-                            <div className="flex flex-row gap-x-4 justify-around">
-                                {form.map((formData, index) => (
-                                    <div key={formData.orderId}>
-                                        <div>
-                                            <div id="invoice-product">
-                                                <h1 className="text-xl font-bold">No. Invoice</h1>
-                                                <p>{formData.orderId.toString()}</p>
-                                            </div>
-                                            {/* ... */}
-                                            <div id="rating-star" className="gap-4">
-                                                <StyledRating
-                                                    name="highlight-selected-only"
-                                                    defaultValue={2}
-                                                    IconContainerComponent={IconContainer}
-                                                    getLabelText={(value: number) => customIcons[value].label}
-                                                    highlightSelectedOnly
-                                                    onChange={(e: any) => handleRatingChange(index, e.target.value)}
-                                                />
-                                            </div>
-                                            <div id="rating-description">
-                                                <textarea
-                                                    className="textarea textarea-bordered w-full rounded-sm"
-                                                    placeholder="Text rating"
-                                                    value={formData.comment}
-                                                    onChange={(e) => handleCommentChange(index, e.target.value)}
-                                                ></textarea>
-                                            </div>
-                                            <div key={index} id="rating-image" className="border-gray-600 my-2 border border-dashed rounded-sm flex justify-center items-center w-full lg:h-full lg:w-full relative">
-                                                <input
-                                                    // disabled={selectedFiles[index].length >= 5}
-                                                    type="file"
-                                                    accept=".jpg, .jpeg, .png, .webp"
-                                                    name={`product-image-${index}`}
-                                                    id={`product-image-input-${index}`}
-                                                    className="w-full h-full cursor-pointer opacity-0 absolute"
-                                                    onChange={(event) => handleFile(event, index)}
-                                                />
-                                                {renderInputMessage(index)}
-                                            </div>
-                                            {/* <p>Image For Product {transaction?.order[index].id}</p> */}
-                                        </div>
+                            <div className="flex justify-center gap-x-4">
+                                    <div className="">
+                                        <p>{transaction?.shop.shopName}</p>
                                     </div>
-
-                                ))}
+                                <div className="">
+                                    {form.map((formData, index) => (
+                                        <div key={formData.orderId}>
+                                            <div className="flex space-x-4">
+                                                {/* <div id="invoice-product"> */}
+                                                    {/* <h1 className="text-xl font-bold">No. Invoice</h1> */}
+                                                    {/* <p>{formData.orderId.toString()}</p> */}
+                                                {/* </div> */}
+                                                {/* ... */}
+                                                <div>
+                                                    <div id="rating-description">
+                                                        <div id="rating-star" className="gap-4">
+                                                            <StyledRating
+                                                                name="highlight-selected-only"
+                                                                defaultValue={2}
+                                                                IconContainerComponent={IconContainer}
+                                                                getLabelText={(value: number) => customIcons[value].label}
+                                                                highlightSelectedOnly
+                                                                onChange={(e: any) => handleRatingChange(index, e.target.value)}
+                                                            />
+                                                        </div>
+                                                        <textarea
+                                                            className="textarea textarea-bordered resize-none rounded-md"
+                                                            placeholder="Text rating"
+                                                            value={formData.comment}
+                                                            onChange={(e) => handleCommentChange(index, e.target.value)}
+                                                        ></textarea>
+                                                        {/* <p>Image For Product {transaction?.order[index].id}</p> */}
+                                                    </div>
+                                                    <div key={index} id="rating-image" className="border-gray-600 my-2 border border-dashed rounded-sm flex justify-center items-center w-full">
+                                                        <input
+                                                            // disabled={selectedFiles[index].length >= 5}
+                                                            type="file"
+                                                            accept=".jpg, .jpeg, .png, .webp"
+                                                            name={`product-image-${index}`}
+                                                            id={`product-image-input-${index}`}
+                                                            className=" cursor-pointer opacity-0 absolute rounded-md"
+                                                            onChange={(event) => handleFile(event, index)}
+                                                        />
+                                                        {renderInputMessage(index)}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                                {renderSelectedImages()}
                             </div>
-                            {renderSelectedImages()}
+                            {/* {renderSelectedImages()} */}
                         </div>
                         <div id="button-action" className="absolute bottom-0 right-0 mb-10 mr-10">
                             <div className="flex justify-end gap-x-4">
-                                <div className="btn btn-outline w-20 h-8 m-auto text-center border rounded-sm bg-transparent border-red-500 hover:bg-red-500">Batal</div>
+                                <div className="btn w-20 h-8 m-auto text-center text-white border rounded-md bg-red-500 border-red-500 hover:bg-transparent hover:text-black">Batal</div>
                                 <div
                                     onClick={() => handleSubmit()}
-                                    className="btn cursor-pointer w-20 h-8 text-white text-center rounded-sm green hover:border bg-green-500 border-green-500 hover:bg-transparent hover:text-black"
+                                    className="btn cursor-pointer w-20 h-8 text-white text-center rounded-md green hover:border bg-green-500 border-green-500 hover:bg-transparent hover:text-black"
                                 >
                                     Ajukan
                                 </div>
