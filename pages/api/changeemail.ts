@@ -73,7 +73,7 @@ export default async function (req: any, res: any) {
       <p>
         Ganti Email Account Anda, ${token}
       </p>
-      <a href="http://localhost:3000/changeemail?token=${token}" class="button">Verification</a>
+      <a href="https://www.tigaorang.dev/changeemail?token=${token}" class="button">Verification</a>
     </div>
   </body>`,
   };

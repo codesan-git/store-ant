@@ -4,7 +4,6 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { getSession } from "next-auth/react";
 import { prisma } from "../../lib/prisma";
 import Navbar from "../navbar";
-import Footer from "../footer";
 import ReviewModal from "../../components/transactions/review_modal";
 import TransactionsDashboard from "@/components/transactions/transactions_dashboard";
 import TransactionItem from "@/components/transactions/transaction_item";
@@ -12,10 +11,8 @@ import PaymentModal from "@/components/transactions/payment_modal";
 import CancelAlert from "@/components/transactions/user_cancel_alert";
 import DetailTransactionModal from "@/components/transactions/detail_transaction_modal";
 import { Product, Order as PrismaOrder, Transaction as PrismaTransaction, TransactionStatus } from "@prisma/client";
-import Chat from "@/components/transactions/chat";
 import ComplainModal from "@/components/transactions/complain_modal";
 import RatingModal from "@/components/transactions/rating_modal";
-import SentItemModal from "@/components/transactions/sent_item";
 
 
 interface CartId {

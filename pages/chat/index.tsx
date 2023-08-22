@@ -1,4 +1,3 @@
-
 import { GetServerSideProps } from "next";
 import Navbar from "../navbar";
 import Chat from "@/components/transactions/chat";

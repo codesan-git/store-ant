@@ -205,7 +205,7 @@ const TransactionItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, 
       return (
         <Fragment>
           {detailTransaksiButton()}
-          <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 text-white bg-green-500">
+          <button onClick={(e) => {e.preventDefault(); router.push({pathname: "/transactions/track", query: {id: transaction.id}})}} className="text-xs lg:text-base w-32 text-white bg-green-500">
             Lacak
           </button>
           {renderExtraActionDropdown()}
@@ -254,7 +254,7 @@ const TransactionItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, 
       return (
         <Fragment>
           {detailTransaksiButton()}
-          <button onClick={(e) => e.preventDefault()} className="text-xs lg:text-base w-32 text-white bg-green-500">
+          <button onClick={(e) => {e.preventDefault(); router.push({pathname: "/transactions/track", query: {id: transaction.id}})}} className="text-xs lg:text-base w-32 text-white bg-green-500">
             Lacak
           </button>
           {renderExtraActionDropdown()}
