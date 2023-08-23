@@ -12,7 +12,7 @@ export default async function handler(
 
   let shops = new Array();
   let shopIds = new Array();
-  let transactionDetails = new Array();
+  let transactionDetails = new Array(); 
   let transactions = new Array();
 
   let productInCart = await prisma.productInCart.findFirst({
