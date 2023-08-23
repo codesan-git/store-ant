@@ -217,6 +217,7 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
         return total;
     }
 
+
     const handleFile = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
         const file = event.target.files && event.target.files[0];
         if (file) {
