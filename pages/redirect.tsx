@@ -17,9 +17,9 @@ export default function Redirect() {
   }
 
   async function UpdateStatus() {
-    //const transactionId:TransactionId = {id: order_id as string, paymentType: };
-    ////console.log(transactionId);
-    //await axios.post(`/api/cart/success`, transactionId);
+    const transactionId:TransactionId = {id: order_id as string, paymentType:"bank_transfer" };
+    //console.log(transactionId);
+    await axios.post(`/api/cart/success`, transactionId);
   }
 
   return (
