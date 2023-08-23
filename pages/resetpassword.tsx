@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
 import { useState } from "react";
 import Image from "next/image";
+import { signOut } from "next-auth/react";
 
 interface FormData {
   password?: string;
@@ -25,7 +26,7 @@ export default function Validation() {
       const response = await axios
         .put(`/api/resetpassword/resetpassword`, form)
         .then(() => {
-          router.push("/login");
+          signOut({ callbackUrl: "/login" });
         });
       //console.log("dari fetchProduct", response);
     } catch (error) {
