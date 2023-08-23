@@ -15,7 +15,12 @@ export default async function handler(
 
   try {
     await prisma.address.updateMany({
-      where:{ isShopAddress: true},
+      where:{ 
+        id: { not: id}, 
+        profile: {
+          userId: session?.user.id
+        }
+      },
       data: {
         isShopAddress: false
       }
