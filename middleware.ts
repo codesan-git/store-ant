@@ -4,19 +4,19 @@ import { NextRequest, NextResponse } from "next/server";
 
 // paths that require authentication or authorization
 const requireAuth: string[] = [
-    "/product",
-    "/profile",
-    "/shop",
-    "/address",
+    "/product/:path*",
+    "/profile/:path*",
+    "/shop/:path*",
+    "/address/:path*",
     "/cart",
     "/transactions",
-    "/api/address",
+    "/api/address/:path*",
     // "/api/product", //kalau pakai ini getProduct akan terhalang middleware
-    "/api/profile",
-    "/api/shop",
-    "/api/cart",
-    "/api/transactions/",
-    "/resetpassword"
+    "/api/profile/:path*",
+    "/api/shop/:path*",
+    "/api/cart/:path*",
+    "/api/transactions/:path*",
+    "/resetpassword/"
 ];
 const protectedPaths: string[] = ["/admin/console"];
 
