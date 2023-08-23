@@ -25,6 +25,16 @@ interface Props {
 }
 
 const ProductCard = ({ product, onClick }: Props) => {
+
+  const formatter = new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    maximumFractionDigits: 0
+  });
+
+  const formatPrice = formatter.format(product.price).toString();
+
+
   const onCardClick = () => {
     if (onClick != null) onClick();
   }
@@ -36,7 +46,7 @@ const ProductCard = ({ product, onClick }: Props) => {
 
   return (
     <Fragment>
-      <div id="card" className="w-64 lg:w-5/6 bg-white h-96 rounded-lg shadow-lg relative">
+      <div id="card" className="w-64 lg:w-5/6 bg-white h-80 rounded-lg shadow-lg relative border-2">
         <Image
           src={product.image!.split(",")[0]}
           width={1500}
@@ -49,13 +59,10 @@ const ProductCard = ({ product, onClick }: Props) => {
           }}
           className="w-full h-1/2 object-cover rounded-t-lg"
         />
-        <div id="card-body" className="w-64 lg:w-auto rounded-b-lg p-4 h-1/2 space-y-2 bg-gray-300">
-          <p className="truncate overflow-hidden">{product.name}</p>
-          <h1 className="text-xl font-bold">
-            Rp {product.price}
-          </h1>
-          <h1 className="text-sm">
-            Qty: {product.stock}
+        <div id="card-body" className="w-64 lg:w-auto rounded-b-lg py-4 px-8 h-1/2 space-y-2 bg-white">
+          <p className="text-xl font-bold truncate overflow-hidden">{product.name}</p>
+          <h1 className="text-2xl font-bold">
+            {formatPrice}
           </h1>
           <div className="text-sm flex flex-row items-center space-x-1">
             <HiLocationMarker className="fill-gray-600" />
