@@ -14,7 +14,12 @@ export default async function handler(
   const session = await getSession({req})
 
   await prisma.address.updateMany({
-    where:{ id: { not: id}},
+    where:{ 
+      id: { not: id}, 
+      profile: {
+        userId: session?.user.id
+      }
+    },
     data: {
       isMainAddress: false
     }

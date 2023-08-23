@@ -7,8 +7,8 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const {id, paymentType} = req.body
-    const session = await getSession({req});
+    const {id, paymentType} = req.body
+    const session = await getSession({req})
 
     const transaction = await prisma.transaction.update({
         where:{id: id!},
