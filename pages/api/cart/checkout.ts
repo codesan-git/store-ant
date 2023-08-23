@@ -14,9 +14,22 @@ export default async function handler(
   let transactionDetails = new Array();
   let transactions = new Array();
 
+  let productInCart = await prisma.productInCart.findFirst({
+    where:{id: Number(id[0])},
+    select: {
+      productId: true,
+      count: true,
+      product: {
+        select: { name: true, shop: true}
+      }
+    }
+  });
+  shops.push(productInCart?.product?.shop);
+  transactionDetails.push(new Array());
+
   let i: number;
   let j: number;
-  for(i=0; i < id.length; i++){
+  for(i= 1; i < id.length; i++){
       let productInCart = await prisma.productInCart.findFirst({
           where:{id: Number(id[i])},
           select: {
@@ -26,7 +39,7 @@ export default async function handler(
               select: { name: true, shop: true}
             }
           }
-      })
+      });
 
       if(!shops.includes(productInCart?.product?.shop)){
         shops.push(productInCart?.product?.shop);

@@ -359,7 +359,7 @@ const RatingModal = ({ ratingTransactionModalArguments }: Props) => {
                     );
                     //setProgress(prog);
                     },
-                    (error) => //console.log(error),
+                    (error) => console.log(error),
                     async () => {
                         await getDownloadURL(uploadTask.snapshot.ref).then((downloadURLs) => {
                             //console.log("URLS ISINYA: ", urls);

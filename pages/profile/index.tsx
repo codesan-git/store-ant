@@ -186,6 +186,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
   }
 
   function onSetMainAddress(id: number) {
+    setIsLoading(true);
     const addressId = { id: id };
     try {
       fetch("/api/address/setmain", {
@@ -195,7 +196,8 @@ export default function Profile({ profile, user, address, provinceData, cityData
         },
         method: "POST",
       }).then(() => {
-        router.push(router.asPath);
+        setIsLoading(false);
+        router.reload();
       });
     } catch (error) {
       ////console.log(error);

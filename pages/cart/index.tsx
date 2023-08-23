@@ -139,19 +139,28 @@ export default function Cart({ cartItems, mainAddress }: Props) {
         <></>
       )}
       {(data.length === 0 || mainAddress == null) ? (        
-        <button disabled={true} onClick={()=> onCheckout()} className='w-36 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
-          Checkout
-        </button>
+        <div>
+          <button disabled={true} onClick={()=> onCheckout()} className='w-36 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
+            Checkout
+          </button>      
+          <button disabled={true} className='ml-5 w-36 btn bg-red-400 hover:bg-red-300 hover:border-gray-500 text-white border-transparent'>
+            <label htmlFor="cart-alert">
+              Delete
+            </label>
+          </button>
+        </div>
       ) : (        
-        <button disabled={checkoutClick} onClick={()=> onCheckout()} className='w-36 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
-          Checkout
-        </button>
+        <div>
+          <button disabled={checkoutClick} onClick={()=> onCheckout()} className='w-36 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
+            Checkout
+          </button>        
+          <button disabled={checkoutClick} className='ml-5 w-36 btn bg-red-400 hover:bg-red-300 hover:border-gray-500 text-white border-transparent'>
+            <label htmlFor="cart-alert">
+              Delete
+            </label>
+          </button>
+        </div>
       )}
-      <button disabled={data.length === 0} className='ml-5 w-36 btn bg-red-400 hover:bg-red-300 hover:border-gray-500 text-white border-transparent'>
-          <label htmlFor="cart-alert">
-            Delete
-          </label>
-      </button>
       <DeleteCartAlert htmlElementId={`cart-alert`} data={data}/>
     </div>
   );
