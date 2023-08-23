@@ -25,7 +25,7 @@ const LoginDropdown = ({session, onLogoutClick}: Props) => {
     <Fragment>
       <div className="dropdown dropdown-end">
         <label tabIndex={0} className="btn btn-ghost btn-circle avatar mr-3" onClick={() => setDropdownOpen(true)}>
-          <div className="w-10 rounded-full">
+          <div className="w-10 h-10 rounded-full">
             <Image 
               src={session?.user?.image!} 
               alt=""
@@ -36,7 +36,7 @@ const LoginDropdown = ({session, onLogoutClick}: Props) => {
         </label>
         <ul tabIndex={0} className="menu menu-compact dropdown-content p-2 shadow bg-base-100 rounded-box w-52">
           <div id="mini-profile-dropdown" className="flex flex-col justify-center items-center space-y-2 p-2">
-            <div className="avatar w-10">
+            <div className="avatar w-10 h-10">
               <Image 
                 src={session?.user?.image!}  
                 alt=""
@@ -73,6 +73,13 @@ const LoginDropdown = ({session, onLogoutClick}: Props) => {
               pathname: "/transactions"
             }}>
               Pesanan saya
+            </Link>
+          </li>
+          <li>
+            <Link href={{
+              pathname: "/chat"
+            }}>
+              Chat
             </Link>
           </li>
           <li>

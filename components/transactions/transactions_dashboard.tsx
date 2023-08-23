@@ -190,13 +190,13 @@ const TransactionsDashboard = ({TransactionDashboardArguments}: Props) => {
                 </span>
               </div>
             </li>
-            <li>
+            {/* <li>
               <div onClick={onChatClick} className="lg:border-t-2 lg:border-gray-600 flex justify-center lg:justify-start items-center text-center p-1 lg:p-4 w-32 lg:w-full h-12 text-sm font-normal rounded-sm lg:rounded-none bg-gray-400 hover:bg-gray-300 transition duration-300 hover:cursor-pointer">
                 <span className="flex justify-center items-center text-center">
                   Chat
                 </span>
               </div>
-            </li>
+            </li> */}
           </ul>
         </div>
       </div>
