@@ -111,7 +111,7 @@ const ComplainModal = ({ complainTransactionModalArguments }: Props) => {
 			);
 			//setProgress(prog);
 			},
-			(error) => //console.log(error),
+			(error) => console.log(error),
 			async () => {
 				await getDownloadURL(uploadTask.snapshot.ref).then((downloadURLs) => {
 					setURLs(prevArray => [...prevArray, downloadURLs]);
