@@ -12,7 +12,8 @@ interface Props {
 const BankAccountFormModal = ({ banks, setBankState } : Props) => {
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [accountNumber, setAccountNumber] = useState<string>()
+  const [accountNumber, setAccountNumber] = useState<string>();
+  const [accountName, setAccountName] = useState<string>();
 
   const modalOpenHandler = () => setModalOpen(!modalOpen);
 
@@ -22,11 +23,18 @@ const BankAccountFormModal = ({ banks, setBankState } : Props) => {
     number:  ''
   });
 
+  const handleInputAccountNameChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const result = event.target.value.replace(/\d/g,'');
+    setAccountName(result);
+
+    setForm({...form, name: result});
+  }
+
   const handleInputAccountNumberChange = (event: ChangeEvent<HTMLInputElement>) => {
     const result = event.target.value.replace(/\D/g, '');
     setAccountNumber(result);
 
-    setForm({...form, number: result})
+    setForm({...form, number: result});
   }
 
   const onFormSubmit = async () => {
@@ -63,7 +71,7 @@ const BankAccountFormModal = ({ banks, setBankState } : Props) => {
             </div>
             <div id="account-owner-name-input-container" className="flex flex-col w-full space-y-1">
               <label htmlFor="name-input">Name</label>
-              <input id="name-input" onChange={e => {setForm({...form, name: e.target.value})}} type="text" className="p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white"/>
+              <input id="name-input" value={accountName} onChange={handleInputAccountNameChange} type="text" className="p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white"/>
             </div>
             <div id="account-number-input-container" className="flex flex-col w-full space-y-1">
               <label htmlFor="account-number-input">Account Number</label>

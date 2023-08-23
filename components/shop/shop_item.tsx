@@ -178,7 +178,7 @@ const ShopItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinis
             </label>
             <ul tabIndex={0} className="mt-1 dropdown-content menu shadow bg-base-100 rounded-sm w-52">
               <li className="rounded-sm hover:bg-gray-100 transition duration-300 text-red-700 font-bold">
-                <label>Tolak Pesanan</label>
+                <label onClick={() => onCancel(transaction)} htmlFor="cancel-alert">Tolak Pesanan</label>
               </li>
               { //I really need to refactor this entire module
                 (transaction.status === TransactionStatus.UNPAID || transaction.status === TransactionStatus.AWAITING_CONFIRMATION || transaction.status === TransactionStatus.PACKING)
@@ -199,6 +199,17 @@ const ShopItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinis
 
     //better idea: Create a callback function argument that passes all the handle functions and buttons to render as objects and render them there
 
+    if (transaction.status === TransactionStatus.UNPAID) {
+      return (
+        <Fragment>
+          {detailTransaksiButton()}
+          {/* <label htmlFor="terima-modal" onClick={()=>onTerima(transaction)} className="flex justify-center items-center text-xs lg:text-base w-32 text-white bg-green-500 hover:cursor-pointer">
+            Terima
+          </label> */}
+          {renderExtraActionDropdown()}
+        </Fragment>
+      );
+    }
     if (transaction.status === TransactionStatus.AWAITING_CONFIRMATION) {
       return (
         <Fragment>
