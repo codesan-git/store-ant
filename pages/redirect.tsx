@@ -53,12 +53,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       if(response.data.status_code == 200){
         const data = {id: context.query.order_id, paymentType: response.data.payment_type};
         //console.log("data: ", data);
-        axios.post(`/api/cart/success`, data);
+        axios.post(`https://tigaorang.dev/api/cart/success`, data);
       }
       if(response.data.status_code == 404){
         const data = {id: context.query.order_id, paymentType: "Balance"};
         //console.log("data: ", data);
-        axios.post(`/api/cart/success`, data);
+        axios.post(`https://tigaorang.dev/api/cart/success`, data);
       }
     })
     .catch(function (error) {
