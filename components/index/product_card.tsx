@@ -37,16 +37,6 @@ const ProductCard = ({ product, onClick }: Props) => {
   return (
     <Fragment>
       <div id="card" className="w-64 lg:w-5/6 bg-white h-96 rounded-lg shadow-lg relative">
-        <Link href={{
-          pathname: '/product/update',
-          query: {
-            id: product.id
-          }
-        }}
-          className="absolute top-2 right-2 drop-shadow">
-          <AiFillEdit className="fill-white w-10 h-10" />
-        </Link>
-        {/* <div id="product-image-container" className="object-cover rounded-t-lg bg-green-500 h-1/2"></div> */}
         <Image
           src={product.image!.split(",")[0]}
           width={1500}

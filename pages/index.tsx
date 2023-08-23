@@ -18,6 +18,7 @@ import axios from "axios";
 import CategoryListItem from "@/components/index/category_list_item";
 import Image from "next/image";
 import { select } from "@material-tailwind/react";
+import ProductItem from "@/components/shop/product_item";
 
 async function handleGoogleSignOut() {
   signOut({ callbackUrl: "/login" });
@@ -193,7 +194,7 @@ export default function Home({ events, products }: Props) {
         </div>
         <div id="product-list-container" className="flex justify-center">
           <div id="product-list" className="grid grid-cols-2 lg:grid-cols-4 gap-5 lg:w-3/4">
-            {products.map((product) => <ProductCard onClick={() => routeToProduct(product.id)} product={product}  key={product.id} />)}
+            {products.map((product) => <ProductCard onClick={() => routeToProduct(product.id)} product={product}  key={product.id}/>)}
           </div>
         </div>
       </div>

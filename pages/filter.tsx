@@ -5,50 +5,64 @@ import Footer from './footer';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Category, Product } from '@prisma/client';
+import { Address, Product, Profile, Shop, User, Category } from "@prisma/client";
 import useSWR from 'swr';
 import ProductCard from '@/components/index/product_card';
+import { filter } from 'cypress/types/bluebird';
+import { GetServerSideProps } from 'next';
+import { prisma } from "../lib/prisma";
+import ProductItem from '@/components/shop/product_item';
 
-const fetchProducts = async(url: string) => {
-    const response = await fetch(url);
+const fetchProducts = async (url: string) => {
+  const response = await fetch(url);
 
-    if(!response.ok){
-        throw new Error("failed");
-    }
-    
-    return response.json();
+  if (!response.ok) {
+    throw new Error("failed");
+  }
+
+  return response.json();
 }
 
 const fetchCategoryName = async (url: string) => {
 
   const response = await fetch(url);
 
-  if(!response.ok) {
+  if (!response.ok) {
     throw new Error("failed");
 
   }
   return response.json();
 }
 
-export default function Search() {
+interface Props {
+  searchedCategory: Category,
+  products: (Product &
+  {
+    shop: Shop
+    & {
+      user: User
+      & {
+        profile: Profile
+        & {
+          addresses: Address[]
+        }
+      }
+    },
+    category: Category
+  })[],
+  events: Event[];
+}
+
+const Filter = ({ products, searchedCategory }: Props) => {
   const search = useSearchParams();
   const searchQuery = search.get('q');
   const encodedSearchQuery = encodeURI(searchQuery!);
   const router = useRouter();
 
-  const {data, isLoading} = useSWR<{products : Array<Product>}>(
-    `/api/product/filter?q=${encodedSearchQuery}`,
-    fetchProducts
-  )
-
-  const {data: categoryData, isLoading:waitingForCategory} = useSWR<{category: Category}>(
+  const { data: categoryData, isLoading: waitingForCategory } = useSWR<{ category: Category }>(
     `/api/category/${encodedSearchQuery}`,
     fetchCategoryName
   );
-
-  if(!data?.products){
-    return null;
-  }
 
   //console.log(`Fetched Category data: ${categoryData?.category.category}`);
 
@@ -72,20 +86,67 @@ export default function Search() {
           </ul>
         </div>
         <div className="px-8 flex-col grid lg:grid-cols-4 gap-10">
-          {data!.products.map((product) => (
-            <div
-              data-theme="garden"
-              className="card w-auto glass"
-              key={product.id}
-              onClick={() => router.push({pathname: '/product/detail/', query: { id: String(product.id) }})}
-            >
-              <ProductCard product={product} />
-            </div>
-          ))}
+          {
+            products.map((product, i) => <ProductCard product={product} key={i}/>)
+          }
         </div>
       </div>
       {/* End Content */}
       <Footer />
     </div>
   )
+}
+
+export default Filter;
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+
+  const categoryId = context.query.q;
+
+  const searchedCategory = await prisma.category.findFirst({
+    where: {
+      id: Number(categoryId)
+    }
+  });
+
+  const products = await prisma.product.findMany({
+    where: {
+      categoryId: Number(categoryId)
+    },
+    orderBy: {
+      id: 'desc'
+    },
+    include: {
+      category: true,
+      shop: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              profile: {
+                include: {
+                  addresses: {
+                    select: {
+                      city: true
+                    },
+                    where: {
+                      isShopAddress: true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  });
+
+  return {
+    props: {
+      searchedCategory: searchedCategory,
+      products: products
+    },
+  };
 }
