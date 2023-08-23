@@ -14,8 +14,9 @@ const requireAuth: string[] = [
     // "/api/product", //kalau pakai ini getProduct akan terhalang middleware
     "/api/profile",
     "/api/shop",
-    "api/cart",
-    "api/transactions/"
+    "/api/cart",
+    "/api/transactions/",
+    "/resetpassword"
 ];
 const protectedPaths: string[] = ["/admin/console"];
 
