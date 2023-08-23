@@ -11,6 +11,7 @@ export default async function handler(
   const session = await getSession({req})
 
   let shops = new Array();
+  let shopIds = new Array();
   let transactionDetails = new Array();
   let transactions = new Array();
 
@@ -25,6 +26,7 @@ export default async function handler(
     }
   });
   shops.push(productInCart?.product?.shop);
+  shopIds.push(productInCart?.product.shop.id);
   transactionDetails.push(new Array());
 
   let i: number;
@@ -41,8 +43,12 @@ export default async function handler(
           }
       });
 
-      if(!shops.includes(productInCart?.product?.shop)){
+      console.log("shop ids: ", shopIds);
+      console.log("cart shop: ", productInCart?.product.shop.id);
+      console.log("include: ", shopIds.includes(productInCart?.product?.shop.id));
+      if(!shopIds.includes(productInCart?.product?.shop.id)){
         shops.push(productInCart?.product?.shop);
+        shopIds.push(productInCart?.product.shop.id);
         transactionDetails.push(new Array());
       }
   }
@@ -53,8 +59,9 @@ export default async function handler(
       isMainAddress: true
     }
   });
-
+  
   for(i = 0; i < shops.length; i++){   
+    console.log("shop: ", shops[i]);
     let transaction = await prisma.transaction.create({
       data:{
         userId: session?.user.id!,
