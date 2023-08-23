@@ -27,9 +27,18 @@ interface Props {
 }
 
 const ProductItem = ({ product, address } : Props) => {
+
+  const formatter = new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    maximumFractionDigits: 0
+  });
+
+  const formatPrice = formatter.format(product.price).toString();
+
   return (
     <Fragment>
-      <div id="card" className="w-64 lg:w-5/6 bg-white h-96 rounded-lg shadow-lg relative">
+      <div id="card" className="w-64 lg:w-5/6 bg-white h-96 rounded-lg shadow-lg relative border-2">
         <Link href={{
           pathname: '/product/update',
           query: {
@@ -52,10 +61,10 @@ const ProductItem = ({ product, address } : Props) => {
           }}
           className="w-full h-1/2 object-cover rounded-t-lg"
         />
-        <div id="card-body" className="w-64 lg:w-auto rounded-b-lg p-4 h-1/2 space-y-2 bg-gray-300">
-          <p className="truncate overflow-hidden">{product.name}</p>
-          <h1 className="text-xl font-bold">
-            Rp {product.price}
+        <div id="card-body" className="w-64 lg:w-auto rounded-b-lg py-4 px-8 h-1/2 space-y-2 bg-white">
+          <p className="text-xl font-bold truncate overflow-hidden">{product.name}</p>
+          <h1 className="text-2xl font-bold">
+            {formatPrice}
           </h1>
           <h1 className="text-sm">
             Qty: {product.stock}
