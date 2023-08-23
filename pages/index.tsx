@@ -193,7 +193,7 @@ export default function Home({ events, products }: Props) {
         </div>
         <div id="product-list-container" className="flex justify-center">
           <div id="product-list" className="grid grid-cols-2 lg:grid-cols-4 gap-5 lg:w-3/4">
-            {products.map((product) => <ProductCard onClick={() => routeToProduct(product.id)} product={product} key={product.id} />)}
+            {products.map((product) => <ProductCard onClick={() => routeToProduct(product.id)} product={product}  key={product.id} />)}
           </div>
         </div>
       </div>

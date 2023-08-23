@@ -6,36 +6,36 @@ import Link from "next/link";
 import { Address, Product, Profile, Shop, User, Category } from "@prisma/client";
 import Image from "next/image";
 
-interface Props{
+interface Props {
   product: (Product &
-    {
-      shop: Shop
+  {
+    shop: Shop
+    & {
+      user: User
       & {
-        user: User
+        profile: Profile
         & {
-          profile: Profile
-          & {
-            addresses: Address[]
-          }
+          addresses: Address[]
         }
-      },
-      category: Category
-    }),
-  onClick?: () =>  void,
+      }
+    },
+    category: Category
+  }),
+  onClick?: () => void,
 }
 
-const ProductCard = ( {product, onClick} : Props ) => {
-    const onCardClick = () => {
-      if(onClick != null) onClick();
-    }
-    //console.log(product?.image?.split(",")[0]);
+const ProductCard = ({ product, onClick }: Props) => {
+  const onCardClick = () => {
+    if (onClick != null) onClick();
+  }
+  //console.log(product?.image?.split(",")[0]);
 
-    const mainAddress = product.shop.user.profile.addresses[0];
+  const mainAddress = product.shop.user.profile.addresses[0];
 
-    console.log(`main address: ${mainAddress}`);
+  console.log(`main address: ${mainAddress}`);
 
-    return (
-      <Fragment>
+  return (
+    <Fragment>
       <div id="card" className="w-64 lg:w-5/6 bg-white h-96 rounded-lg shadow-lg relative">
         <Link href={{
           pathname: '/product/update',
@@ -44,17 +44,17 @@ const ProductCard = ( {product, onClick} : Props ) => {
           }
         }}
           className="absolute top-2 right-2 drop-shadow">
-          <AiFillEdit className="fill-white w-10 h-10"/>
+          <AiFillEdit className="fill-white w-10 h-10" />
         </Link>
         {/* <div id="product-image-container" className="object-cover rounded-t-lg bg-green-500 h-1/2"></div> */}
-        <Image 
+        <Image
           src={product.image!.split(",")[0]}
           width={1500}
-          height={1500} 
-          alt="no image available" 
+          height={1500}
+          alt="no image available"
           onError={({ currentTarget }) => {
-              currentTarget.onerror = null; // prevents looping
-              currentTarget.src =
+            currentTarget.onerror = null; // prevents looping
+            currentTarget.src =
               "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
           }}
           className="w-full h-1/2 object-cover rounded-t-lg"
@@ -73,21 +73,21 @@ const ProductCard = ( {product, onClick} : Props ) => {
           </div>
           <div className="flex flex-row space-x-2 text-sm">
             <div id="rating-container" className="flex flex-row items-center space-x-1">
-              <HiStar className="fill-yellow-800 w-5 h-5 "/>
+              <HiStar className="fill-yellow-800 w-5 h-5 " />
               <span>{product.averageRating}</span>
             </div>
             <div>
               |
             </div>
             <div className="flex flex-row items-center space-x-1">
-              <HiOutlineClipboard/>
+              <HiOutlineClipboard />
               <span>{product.category.category}</span>
             </div>
           </div>
         </div>
       </div>
     </Fragment>
-    );
+  );
 }
 
 export default ProductCard;
