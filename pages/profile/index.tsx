@@ -294,20 +294,40 @@ export default function Profile({ profile, user, address, provinceData, cityData
       token: session?.user.accessToken!,
     };
 
-    fetch("/api/changephoneNumber", {
-      method: "POST",
-      headers: {
-        Accept: "application/json, text/plain, */*",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    }).then((res) => {
-      //console.log("Response received");
-      if (res.status === 200) {
-        //console.log("Response succeeded!");
-        setSubmitted(true);
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, send it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fetch("/api/changephoneNumber", {
+          method: "POST",
+          headers: {
+            Accept: "application/json, text/plain, */*",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }).then((res) => {
+          //console.log("Response received");
+          if (res.status === 200) {
+            //console.log("Response succeeded!");
+            setSubmitted(true);
+            router.back()
+          }
+        });
+        Swal.fire(
+          "Please Check Your Email!",
+          "Your file has been sent.",
+          "success"
+        );
       }
     });
+
+    
   };
 
   const getToken = async () => {
@@ -335,7 +355,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
       confirmButtonText: "Yes, send it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch("/api/contact", {
+        fetch("/api/verify", {
           method: "POST",
           headers: {
             Accept: "application/json, text/plain, */*",
@@ -423,6 +443,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
           if (res.status === 200) {
             //console.log("Response succeeded!");
             setSubmitted(true);
+            router.back()
           }
         });
         Swal.fire("Please Check Your Email!", "Your file has been sent.", "success");
@@ -743,8 +764,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
                         <a
                           href="#"
                           className="btn btn-primary w-full rounded-md"
-                          onClick={(e) => changePhoneNumber(e)}
-                        >
+                          onClick={(e) => changePhoneNumber(e)}>
                           Send!
                         </a>
                       </div>
