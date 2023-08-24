@@ -73,7 +73,7 @@ export default async function Nodemailer(req: any, res: any) {
       <p>
         tryin to change password, ${token}
       </p>
-      <a href="http://localhost:3000/changepassword?token=${token}" class="button">Verification</a>
+      <a href="https://www.tigaorang.dev/changepassword?token=${token}" class="button">Verification</a>
     </div>
   </body>`,
   };
