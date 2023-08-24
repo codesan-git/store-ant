@@ -156,10 +156,7 @@ export default function Login() {
         </div>
       </div>
       {/* End Test Modal */}
-      <section className="w-3/4 mx-auto flex flex-col gap-10 px-5">
-          {/* <Link className="absolute top-0 right-0 cursor-pointer" href={"/"} passHref>
-            <ImCross size={20} />
-          </Link> */}
+      <section className="w-96 mx-auto flex flex-col gap-10 px-5">
         <div className="title">
           <h1 className="text-gray-800 text-4xl font-bold py-4">Store.ant</h1>
           <p className="w-3/4 mx-auto text-gray-400">

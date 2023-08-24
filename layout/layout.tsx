@@ -9,7 +9,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <Link className="absolute top-20 right-44 cursor-pointer" href={"/"} passHref>
                 <ImCross size={20} color='#424242' />
             </Link>
-            <div className="m-auto bg-slate-50 rounded-md w-[65%] grid lg:grid-cols-2">
+            <div className="m-auto bg-slate-50 rounded-md w-[60rem] grid lg:grid-cols-2">
                 <div className={styles.imgStyle}>
                     <div className={styles.cartoonImg}></div>
                     <div className={styles.cloud_one}></div>
