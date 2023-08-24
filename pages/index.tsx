@@ -86,11 +86,6 @@ export default function Home({ events, products }: Props) {
   const encodedSearchQuery = encodeURI(searchQuery!);
   const router = useRouter();
 
-  const buttonSortHandler = (e: any) => {
-    setSortBy(e.target.value.split(" ")[0]);
-    setSortDir(e.target.value.split(" ")[1]);
-  };
-
   const fetchCategories = async (url: string) => {
     const response = await fetch(url);
 
@@ -154,7 +149,7 @@ export default function Home({ events, products }: Props) {
         <title>Homepage</title>
       </Head>
       <Navbar />
-      <div id="content" className="p-2 space-y-4">
+      <div id="content" className="p-2 space-y-8">
         <div id="category-list" className=" carousel carousel-center p-4 h-28 space-x-1 items-center shadow rounded-md lg:hidden">
           {
             categoryDataIsLoading
@@ -192,9 +187,11 @@ export default function Home({ events, products }: Props) {
             </div>
           </div>
         </div>
-        <div id="product-list-container" className="flex justify-center">
-          <div id="product-list" className="grid grid-cols-2 lg:grid-cols-4 gap-5 lg:w-3/4">
-            {products.map((product) => <ProductCard onClick={() => routeToProduct(product.id)} product={product}  key={product.id}/>)}
+        <div id="product-list-container" className="flex justify-center ">
+          <div className="lg:w-3/4 flex justify-center items-center">
+            <div id="product-list" className="grid grid-cols-2 lg:grid-cols-5 gap-8">
+              {products.map((product) => <ProductCard onClick={() => routeToProduct(product.id)} product={product}  key={product.id}/>)}
+            </div>
           </div>
         </div>
       </div>
@@ -205,33 +202,10 @@ export default function Home({ events, products }: Props) {
 export const getServerSideProps: GetServerSideProps = async () => {
   const events = await prisma.event.findMany();
 
-  // const products = await prisma.product.findMany({
-  //   orderBy: {
-  //     id: 'desc'
-  //   },
-  //   include: {
-  //     category: true,
-  //     shop: {
-  //       include: {
-  //         user: {
-  //           include: {
-  //             profile: {
-  //               include: {
-  //                 addresses: {
-  //                   where: {
-  //                     isShopAddress: true
-  //                   }
-  //                 }
-  //               }
-  //             },
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-  // });
-
   const products = await prisma.product.findMany({
+    where: {
+      stock: {gt: 0}
+    },
     orderBy: {
       id: 'desc'
     },

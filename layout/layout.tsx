@@ -4,7 +4,7 @@ import styles from '../styles/Layout.module.css'
 export default function Layout({children}:{children:React.ReactNode}) {
   return (
     <div className="flex h-screen">
-        <div className="m-auto bg-slate-50 rounded-md w-3/5 grid lg:grid-cols-2">
+        <div className="m-auto bg-slate-50 rounded-md w-[65%] grid lg:grid-cols-2">
             <div className={styles.imgStyle}>
                 <div className={styles.cartoonImg}></div>
                 <div className={styles.cloud_one}></div>
