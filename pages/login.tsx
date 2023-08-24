@@ -162,7 +162,6 @@ export default function Login() {
           <p className="w-3/4 mx-auto text-gray-400">
             lorem ipsum dolor sit amet{" "}
           </p>
-          {/* <label htmlFor="my-modal-6">forgot password</label> */}
         </div>
 
         <form
