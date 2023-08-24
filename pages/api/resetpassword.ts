@@ -3,7 +3,7 @@ import { prisma } from "../../lib/prisma";
 require("dotenv").config();
 
 let nodemailer = require("nodemailer");
-export default async function (req: any, res: any) {
+export default async function Nodemailer(req: any, res: any) {
   const { email } = req.body
 
   const transporter = nodemailer.createTransport({
