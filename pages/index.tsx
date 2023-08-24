@@ -24,18 +24,6 @@ async function handleGoogleSignOut() {
   signOut({ callbackUrl: "/login" });
 }
 
-// interface Products {
-//   products: {
-//     id: string;
-//     name: string;
-//     price: number;
-//     stock: number;
-//     category: Category;
-//     image: string;
-//     averageRating: number
-//   }[];
-// }
-
 
 interface Sort {
   _sort: string;
@@ -189,8 +177,8 @@ export default function Home({ events, products }: Props) {
         </div>
         <div id="product-list-container" className="flex justify-center ">
           <div className="lg:w-3/4 flex justify-center items-center">
-            <div id="product-list" className="grid grid-cols-2 lg:grid-cols-5 gap-8">
-              {products.map((product) => <ProductCard onClick={() => routeToProduct(product.id)} product={product}  key={product.id}/>)}
+            <div id="product-list" className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-5 gap-2 xl:gap-4 2xl:gap-8">
+              {products.map((product) => <ProductCard onClick={() => routeToProduct(product.id)} product={product} key={product.id} />)}
             </div>
           </div>
         </div>
@@ -204,7 +192,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
   const products = await prisma.product.findMany({
     where: {
-      stock: {gt: 0}
+      stock: { gt: 0 }
     },
     orderBy: {
       id: 'desc'
@@ -215,7 +203,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
         include: {
           user: {
             select: {
-              id:  true,
+              id: true,
               name: true,
               profile: {
                 include: {
