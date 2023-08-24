@@ -46,43 +46,51 @@ const ProductCard = ({ product, onClick }: Props) => {
 
   return (
     <Fragment>
-      <div id="card" className="w-64 lg:w-5/6 bg-white h-80 rounded-lg shadow-lg relative border-2">
-        <Image
-          src={product.image!.split(",")[0]}
-          width={1500}
-          height={1500}
-          alt="no image available"
-          onError={({ currentTarget }) => {
-            currentTarget.onerror = null; // prevents looping
-            currentTarget.src =
-              "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
-          }}
-          className="w-full h-1/2 object-cover rounded-t-lg"
-        />
-        <div id="card-body" className="w-64 lg:w-auto rounded-b-lg py-4 px-8 h-1/2 space-y-2 bg-white">
-          <p className="text-xl font-bold truncate overflow-hidden">{product.name}</p>
-          <h1 className="text-2xl font-bold">
-            {formatPrice}
-          </h1>
-          <div className="text-sm flex flex-row items-center space-x-1">
-            <HiLocationMarker className="fill-gray-600" />
-            {mainAddress.city}
-          </div>
-          <div className="flex flex-row space-x-2 text-sm">
-            <div id="rating-container" className="flex flex-row items-center space-x-1">
-              <HiStar className="fill-yellow-800 w-5 h-5 " />
-              <span>{product.averageRating}</span>
+      <Link 
+        href={{
+          pathname: "/product/detail/",
+          query: { id: String(product.id) },
+        }}
+        passHref
+      >
+        <div id="card" className="w-64 bg-white h-80 rounded-lg shadow-lg relative border-2">
+          <Image
+            src={product.image!.split(",")[0]}
+            width={1500}
+            height={1500}
+            alt="no image available"
+            onError={({ currentTarget }) => {
+              currentTarget.onerror = null; // prevents looping
+              currentTarget.src =
+                "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
+            }}
+            className="w-full h-1/2 object-cover rounded-t-lg"
+          />
+          <div id="card-body" className="w-64 lg:w-auto rounded-b-lg py-4 px-8 h-1/2 space-y-2 bg-white">
+            <p className="text-xl font-bold truncate overflow-hidden">{product.name}</p>
+            <h1 className="text-2xl font-bold">
+              {formatPrice}
+            </h1>
+            <div className="text-sm flex flex-row items-center space-x-1">
+              <HiLocationMarker className="fill-gray-600" />
+              {mainAddress.city}
             </div>
-            <div>
-              |
-            </div>
-            <div className="flex flex-row items-center space-x-1">
-              <HiOutlineClipboard />
-              <span>{product.category.category}</span>
+            <div className="flex flex-row space-x-2 text-sm">
+              <div id="rating-container" className="flex flex-row items-center space-x-1">
+                <HiStar className="fill-yellow-800 w-5 h-5 " />
+                <span>{product.averageRating}</span>
+              </div>
+              <div>
+                |
+              </div>
+              <div className="flex flex-row items-center space-x-1">
+                <HiOutlineClipboard />
+                <span>{product.category.category}</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </Link>
     </Fragment>
   );
 }
