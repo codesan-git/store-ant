@@ -69,11 +69,11 @@ export default async function Nodemailer(req: any, res: any) {
   </head>
   <body>
     <div class="container">
-      <h1>Reset Password make sure kamu yakin ya</h1>
+      <h1>Change Password make sure kamu yakin ya</h1>
       <p>
-        Ganti Email Account Anda, ${token}
+        tryin to change password, ${token}
       </p>
-      <a href="https://www.tigaorang.dev/changeemail?token=${token}" class="button">Verification</a>
+      <a href="http://localhost:3000/changepassword?token=${token}" class="button">Verification</a>
     </div>
   </body>`,
   };
