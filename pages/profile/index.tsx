@@ -322,7 +322,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
 
     let data = {
       email: session?.user.email!,
-      token: token,
+      token: session?.user.accessToken,
     };
 
     Swal.fire({
