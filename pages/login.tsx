@@ -75,7 +75,7 @@ export default function Login() {
       confirmButtonText: "Yes, send it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch("/api/resetpassword", {
+        fetch("/api/changepassword", {
           method: "POST",
           headers: {
             Accept: "application/json, text/plain, */*",

@@ -3,7 +3,7 @@
 require("dotenv").config();
 
 let nodemailer = require("nodemailer");
-export default function (req: any, res: any) {
+export default function Nodemailer(req: any, res: any) {
   // const { data: session } = useSession();
   const transporter = nodemailer.createTransport({
     port: 465, //587
