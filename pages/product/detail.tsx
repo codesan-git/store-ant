@@ -257,8 +257,8 @@ export default function CreateShop({ product, ratings, mainAddress, location }: 
                 className="mx-auto my-auto w-96 h-96"
               />
               <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-                <button disabled={index === 0 ? true : false} onClick={() => onImageClick(index - 1)} className="btn btn-circle btn-sm lg:btn-md">❮</button>
-                <button disabled={index === product.image.split(",").length - 1 ? true : false} onClick={() => onImageClick(index + 1)} className="btn btn-circle btn-sm lg:btn-md">❯</button>
+                <button disabled={index === 0 ? true : false} onClick={() => onImageClick(index - 1)} className="btn btn-circle btn-sm lg:btn-md bg-light-blue-600 text-white border-none">❮</button>
+                <button disabled={index === product.image.split(",").length - 1 ? true : false} onClick={() => onImageClick(index + 1)} className="btn btn-circle btn-sm lg:btn-md bg-light-blue-600 text-white border-none">❯</button>
               </div>
             </div>
             <div className="flex h-40 mt-5 gap-x-5">
