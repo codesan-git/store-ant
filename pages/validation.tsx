@@ -4,15 +4,12 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { getSession, useSession } from "next-auth/react";
 import Image from "next/image";
 
-interface Token {
-  token: string
-}
-
-export default function Validation({token} : Token) {
+export default function Validation() {
   const router = useRouter();
   const { token: accessToken } = router.query;
   const { data: session } = useSession();
-
+  const token = session?.user.accessToken;
+  
   const verifyAccount = async () => {
     try {
       await axios.get(
@@ -59,19 +56,3 @@ export default function Validation({token} : Token) {
     </>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getSession(context);
-  const id = context.query.id;
-
-  //console.log("dataValidation", session);
-  //   const user = await prisma.user.findUnique({
-  //     where: {
-  //       id: session?.user?.id,
-  //     },
-  //   });
-
-  const token = session?.user.accessToken!;
-
-  return { props: { token } };
-};

@@ -12,7 +12,7 @@ interface FormData {
 
 export default function Validation() {
   const router = useRouter();
-  const { token: accessToken } = router.query;
+  const accessToken = router.query.token;
   const [form, setForm] = useState<FormData>({
     password: "",
     access_token: accessToken as string,

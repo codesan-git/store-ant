@@ -3,7 +3,7 @@
 require("dotenv").config();
 
 let nodemailer = require("nodemailer");
-export default function (req: any, res: any) {
+export default function Nodemailer(req: any, res: any) {
   // const { data: session } = useSession();
   const transporter = nodemailer.createTransport({
     port: 465, //587
@@ -62,7 +62,7 @@ export default function (req: any, res: any) {
       <p>
         ${req.body.token}
       </p>
-      <a href=https://www.tigaorang.dev/changenumber?token=${req.body.token}" class="button">Verification</a>
+      <a href=http://localhost:3000/validation?token=${req.body.token} class="button">Verification</a>
     </div>
   </body>`,
   };

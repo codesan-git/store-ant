@@ -3,7 +3,7 @@ import { prisma } from "../../lib/prisma";
 require("dotenv").config();
 
 let nodemailer = require("nodemailer");
-export default async function (req: any, res: any) {
+export default async function Nodemailer(req: any, res: any) {
   const { email } = req.body
 
   const transporter = nodemailer.createTransport({
@@ -26,6 +26,7 @@ export default async function (req: any, res: any) {
   })
 
   const token = account?.access_token
+  const references = `/resetpassword/${token}.replace(/?token=/g, "/")`;
   
   const mailData = {
     from: process.env.email,
@@ -73,7 +74,7 @@ export default async function (req: any, res: any) {
       <p>
         tryin to reset password, ${token}
       </p>
-      <a href="https://www.tigaorang.dev/resetpassword?token=${token}" class="button">Verification</a>
+      <a href=${`https://tigaorang.dev/${references}`} class="button">Verification</a>
     </div>
   </body>`,
   };
