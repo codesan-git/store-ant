@@ -670,10 +670,10 @@ export default function Profile({ profile, user, address, provinceData, cityData
 
                 {/* Handle Gender */}
                 <div className="flex gap-5">
-                  <label className="my-auto mr-4 text-sm lg:text-base w-1/3 lg:w-auto">Gender</label>
+                  <label className="my-auto mr-4 text-sm lg:text-base w-1/3 lg:w-auto">Jenis kelamin</label>
                   <div>
                     <FormControl sx={{ m: 1, minWidth: 100 }} size="small">
-                      <InputLabel id="demo-simple-select-autowidth-label">Gender</InputLabel>
+                      <InputLabel id="demo-simple-select-autowidth-label">Jenis kelamin</InputLabel>
                       <Select
                         labelId="demo-simple-select-autowidth-label"
                         id="demo-simple-select-autowidth"
@@ -685,8 +685,8 @@ export default function Profile({ profile, user, address, provinceData, cityData
                         <MenuItem value="">
                           <em>None</em>
                         </MenuItem>
-                        <MenuItem value={Gender.MAN}>{Gender.MAN}</MenuItem>
-                        <MenuItem value={Gender.WOMAN}>{Gender.WOMAN}</MenuItem>
+                        <MenuItem value={Gender.MAN}>Laki-laki</MenuItem>
+                        <MenuItem value={Gender.WOMAN}>Perempuan</MenuItem>
                       </Select>
                     </FormControl>
                   </div>
@@ -809,7 +809,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
                       className="btn btn-outline btn-primary w-full btn-md rounded-lg"
                       onClick={(e) => changeVerifyStatus(e)}
                     >
-                      Verify Account
+                      Verifikasi Akun
                     </button>
                   </>
                 )}
@@ -823,8 +823,8 @@ export default function Profile({ profile, user, address, provinceData, cityData
       ),
     },
     {
-      label: "Address",
-      value: "address",
+      label: "Alamat",
+      value: "alamat",
       icon: BsFillHouseFill,
       desc: ``,
       code: (
@@ -909,16 +909,16 @@ export default function Profile({ profile, user, address, provinceData, cityData
                 </div>
                 <div className="lg:w-1/2">
                   <div className="flex flex-row space-x-1">
-                    <h1 className="w-1/2">Bank</h1>
-                    <h1 className="w-1/2">: {banks.filter((bank) => bank.id === bankAccount.bankTypeId).at(0)?.name}</h1>
+                    <h1 className="w-1/4">Bank</h1>
+                    <h1 className="w-1/4">: {banks.filter((bank) => bank.id === bankAccount.bankTypeId).at(0)?.name}</h1>
                   </div>
                   <div className="flex flex-row space-x-1">
-                    <h1 className="w-1/2">Name</h1>
-                    <h1 className="w-1/2">: {bankAccount.name}</h1>
+                    <h1 className="w-1/4">Nama Akun</h1>
+                    <h1 className="w-1/4">: {bankAccount.name}</h1>
                   </div>
                   <div className="flex flex-row space-x-1">
-                    <h1 className="w-1/2">Account No.</h1>
-                    <h1 className="w-1/2">: {bankAccount.number}</h1>
+                    <h1 className="w-1/4">Nomor Akun</h1>
+                    <h1 className="w-1/4">: {bankAccount.number}</h1>
                   </div>
                 </div>
               </Fragment>
