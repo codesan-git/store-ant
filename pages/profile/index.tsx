@@ -327,8 +327,6 @@ export default function Profile({ profile, user, address, provinceData, cityData
         );
       }
     });
-
-
   };
 
   const getToken = async () => {
