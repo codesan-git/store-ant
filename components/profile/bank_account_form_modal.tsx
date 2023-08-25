@@ -46,11 +46,11 @@ const BankAccountFormModal = ({ banks, setBankState } : Props) => {
   return (
     <Fragment>
       <Button onClick={modalOpenHandler}>
-        + Add Bank Account
+        + Tambah Akun Bank
       </Button>
       <Dialog open={modalOpen} handler={modalOpenHandler}>
         <DialogHeader>
-          <h1 className="w-3/4">Add Bank Account</h1>
+          <h1 className="w-3/4">Tambah Akun Bank</h1>
           <div  className="w-1/4 flex justify-end">
             <button onClick={modalOpenHandler}>
               ✕
@@ -70,15 +70,15 @@ const BankAccountFormModal = ({ banks, setBankState } : Props) => {
               </select>
             </div>
             <div id="account-owner-name-input-container" className="flex flex-col w-full space-y-1">
-              <label htmlFor="name-input">Name</label>
+              <label htmlFor="name-input">Nama Akun</label>
               <input id="name-input" value={accountName} onChange={handleInputAccountNameChange} type="text" className="p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white"/>
             </div>
             <div id="account-number-input-container" className="flex flex-col w-full space-y-1">
-              <label htmlFor="account-number-input">Account Number</label>
+              <label htmlFor="account-number-input">Nomor Akun</label>
               <input id="account-number-input" value={accountNumber} onChange={handleInputAccountNumberChange} type="text" className="p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white"/>
             </div>
             <div className="w-full flex justify-end">
-              <button type="submit" onClick={modalOpenHandler} className="w-24 h-8 bg-green-700 hover:bg-green-500 transition text-white rounded-md ">Save</button>
+              <button type="submit" onClick={modalOpenHandler} className="w-24 h-8 bg-green-700 hover:bg-green-500 transition text-white rounded-md ">Simpan</button>
             </div>
           </form>
         </DialogBody>

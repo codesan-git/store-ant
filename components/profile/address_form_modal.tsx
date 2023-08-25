@@ -57,7 +57,7 @@ const AddressFormModal = ({ provinceData, cityData, setAddressesState } : Props)
       </Button>
       <Dialog open={modalOpen} handler={modalOpenHandler} size={modalSize}>
         <DialogHeader>
-          <h1 className="w-3/4">Add New Address</h1>
+          <h1 className="w-3/4">Tambah Alamat Baru</h1>
           <div  className="w-1/4 flex justify-end">
             <button onClick={() => modalOpenHandler("xl")}>
               ✕
@@ -67,11 +67,11 @@ const AddressFormModal = ({ provinceData, cityData, setAddressesState } : Props)
         <DialogBody className="">
           <form onSubmit={e=>{e.preventDefault(); onSubmit()}}  className="space-y-4">
             <div className="flex flex-col space-y-1">
-              <label htmlFor="address-input">Address</label>
+              <label htmlFor="address-input">Alamat</label>
               <input id="address-input" type="text" name="address" onChange={(e) => setForm({ ...form, address: e.target.value})} className="p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white"/>
             </div>                
             <div className='flex flex-col space-y-1 w-full'>
-              <label htmlFor="province-input" className='font-bold'>Province</label>
+              <label htmlFor="province-input" className='font-bold'>Provinsi</label>
               <select name="province" id="province-input" className='p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white'
                   onChange={e => {e.preventDefault(); setForm({...form, provinceId: String(e.target.selectedIndex + 1), province: e.target.value})}} 
               >
@@ -81,7 +81,7 @@ const AddressFormModal = ({ provinceData, cityData, setAddressesState } : Props)
               </select>
             </div>               
             <div className='flex flex-col space-y-1 w-full'>
-              <label htmlFor="city-input" className='font-bold'>City</label>
+              <label htmlFor="city-input" className='font-bold'>Kota</label>
               <select name="city" id="city-input" className='p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white'
                   onChange={e => {e.preventDefault(); setForm({...form, city: e.target.value}); setCityid(e.target.value)}}
               >
@@ -94,11 +94,11 @@ const AddressFormModal = ({ provinceData, cityData, setAddressesState } : Props)
               </select>
             </div>
             <div className="flex flex-col space-y-1">
-              <label htmlFor="address-input">Region</label>
+              <label htmlFor="address-input">Daerah</label>
               <input id="address-input" type="text" name="region" onChange={e => setForm({...form, region: e.target.value})} className="p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white"/>
             </div>    
             <div className="flex flex-col space-y-1">
-              <label htmlFor="address-input">Postcode</label>
+              <label htmlFor="address-input">Kode Pos</label>
               <input 
                 id="address-input" 
                 type="number" 
@@ -115,7 +115,7 @@ const AddressFormModal = ({ provinceData, cityData, setAddressesState } : Props)
                 className="p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white"/>
             </div>    
             <div className="flex flex-col space-y-1">
-              <label htmlFor="address-input">Contact Number</label>
+              <label htmlFor="address-input">Nomor Kontak</label>
               <input 
                 id="address-input" 
                 type="number"
@@ -132,7 +132,7 @@ const AddressFormModal = ({ provinceData, cityData, setAddressesState } : Props)
                 className="p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white"/>
             </div>
             <div className="w-full flex justify-end">
-              <button type="submit" onClick={() => modalOpenHandler("xl")} className="w-24 h-8 bg-green-700 hover:bg-green-500 transition text-white rounded-md ">Save</button>
+              <button type="submit" onClick={() => modalOpenHandler("xl")} className="w-24 h-8 bg-green-700 hover:bg-green-500 transition text-white rounded-md ">Simpan</button>
             </div>
           </form>
         </DialogBody>

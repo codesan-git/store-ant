@@ -214,7 +214,7 @@ const Navbar = () => {
           <form onSubmit={onSearch} className="w-full">
             <input
               type="text"
-              placeholder="Shop now"
+              placeholder="Belanja sekarang"
               className="input input-bordered input-primary input-sm w-full placeholder-primary-focus"
               value={query}
               onChange={e => { setQuery(e.target.value); }}

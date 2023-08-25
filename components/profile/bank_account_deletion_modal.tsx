@@ -13,11 +13,11 @@ const BankAccountDeletionModal = ({ onConfirm } : Props) => {
   return (
     <Fragment>
       <Button onClick={handleModalOpen} className="bg-red-500">
-        Delete Bank Account
+        Hapus Akun Bank
       </Button>
       <Dialog open={modalOpen} handler={handleModalOpen}>
         <DialogHeader>
-          <h1 className="w-3/4">Confirm Deletion</h1>
+          <h1 className="w-3/4">Konfirmasi Penghapusan</h1>
             <div  className="w-1/4 flex justify-end">
               <button onClick={handleModalOpen}>
                 ✕
@@ -25,14 +25,14 @@ const BankAccountDeletionModal = ({ onConfirm } : Props) => {
             </div>
         </DialogHeader>
         <DialogBody>
-          <p>Are you sure you want to delete your bank account?</p>
+          <p>Apakah anda yakin untuk menghapus akun bank anda?</p>
         </DialogBody>
         <DialogFooter className="space-x-2">
           <Button onClick={handleModalOpen} className="bg-red-500">
-            Cancel
+            Batal
           </Button>
           <Button onClick={() => {onConfirm(); handleModalOpen();}}>
-            Confirm
+            Konfirmasi
           </Button>
         </DialogFooter>
       </Dialog>
