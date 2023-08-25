@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { AiFillCloseCircle } from "react-icons/ai";
+import { ImCross } from "react-icons/im";
 
 interface FormData {
   email: string;
@@ -108,7 +109,7 @@ export default function Login() {
       <div className="modal modal-bottom sm:modal-middle lg:top-0">
         <div className="modal-box">
           <label htmlFor="my-modal-6" className="fixed right-2 top-2">
-            <AiFillCloseCircle 
+            <AiFillCloseCircle
               className="w-8 h-8"
             />
           </label>
@@ -155,13 +156,12 @@ export default function Login() {
         </div>
       </div>
       {/* End Test Modal */}
-      <section className="w-3/4 mx-auto flex flex-col gap-10">
+      <section className="w-96 mx-auto flex flex-col gap-10 px-5">
         <div className="title">
           <h1 className="text-gray-800 text-4xl font-bold py-4">Store.ant</h1>
           <p className="w-3/4 mx-auto text-gray-400">
             lorem ipsum dolor sit amet{" "}
           </p>
-          <label htmlFor="my-modal-6">forgot password</label>
         </div>
 
         <form
@@ -169,56 +169,58 @@ export default function Login() {
             e.preventDefault();
             loginUser(form);
           }}
-          className="flex flex-col gap-5"
+          className="flex flex-col gap-5 px-10"
         >
-          <div className={styles.input_group}>
+          <div className="flex rounded-md bg-white p-2 border border-gray-900">
+            <div className="icon flex items-center px-2">
+              <HiAtSymbol size={20} color="#888888" />
+            </div>
             <input
               type="email"
               name="email"
               placeholder="Email"
-              className={styles.input_text}
+              className="border-none w-full placeholder-[#888888] focus:outline-0"
               value={form?.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
             />
-            <span className="icon flex items-center px-4">
-              <HiAtSymbol size={25} />
-            </span>
           </div>
-          <div className={styles.input_group}>
-            <input
-              type={`${show ? "text" : "password"}`}
-              name="password"
-              placeholder="Password"
-              className={styles.input_text}
-              value={form?.password}
-              onChange={(e) => setForm({ ...form, password: e.target.value })}
-            />
-            <span
-              className="icon flex items-center px-4"
-              onClick={() => setShow(!show)}
-            >
-              <HiKey size={25} />
-            </span>
+          <div>
+            <div className="flex rounded-md bg-white p-2 border border-gray-900">
+              <div
+                className="icon flex items-center px-2"
+                onClick={() => setShow(!show)}
+              >
+                <HiKey size={20} color="#888888" />
+              </div>
+              <input
+                type={`${show ? "text" : "password"}`}
+                name="password"
+                placeholder="Password"
+                className="w-full placeholder-[#888888] focus:outline-0"
+                value={form?.password}
+                onChange={(e) => setForm({ ...form, password: e.target.value })}
+              />
+            </div>
+            <div className="text-sm text-right underline capitalize text-[#424242]">
+              <label htmlFor="my-modal-6">forgot password</label>
+            </div>
           </div>
-
-          <div className={styles.input_group}>
-            <button type="submit" className={styles.button}>
-              Login
-            </button>
-          </div>
-          <div className={styles.input_group}>
+          <button type="submit" className="btn btn-outline rounded-md capitalize w-full bg-white hover:bg-blue-400">
+            Login
+          </button>
+          <div className="flex rounded-md bg-white py-2 px-4 border border-gray-900 space-x-4 btn btn-outline capitalize w-full hover:bg-blue-400">
+            <Image
+              alt=""
+              src={"/assets/google.svg"}
+              width="20"
+              height={20}
+            ></Image>
             <button
               type="button"
               onClick={handleGoogleSignIn}
               className={styles.button_custom}
             >
               Sign In with Google{" "}
-              <Image
-                alt=""
-                src={"/assets/google.svg"}
-                width="20"
-                height={20}
-              ></Image>
             </button>
           </div>
         </form>

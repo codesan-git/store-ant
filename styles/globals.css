@@ -14,7 +14,6 @@
 body {
   margin: 0px;
   height: 100%;
-  padding: 1rem;
   overflow-x: hidden;
   overflow-y: auto;
   background-color: var(--surface-ground);
@@ -27,4 +26,9 @@ body {
 
 .translate-x-point {
   transform:translate(139px, 258px);
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: red;
+  opacity: 1; /* Firefox */
 }
