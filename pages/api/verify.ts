@@ -58,7 +58,7 @@ export default function Nodemailer(req: any, res: any) {
   </head>
   <body>
     <div class="container">
-      <h1>Ganti Nomor HP</h1>
+      <h1>Verify Account</h1>
       <p>
         ${req.body.token}
       </p>

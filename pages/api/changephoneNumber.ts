@@ -69,7 +69,7 @@ export default async function Nodemailer(req: any, res: any) {
   </head>
   <body>
     <div class="container">
-      <h1>Reset Password make sure kamu yakin ya</h1>
+      <h1>Change Phone Number</h1>
       <p>
         Ganti Nomor Telefon Anda, ${token}
       </p>
