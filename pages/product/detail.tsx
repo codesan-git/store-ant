@@ -242,7 +242,7 @@ export default function CreateShop({ product, ratings, mainAddress, location }: 
           <div className="sm:flex sm:flex-row">
             <section
               id="product-information-panel"
-              className="mb-10 sm:mb-0 w-full lg:w-3/4"
+              className="mb-10 sm:mb-0 w-full lg:w-2/3"
             >
               <div id="product-image-container" className="p-4 w-full h-auto">
                 <div className="w-full h-auto relative">
@@ -432,7 +432,7 @@ export default function CreateShop({ product, ratings, mainAddress, location }: 
             </section>
             <section
               id="item-order-section"
-              className="hidden lg:block sm:w-1/4 p-10"
+              className="hidden lg:block sm:w-84 p-10"
             >
               <div className="p-4 shadow-lg rounded-lg sticky top-24">
                 <h1>Stok {renderStockCount(product.stock)}</h1>
