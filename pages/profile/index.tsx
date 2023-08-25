@@ -42,6 +42,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { format } from "date-fns";
 import { Address, createAddress, deleteAddress, getAllAddress } from "@/services/address/address";
 import { getBankAccount } from "@/services/bank/bank";
+import { MdEdit } from "react-icons/md";
 
 interface FormData {
   username?: string;
@@ -173,14 +174,14 @@ export default function Profile({ profile, user, address, provinceData, cityData
 
   async function create(data: FormData) {
     setIsLoading(true);
-  
+
     try {
       const response = await axios.post("/api/profile/setting", data, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-  
+
       if (response.status === 200) {
         setForm({
           username: data.username,
@@ -194,7 +195,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
     } catch (error) {
       //console.log(error);
     }
-  
+
     setIsLoading(false);
   }
 
@@ -327,7 +328,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
       }
     });
 
-    
+
   };
 
   const getToken = async () => {
@@ -459,7 +460,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
     }
   };
 
-  const getDate = profile?.birthDate ? format(new Date(profile?.birthDate?.replace(/-/g,",")),"d MMMM yyyy") : "-";
+  const getDate = profile?.birthDate ? format(new Date(profile?.birthDate?.replace(/-/g, ",")), "d MMMM yyyy") : "-";
 
   const data = [
     {
@@ -516,7 +517,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
                     <button
                       onClick={() => changePhoto(selectedFile)}
                       className="btn btn-primary btn-outline rounded-md w-full"
-                      disabled = {!selectedFile}
+                      disabled={!selectedFile}
                     >
                       Simpan Foto
                     </button>
@@ -539,7 +540,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
               </div>
             </div>
 
-            <div className="w-full">
+            <div className="w-[26rem]">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -737,12 +738,13 @@ export default function Profile({ profile, user, address, provinceData, cityData
                 </div>
                 {/* Handle Nomor HP */}
                 <div className="flex gap-5">
-                  <label className="mr-4 text-sm lg:text-base w-1/3 lg:w-auto">Nomor HP</label>
-                  <h5 className="text-sm lg:text-base w-1/3 lg:w-auto">{profile?.phoneNumber}</h5>
-                  {/* The button to open modal */}
-                  <a href="#modal-nomorhp" className="text-primary text-sm lg:text-base w-1/3 lg:w-auto">
-                    ubah
-                  </a>
+                  <div className="grid grid-cols-3 w-full">
+                    <label className="text-sm lg:text-base">Nomor HP</label>
+                    <h5 className="text-sm lg:text-base">{profile?.phoneNumber}</h5>
+                    <a href="#modal-nomorhp" className="text-primary text-sm lg:text-base w-1/3 lg:w-auto ml-auto">
+                      <MdEdit />
+                    </a>
+                  </div>
                   {/* <p>{/<em> Put this part before </body> tag </em>/}</p> */}
                   <div className="modal" id="modal-nomorhp">
                     <div className="modal-box">
@@ -775,15 +777,21 @@ export default function Profile({ profile, user, address, provinceData, cityData
                 {/* End Handle Nomor HP */}
 
                 {/* Handle Email */}
-                <div className="flex flex-col lg:flex-row gap-5">
-                  <div className="flex flex-row">
-                    <label className="mr-4 text-sm lg:text-base w-1/3 lg:w-auto">Email</label>
-                    <h5 className="text-sm lg:text-base w-1/3 lg:w-auto">{session?.user?.email}</h5>
+                <div className="flex flex-col">
+                  <div className="grid grid-cols-3">
+                    <div className="col-span-1">
+                      <label className="text-sm lg:text-base">Email</label>
+                    </div>
+                    <div className="flex justify-between w-full">
+                      <h5 className="text-sm lg:text-base">{session?.user?.email}</h5>
+                      {/* The button to open modal */}
+                      <div>
+                        <a href="#modal-email" className="text-primary text-sm lg:text-base">
+                          ubah
+                        </a>
+                      </div>
+                    </div>
                   </div>
-                  {/* The button to open modal */}
-                  <a href="#modal-email" className="text-primary text-sm lg:text-base w-1/3 lg:w-auto">
-                    ubah
-                  </a>
                   {/* <p>{/<em> Put this part before </body> tag </em>/}</p> */}
                   <div className="modal" id="modal-email">
                     <div className="modal-box">
@@ -851,8 +859,8 @@ export default function Profile({ profile, user, address, provinceData, cityData
         <>
           <section className="mt-8 flex flex-col gap-5 bg-gray-100 p-2 lg:p-10 rounded-md">
             <div className="flex">
-              <AddressFormModal 
-                provinceData={provinceData} 
+              <AddressFormModal
+                provinceData={provinceData}
                 cityData={cityData}
                 setAddressesState={setAddresses}
               />
@@ -873,9 +881,9 @@ export default function Profile({ profile, user, address, provinceData, cityData
                         <p>{address.postcode}</p>
                         <div className="flex flex-col lg:flex-row gap-3 text-xs lg:text-base">
                           {/* <a className="text-primary-focus">Ubah Alamat</a> */}
-                          <AddressUpdateFormModal 
-                            provinceData={provinceData} 
-                            cityData={cityData} 
+                          <AddressUpdateFormModal
+                            provinceData={provinceData}
+                            cityData={cityData}
                             address={address}
                             setAddressesState={setAddresses}
                           />
@@ -945,7 +953,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
               :
               <Fragment>
                 <div>
-                  <BankAccountFormModal 
+                  <BankAccountFormModal
                     banks={banks}
                     setBankState={setBankAccount}
                   />
@@ -967,10 +975,10 @@ export default function Profile({ profile, user, address, provinceData, cityData
   //console.log("user", session?.user);
   return (
     <>
-      <Navbar />      
+      <Navbar />
       <div className="lg:flex w-full my-5 lg:w-3/4 mx-auto">
         <div className="w-full lg:mx-10">
-          { isLoading? (
+          {isLoading ? (
             <div className="text-red-500">LOADING...</div>
           ) : (
             <></>
@@ -996,7 +1004,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
           </Tabs>
         </div>
       </div>
-      <DeleteAddressAlert htmlElementId={`address-alert`} addressId={selectedAddressId}/>
+      <DeleteAddressAlert htmlElementId={`address-alert`} addressId={selectedAddressId} />
       <Footer />
     </>
   );
