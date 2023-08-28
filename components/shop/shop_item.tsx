@@ -96,7 +96,7 @@ const ShopItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinis
     let total = 0;
 
     orders?.forEach((order) => {
-      total += (order.product.price)
+      total += (order.product.price * order.count)
     });
 
     return total;
