@@ -56,7 +56,7 @@ const CanceledModal = ({ htmlElementId: id, selectProductCallback }: Props) => {
   };
 
   async function onCanceled() {
-    await axios.put(`/api/shop/canceled`, {
+    await axios.put(`/api/shop/cancel`, {
       id: selectedTransaction?.id
     }).then(router.reload)
   }
