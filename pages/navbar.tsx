@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
-import { useRouter } from "next/router";
+import { Router, useRouter } from "next/router";
 import Link from "next/link";
 import { HiShoppingCart, HiBell } from "react-icons/hi";
 import { useState } from 'react';
-import { Category, NotifRole, NotifType } from "@prisma/client";
+import { Category, NotifRole, NotifType, User, Shop } from "@prisma/client";
 import useSWR from 'swr';
 import { InferGetServerSidePropsType } from "next";
 import LoginDropdown from "@/components/navbar/login_dropdown";
@@ -37,6 +37,19 @@ interface Notification {
   notifType: NotifType;
   notifRole: NotifRole;
   isSeen: boolean;
+}
+
+interface Messages {
+  messages: MessageForm[];
+  recipient: User;
+  shop: Shop;
+  //conversation: Conversation;
+}
+
+interface MessageForm {
+  senderId: string;
+  recipientId: string;
+  message: string;
 }
 
 interface TabPanelProps {
@@ -76,6 +89,7 @@ async function handleGoogleSignOut() {
   signOut({ callbackUrl: "/login" });
 }
 
+
 const fetchCategories = async (url: string) => {
 
   const response = await fetch(url);
@@ -86,8 +100,9 @@ const fetchCategories = async (url: string) => {
 }
 
 // export default function 
-const Navbar = () => {
+const Navbar = ( senderId : MessageForm ) => {
   const [value, setValue] = useState(0);
+
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -99,6 +114,9 @@ const Navbar = () => {
 
   const { data: session } = useSession();
   const router = useRouter();
+  const onChatClick = () => {
+    router.push(`/chat?newChatUserId=${senderId}`);
+  }
   const refreshData = () => {
     router.replace(router.asPath);
   };
@@ -108,7 +126,7 @@ const Navbar = () => {
     fetchCategories
   )
 
-  const {data: count, isLoading: loadingCount} = useSWR<{count : number}>(
+  const { data: count, isLoading: loadingCount } = useSWR<{ count: number }>(
     `/api/notification/count/`,
     fetchCategories,
     { refreshInterval: 30000 }
@@ -154,7 +172,7 @@ const Navbar = () => {
     router.push(`/filter?q=${encodedSearchQuery}`);
     ////console.log(encodedSearchQuery);
   }
-  
+
   ////console.log("profile ", session?.user.image);
 
   if (!categoryData?.categories) {
@@ -267,14 +285,14 @@ const Navbar = () => {
               </div>
 
               {/* notif */}
-              <div className="dropdown dropdown-end" onClick={()=>{getNotif(); readNotif();}}>
+              <div className="dropdown dropdown-end" onClick={() => { getNotif(); readNotif(); }}>
                 <label tabIndex={0} className="btn btn-ghost m-1 text-lg">
-                  <HiBell className="hidden sm:block"/>
-                  <div className="indicator">                      
+                  <HiBell className="hidden sm:block" />
+                  <div className="indicator">
                     {count?.count! > 0 ? (
-                        <span className="badge badge-sm indicator-item">{count?.count!}</span>
-                      ) : (
-                        <></>
+                      <span className="badge badge-sm indicator-item">{count?.count!}</span>
+                    ) : (
+                      <></>
                     )}
                   </div>
                 </label>
@@ -293,7 +311,7 @@ const Navbar = () => {
 
                           {Boolean(notif.notifType === "CHAT") &&
                             <CustomTabPanel value={value} index={0}>
-                              <div>{notif.body}</div>
+                              <div onClick={onChatClick}>{notif.body}</div>
                             </CustomTabPanel>
                           }
                           {notif.notifType === "TRANSACTION" && notif.notifRole === "USER" ?
@@ -334,15 +352,6 @@ const Navbar = () => {
                   tabIndex={0}
                   className="dropdown-content card card-compact w-96 p-2 shadow bg-primary text-primary-content glass"
                 >
-                  {/* <figure>
-                    <Image 
-                      className="p-16" 
-                      src="/assets/food.png" 
-                      alt="car!" 
-                      width={1500}
-                      height={1500}  
-                    />
-                  </figure> */}
                   <div className="card-body bg-primary rounded-lg">
                     <h2 className="card-title">Life hack</h2>
                     <p>How to park your car at your garage?</p>
