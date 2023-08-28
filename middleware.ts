@@ -7,6 +7,8 @@ const requireAuth: string[] = [
     "/product/",
     "/profile/",
     "/shop/",
+    "/profile",
+    "/shop",
     "/address/",
     "/cart",
     "/transactions",

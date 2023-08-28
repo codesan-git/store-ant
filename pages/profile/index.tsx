@@ -2,7 +2,7 @@ import React, { Fragment, useEffect } from "react";
 import styles from "../../styles/Form.module.css";
 import Image from "next/image";
 import { useState } from "react";
-import { HiAtSymbol, HiKey, HiUser } from "react-icons/hi";
+import { HiPencilAlt } from "react-icons/hi";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
@@ -557,7 +557,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
                   <h5 className="text-sm lg:text-base w-1/3 lg:w-auto">{profile?.username}</h5>
                   {/* The button to open modal */}
                   <a href="#my-modal-2" className="text-primary text-sm lg:text-base w-1/3 lg:w-auto">
-                    ubah
+                    <HiPencilAlt />
                   </a>
                   <div className="modal z-50" id="my-modal-2">
                     <div className="modal-box">
@@ -640,7 +640,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
                   }
                   {/* The button to open modal */}
                   <a href="#modal-birthday" className="text-primary text-sm lg:text-base w-1/3 lg:w-auto">
-                    ubah
+                    <HiPencilAlt />
                   </a>
                 </div>
                 <div className="modal" id="modal-birthday">
@@ -736,13 +736,12 @@ export default function Profile({ profile, user, address, provinceData, cityData
                 </div>
                 {/* Handle Nomor HP */}
                 <div className="flex gap-5">
-                  <div className="grid grid-cols-3 w-full">
-                    <label className="text-sm lg:text-base">Nomor HP</label>
-                    <h5 className="text-sm lg:text-base">{profile?.phoneNumber}</h5>
-                    <a href="#modal-nomorhp" className="text-primary text-sm lg:text-base w-1/3 lg:w-auto ml-auto">
-                      <MdEdit />
-                    </a>
-                  </div>
+                  <label className="mr-4 text-sm lg:text-base w-1/3 lg:w-auto">Nomor HP</label>
+                  <h5 className="text-sm lg:text-base w-1/3 lg:w-auto">{profile?.phoneNumber}</h5>
+                  {/* The button to open modal */}
+                  <a href="#modal-nomorhp" className="text-primary text-sm lg:text-base w-1/3 lg:w-auto">
+                    <HiPencilAlt />
+                  </a>
                   {/* <p>{/<em> Put this part before </body> tag </em>/}</p> */}
                   <div className="modal" id="modal-nomorhp">
                     <div className="modal-box">
@@ -790,6 +789,10 @@ export default function Profile({ profile, user, address, provinceData, cityData
                       </div>
                     </div>
                   </div>
+                  {/* The button to open modal */}
+                  <a href="#modal-email" className="text-primary text-sm lg:text-base w-1/3 lg:w-auto">
+                    <HiPencilAlt />
+                  </a>
                   {/* <p>{/<em> Put this part before </body> tag </em>/}</p> */}
                   <div className="modal" id="modal-email">
                     <div className="modal-box">

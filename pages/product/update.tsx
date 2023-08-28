@@ -9,6 +9,7 @@ import Link from 'next/link'
 import { Category } from "@prisma/client";
 import useSWR from 'swr';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject  } from "firebase/storage";
+import Navbar from '../navbar';
 
 const fetchCategories = async (url: string) => {
 
@@ -205,7 +206,8 @@ export default function CreateShop({product} : FetchData) {
   }
 
   return (
-    <div className='lg:px-36'>
+    <div className='lg:px-36 space-y-4'>
+      <Navbar/>
       <div id='title-hack-container' className=''>
         <section className='pl-4 lg:w-1/2 flex lg:flex-col lg:justify-center lg:items-center'>
           <div className='lg:w-5/6 justify-start'>
