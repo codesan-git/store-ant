@@ -42,7 +42,7 @@ const ProductCard = ({ product, onClick }: Props) => {
 
   const mainAddress = product.shop.user.profile.addresses[0];
 
-  console.log(`main address: ${mainAddress}`);
+  // console.log(`main address: ${mainAddress}`);
 
   return (
     <Fragment>
