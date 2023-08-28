@@ -243,7 +243,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
         method: "POST",
       }).then(() => {
         router.push(router.asPath);
-        alert("address deleted!");
+        alert("Alamat Toko Utama Berhasil Diubah!");
       });
     } catch (error) {
       ////console.log(error);
