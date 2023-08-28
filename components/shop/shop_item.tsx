@@ -56,6 +56,7 @@ interface Props {
   onFinish: (id: number) => Promise<void>,
   onReturn: (id: number) => Promise<void>,
   onDetail: (transaction: Transaction) => void,
+  onCanceled: (transaction: Transaction) => Promise<void>,
   onRate: (productName: String, cartItemId: Number) => void,
   onTerima: (transaction: Transaction) => Promise<void>
   onTolak: (id: number) => Promise<void>,
@@ -63,7 +64,7 @@ interface Props {
   onItemReceive: (transaction: Transaction) => Promise<void>
 }
 
-const ShopItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinish, onReturn, onDetail, onTerima, onTolak, onItemReceive }: Props) => { //TODO: re-adjust background colors based on website. the one in the wireframe are just placeholder colors.
+const ShopItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinish, onReturn, onDetail, onTerima, onTolak, onItemReceive, onCanceled }: Props) => { //TODO: re-adjust background colors based on website. the one in the wireframe are just placeholder colors.
 
   const transactionCreatedDate = new Date(transaction.createdAt);
   const transactionLastUpdate = new Date(transaction.updatedAt);
@@ -221,6 +222,20 @@ const ShopItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinis
         </Fragment>
       );
     }
+    if (transaction.status === TransactionStatus.CANCELING) {
+      return (
+        <Fragment>
+          {/* {detailTransaksiButton()} */}
+          <label htmlFor="canceled-modal" onClick={()=>onCanceled(transaction)}  className="flex justify-center items-center text-xs lg:text-base w-32 text-white bg-green-500 hover:cursor-pointer">
+            Terima
+          </label>
+          <label htmlFor="terima-modal" onClick={()=>onTerima(transaction)} className="flex justify-center items-center text-xs lg:text-base w-32 text-white bg-red-500 hover:cursor-pointer">
+            Tolak Pengajuan
+          </label>
+          {renderExtraActionDropdown()}
+        </Fragment>
+      );
+    }
     if (transaction.status === TransactionStatus.RETURNED) {
       return (
         <Fragment>
@@ -269,6 +284,9 @@ const ShopItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, onFinis
       return (
         <Fragment>
           {detailTransaksiButton()}
+          {/* <label htmlFor="itemreceive-modal" onClick={()=>onItemReceive(transaction)} className="flex justify-center items-center text-xs lg:text-base w-32 text-white bg-green-500 hover:cursor-pointer">
+            Kirim
+          </label> */}
           {renderExtraActionDropdown()}
         </Fragment>
       );
