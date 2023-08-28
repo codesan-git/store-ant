@@ -10,7 +10,7 @@ import TransactionItem from "@/components/transactions/transaction_item";
 import PaymentModal from "@/components/transactions/payment_modal";
 import CancelAlert from "@/components/transactions/user_cancel_alert";
 import DetailTransactionModal from "@/components/transactions/detail_transaction_modal";
-import { Product, Order as PrismaOrder, Transaction as PrismaTransaction, TransactionStatus } from "@prisma/client";
+import { Product, Order as PrismaOrder, Transaction as PrismaTransaction, TransactionStatus, Profile, Address } from "@prisma/client";
 import ComplainModal from "@/components/transactions/complain_modal";
 import RatingModal from "@/components/transactions/rating_modal";
 
@@ -37,10 +37,17 @@ interface Transaction {
   createdAt: Date,
   updatedAt: Date,
   paymentMethod: string,
+  shippingCost: number,
   order: Order[],
   shop: {
     userId: string,
-    shopName: string
+    shopName: string,
+    user: {
+      profile: Profile
+      & {
+        addresses: Address[]
+      }
+    }
   },
 }
 
@@ -279,6 +286,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       createdAt: true,
       updatedAt: true,
       paymentMethod: true,
+      shippingCost: true,
       order: {
         include: {
           product: {
@@ -296,7 +304,21 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       shop: {
         select: {
           userId: true,
-          shopName: true
+          shopName: true,
+          user: {
+            include: {
+              profile: {
+                include: {
+                  addresses: {
+                    where: {
+                      isShopAddress: true
+                    },
+                  },
+                },
+                
+              }
+            }
+          }
         }
       }
     }

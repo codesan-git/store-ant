@@ -1,4 +1,4 @@
-import { Product, ProductInCart, Shop, TransactionStatus } from "@prisma/client";
+import { Address, Product, ProductInCart, Profile, Shop, TransactionStatus } from "@prisma/client";
 import axios from "axios";
 import Image from "next/image";
 import { Fragment, useEffect, useState } from "react";
@@ -20,22 +20,38 @@ interface Order {
 }
 
 interface Transaction {
-  id: number,
-  userId: number,
+  id: string,
+  userId: string,
   shopId: number,
   status: TransactionStatus,
   createdAt: Date,
   updatedAt: Date,
   paymentMethod: string,
+  shippingCost:  number,
   order: Order[],
   shop: {
-    shopName: string
-  } 
+    userId: string,
+    shopName: string,
+    user: {
+      profile: Profile
+      & {
+        addresses: Address[]
+      }
+    }
+  },
 }
 
 const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => {
 
-	
+	const formatter = new Intl.NumberFormat(
+		'id-ID',
+		{
+			style: 'currency',
+			currency: 'IDR',
+			
+		}
+	);
+
 	const { 
 		transactionModalIsHidden, 
 		setTransactionModalIsHidden,
@@ -44,6 +60,8 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
 	
 	const { selectedTransaction: transaction } : { selectedTransaction: Transaction | undefined} = getTransactionDetail(); //this is pretty cursed lol -
 	const [shop, setShop] = useState<Shop>();
+
+	const address = transaction?.shop.user.profile.addresses[0];
 	
 	const fetchShop = async () => {
 		try {
@@ -91,7 +109,7 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
 							{order?.product.name}
 						</div>
 						<div className=" p-0.5">
-							Total: Rp {total.toString()}
+							{formatter.format(total).split(/\,[0-9][0-9]/)}
 						</div>
 					</div>
 				</div>
@@ -185,8 +203,8 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
 									</div>
 									<div className="w-full">
 										<p className="font-bold">{shop?.shopName}</p>
-										<p>081234567890</p>
-										<p className="mt-2">Jalan Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque esse minus necessitatibus adipisci qua</p>
+										<p>{address?.contact}</p>
+										<p className="mt-2">J{address?.address}, {address?.region}, {address?.city}, {address?.province}</p>
 									</div>
 								</div>
 							</div>
@@ -211,7 +229,7 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
 										:
 									</div>
 									<div className="">
-										Rp {calculateTransactionTotal().toString()}
+										{calculateTransactionTotal().toString()}
 									</div>
 								</div>
 								<div id="delivery-expense" className="flex flex-row">
@@ -222,7 +240,7 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
 										:
 									</div>
 									<div className="">
-										Rp 0
+										{transaction?.shippingCost}
 									</div>
 								</div>
 								<hr className="h-px my-2 bg-black border-0"/>

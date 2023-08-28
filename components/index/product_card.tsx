@@ -29,7 +29,6 @@ const ProductCard = ({ product, onClick }: Props) => {
   const formatter = new Intl.NumberFormat('id-ID', {
     style: 'currency',
     currency: 'IDR',
-    maximumFractionDigits: 0
   });
 
   const formatPrice = formatter.format(product.price).toString();
@@ -69,11 +68,11 @@ const ProductCard = ({ product, onClick }: Props) => {
           <div id="card-body" className="w-32 lg:w-40 xl:w-44 2xl:w-auto rounded-b-lg py-1 px-2 lg:py-4 lg:px-8 h-1/2 space-y-2 bg-white">
             <p className="text-xs md:text-base xl:text-xl font-bold truncate overflow-hidden">{product.name}</p>
             <h1 className="text-base md:text-xl xl:text-2xl font-bold">
-              {formatPrice}
+              {formatPrice.split(/\,[0-9][0-9]/)}
             </h1>
             <div className="text-xs lg:text-sm flex flex-row items-center space-x-1">
               <HiLocationMarker className="fill-gray-600" />
-              {mainAddress.city}
+              {mainAddress?.city}
             </div>
             <div className="lg:flex lg:flex-row space-x-2 text-sm">
               <div id="rating-container" className="flex flex-row items-center space-x-1">

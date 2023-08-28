@@ -1,6 +1,6 @@
 import { Fragment, useState } from "react";
 import { HiOutlineEllipsisVertical, HiShoppingCart } from "react-icons/hi2";
-import { Product, Order as PrismaOrder, ProductInCart, Transaction as PrismaTransaction, TransactionStatus } from "@prisma/client";
+import { Product, Order as PrismaOrder, ProductInCart, Transaction as PrismaTransaction, TransactionStatus, Profile, Address } from "@prisma/client";
 import { useRouter } from "next/router";
 import Image from "next/image";
 
@@ -23,10 +23,17 @@ interface Transaction {
   createdAt: Date,
   updatedAt: Date,
   paymentMethod: string,
+  shippingCost:  number,
   order: Order[],
   shop: {
     userId: string,
-    shopName: string
+    shopName: string,
+    user: {
+      profile: Profile
+      & {
+        addresses: Address[]
+      }
+    }
   },
 }
 
@@ -48,6 +55,11 @@ const TransactionItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, 
   const transactionCreatedDate = new Date(transaction.createdAt);
   const transactionLastUpdate = new Date(transaction.updatedAt);
   const router = useRouter();
+
+  const formatter = new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+  });
 
   const onPenjualClick = () => {
     router.push(`/transactions?newChatUserId=${transaction.shop.userId}`);
@@ -315,7 +327,7 @@ const TransactionItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, 
             </div>
             <div id="total-details-lower" className="hidden lg:flex lg:flex-col lg:justify-center w-1/3 p-4 space-y-2 border-l-gray-500 border-l-2">
               <h1 className="">Total Belanja</h1>
-              <h1 className="font-bold">Rp {calculateTransactionTotal().toString()}</h1>
+              <h1 className="font-bold">{formatter.format(calculateTransactionTotal().valueOf()).split(/\,[0-9][0-9]/)}</h1>
             </div>
           </div>
           <div id="total-section" className="flex flex-row p-2 bg-gray-400">
