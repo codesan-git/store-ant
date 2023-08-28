@@ -256,7 +256,7 @@ export default function CreateShop({ product, ratings, mainAddress, location }: 
                         "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg";
                     }}
                     alt=""
-                    className="mx-auto my-auto w-96 h-96 object-contain"
+                    className="mx-auto my-auto w-96 h-96 object-cover"
                   />
                   <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
                     <button disabled={index === 0 ? true : false} onClick={() => onImageClick(index - 1)} className="btn btn-circle btn-sm lg:btn-md bg-light-blue-600 text-white border-none">❮</button>
