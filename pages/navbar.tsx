@@ -39,18 +39,18 @@ interface Notification {
   isSeen: boolean;
 }
 
-interface Messages {
-  messages: MessageForm[];
-  recipient: User;
-  shop: Shop;
-  //conversation: Conversation;
-}
+// interface Messages {
+//   messages: MessageForm[];
+//   recipient: User;
+//   shop: Shop;
+//   //conversation: Conversation;
+// }
 
-interface MessageForm {
-  senderId: string;
-  recipientId: string;
-  message: string;
-}
+// interface MessageForm {
+//   senderId: string;
+//   recipientId: string;
+//   message: string;
+// }
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -100,7 +100,7 @@ const fetchCategories = async (url: string) => {
 }
 
 // export default function 
-const Navbar = ( senderId : MessageForm ) => {
+const Navbar = (  ) => {
   const [value, setValue] = useState(0);
 
 
@@ -114,9 +114,9 @@ const Navbar = ( senderId : MessageForm ) => {
 
   const { data: session } = useSession();
   const router = useRouter();
-  const onChatClick = () => {
-    router.push(`/chat?newChatUserId=${senderId}`);
-  }
+  // const onChatClick = () => {
+  //   router.push(`/chat?newChatUserId=${senderId}`);
+  // }
   const refreshData = () => {
     router.replace(router.asPath);
   };
@@ -311,7 +311,7 @@ const Navbar = ( senderId : MessageForm ) => {
 
                           {Boolean(notif.notifType === "CHAT") &&
                             <CustomTabPanel value={value} index={0}>
-                              <div onClick={onChatClick}>{notif.body}</div>
+                              <div >{notif.body}</div>
                             </CustomTabPanel>
                           }
                           {notif.notifType === "TRANSACTION" && notif.notifRole === "USER" ?
