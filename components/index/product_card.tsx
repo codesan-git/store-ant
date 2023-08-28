@@ -53,7 +53,7 @@ const ProductCard = ({ product, onClick }: Props) => {
         }}
         passHref
       >
-        <div id="card" className="w-32 lg:w-40 xl:w-44 2xl:w-64 bg-white h-80 rounded-lg shadow-lg relative border-2">
+        <div id="card" className="w-32 sm:w-auto bg-white h-80 rounded-lg shadow-lg relative border-2">
           <Image
             src={product.image!.split(",")[0]}
             width={1500}

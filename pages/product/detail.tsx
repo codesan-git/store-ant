@@ -242,7 +242,7 @@ export default function CreateShop({ product, ratings, mainAddress, location }: 
           <div className="sm:flex sm:flex-row">
             <section
               id="product-information-panel"
-              className="mb-10 sm:mb-0 w-full lg:w-3/4"
+              className="mb-10 sm:mb-0 w-full lg:w-2/3"
             >
               <div id="product-image-container" className="p-4 w-full h-auto">
                 <div className="w-full h-auto relative">
@@ -432,7 +432,7 @@ export default function CreateShop({ product, ratings, mainAddress, location }: 
             </section>
             <section
               id="item-order-section"
-              className="hidden lg:block sm:w-1/4 p-10"
+              className="hidden lg:block w-auto lg:w-1/3 p-16"
             >
               <div className="p-4 shadow-lg rounded-lg sticky top-24">
                 <h1>Stok {renderStockCount(product.stock)}</h1>
@@ -463,18 +463,18 @@ export default function CreateShop({ product, ratings, mainAddress, location }: 
                   </div>
                 </div>
                 <h1>Subtotal: Rp.{Subtotal}</h1>
-                <div id="button-group" className="mt-4 w-auto space-x-4">
+                <div id="button-group" className=" w-auto space-x-2">
                   <button
                     onClick={() => checkout(count)}
                     disabled={count === 0 ? true : false}
-                    className="w-20 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent"
+                    className="sm:w-10 xl:w-20 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent"
                   >
                     Beli
                   </button>
                   <button
                     onClick={() => addToCart(count)}
                     disabled={count === 0 ? true : false}
-                    className="w-32 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent"
+                    className="sm:w-20 xl:w-32 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent"
                   >
                     Add to Cart
                   </button>
