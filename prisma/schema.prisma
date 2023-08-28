@@ -171,19 +171,22 @@ model User {
   Transaction     Transaction[]
   SentMessage     Message[]   @relation("sender")
   ReceivedMessage Message[]   @relation("recipient")
-  notifications   Notification[]
+  notifications   Notification[] @relation("user")
+  senderNotif   Notification[] @relation("sender")
 }
 
 model Notification {
   id            Int @unique @id @default(autoincrement())
   userId        String @map("user_id")
   body          String
+  senderId      String?
   isSeen        Boolean @default(false)
   createdAt     DateTime @default(now())
   notifType     NotifType?
   notifRole     NotifRole?
   
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation("user", fields: [userId], references: [id], onDelete: Cascade)
+  sender User? @relation("sender" ,fields: [senderId], references: [id], onDelete: Cascade)
 }
 
 model Product {

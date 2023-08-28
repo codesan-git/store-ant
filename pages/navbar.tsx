@@ -37,10 +37,11 @@ interface Notification {
   notifType: NotifType;
   notifRole: NotifRole;
   isSeen: boolean;
+  senderId: string;
 }
 
 // interface Messages {
-//   messages: MessageForm[];
+//   messages: MessageForm;
 //   recipient: User;
 //   shop: Shop;
 //   //conversation: Conversation;
@@ -101,6 +102,7 @@ const fetchCategories = async (url: string) => {
 
 // export default function 
 const Navbar = (  ) => {
+  console.log()
   const [value, setValue] = useState(0);
 
 
@@ -311,7 +313,7 @@ const Navbar = (  ) => {
 
                           {Boolean(notif.notifType === "CHAT") &&
                             <CustomTabPanel value={value} index={0}>
-                              <div >{notif.body}</div>
+                              <div onClick={()=>router.push(`/chat?newChatUserId=${notif.senderId}`)}>{notif.body}</div>
                             </CustomTabPanel>
                           }
                           {notif.notifType === "TRANSACTION" && notif.notifRole === "USER" ?
