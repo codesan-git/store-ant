@@ -247,8 +247,8 @@ export default function CreateShop({ product, ratings, mainAddress, location }: 
               <div id="product-image-container" className="p-4 w-full h-auto">
                 <div className="w-full h-auto relative">
                   <Image
-                    width={1500}
-                    height={1500}
+                    width={5000}
+                    height={5000}
                     src={selectedImage}
                     onError={({ currentTarget }) => {
                       currentTarget.onerror = null; // prevents looping
@@ -256,14 +256,14 @@ export default function CreateShop({ product, ratings, mainAddress, location }: 
                         "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg";
                     }}
                     alt=""
-                    className="mx-auto my-auto w-96 h-96"
+                    className="mx-auto my-auto w-96 h-96 object-contain"
                   />
                   <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
                     <button disabled={index === 0 ? true : false} onClick={() => onImageClick(index - 1)} className="btn btn-circle btn-sm lg:btn-md bg-light-blue-600 text-white border-none">❮</button>
                     <button disabled={index === product.image.split(",").length - 1 ? true : false} onClick={() => onImageClick(index + 1)} className="btn btn-circle btn-sm lg:btn-md bg-light-blue-600 text-white border-none">❯</button>
                   </div>
                 </div>
-                <div className="flex h-40 mt-5 gap-x-5">
+                <div className="flex flex-row space-x-2 justify-center items-center p-2">
                   {product.image.split(",").map((image, i) => (
                     <Image
                       width={1500}
@@ -277,7 +277,7 @@ export default function CreateShop({ product, ratings, mainAddress, location }: 
                           "https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg";
                       }}
                       alt=""
-                      className="mx-auto my-auto w-1/4 h-full"
+                      className="w-40 h-40"
                     />
                   ))}
                 </div>
