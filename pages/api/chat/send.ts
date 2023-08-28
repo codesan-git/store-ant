@@ -55,7 +55,7 @@ export default async function handler(
       userId: recipientId!,
       notifType: NotifType.CHAT,
       body: `${session?.user.name} mengirimkan pesan.`,
-      senderId: String(session?.user?.id!)
+      senderId: String(session?.user?.id!) || null
     }
   })
   res.status(200).json({ message: 'message created' })
