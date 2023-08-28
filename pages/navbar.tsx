@@ -181,7 +181,7 @@ const Navbar = () => {
       <div className="navbar bg-base-100 sm:px-1 lg:px-32 shadow">
         <div className="navbar-start">
           <div className="flex-1 lg:mx-16">
-            <Link className="btn btn-ghost normal-case text-xl text-primary-focus" href="/">
+            <Link className="btn btn-ghost normal-case text-xl text-primary-focus" href="/" passHref>
               Store{" "}
               <span className="text-indigo-700 to-secondary-focus">.</span>
               <span className="text-secondary-focus">ant</span>
@@ -291,7 +291,7 @@ const Navbar = () => {
                       {notif?.map((notif) => (
                         <div key={notif.id} className="cursor-pointer hover:bg-gray-300 overflow-y-auto" onClick={() => onNotifClick(notif.notifType, notif.notifRole)}>
 
-                          {notif.notifType === "CHAT" &&
+                          {Boolean(notif.notifType === "CHAT") &&
                             <CustomTabPanel value={value} index={0}>
                               <div>{notif.body}</div>
                             </CustomTabPanel>
