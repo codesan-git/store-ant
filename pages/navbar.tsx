@@ -37,7 +37,7 @@ interface Notification {
   notifType: NotifType;
   notifRole: NotifRole;
   isSeen: boolean;
-  senderId: string;
+  senderId: String;
 }
 
 // interface Messages {
