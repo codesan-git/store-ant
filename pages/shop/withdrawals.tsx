@@ -101,7 +101,7 @@ export default function Withdraw({ bank, shop }: Data) {
                           </div>
                           <div className="grid grid-cols-2 space-x-4">
                             <p className="font-bold text-gray-600 col-span-1">Saldo</p>
-                            <p className="font-extrabold col-span-1">{shop.balance}</p>
+                            <p className="font-extrabold col-span-1">{formatKas()}</p>
                           </div>
                         </div>
                       </div>
