@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, KeyboardEvent } from "react";
 import styles from "../../styles/Form.module.css";
 import Image from "next/image";
 import { useState } from "react";
@@ -119,6 +119,10 @@ export default function Profile({ profile, user, address, provinceData, cityData
   };
 
   //console.log(address);
+  const handleKeyDown = (event: KeyboardEvent<HTMLElement>) => {
+    // console.log(event.key);
+    return false
+  };
 
   const notifAlert = () => {
     <div className="alert shadow-lg">
@@ -146,31 +150,6 @@ export default function Profile({ profile, user, address, provinceData, cityData
       </div>
     </div>;
   };
-
-  // async function create(data: FormData) {
-  //   try {
-  //     setIsLoading(true);
-  //     fetch("/api/profile/setting", {
-  //       body: JSON.stringify(data),
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       method: "POST",
-  //     }).then(() => {
-  //       setIsLoading(false);
-  //       setForm({
-  //         username: data.username,
-  //         password: "",
-  //         phonenumber: data.phonenumber,
-  //         birthDate: data.birthDate,
-  //         gender: data.gender
-  //       });
-  //       router.push(router.asPath);
-  //     });
-  //   } catch (error) {
-  //     ////console.log(error);
-  //   }
-  // }
 
   async function create(data: FormData) {
     setIsLoading(true);
@@ -667,6 +646,9 @@ export default function Profile({ profile, user, address, provinceData, cityData
                         name="birthday"
                         placeholder="Birthday"
                         value={form?.birthDate}
+                        min='1899-01-01' 
+                        max='2000-01-01'
+                        onKeyDown={(e)=>e.preventDefault()}
                         className="input input-bordered input-primary w-auto rounded-md"
                         onChange={(e) =>
                           setForm({
