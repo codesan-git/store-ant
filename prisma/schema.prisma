@@ -17,7 +17,7 @@ enum Gender {
 
 enum Role {
   USER
-  ADMIN 
+  ADMIN
 }
 
 enum BalanceType {
@@ -28,7 +28,7 @@ enum BalanceType {
 enum OrderStatus {
   ONGOING
   RETURNING
-  NEED_ADMIN_REVIEW 
+  NEED_ADMIN_REVIEW
   RETURNED
   RETURN_REJECTED
   CANCELING
@@ -51,7 +51,7 @@ enum TransactionStatus {
   DELIVERED
   FINISHED
   RETURNING
-  NEED_ADMIN_REVIEW 
+  NEED_ADMIN_REVIEW
   RETURNED
   RETURN_REJECTED
   CANCELING
@@ -80,11 +80,11 @@ enum NotifRole {
 }
 
 model Account {
-  id                 String     @id @default(cuid())
-  userId             String     @map("user_id")
+  id                 String  @id @default(cuid())
+  userId             String  @map("user_id")
   type               String
   provider           String
-  providerAccountId  String     @map("provider_account_id")
+  providerAccountId  String  @map("provider_account_id")
   refresh_token      String?
   access_token       String?
   expires_at         Int?
@@ -114,22 +114,22 @@ model Profile {
 }
 
 model Shop {
-  id            Int    @id @default(autoincrement())
-  userId        String @unique @map("user_id")
+  id            Int           @id @default(autoincrement())
+  userId        String        @unique @map("user_id")
   shopName      String
-  balance       Int    @default(0)
+  balance       Int           @default(0)
   product       Product[]
   transaction   Transaction[]
   image         String?
-  averageRating Float @default(0.00)
+  averageRating Float         @default(0.00)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Address {
-  id            Int     @id @default(autoincrement())
-  profileId     Int     @map("profile_id")
-  address       String  
+  id            Int           @id @default(autoincrement())
+  profileId     Int           @map("profile_id")
+  address       String
   region        String
   city          String
   cityId        String
@@ -137,8 +137,8 @@ model Address {
   provinceId    String
   postcode      String
   contact       String
-  isMainAddress Boolean @default(false)
-  isShopAddress Boolean @default(false)
+  isMainAddress Boolean       @default(false)
+  isShopAddress Boolean       @default(false)
   Transaction   Transaction[]
 
   profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
@@ -154,45 +154,45 @@ model Session {
 }
 
 model User {
-  id              String       @id @default(cuid())
-  Role            Role         @default(USER)
+  id              String         @id @default(cuid())
+  Role            Role           @default(USER)
   name            String?
-  email           String?      @unique
+  email           String?        @unique
   emailVerified   DateTime?
   image           String?
-  balance         Int         @default(0)
+  balance         Int            @default(0)
   accounts        Account[]
   sessions        Session[]
-  profile         Profile?  
+  profile         Profile?
   shop            Shop?
   cart            Cart?
   bankAccount     BankAccount?
   withdrawal      Withdrawal[]
   Transaction     Transaction[]
-  SentMessage     Message[]   @relation("sender")
-  ReceivedMessage Message[]   @relation("recipient")
+  SentMessage     Message[]      @relation("sender")
+  ReceivedMessage Message[]      @relation("recipient")
   notifications   Notification[] @relation("user")
-  senderNotif   Notification[] @relation("sender")
+  senderNotif     Notification[] @relation("sender")
 }
 
 model Notification {
-  id            Int @unique @id @default(autoincrement())
-  userId        String @map("user_id")
-  body          String
-  senderId      String?
-  isSeen        Boolean @default(false)
-  createdAt     DateTime @default(now())
-  notifType     NotifType?
-  notifRole     NotifRole?
-  
-  user User @relation("user", fields: [userId], references: [id], onDelete: Cascade)
-  sender User? @relation("sender" ,fields: [senderId], references: [id], onDelete: Cascade)
+  id        Int        @id @unique @default(autoincrement())
+  userId    String     @map("user_id")
+  body      String
+  senderId  String?
+  isSeen    Boolean    @default(false)
+  createdAt DateTime   @default(now())
+  notifType NotifType?
+  notifRole NotifRole?
+
+  user   User  @relation("user", fields: [userId], references: [id], onDelete: Cascade)
+  sender User? @relation("sender", fields: [senderId], references: [id], onDelete: Cascade)
 }
 
 model Product {
-  id            Int @unique @id @default(autoincrement())
-  shopId        Int @map("shop_id")
-  categoryId    Int @map("category_id")
+  id            Int             @id @unique @default(autoincrement())
+  shopId        Int             @map("shop_id")
+  categoryId    Int             @map("category_id")
   name          String
   image         String?
   description   String?
@@ -200,158 +200,158 @@ model Product {
   stock         Int
   order         Order[]
   productInCart ProductInCart[]
-  averageRating Float @default(0.00)
-  weight        Int @default(100)
+  averageRating Float           @default(0.00)
+  weight        Int             @default(100)
 
   category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  shop Shop @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  shop     Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
 }
 
 model Category {
-  id            Int @id @default(autoincrement())
-  category      String
-  product       Product[]
+  id       Int       @id @default(autoincrement())
+  category String
+  product  Product[]
 }
 
 model Cart {
-  id            Int @unique @id @default(autoincrement())
-  userId        String @unique @map("user_id")
+  id            Int             @id @unique @default(autoincrement())
+  userId        String          @unique @map("user_id")
   productInCart ProductInCart[]
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model ProductInCart {
-  id           Int @id @default(autoincrement())
-  cartId       Int @map("cart_id")
-  productId    Int @map("product_id")
-  count        Int
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @default(now())
+  id        Int      @id @default(autoincrement())
+  cartId    Int      @map("cart_id")
+  productId Int      @map("product_id")
+  count     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 
-  cart Cart @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  cart    Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
 model Transaction {
-  id                String @id @default(cuid())
-  userId            String @map("user_id")
-  shopId            Int @map("shop_id")
-  userAddressId     Int @map("address_id")
-  status            TransactionStatus @default(UNPAID)
-  etdArrive         String?
-  shippingCost      Int?
-  service           String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @default(now())
-  paymentMethod     String
-  order             Order[]
+  id            String            @id @default(cuid())
+  userId        String            @map("user_id")
+  shopId        Int               @map("shop_id")
+  userAddressId Int               @map("address_id")
+  status        TransactionStatus @default(UNPAID)
+  etdArrive     String?
+  shippingCost  Int?
+  service       String?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @default(now())
+  paymentMethod String
+  order         Order[]
 
-  user              User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userAddress       Address @relation(fields: [userAddressId], references: [id], onDelete: Cascade)
-  shop              Shop @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userAddress Address @relation(fields: [userAddressId], references: [id], onDelete: Cascade)
+  shop        Shop    @relation(fields: [shopId], references: [id], onDelete: Cascade)
 }
 
 model Order {
-  id              Int @id @default(autoincrement())
-  transactionId   String @map("transaction_id")
-  productId       Int @map("product_id")
-  count           Int
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @default(now())
-  OrderStatus     OrderStatus @default(ONGOING)
-  Rating          Rating?
-  Complain        Complain?
-  
-  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  id            Int         @id @default(autoincrement())
+  transactionId String      @map("transaction_id")
+  productId     Int         @map("product_id")
+  count         Int
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @default(now())
+  OrderStatus   OrderStatus @default(ONGOING)
+  Rating        Rating?
+  Complain      Complain?
+
+  product     Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
   transaction Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
 }
 
 model Rating {
-  id              Int @id @default(autoincrement())
-  orderId          Int @map("order_id") @unique
-  rate            Int
-  comment         String?
-  image           String?
-  
-  order           Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  id      Int     @id @default(autoincrement())
+  orderId Int     @unique @map("order_id")
+  rate    Int
+  comment String?
+  image   String?
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
 }
 
 model Event {
-  id              Int @id @default(autoincrement())
-  startDate       DateTime
-  endDate         DateTime
-  image           String
-  eventPath       String
-  eventName       String
+  id        Int      @id @default(autoincrement())
+  startDate DateTime
+  endDate   DateTime
+  image     String
+  eventPath String
+  eventName String
 }
 
 model Complain {
-  id                Int @id @default(autoincrement())
-  orderId            Int @map("order_id") @unique
-  image             String
-  description       String
-  status            ComplainStatus @default(OPEN)
-  ShopComment       ShopComment?
+  id          Int            @id @default(autoincrement())
+  orderId     Int            @unique @map("order_id")
+  image       String
+  description String
+  status      ComplainStatus @default(OPEN)
+  ShopComment ShopComment?
 
-  order             Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
 }
 
 model ShopComment {
-  id                Int @id @default(autoincrement())
-  complainId        Int @map("Complain_id") @unique
-  image             String
-  description       String
-  
+  id          Int    @id @default(autoincrement())
+  complainId  Int    @unique @map("Complain_id")
+  image       String
+  description String
+
   complain Complain @relation(fields: [complainId], references: [id], onDelete: Cascade)
 }
 
 model BankType {
-  id          Int      @id @default(autoincrement())
-  name        String
-  account     BankAccount[]
+  id      Int           @id @default(autoincrement())
+  name    String
+  account BankAccount[]
 }
 
 model BankAccount {
-  id          Int      @id @default(autoincrement())
-  bankTypeId  Int      @map("bankType_id")
-  userId      String   @unique @map("user_id")
-  name        String
-  number      String   @unique
+  id         Int    @id @default(autoincrement())
+  bankTypeId Int    @map("bankType_id")
+  userId     String @unique @map("user_id")
+  name       String
+  number     String @unique
 
-  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  bank        BankType     @relation(fields: [bankTypeId], references: [id], onDelete: Cascade)
+  user User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bank BankType @relation(fields: [bankTypeId], references: [id], onDelete: Cascade)
 }
 
 model Withdrawal {
-  id          Int               @id @default(autoincrement())
-  userId      String            @map("user_id")
+  id          Int              @id @default(autoincrement())
+  userId      String           @map("user_id")
   amount      Int
-  BalanceType BalanceType       @default(USER)
-  status      WithdrawalStatus  @default(REQUESTED)
+  BalanceType BalanceType      @default(USER)
+  status      WithdrawalStatus @default(REQUESTED)
 
-  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Conversation {
-  id          Int @id @default(autoincrement())
-  createdAt   DateTime @default(now())
-  messages    Message[]
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  messages  Message[]
 }
 
 model Message {
-  id              Int @id @default(autoincrement())
-  conversationId  Int?
-  message         String
-  senderId        String 
-  sender          User? @relation("sender", fields: [senderId], references: [id], onDelete: Cascade)
-  recipientId     String 
-  recipient       User? @relation("recipient", fields: [recipientId], references: [id], onDelete: Cascade)
-  createdAt       DateTime @default(now())
-  isSeen          Boolean @default(false)
-  image           String?
-  
-  conversation    Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  id             Int      @id @default(autoincrement())
+  conversationId Int?
+  message        String
+  senderId       String
+  sender         User?    @relation("sender", fields: [senderId], references: [id], onDelete: Cascade)
+  recipientId    String
+  recipient      User?    @relation("recipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  createdAt      DateTime @default(now())
+  isSeen         Boolean  @default(false)
+  image          String?
+
+  conversation Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 }
 
 model VerificationToken {

@@ -21,6 +21,7 @@ import CanceledModal from "@/components/shop/canceled_modal";
 import SellerCancelAlert from "@/components/transactions/seller_cancel_alert";
 import ProductItem from "@/components/shop/product_item";
 import { Address } from "@prisma/client";
+import { MdQueue } from "react-icons/md"
 interface Props {
   shop: {
     shopName: string,
@@ -88,7 +89,7 @@ const OrdersMania = ({ shop, products, address, transactions }: Props) => {
   const router = useRouter();
 
   console.log("SHOP: ", shop);
-  useEffect(()=> {
+  useEffect(() => {
     if (shop == null) {
       router.push('/shop/register')
     }
@@ -121,7 +122,7 @@ const OrdersMania = ({ shop, products, address, transactions }: Props) => {
         method: "PUT",
       }).then(() => router.reload());
     } catch (error) {
-      ////console.log(error)
+      console.log(error)
     }
   }
 
@@ -222,23 +223,28 @@ const OrdersMania = ({ shop, products, address, transactions }: Props) => {
   }
 
   const homeShop = () => {
-      return <div>
-        <div className='lg:flex lg:flex-row py-4 lg:space-x-2'>
-          <div id='dashboard-content' className='w-fit bg-gray-100 lg:p-5 space-y-2'>
-            <h1 className='hidden lg:block text-2xl'>Seller Home</h1>
-            <div id='new-item-input-container' className='lg:grid lg:grid-cols-5 w-full' >
-              <div className='cursor-pointer' onClick={() => onNewItem()}>
-                <div id='new-item-input' className='btn rounded-md border p-2 w-full bg-primary-focus lg:w-5/6 h-10 flex justify-center items-center hover:bg-transparent text-white hover:text-gray-700'>
-                  (+) New Item
+    return <div>
+      <div className='lg:flex lg:flex-row py-4 lg:space-x-2'>
+        <div id='dashboard-content' className='w-fit bg-gray-100 lg:p-5 space-y-2'>
+          <h1 className='hidden lg:block text-2xl'>Seller Home</h1>
+          <div id='new-item-input-container' className='lg:grid lg:grid-cols-5 w-full' >
+            <div className='cursor-pointer' onClick={() => onNewItem()}>
+              <div id='new-item-input' className='btn rounded-md p-2 w-full bg-primary-focus lg:w-5/6 h-10 flex justify-center items-center hover:bg-transparent text-white hover:text-gray-700'>
+                <div className="flex space-x-2 text-md">
+                  <MdQueue size={20}/>
+                  <p className="my-auto capitalize">
+                    Tambah Barang
+                  </p>
                 </div>
               </div>
             </div>
-            <div id='product-list' className='flex flex-row overflow-y-auto space-x-4 lg:space-x-0 lg:grid lg:grid-cols-5 lg:gap-y-10 w-full'>
-              {products?.map((product, i) => <ProductItem key={i} product={product} address={address} />)}
-            </div>
+          </div>
+          <div id='product-list' className='flex flex-row overflow-y-auto space-x-4 lg:space-x-0 lg:grid lg:grid-cols-5 lg:gap-y-10 w-full'>
+            {products?.map((product, i) => <ProductItem key={i} product={product} address={address} />)}
           </div>
         </div>
       </div>
+    </div>
   }
 
   return (
