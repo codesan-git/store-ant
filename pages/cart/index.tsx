@@ -106,6 +106,7 @@ export default function Cart({ cartItems, mainAddress }: Props) {
                   data-theme="garden"
                   className="card w-auto glass"
                   key={String(cartItem.id)}
+                  onClick={() => handleChange(String(cartItem.id))}
                 >         
                   <div className="flex">
                       <input className='w-5 ml-5' type="checkbox" value={String(cartItem.id)} onChange={e => {handleChange(e.target.value);}} />
