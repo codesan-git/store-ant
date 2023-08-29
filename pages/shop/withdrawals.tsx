@@ -45,7 +45,7 @@ export default function Withdraw({ bank, shop }: Data) {
     try {
       await axios.post('/api/profile/withdrawal/create', form).then(() => { router.back() });
     } catch (error: any) {
-      ////console.log(error);
+      console.log(error);
     }
   }
 

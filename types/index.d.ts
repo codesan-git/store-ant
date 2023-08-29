@@ -24,5 +24,8 @@ export type getTypeShop = Shop & {
 
 
 declare global {
-  let getShop: getTypeShop
+  let getShop: getTypeShop;
+  interface Window {
+    clipboardData: any;
+  }
 }
