@@ -16,6 +16,7 @@ export default function Validation() {
         phoneNumber: "",
         access_token: accessToken as string,
     });
+    const exceptThisSymbols = ["e", "E", "+", "-", ".", ","];
     //console.log("accessToken", accessToken);
 
     //console.log("form body", form);
@@ -56,13 +57,17 @@ export default function Validation() {
                                 type="text"
                                 name="phoneNumber"
                                 value={form?.phoneNumber}
+                                onKeyDown={e => exceptThisSymbols.includes(e.key) && e.preventDefault()}
                                 className="input input-bordered input-primary w-full rounded-md h-10 px-4 text-sm peer bg-gray-100 outline-none"
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        phoneNumber: e.target.value,
-                                        access_token: accessToken as string,
-                                    })
+                                onChange={(e) => {
+                                    if(e.target.value.length <= 13){
+                                        setForm({
+                                            ...form,
+                                            phoneNumber: e.target.value,
+                                            access_token: accessToken as string,
+                                        })
+                                    }
+                                }
                                 }
                             />
                             <label

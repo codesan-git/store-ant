@@ -1,4 +1,4 @@
-import { Product, ProductInCart, Shop, TransactionStatus } from "@prisma/client";
+import { Address, Product, ProductInCart, Profile, Shop, TransactionStatus, Transaction as PrismaTransaction } from "@prisma/client";
 import axios from "axios";
 import Image from "next/image";
 import { Fragment, useEffect, useState } from "react";
@@ -19,23 +19,31 @@ interface Order {
   product: Product
 }
 
-interface Transaction {
-  id: number,
-  userId: number,
-  shopId: number,
-  status: TransactionStatus,
-  createdAt: Date,
-  updatedAt: Date,
-  paymentMethod: string,
+interface Transaction extends PrismaTransaction {
   order: Order[],
   shop: {
-    shopName: string
-  } 
+    userId: string,
+    shopName: string,
+    user: {
+      profile: Profile
+      & {
+        addresses: Address[]
+      }
+    }
+  },
 }
 
 const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => {
 
-	
+	const formatter = new Intl.NumberFormat(
+		'id-ID',
+		{
+			style: 'currency',
+			currency: 'IDR',
+			
+		}
+	);
+
 	const { 
 		transactionModalIsHidden, 
 		setTransactionModalIsHidden,
@@ -44,6 +52,8 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
 	
 	const { selectedTransaction: transaction } : { selectedTransaction: Transaction | undefined} = getTransactionDetail(); //this is pretty cursed lol -
 	const [shop, setShop] = useState<Shop>();
+
+	const address = transaction?.shop.user.profile.addresses[0];
 	
 	const fetchShop = async () => {
 		try {
@@ -91,7 +101,7 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
 							{order?.product.name}
 						</div>
 						<div className=" p-0.5">
-							Total: Rp {total.toString()}
+							{formatter.format(total).split(/\,[0-9][0-9]/)}
 						</div>
 					</div>
 				</div>
@@ -123,6 +133,12 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
 
     return total;
   }
+
+	const calculateTransactionAndDeliveryFeeTotal = (): Number => {
+		const total = calculateTransactionTotal().valueOf() + (transaction?.shippingCost?? 0);
+
+		return total;
+	}
 
   return (
 		<Fragment>
@@ -159,7 +175,7 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
 									{transaction?.order.map((order) => productItem(order))}
 								</div>
 								<div className="">
-									<h1 className="font-bold flex justify-end">Total Belanja: Rp {calculateTransactionTotal().toString()}</h1>
+									<h1 className="font-bold flex justify-end">Total Belanja: {formatter.format(calculateTransactionTotal().valueOf()).split(/\,\d\d/)}</h1>
 								</div>
 							</div>
 							<div id="delivery-details">
@@ -172,8 +188,8 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
 										:
 									</div>
 									<div className="w-full">
-										<p>StoreAnt Aja - Reguler</p>
-										<p className="italic">{`(Estimasi Tiba: 30 Juni 2023)`}</p>
+										<p>{transaction?.service?.toString()}</p>
+										<p className="italic">{`(Estimasi Tiba: ${transaction?.etdArrive?? ''})`}</p>
 									</div>
 								</div>
 								<div id="address-details" className="flex flex-row space-x-2">
@@ -185,8 +201,8 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
 									</div>
 									<div className="w-full">
 										<p className="font-bold">{shop?.shopName}</p>
-										<p>081234567890</p>
-										<p className="mt-2">Jalan Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque esse minus necessitatibus adipisci qua</p>
+										<p>{address?.contact}</p>
+										<p className="mt-2">J{address?.address}, {address?.region}, {address?.city}, {address?.province}</p>
 									</div>
 								</div>
 							</div>
@@ -200,7 +216,7 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
 										:
 									</div>
 									<div className="">
-										{transaction?.paymentMethod.toString()}
+										{transaction?.paymentMethod?? '-'}
 									</div>
 								</div>
 								<div id="total-spent" className="flex flex-row">
@@ -211,7 +227,7 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
 										:
 									</div>
 									<div className="">
-										Rp {calculateTransactionTotal().toString()}
+										{formatter.format(calculateTransactionTotal().valueOf()).split(/\,\d\d/)}
 									</div>
 								</div>
 								<div id="delivery-expense" className="flex flex-row">
@@ -222,7 +238,7 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
 										:
 									</div>
 									<div className="">
-										Rp 0
+										{formatter.format(transaction?.shippingCost?? 0).split(/\,\d\d/)}
 									</div>
 								</div>
 								<hr className="h-px my-2 bg-black border-0"/>
@@ -234,7 +250,7 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
 										:
 									</div>
 									<div className="">
-										Rp 123,456
+										{formatter.format(calculateTransactionAndDeliveryFeeTotal().valueOf()).split(/\,\d\d/)}
 									</div>
 								</div>
 							</div>

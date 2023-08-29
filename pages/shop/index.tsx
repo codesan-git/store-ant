@@ -248,7 +248,7 @@ const OrdersMania = ({ shop, products, address, transactions }: Props) => {
   }
 
   return (
-    <div>
+    <div className="p-2">
       {shop ? (
         <div>
           <Navbar />

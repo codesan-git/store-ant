@@ -8,7 +8,7 @@ import useSWR from "swr";
 import { Category } from "@prisma/client";
 import axios from "axios";
 import { HiOutlineCamera, HiOutlinePhoto } from "react-icons/hi2";
-import { getStorage, ref, uploadBytesResumable, getDownloadURL  } from "firebase/storage";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import Navbar from "../navbar";
 
 const fetchProducts = async (url: string) => {
@@ -49,11 +49,11 @@ export default function CreateProduct() {
     console.log("url length: ", urls.length);
     console.log("files length: ", selectedFiles.length);
     console.log("condition: ", selectedFiles.length == urls.length);
-    if(urls.join(",") != "" && urls.length == selectedFiles.length){
-      const data = {name: form.name, price: form.price, stock: form.stock, image: urls.join(","), description: form.description, categoryId: form.categoryId};
+    if (urls.join(",") != "" && urls.length == selectedFiles.length) {
+      const data = { name: form.name, price: form.price, stock: form.stock, image: urls.join(","), description: form.description, categoryId: form.categoryId };
       axios.post('/api/product/create', data).then(() => { router.back(); });
     }
-  },[urls]);
+  }, [urls]);
 
   const { data, isLoading } = useSWR<{ categories: Array<Category> }>(
     `/api/category/`,
@@ -92,7 +92,7 @@ export default function CreateProduct() {
 
   async function handleUpload() {
     setIsProcessing(true);
-    const promises : any[] = [];
+    const promises: any[] = [];
     const storage = getStorage();
 
     selectedFiles.map((file) => {
@@ -130,7 +130,7 @@ export default function CreateProduct() {
   const handleQuantityChange = (event: ChangeEvent<HTMLInputElement>) => {
     const quantity = Number(event.target.value);
 
-    if(quantity < 0) return;
+    if (quantity < 0) return;
 
 
     setForm({ ...form, stock: quantity.valueOf().toString() });
@@ -139,7 +139,7 @@ export default function CreateProduct() {
   const handlePriceChange = (event: ChangeEvent<HTMLInputElement>) => {
     const price = Number(event.target.value);
 
-    if(price < 0) return;
+    if (price < 0) return;
 
     setForm({ ...form, price: price.valueOf().toString() });
   }
@@ -202,132 +202,134 @@ export default function CreateProduct() {
   };
 
   return (
-    <div className="lg:px-36 space-y-4">
-      <Navbar/>
-      { isLoading? (
-            <div className="text-red-500">LOADING...</div>
-          ) : (
-            <></>
-          )}
-      <div id="title-hack-container" className="">
-        <section className="pl-4 lg:w-1/2 flex lg:flex-col lg:justify-center lg:items-center">
-          <div className="lg:w-5/6 justify-start">
-            <h1 className=" text-2xl  font-bold mb-2">Add Product</h1>
-          </div>
-        </section>
-      </div>
-      <form
-        action=""
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleUpload();
-        }}
-        className="lg:flex lg:flex-row"
-      >
-        <section className="px-4 lg:w-1/2 flex flex-col justify-center items-center space-y-4">
-          <div className="border-gray-600 border border-dashed rounded-xl flex justify-center items-center h-40 w-full lg:h-5/6 lg:w-5/6 relative">
-            <input
-              disabled={selectedFiles.length >= 5}
-              type="file"
-              accept=".jpg, .jpeg, .png, .webp"
-              name="product-image"
-              id="product-image-input"
-              className="w-full h-full cursor-pointer opacity-0 absolute"
-              onChange={({ target }) => {
-                handleFile(target);
-                if (target.files) {
-                  const file = target.files[0];
-                  if (file) setSelectedImage(URL.createObjectURL(file));
-                }
-              }}
-            />
-            {renderInputMessage()}
-          </div>
-          {renderSelectedImages()}
-        </section>
-        <section className="p-4 lg:w-1/2">
-          <div className=" space-y-4 flex flex-col">
-            <div className="flex flex-col space-y-1 w-full">
-              <label htmlFor="product-name-input" className="font-bold">
-                Name
-              </label>
-              <input
-                id="product-name-input"
-                name="product-name"
-                type="text"
-                className="p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white"
-                value={form?.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
-              />
+    <div className="p-2">
+      <Navbar />
+      <div className="mt-6 lg:px-36 space-y-4">
+        {isLoading ? (
+          <div className="text-red-500">LOADING...</div>
+        ) : (
+          <></>
+        )}
+        <div id="title-hack-container" className="">
+          <section className="pl-4 lg:w-1/2 flex lg:flex-col lg:justify-center lg:items-center">
+            <div className="lg:w-5/6 justify-start">
+              <h1 className=" text-2xl  font-bold mb-2">Add Product</h1>
             </div>
-            <div className="flex flex-col space-y-1 w-full">
-              <label htmlFor="product-category-input" className="font-bold">
-                Category
-              </label>
-              <select
-                name="product-category"
-                id="product-category-input"
-                className="p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white"
-                onChange={(e) => {
-                  e.preventDefault();
-                  setForm({ ...form, categoryId: e.target.value });
+          </section>
+        </div>
+        <form
+          action=""
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleUpload();
+          }}
+          className="lg:flex lg:flex-row"
+        >
+          <section className="px-4 lg:w-1/2 flex flex-col justify-center items-center space-y-4">
+            <div className="border-gray-600 border border-dashed rounded-xl flex justify-center items-center h-40 w-full lg:h-5/6 lg:w-5/6 relative">
+              <input
+                disabled={selectedFiles.length >= 5}
+                type="file"
+                accept=".jpg, .jpeg, .png, .webp"
+                name="product-image"
+                id="product-image-input"
+                className="w-full h-full cursor-pointer opacity-0 absolute"
+                onChange={({ target }) => {
+                  handleFile(target);
+                  if (target.files) {
+                    const file = target.files[0];
+                    if (file) setSelectedImage(URL.createObjectURL(file));
+                  }
                 }}
-              >
-                {data.categories.map((category) => (
-                  <option value={category.id} key={category.id}>
-                    {category.category}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="flex flex-col space-y-1 w-full">
-              <label htmlFor="product-quantity-input" className="font-bold">
-                Quantity
-              </label>
-              <input
-                id="product-quantity-input"
-                name="product-quantity"
-                type="number"                
-                onKeyDown={e => exceptThisSymbols.includes(e.key) && e.preventDefault()}
-                className="p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white"
-                value={form.stock}
-                onChange={handleQuantityChange}
               />
+              {renderInputMessage()}
             </div>
-            <div className="flex flex-col space-y-1 w-full">
-              <label htmlFor="product-price-input" className="font-bold">
-                Price
-              </label>
-              <input
-                id="product-price-input"
-                name="product-price"
-                type="number"
-                className="p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white"
-                value={form.price}                
-                onKeyDown={e => exceptThisSymbols.includes(e.key) && e.preventDefault()}
-                onChange={handlePriceChange}
-              />
+            {renderSelectedImages()}
+          </section>
+          <section className="p-4 lg:w-1/2">
+            <div className=" space-y-4 flex flex-col">
+              <div className="flex flex-col space-y-1 w-full">
+                <label htmlFor="product-name-input" className="font-bold">
+                  Name
+                </label>
+                <input
+                  id="product-name-input"
+                  name="product-name"
+                  type="text"
+                  className="p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white"
+                  value={form?.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                />
+              </div>
+              <div className="flex flex-col space-y-1 w-full">
+                <label htmlFor="product-category-input" className="font-bold">
+                  Category
+                </label>
+                <select
+                  name="product-category"
+                  id="product-category-input"
+                  className="p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white"
+                  onChange={(e) => {
+                    e.preventDefault();
+                    setForm({ ...form, categoryId: e.target.value });
+                  }}
+                >
+                  {data.categories.map((category) => (
+                    <option value={category.id} key={category.id}>
+                      {category.category}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex flex-col space-y-1 w-full">
+                <label htmlFor="product-quantity-input" className="font-bold">
+                  Quantity
+                </label>
+                <input
+                  id="product-quantity-input"
+                  name="product-quantity"
+                  type="number"
+                  onKeyDown={e => exceptThisSymbols.includes(e.key) && e.preventDefault()}
+                  className="p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white"
+                  value={form.stock}
+                  onChange={handleQuantityChange}
+                />
+              </div>
+              <div className="flex flex-col space-y-1 w-full">
+                <label htmlFor="product-price-input" className="font-bold">
+                  Price
+                </label>
+                <input
+                  id="product-price-input"
+                  name="product-price"
+                  type="number"
+                  className="p-2 h-10 border rounded-lg border-gray-400 focus:border-none focus:border-white"
+                  value={form.price}
+                  onKeyDown={e => exceptThisSymbols.includes(e.key) && e.preventDefault()}
+                  onChange={handlePriceChange}
+                />
+              </div>
+              <div className="flex flex-col space-y-1 w-full">
+                <label htmlFor="" className="font-bold">
+                  Description
+                </label>
+                <textarea
+                  name="product-description"
+                  id="product-description-input"
+                  className="resize-none p-2 h-48 border rounded-lg border-gray-400 focus:border-none focus:border-white"
+                  value={form?.description}
+                  onChange={(e) =>
+                    setForm({ ...form, description: e.target.value })
+                  }
+                />
+              </div>
+              <button className="h-10 lg:w-36 rounded text-white bg-indigo-700">
+                Submit
+              </button>
             </div>
-            <div className="flex flex-col space-y-1 w-full">
-              <label htmlFor="" className="font-bold">
-                Description
-              </label>
-              <textarea
-                name="product-description"
-                id="product-description-input"
-                className="p-2 h-48 border rounded-lg border-gray-400 focus:border-none focus:border-white"
-                value={form?.description}
-                onChange={(e) =>
-                  setForm({ ...form, description: e.target.value })
-                }
-              />
-            </div>
-            <button className="h-10 lg:w-36 rounded text-white bg-indigo-700">
-              Submit
-            </button>
-          </div>
-        </section>
-      </form>
+          </section>
+        </form>
+      </div>
     </div>
   );
 }

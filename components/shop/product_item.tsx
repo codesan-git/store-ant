@@ -31,7 +31,6 @@ const ProductItem = ({ product, address } : Props) => {
   const formatter = new Intl.NumberFormat('id-ID', {
     style: 'currency',
     currency: 'IDR',
-    maximumFractionDigits: 0
   });
 
   const formatPrice = formatter.format(product.price).toString();
@@ -64,7 +63,7 @@ const ProductItem = ({ product, address } : Props) => {
         <div id="card-body" className="w-64 lg:w-auto rounded-b-lg py-4 px-8 h-1/2 space-y-2 bg-white">
           <p className="text-xl font-bold truncate overflow-hidden">{product.name}</p>
           <h1 className="text-2xl font-bold">
-            {formatPrice}
+            {formatPrice.split(/\,[0-9][0-9]/)}
           </h1>
           <h1 className="text-sm">
             Qty: {product.stock}
