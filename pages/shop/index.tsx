@@ -17,9 +17,11 @@ import TerimaModal from "@/components/shop/terima_modal";
 import axios from "axios";
 import ProcessModal from "@/components/transactions/process_modal";
 import ItemReceiveModal from "@/components/shop/item_receive";
+import CanceledModal from "@/components/shop/canceled_modal";
 import SellerCancelAlert from "@/components/transactions/seller_cancel_alert";
 import ProductItem from "@/components/shop/product_item";
 import { Address } from "@prisma/client";
+import { MdQueue } from "react-icons/md"
 interface Props {
   shop: {
     shopName: string,
@@ -87,7 +89,7 @@ const OrdersMania = ({ shop, products, address, transactions }: Props) => {
   const router = useRouter();
 
   console.log("SHOP: ", shop);
-  useEffect(()=> {
+  useEffect(() => {
     if (shop == null) {
       router.push('/shop/register')
     }
@@ -102,15 +104,6 @@ const OrdersMania = ({ shop, products, address, transactions }: Props) => {
   const [currentCartItemId, setCurrentCartItemId] = useState<Number>();
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction>();
   const [transactionModalIsHidden, setTransactionModalIsHidden] = useState<Boolean>(true);
-
-  // const [sellerShop, setSellerShop] = useState<Props>({
-  //   shop: {
-  //     shopName: shop?.shop?.shopName,
-  //     balance: shop?.shop?.balance,
-  //     image: shop?.shop?.image,
-  //     averageRating: shop?.shop?.averageRating
-  //   }
-  // })
 
   useEffect(() => { }, [itemsToDisplay]);
 
@@ -129,7 +122,7 @@ const OrdersMania = ({ shop, products, address, transactions }: Props) => {
         method: "PUT",
       }).then(() => router.reload());
     } catch (error) {
-      ////console.log(error)
+      console.log(error)
     }
   }
 
@@ -221,6 +214,7 @@ const OrdersMania = ({ shop, products, address, transactions }: Props) => {
               onTolak={onTolak}
               onProcess={onSelect}
               onItemReceive={onSelect}
+              onCanceled={onSelect}
             />
           )
         }
@@ -229,45 +223,37 @@ const OrdersMania = ({ shop, products, address, transactions }: Props) => {
   }
 
   const homeShop = () => {
-      return <div>
-        <div className='lg:flex lg:flex-row py-4 lg:space-x-2'>
-          <div id='dashboard-content' className='w-full bg-gray-100 lg:p-5 space-y-2'>
-            <h1 className='hidden lg:block text-2xl'>Seller Home</h1>
-            <div id='new-item-input-container' className='lg:grid lg:grid-cols-5 w-full' >
-              <div className='cursor-pointer' onClick={() => onNewItem()}>
-                <div id='new-item-input' className='border-dashed border-2 border-black p-2 w-full lg:w-5/6 h-10 flex justify-center items-center'>
-                  <h1>{'(+) New Item'}</h1>
+    return <div>
+      <div className='lg:flex lg:flex-row py-4 lg:space-x-2'>
+        <div id='dashboard-content' className='w-fit bg-gray-100 lg:p-5 space-y-2'>
+          <h1 className='hidden lg:block text-2xl'>Seller Home</h1>
+          <div id='new-item-input-container' className='lg:grid lg:grid-cols-5 w-full' >
+            <div className='cursor-pointer' onClick={() => onNewItem()}>
+              <div id='new-item-input' className='btn rounded-md p-2 w-full bg-primary-focus lg:w-5/6 h-10 flex justify-center items-center hover:bg-transparent text-white hover:text-gray-700'>
+                <div className="flex space-x-2 text-md">
+                  <MdQueue size={20}/>
+                  <p className="my-auto capitalize">
+                    Tambah Barang
+                  </p>
                 </div>
               </div>
             </div>
-            <div id='product-list' className='flex flex-row overflow-y-auto space-x-4 lg:space-x-0 lg:grid lg:grid-cols-5 lg:gap-y-10 w-full'>
-              {products?.map((product, i) => <ProductItem key={i} product={product} address={address} />)}
-            </div>
+          </div>
+          <div id='product-list' className='flex flex-row overflow-y-auto space-x-4 lg:space-x-0 lg:grid lg:grid-cols-5 lg:gap-y-10 w-full'>
+            {products?.map((product, i) => <ProductItem key={i} product={product} address={address} />)}
           </div>
         </div>
       </div>
+    </div>
   }
 
-  // function onNewItem() {
-  //   if (address != null)
-  //     router.push('product/create');
-  //   else
-  //     alert("Silahkan atur alamat toko terlebih dahulu.");
-  // }
-
-  //console.log(`transaction`, transactions)
-  //console.log(`name shop`, shop)
-  //console.log(`products bang`, products)
-  //console.log(`address`, address)
-  // //console.log(`sellerShop`, sellerShop)
-
   return (
-    <div>
+    <div className="p-2">
       {shop ? (
         <div>
           <Navbar />
           <div className="flex lg:flex-row flex-col py-4 space-y-2 lg:space-y-0 lg:space-x-2">
-            <div id="transactions-dashboard-container" className="lg:w-1/6 lg:h-full lg:sticky lg:top-24">
+            <div id="transactions-dashboard-container" className="w-96 lg:h-full lg:sticky lg:top-24">
               <SellerDashboard TransactionDashboardArguments={TransactionDashboardArguments} shop={{ shopName: shop.shopName, image: shop.image, balance: shop.balance, averageRating: shop.averageRating }} />
             </div>
             {
@@ -286,6 +272,7 @@ const OrdersMania = ({ shop, products, address, transactions }: Props) => {
             }
           </div>
           {/* <ReviewModal htmlElementId={`review-modal`} selectProductCallback={getCurrentSelectedProductForRate} /> */}
+          <CanceledModal htmlElementId={`canceled-modal`} selectProductCallback={getTransactionDetail} />
           <TerimaModal htmlElementId={`terima-modal`} selectProductCallback={getTransactionDetail} />
           <ProcessModal htmlElementId={`process-modal`} selectProductCallback={getTransactionDetail} />
           <ItemReceiveModal htmlElementId={`itemreceive-modal`} selectProductCallback={getTransactionDetail} />

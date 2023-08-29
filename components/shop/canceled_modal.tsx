@@ -27,7 +27,7 @@ interface Cost {
   service: string
 }
 
-const PaymentModal = ({ htmlElementId: id, selectProductCallback }: Props) => {
+const CanceledModal = ({ htmlElementId: id, selectProductCallback }: Props) => {
   const {
     selectedTransaction
   } = selectProductCallback();
@@ -55,26 +55,14 @@ const PaymentModal = ({ htmlElementId: id, selectProductCallback }: Props) => {
     //console.log(isUsingBalance);
   };
 
-  async function onBayar() {
-    const params: Params = { id: selectedTransaction.id, price: totalPrice + cost?.cost[0].value! };
-    const transactionToken: TransactionToken = (await axios.post(`/api/cart/pay`, params)).data;
-    window.open(transactionToken.redirectUrl);
-  }
-
-  async function onBayarDenganSaldo() {
-    const params: Params = { id: selectedTransaction.id, price: totalPrice + cost?.cost[0].value! };
-    const transactionToken: TransactionToken = (await axios.post(`/api/cart/paywithbalance`, params)).data;
-    window.open(transactionToken.redirectUrl);
-  }
-
-  async function onTerima() {
-    await axios.put(`/api/shop/deliver`, {
+  async function onCanceled() {
+    await axios.put(`/api/shop/cancel`, {
       id: selectedTransaction?.id
     }).then(router.reload)
   }
 
   const onSubmit = async () => {
-    onTerima()
+    onCanceled()
   }
 
   const getCost = async () => {
@@ -106,7 +94,7 @@ const PaymentModal = ({ htmlElementId: id, selectProductCallback }: Props) => {
       <div id={id} className="modal modal-bottom sm:modal-middle">
         <div className="modal-box space-y-2">
           <div className="flex">
-            <h1 className="text-lg font-bold">Konfirmasi</h1>
+            <h1 className="text-lg font-bold">Konfirmasi Pembatalan</h1>
             <div className="w-full flex justify-end" onClick={onClose}>
               <label htmlFor={id} className="text-lg font-bold">✕</label>
             </div>
@@ -141,12 +129,6 @@ const PaymentModal = ({ htmlElementId: id, selectProductCallback }: Props) => {
               <p>Estimasi Pengiriman: {cost?.cost[0]?.etd} hari</p>
               <p>Biaya: {formatter.format(cost?.cost[0]?.value!)}</p>
               <h1 className="text-md">Total: {formatter.format(totalPrice + cost?.cost[0]?.value!)}</h1>
-              {/* <form id="review-form" action="" className="py-1 space-y-1">
-                <label>
-                  <input type="checkbox" checked={isUsingBalance} onChange={handleChange} />
-                  Bayar dengan Saldo
-                </label>
-              </form> */}
               <div className="" onClick={onSubmit}>
                 <label htmlFor={id} className="h-10 w-full rounded text-white bg-indigo-700 hover:bg-indigo-900 hover:cursor-pointer flex justify-center items-center">
                   Terima
@@ -164,4 +146,4 @@ const PaymentModal = ({ htmlElementId: id, selectProductCallback }: Props) => {
   );
 };
 
-export default PaymentModal;
+export default CanceledModal;
