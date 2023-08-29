@@ -10,7 +10,7 @@ import TransactionItem from "@/components/transactions/transaction_item";
 import PaymentModal from "@/components/transactions/payment_modal";
 import CancelAlert from "@/components/transactions/user_cancel_alert";
 import DetailTransactionModal from "@/components/transactions/detail_transaction_modal";
-import { Product, Order as PrismaOrder, Transaction as PrismaTransaction, TransactionStatus } from "@prisma/client";
+import { Product, Order as PrismaOrder, Transaction as PrismaTransaction, TransactionStatus, Profile, Address } from "@prisma/client";
 import ComplainModal from "@/components/transactions/complain_modal";
 import RatingModal from "@/components/transactions/rating_modal";
 
@@ -29,20 +29,41 @@ interface Order {
   product: Product
 }
 
-interface Transaction {
-  id: string,
-  userId: string,
-  shopId: number,
-  status: TransactionStatus,
-  createdAt: Date,
-  updatedAt: Date,
-  paymentMethod: string,
+interface Transaction extends PrismaTransaction {
   order: Order[],
   shop: {
     userId: string,
-    shopName: string
+    shopName: string,
+    user: {
+      profile: Profile
+      & {
+        addresses: Address[]
+      }
+    }
   },
 }
+
+// interface Transaction {
+//   id: string,
+//   userId: string,
+//   shopId: number,
+//   status: TransactionStatus,
+//   createdAt: Date,
+//   updatedAt: Date,
+//   paymentMethod: string,
+//   shippingCost: number,
+//   order: Order[],
+//   shop: {
+//     userId: string,
+//     shopName: string,
+//     user: {
+//       profile: Profile
+//       & {
+//         addresses: Address[]
+//       }
+//     }
+//   },
+// }
 
 interface Props {
   newChatUserId?: string,
@@ -271,14 +292,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     where: {
       userId: session?.user.id
     },
-    select: {
-      id: true,
-      userId: true,
-      shopId: true,
-      status: true,
-      createdAt: true,
-      updatedAt: true,
-      paymentMethod: true,
+    include: {
       order: {
         include: {
           product: {
@@ -296,7 +310,21 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       shop: {
         select: {
           userId: true,
-          shopName: true
+          shopName: true,
+          user: {
+            include: {
+              profile: {
+                include: {
+                  addresses: {
+                    where: {
+                      isShopAddress: true
+                    },
+                  },
+                },
+                
+              }
+            }
+          }
         }
       }
     }
