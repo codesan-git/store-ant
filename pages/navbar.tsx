@@ -40,19 +40,6 @@ interface Notification {
   senderId: string | null;
 }
 
-// interface Messages {
-//   messages: MessageForm;
-//   recipient: User;
-//   shop: Shop;
-//   //conversation: Conversation;
-// }
-
-// interface MessageForm {
-//   senderId: string;
-//   recipientId: string;
-//   message: string;
-// }
-
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;

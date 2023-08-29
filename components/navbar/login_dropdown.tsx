@@ -83,6 +83,13 @@ const LoginDropdown = ({session, onLogoutClick}: Props) => {
             </Link>
           </li>
           <li>
+            <Link href={{
+              pathname: "/withdraw"
+            }}>
+              Withdraw
+            </Link>
+          </li>
+          <li>
             <button onClick={onLogoutClick}>Logout</button>
           </li>
         </ul>
