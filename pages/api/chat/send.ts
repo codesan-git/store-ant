@@ -14,6 +14,7 @@ export default async function handler(
   //console.log("SEND ", message);
 
   let convoId;
+  const userId = session?.user?.id ?? '';
   
   const conversation = await prisma.conversation.findMany({
     include:{
@@ -54,13 +55,9 @@ export default async function handler(
     data:{
       userId: recipientId!,
       notifType: NotifType.CHAT,
-      body: `${session?.user.name} mengirimkan pesan.`
+      body: `${session?.user.name} mengirimkan pesan.`,
+      senderId: String(userId)
     }
   })
   res.status(200).json({ message: 'message created' })
-  // try {
-  // } catch (error) {
-  //   ////console.log(error)
-  //   res.status(400).json({ message: "Fail" })
-  // }
 }
