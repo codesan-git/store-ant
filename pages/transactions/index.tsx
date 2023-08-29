@@ -29,15 +29,7 @@ interface Order {
   product: Product
 }
 
-interface Transaction {
-  id: string,
-  userId: string,
-  shopId: number,
-  status: TransactionStatus,
-  createdAt: Date,
-  updatedAt: Date,
-  paymentMethod: string,
-  shippingCost: number,
+interface Transaction extends PrismaTransaction {
   order: Order[],
   shop: {
     userId: string,
@@ -50,6 +42,28 @@ interface Transaction {
     }
   },
 }
+
+// interface Transaction {
+//   id: string,
+//   userId: string,
+//   shopId: number,
+//   status: TransactionStatus,
+//   createdAt: Date,
+//   updatedAt: Date,
+//   paymentMethod: string,
+//   shippingCost: number,
+//   order: Order[],
+//   shop: {
+//     userId: string,
+//     shopName: string,
+//     user: {
+//       profile: Profile
+//       & {
+//         addresses: Address[]
+//       }
+//     }
+//   },
+// }
 
 interface Props {
   newChatUserId?: string,
@@ -278,15 +292,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     where: {
       userId: session?.user.id
     },
-    select: {
-      id: true,
-      userId: true,
-      shopId: true,
-      status: true,
-      createdAt: true,
-      updatedAt: true,
-      paymentMethod: true,
-      shippingCost: true,
+    include: {
       order: {
         include: {
           product: {

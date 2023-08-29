@@ -15,15 +15,7 @@ interface Order {
   product: Product
 }
 
-interface Transaction {
-  id: string,
-  userId: string,
-  shopId: number,
-  status: TransactionStatus,
-  createdAt: Date,
-  updatedAt: Date,
-  paymentMethod: string,
-  shippingCost:  number,
+interface Transaction extends PrismaTransaction {
   order: Order[],
   shop: {
     userId: string,
