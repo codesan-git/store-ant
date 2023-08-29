@@ -222,17 +222,23 @@ export default function Profile({ profile, user, address, provinceData, cityData
         method: "POST",
       }).then(() => {
         router.push(router.asPath);
-        alert("Alamat Toko Utama Berhasil Diubah!");
+        alert("Alamat Toko Utama Berhasil Diubah!")
       });
     } catch (error) {
       ////console.log(error);
     }
   }
 
-  const onDeleteAddress = async (id: number) => {
-    await deleteAddress(id);
-    const updatedAddresses = await getAllAddress();
-    setAddresses(updatedAddresses);
+  const onDeleteAddress = async (address: Address) => {
+    if(address.isShopAddress)
+      alert("Tidak bisa menghapus alamat toko");
+    else if(address.isMainAddress)
+      alert("Tidak bisa menghapus alamat utama");
+    else{
+      await deleteAddress(address.id);
+      const updatedAddresses = await getAllAddress();
+      setAddresses(updatedAddresses);
+    }
   }
 
   async function changePhoto(file: any) {
@@ -891,7 +897,7 @@ export default function Profile({ profile, user, address, provinceData, cityData
                             )}
                           </div>
                           <p className="text-primary hidden lg:block">|</p>
-                          <label className="text-primary-focus cursor-pointer" onClick={() => onDeleteAddress(address.id)} htmlFor="address-alert">Hapus</label>
+                          <label className="text-primary-focus cursor-pointer" onClick={() => onDeleteAddress(address)} htmlFor="address-alert">Hapus</label>
                         </div>
                       </div>
                     </div>
@@ -987,7 +993,6 @@ export default function Profile({ profile, user, address, provinceData, cityData
           </Tabs>
         </div>
       </div>
-      <DeleteAddressAlert htmlElementId={`address-alert`} addressId={selectedAddressId} />
       <Footer />
     </>
   );
