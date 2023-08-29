@@ -154,7 +154,7 @@ export default function Cart({ cartItems, mainAddress }: Props) {
           <button disabled={true} onClick={()=> onCheckout()} className='w-36 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
             Checkout
           </button>      
-          <button disabled={true} className='ml-5 w-36 btn bg-red-400 hover:bg-red-300 hover:border-gray-500 text-white border-transparent'>
+          <button disabled={data.length === 0} className='ml-5 w-36 btn bg-red-400 hover:bg-red-300 hover:border-gray-500 text-white border-transparent'>
             <label htmlFor="cart-alert">
               Delete
             </label>
