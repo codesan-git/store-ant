@@ -316,7 +316,7 @@ export default function CreateProduct() {
                 <textarea
                   name="product-description"
                   id="product-description-input"
-                  className="p-2 h-48 border rounded-lg border-gray-400 focus:border-none focus:border-white"
+                  className="resize-none p-2 h-48 border rounded-lg border-gray-400 focus:border-none focus:border-white"
                   value={form?.description}
                   onChange={(e) =>
                     setForm({ ...form, description: e.target.value })
