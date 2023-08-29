@@ -36,10 +36,16 @@ export default function Withdraw({ bank }: BankData) {
   const router = useRouter();
 
   const handleUpload = async () => {
-    try {
-      await axios.post('/api/profile/withdrawal/create', form).then(() => { router.back() });
-    } catch (error: any) {
-      //console.log(error);
+    if (Number(form.amount) > Number(session?.user?.balance))
+      alert("Saldo tidak mencukupi");
+    else if (Number(form.amount) < 10000)
+      alert("Minimal penarikan 10000");
+    else {
+      try {
+        await axios.post('/api/profile/withdrawal/create', form).then(() => { router.back() });
+      } catch (error: any) {
+        ////console.log(error);
+      }
     }
   }
 
@@ -47,6 +53,8 @@ export default function Withdraw({ bank }: BankData) {
     style: 'currency',
     currency: 'IDR',
   });
+
+  const exceptThisSymbols = ["e", "E", "+", "-", ".", ","];
 
   const formatKas = () => formatter.format(session?.user?.balance!).toString();
 
@@ -100,6 +108,7 @@ export default function Withdraw({ bank }: BankData) {
                             type="number"
                             className="w-full h-10 mt-2 border rounded-lg border-gray-400 focus:border-none focus:border-white"
                             value={form?.amount}
+                            onKeyDown={e => exceptThisSymbols.includes(e.key) && e.preventDefault()}
                             onChange={(e) => setForm({ ...form, amount: e.target.value })}
                           />
                           <div className="text-right">

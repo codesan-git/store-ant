@@ -116,7 +116,8 @@ export default function Withdraw({ bank, shop }: Data) {
                             name="product-price"
                             type="number"
                             className="w-full h-10 mt-2 border rounded-lg border-gray-400 focus:border-none focus:border-white"
-                            value={form?.amount}
+                            value={form?.amount}                
+                            onKeyDown={e => exceptThisSymbols.includes(e.key) && e.preventDefault()}
                             onChange={(e) => setForm({ ...form, amount: e.target.value })}
                           />
                           <div className="text-right">
