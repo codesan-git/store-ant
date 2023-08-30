@@ -61,7 +61,7 @@ export default function Profile(shopData: ShopData) {
 					else
 						data = { name: name, image: shopData.shop.image };
 					await axios.put("/api/shop/profile", data);
-				}).then(() => router.reload());
+				}).then(() => router.push('/shop'));
 			}
 		);
 	}
