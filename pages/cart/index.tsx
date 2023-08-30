@@ -36,15 +36,17 @@ export default function Cart({ cartItems, mainAddress }: Props) {
   const [data, setData] = useState<string[]>([]); 
   const [checkoutClick, setCheckoutClick] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isChecked, setIsChecked] = useState<boolean[]>([]);
   const router = useRouter();
 
   if (cartItems) {
     cartItems.forEach((cartItem) => {
       cartItem.price = Number(cartItem.count) * Number(cartItem.product.price);
+      isChecked.push(false);
     });
   }
 
-  function handleChange(id: string) {
+  function handleChange(id: string, idx: number) {
     const newData = [...data];
     const index = newData.indexOf(id);
     if (index === -1) {
@@ -53,6 +55,9 @@ export default function Cart({ cartItems, mainAddress }: Props) {
       newData.splice(index, 1);
     }
     setData(newData);
+    let tempCheck = isChecked;
+    tempCheck[idx] = !tempCheck[idx];
+    setIsChecked(tempCheck);
 
     //console.log(newData);
     //console.log(id);
@@ -101,15 +106,15 @@ export default function Cart({ cartItems, mainAddress }: Props) {
           )}
           {cartItems ? (
             <div>
-              {cartItems.map((cartItem) => (
+              {cartItems.map((cartItem, i) => (
                 <div
                   data-theme="garden"
                   className="card w-auto glass"
                   key={String(cartItem.id)}
-                  onClick={() => handleChange(String(cartItem.id))}
+                  onClick={() => handleChange(String(cartItem.id), i)}
                 >         
                   <div className="flex">
-                      <input className='w-5 ml-5' type="checkbox" value={String(cartItem.id)} onChange={e => {handleChange(e.target.value);}} />
+                      <input className='w-5 ml-5' type="checkbox" checked={isChecked[i]} value={String(cartItem.id)} onChange={e => {handleChange(e.target.value, i);}} />
                       <div className="card-body py-5">
                           <figure className="rounded-md h-40 w-40">
                               {cartItem.product.image? (
