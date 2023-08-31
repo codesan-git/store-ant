@@ -54,7 +54,7 @@ const TransactionItem = ({ transaction, onRate: onRateClick, onBayar, onCancel, 
   });
 
   const onPenjualClick = () => {
-    router.push(`/transactions?newChatUserId=${transaction.shop.userId}`);
+    router.push(`/chat?newChatUserId=${transaction.shop.userId}`);
   }
 
   const renderTransactionDate = () => { //TODO: try using locale format function next time

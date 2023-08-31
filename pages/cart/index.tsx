@@ -104,7 +104,7 @@ export default function Cart({ cartItems, mainAddress }: Props) {
 
   return (
     <div>
-      <Navbar />
+      {/* <Navbar profile={} /> */}
       <div className="px-32 my-8 flex-col gap-10 cursor-pointer">
         {isLoading ? (
           <div className="text-red-500">LOADING...</div>
