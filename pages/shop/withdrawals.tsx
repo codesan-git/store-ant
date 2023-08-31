@@ -9,6 +9,7 @@ import { getSession, useSession } from "next-auth/react";
 import { AiFillBank } from 'react-icons/ai'
 import Footer from "../footer";
 import Navbar from "../navbar";
+import { BiArrowBack } from "react-icons/bi";
 
 interface FormData {
   amount: string;
@@ -43,11 +44,11 @@ export default function Withdraw({ bank, shop }: Data) {
   const formatKas = () => formatter.format(shop.balance).toString();
 
   const handleUpload = async () => {
-    if(Number(form.amount) > shop.balance)
+    if (Number(form.amount) > shop.balance)
       alert("Saldo tidak mencukupi");
-    else if(Number(form.amount) < 10000)
+    else if (Number(form.amount) < 10000)
       alert("Minimal penarikan 10000");
-    else{
+    else {
       try {
         await axios.post('/api/profile/withdrawal/create', form).then(() => { router.back() });
       } catch (error: any) {
@@ -60,80 +61,92 @@ export default function Withdraw({ bank, shop }: Data) {
     <>
       <Navbar />
       <div className="w-full h-[80vh]">
-        <div className="my-14 lg:my-20">
-          <div className="mx-auto w-full lg:w-1/2">
-            <div className="lg:px-24 py-1">
-              <div className="flex font-bold text-lg lg:text-2xl"><AiFillBank className="my-auto mr-2 w-6 h-6 lg:w-8 lg:h-8" />Withdraw Form</div>
-            </div>
+        <div className="mx-96 my-12">
+          <div className="flex space-x-1 cursor-pointer px-8 my-4" onClick={() => router.back()}>
+            <BiArrowBack className="my-auto" />
+            <p className="font-bold">Kembali</p>
           </div>
-          {bank ? (
-            <div>
-              <div className="flex">
-                <div className="m-auto p-10 lg:grid lg:grid-cols-2 border rounded-lg border-gray-500 gap-4">
-                  <div className="border border-gray-500 rounded-lg p-5 mb-5 lg:mb-0">
-                    <h1 className="text-xl font-bold mb-2">Information</h1>
-                    <div className="mb-4">
-                      <h3 className="font-bold text-gray-600">
-                        Bank:
-                      </h3>
-                      <h3 className="text-gray-600">
-                        Name: {bank.name}
-                      </h3>
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-gray-600">
-                        Shop:
-                      </h3>
-                      <h3 className="text-gray-600">
-                        Name: {shop.shopName}
-                      </h3>
-                      <h3 className="text-gray-600">
-                        Balance: {formatKas()}
-                      </h3>
-                    </div>
-                  </div>
-                  <div className="border border-gray-500 rounded-lg p-5 gap-4">
-                    <div className="flex gap-4">
-                      <h3 className="font-bold">
-                        Account Number: <span className="font-normal">{bank.number}</span>
-                      </h3>
-                      <h3 className="font-bold">
-                        Bank: <span className="font-normal">{bank.bank.name}</span>
-                      </h3>
-                    </div>
-                    <div className="my-4">
-                      <h3 className="font-bold text-center">
-                        Withdrawal Amount
-                      </h3>
-                      <input
-                        id="product-price-input"
-                        name="product-price"
-                        type="number"
-                        className="w-full h-10 mt-2 border rounded-lg border-gray-400 focus:border-none focus:border-white"
-                        value={form?.amount}                
-                        onKeyDown={e => exceptThisSymbols.includes(e.key) && e.preventDefault()}
-                        onChange={(e) => setForm({ ...form, amount: e.target.value })}
-                      />
-                    </div>
-                    <div className="flex justify-center">
-                      <button
-                        disabled={Number(form.amount) > Number(shop.balance) ? true : false}
-                        className="flex btn btn-md lg:w-36 items-center rounded text-white bg-indigo-700"
-                        onClick={handleUpload}
-                      >
-                        {Number(form.amount) > Number(shop.balance) ? "Saldo tidak mencukupi" : "Submit"}
-                      </button>
+          <div className="border border-gray-500 rounded-md">
+
+            <div className="flex font-bold text-lg lg:text-2xl p-5 bg-[#EEEEEE] rounded-t-md">
+              <AiFillBank className="my-auto mr-2 w-6 h-6 lg:w-8 lg:h-8" />
+              <p>Informasi Penarikan Saldo Toko</p>
+            </div>
+            <div className="w-full">
+              {bank ? (
+                <div className="flex">
+                  <div className="lg:grid lg:grid-cols-1 w-full rounded-lg border-gray-500 gap-4 mx-auto">
+                    <div className=" p-5 lg:mb-0 my-4 mx-auto flex">
+                      <div className="my-auto">
+                        <h1 className="text-xl font-bold mb-2">Bank</h1>
+                        <div className="mb-4 capitalize">
+                          <div className="grid grid-cols-2 space-x-4">
+                            <p className="font-bold text-gray-600 col-span-1">Nama Bank</p>
+                            <p className="font-extrabold col-span-1">{bank.name}</p>
+                          </div>
+                          <div className="grid grid-cols-2 space-x-4">
+                            <p className="font-bold text-gray-600 col-span-1">Nomor Rekening</p>
+                            <p className="font-extrabold col-span-1">{bank.number}</p>
+                          </div>
+                          <div className="grid grid-cols-2 space-x-4">
+                            <p className="font-bold text-gray-600 col-span-1">Nama Rekening</p>
+                            <p className="font-extrabold col-span-1">{bank.bank.name}</p>
+                          </div>
+                        </div>
+                        <h1 className="text-xl font-bold mb-2">Toko</h1>
+                        <div className="mb-4 capitalize">
+                          <div className="grid grid-cols-2 space-x-4">
+                            <p className="font-bold text-gray-600 col-span-1">Nama Toko</p>
+                            <p className="font-extrabold col-span-1">{shop.shopName}</p>
+                          </div>
+                          <div className="grid grid-cols-2 space-x-4">
+                            <p className="font-bold text-gray-600 col-span-1">Saldo</p>
+                            <p className="font-extrabold col-span-1">{formatKas()}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="border border-gray-500 w-0 h-full py-4 mx-12 col-span-1"></div>
+                      <div className="grid grid-cols-1 rounded-lg gap-4 mx-auto py-4 divide-y divide-gray-500 col-span-1 min-w-[201px]">
+                        <div className="">
+                          <h3 className="font-bold">
+                            Jumlah Penarikan
+                          </h3>
+                          <input
+                            id="product-price-input"
+                            name="product-price"
+                            type="number"
+                            className="w-full h-10 mt-2 border rounded-lg border-gray-400 focus:border-none focus:border-white"
+                            value={form?.amount}                
+                            onKeyDown={e => exceptThisSymbols.includes(e.key) && e.preventDefault()}
+                            onChange={(e) => setForm({ ...form, amount: e.target.value })}
+                          />
+                          <div className="text-right">
+                            <label htmlFor="" className="underline">
+                              Tarik Semua
+                            </label>
+                          </div>
+                        </div>
+                        <div className="flex justify-center">
+                          <button
+                            disabled={Number(form.amount) > Number(shop.balance) ? true : false}
+                            className="flex btn btn-md border-none w-full items-center rounded-lg text-white bg-[#07AEC2] my-2"
+                            onClick={handleUpload}
+                          >
+                            {Number(form.amount) > Number(shop.balance) ? "Saldo tidak mencukupi" : "Tarik Saldo"}
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              ) : (
+                <div>
+                  <p>Tambahkan informasi bank</p>
+                  <button onClick={() => router.push("/profile/")}>Tambah</button>
+                </div>
+              )}
             </div>
-          ) : (
-            <div>          
-              <p>Tambahkan informasi bank</p>
-              <button onClick={()=>router.push("/profile/")}>Tambah</button>
-            </div>
-          )}
+          </div>
         </div>
       </div>
       <Footer />

@@ -12,6 +12,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { AiFillCloseCircle } from "react-icons/ai";
 import { ImCross } from "react-icons/im";
+import { createRoot } from "react-dom/client";
 
 interface FormData {
   email: string;
@@ -62,13 +63,31 @@ export default function Login() {
   //   //console.log('getEmail', res)
   // }
 
+  const closeModal = () => {
+    return (
+      <>
+        <label
+          className="btn btn-primary w-full mx-auto btn-sm rounded-lg"
+          htmlFor="my-modal-6"
+          onClick={
+            (e) => {
+              handleForgotPassword(e);
+            }
+          }
+        >
+          Send Email
+        </label>
+      </>
+    )
+  }
+
   const handleForgotPassword = (e: any) => {
     e.preventDefault();
     //console.log("Sending");
 
     Swal.fire({
       title: "Are you sure?",
-      text: "You won't be able to revert this!",
+      text: "Pesan akan dikirimkan ke Email anda!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -86,15 +105,21 @@ export default function Login() {
         }).then((res) => {
           //console.log("Response received");
           if (res.status === 200) {
+            // router.back()
             //console.log("Response succeeded!");
             // setSubmitted(true);
           }
         });
-        Swal.fire(
-          "Please Check Your Email!",
-          "Your file has been sent.",
-          "success"
-        );
+        Swal.fire({
+          icon: "success",
+          text: "Please Check Your Email!\n Your file has been sent.\n success",
+          // showConfirmButton: false,
+          confirmButtonText:'<label className="btn btn-primary w-full mx-auto btn-sm rounded-lg" for="my-modal-6"> Close </label>',
+          confirmButtonAriaLabel: 'Thumbs up, great!',
+          // timer: 1500
+        }).then(() => {
+
+        });
       }
     });
   };
@@ -148,7 +173,11 @@ export default function Login() {
             <label
               className="btn btn-primary w-full mx-auto btn-sm rounded-lg"
               htmlFor="my-modal-6"
-              onClick={(e) => handleForgotPassword(e)}
+              onClick={
+                (e) => {
+                  handleForgotPassword(e);
+                }
+              }
             >
               Send Email
             </label>
