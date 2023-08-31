@@ -53,7 +53,7 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
 	const { selectedTransaction: transaction } : { selectedTransaction: Transaction | undefined} = getTransactionDetail(); //this is pretty cursed lol -
 	const [shop, setShop] = useState<Shop>();
 
-	const address = transaction?.shop.user.profile.addresses[0];
+	const address = transaction?.shop?.user?.profile?.addresses[0];
 	
 	const fetchShop = async () => {
 		try {
@@ -202,7 +202,7 @@ const DetailTransactionModal = ( { detailTransactionModalArguments }: Props) => 
 									<div className="w-full">
 										<p className="font-bold">{shop?.shopName}</p>
 										<p>{address?.contact}</p>
-										<p className="mt-2">J{address?.address}, {address?.region}, {address?.city}, {address?.province}</p>
+										<p className="mt-2">{address?.address}, {address?.region}, {address?.city}, {address?.province}</p>
 									</div>
 								</div>
 							</div>
