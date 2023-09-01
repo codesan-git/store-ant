@@ -240,7 +240,7 @@ const Navbar = (  ) => {
                       className="h-5 w-5"
                       fill="none"
                       viewBox="0 0 24 24"
-                      stroke="white"
+                      stroke="black"
                     >
                       <path
                         strokeLinecap="round"
@@ -274,7 +274,7 @@ const Navbar = (  ) => {
               </div>
 
               {/* notif */}
-              <div className="dropdown dropdown-end" onClick={() => { getNotif(); readNotif(); }}>
+              <div className="dropdown dropdown-end ml-auto" onClick={() => { getNotif(); readNotif(); }}>
                 <label tabIndex={0} className="btn btn-ghost m-1 text-lg">
                   <HiBell className="hidden sm:block" />
                   <div className="indicator">
@@ -285,7 +285,7 @@ const Navbar = (  ) => {
                     )}
                   </div>
                 </label>
-                <div tabIndex={0} className="mt-3 card dropdown-content bg-base-100 shadow">
+                <div tabIndex={0} className="mt-3 card dropdown-content bg-white shadow">
                   <div className="card-body h-[400px] w-[400px] overflow-y-scroll">
                     <Box>
                       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
