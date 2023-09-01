@@ -36,7 +36,7 @@ export default function Validation() {
   return (
     <>
 
-      <div className="card lg:w-96 bg-base-100 shadow-xl mx-auto lg:my-36">
+      <div className="card lg:w-96 bg-base-100 shadow-xl mx-auto lg:py-12">
         <figure className="px-10 pt-10">
           <Image
             src="https://s3-us-west-2.amazonaws.com/shipsy-public-assets/shipsy/SHIPSY_LOGO_BIRD_BLUE.png"
