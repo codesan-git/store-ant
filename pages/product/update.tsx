@@ -163,7 +163,10 @@ export default function CreateShop({product} : FetchData) {
       });
       Promise.all(promises)
         .then(async () => {
-          alert("Update Success!");
+          if(oldImages.length == 0 && files.length == 0)
+            alert("Harap upload gambar!");
+          else
+            alert("Update Success!");
         })
         .then((err) => console.log(err));
     }catch(error){
