@@ -1,5 +1,5 @@
 import { Session } from "next-auth";
-import { useSession } from "next-auth/react";
+import { getSession,useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment, useState } from "react";
@@ -120,17 +120,17 @@ const LoginDropdown = ({session, onLogoutClick}: Props) => {
           <div>
             <ul>
               <li>
-                <Link className="flex p-2 text-base font-normal transition duration-200 hover:bg-gray-300" href={{pathname: '/profile'}}>
+                <Link className="flex p-2 text-base font-normal transition duration-200 hover:bg-gray-300" href={{pathname: '/profile'}} passHref>
                   <span>Profil</span> 
                 </Link>
               </li>
               <li>
-                <Link className="flex p-2 text-base font-normal transition duration-200 hover:bg-gray-300" href={{pathname: '/shop'}}>
+                <Link className="flex p-2 text-base font-normal transition duration-200 hover:bg-gray-300" href={{pathname: '/shop'}} passHref>
                   <span>Toko</span> 
                 </Link>
               </li>
               <li>
-                <Link className="flex p-2 text-base font-normal transition duration-200 hover:bg-gray-300" href={{pathname: '/transactions'}}>
+                <Link className="flex p-2 text-base font-normal transition duration-200 hover:bg-gray-300" href={{pathname: '/transactions'}} passHref>
                   <span>Pembelian</span> 
                 </Link>
               </li>
@@ -139,12 +139,12 @@ const LoginDropdown = ({session, onLogoutClick}: Props) => {
           <div>
             <ul>
               <li>
-                <Link className="flex p-2 text-base font-normal transition duration-200 hover:bg-gray-300" href={{pathname: '/profile'}}>
+                <Link className="flex p-2 text-base font-normal transition duration-200 hover:bg-gray-300" href={{pathname: '/profile'}} passHref>
                   <span>Penarikan Dana</span> 
                 </Link>
               </li>
               <li>
-                <Link className="flex p-2 text-base font-normal transition duration-200 hover:bg-gray-300" href={{pathname: '/profile'}}>
+                <Link className="flex p-2 text-base font-normal transition duration-200 hover:bg-gray-300" href={{pathname: '/profile'}} passHref>
                   <span>Pusat Bantuan</span> 
                 </Link>
               </li>
