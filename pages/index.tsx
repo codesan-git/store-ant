@@ -149,7 +149,7 @@ export default function Home({ events, products }: Props) {
           <div id="product-carousel" className="carousel w-full rounded-lg lg:w-3/4 lg:h-96">
             <div id="slide1" className="carousel-item relative w-full transition duration-700 ease-in-out hover:cursor-pointer">
               <Image
-                src={events[0].image}
+                src={selectedImage}
                 alt=""
                 width={1500}
                 height={1500}

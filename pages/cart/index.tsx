@@ -33,7 +33,7 @@ interface CartId {
 
 export default function Cart({ cartItems, mainAddress }: Props) {
   //console.log("address: ", mainAddress);
-  const [data, setData] = useState<string[]>([]); 
+  const [data, setData] = useState<string[]>([]);
   const [checkoutClick, setCheckoutClick] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isChecked, setIsChecked] = useState<boolean[]>([]);
@@ -55,8 +55,8 @@ export default function Cart({ cartItems, mainAddress }: Props) {
       newData.splice(index, 1);
     }
     setData(newData);
-    
-    if(!isCheckboxClick){
+
+    if (!isCheckboxClick) {
       let tempCheck = isChecked;
       tempCheck[idx] = !tempCheck[idx];
       setIsChecked(tempCheck);
@@ -70,122 +70,126 @@ export default function Cart({ cartItems, mainAddress }: Props) {
     //console.log(id);
   }
 
-  function onCheckout(){
+  function onCheckout() {
     setCheckoutClick(true);
     setIsLoading(true);
-    const cartId:CartId = {id: data}
-    try{
+    const cartId: CartId = { id: data }
+    try {
       fetch('/api/cart/checkout', {
-          body: JSON.stringify(cartId),
-          headers: {
-              'Content-Type' : 'application/json'
-          },
-          method: 'POST'
-      }).then(()=> router.push("/transactions"))
-    }catch(error){
-        console.log(error)
+        body: JSON.stringify(cartId),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: 'POST'
+      }).then(() => router.push("/transactions"))
+    } catch (error) {
+      console.log(error)
     }
   }
-  
-  function onDelete(){
-    const cartId:CartId = {id: data}
-    try{
+
+  function onDelete() {
+    const cartId: CartId = { id: data }
+    try {
       fetch('/api/cart/delete', {
-          body: JSON.stringify(cartId),
-          headers: {
-              'Content-Type' : 'application/json'
-          },
-          method: 'DELETE'
-      }).then(()=> router.reload());
-    }catch(error){
-        ////console.log(error)
+        body: JSON.stringify(cartId),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: 'DELETE'
+      }).then(() => router.reload());
+    } catch (error) {
+      ////console.log(error)
     }
   }
 
   return (
     <div>
-        <Navbar />
-        <div className="px-8 my-8 flex-col gap-10 cursor-pointer">
-          { isLoading? (
-            <div className="text-red-500">LOADING...</div>
-          ) : (
-            <></>
-          )}
-          {cartItems ? (
-            <div>
-              {cartItems.map((cartItem, i) => (
-                <div
-                  data-theme="garden"
-                  className="card w-auto glass"
-                  key={String(cartItem.id)}
-                  onClick={() => handleChange(String(cartItem.id), i, false)}
-                >         
-                  <div className="flex">
-                      <input className='w-5 ml-5' type="checkbox" checked={isChecked[i]} value={String(cartItem.id)} onChange={e => {handleChange(e.target.value, i, true, e.target.checked);}} />
-                      <div className="card-body py-5">
-                          <figure className="rounded-md h-40 w-40">
-                              {cartItem.product.image? (
-                                  <Image 
-                                    src={cartItem.product.image}
-                                    alt=""
-                                    width={1500}
-                                    height={1500}  
-                                  />
-                              ) : (
-                                  <Image 
-                                    src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
-                                    alt=""
-                                    width={1500}
-                                    height={1500}  
-                                  />
-                              )}
-                          </figure>
-                      </div>
-                      <div className="card-body py-5 h-1/4 w-full">
-                          <h2 className="card-title">{cartItem.product.name}</h2>
-                          <p className="text-md">Rp. {String(cartItem.product.price)}</p>
-                          <p className="text-md">Qty. {String(cartItem.count)}</p>
-                          <p className="text-lg font-bold">
-                          Total Price: Rp. {Number(cartItem.price)}
-                          </p>
-                      </div>
+      {/* <Navbar profile={} /> */}
+      <div className="px-32 my-8 flex-col gap-10 cursor-pointer">
+        {isLoading ? (
+          <div className="text-red-500">LOADING...</div>
+        ) : (
+          <></>
+        )}
+        {cartItems ? (
+          <div className="space-y-4 mx-16">
+            {cartItems.map((cartItem, i) => (
+              <div
+                data-theme="garden"
+                className="card w-auto glass"
+                key={String(cartItem.id)}
+                onClick={() => handleChange(String(cartItem.id), i, false)}
+              >
+                <div className="flex">
+                  <input className='w-5 ml-5' type="checkbox" checked={isChecked[i]} value={String(cartItem.id)} onChange={e => { handleChange(e.target.value, i, true, e.target.checked); }} />
+                  <div className="card-body py-5">
+                    <figure className="rounded-md h-40 w-40">
+                      {cartItem.product.image ? (
+                        <Image
+                          src={cartItem.product.image}
+                          alt=""
+                          width={1500}
+                          height={1500}
+                        />
+                      ) : (
+                        <Image
+                          src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/01/Featured-Image-Odd-Jobs-Cropped.jpg"
+                          alt=""
+                          width={1500}
+                          height={1500}
+                        />
+                      )}
+                    </figure>
+                  </div>
+                  <div className="card-body py-5 h-1/4 w-full">
+                    <h2 className="card-title">{cartItem.product.name}</h2>
+                    <p className="text-md">Rp. {String(cartItem.product.price)}</p>
+                    <p className="text-md">Qty. {String(cartItem.count)}</p>
+                    <p className="text-lg font-bold">
+                      Total Price: Rp. {Number(cartItem.price)}
+                    </p>
                   </div>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <p>No Items in Cart</p>
-          )}
-        </div>
-      {mainAddress == null? (
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p>No Items in Cart</p>
+        )}
+      </div>
+      {mainAddress == null ? (
         <p>Alamat utama belum diatur</p>
       ) : (
         <></>
       )}
-      {(data.length === 0 || mainAddress == null) ? (        
-        <div>
-          <button disabled={true} onClick={()=> onCheckout()} className='w-36 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
-            Checkout
-          </button>      
-          <button disabled={data.length === 0} className='ml-5 w-36 btn bg-red-400 hover:bg-red-300 hover:border-gray-500 text-white border-transparent'>
-            <label htmlFor="cart-alert">
-              Delete
-            </label>
-          </button>
+      {(data.length === 0 || mainAddress == null) ? (
+        <div className="float-right px-32">
+          <div className="mx-16">
+            <button disabled={true} onClick={() => onCheckout()} className='w-36 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
+              Checkout
+            </button>
+            <button disabled={data.length === 0} className='ml-5 w-36 btn bg-red-400 hover:bg-red-300 hover:border-gray-500 text-white border-transparent'>
+              <label htmlFor="cart-alert">
+                Delete
+              </label>
+            </button>
+          </div>
         </div>
-      ) : (        
-        <div>
-          <button disabled={checkoutClick} onClick={()=> onCheckout()} className='w-36 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
-            Checkout
-          </button>        
-          <button disabled={checkoutClick} className='ml-5 w-36 btn bg-red-400 hover:bg-red-300 hover:border-gray-500 text-white border-transparent'>
-            <label htmlFor="cart-alert">
-              Delete
-            </label>
-          </button>
+      ) : (
+        <div className="float-right px-32">
+          <div className="mx-16">
+            <button disabled={checkoutClick} onClick={() => onCheckout()} className='w-36 btn bg-green-400 hover:bg-green-300 hover:border-gray-500 text-white border-transparent'>
+              Checkout
+            </button>
+            <button disabled={checkoutClick} className='ml-5 w-36 btn bg-red-400 hover:bg-red-300 hover:border-gray-500 text-white border-transparent'>
+              <label htmlFor="cart-alert">
+                Delete
+              </label>
+            </button>
+          </div>
         </div>
       )}
-      <DeleteCartAlert htmlElementId={`cart-alert`} data={data}/>
+      <DeleteCartAlert htmlElementId={`cart-alert`} data={data} />
     </div>
   );
 }
@@ -195,18 +199,18 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const cart = await prisma.cart.findFirst({
     where: { userId: session?.user.id },
   });
-  
-  if(!cart){
+
+  if (!cart) {
     return {
-      props: { },
+      props: {},
     };
   }
 
   const cartItems = await prisma.productInCart.findMany({
-    where: { 
+    where: {
       AND: [
         { cartId: cart?.id }
-      ] 
+      ]
     },
     select: {
       id: true,
@@ -216,7 +220,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   });
 
   const mainAddress = await prisma.address.findFirst({
-    where:{
+    where: {
       profile: {
         userId: session?.user.id
       },

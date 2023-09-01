@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, KeyboardEvent } from "react";
 import styles from "../../styles/Form.module.css";
 import Image from "next/image";
 import { useState } from "react";
-import { HiPencilAlt } from "react-icons/hi";
+import { HiPencil } from "react-icons/hi";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
@@ -230,11 +230,11 @@ export default function Profile({ profile, user, address, provinceData, cityData
   }
 
   const onDeleteAddress = async (address: Address) => {
-    if(address.isShopAddress)
+    if (address.isShopAddress)
       alert("Tidak bisa menghapus alamat toko");
-    else if(address.isMainAddress)
+    else if (address.isMainAddress)
       alert("Tidak bisa menghapus alamat utama");
-    else{
+    else {
       await deleteAddress(address.id);
       const updatedAddresses = await getAllAddress();
       setAddresses(updatedAddresses);
@@ -455,9 +455,9 @@ export default function Profile({ profile, user, address, provinceData, cityData
         who are like offended by it, it doesn't matter.`,
       code: (
         <>
-          <section className="mt-8 flex flex-col lg:flex-row gap-10 bg-gray-100 lg:p-10 rounded-md">
-            <div className="">
-              <div className="card card-compact lg:w-96 bg-base-100 shadow-xl">
+          <section className="flex flex-col lg:flex-row lg:justify-center space-x-4 bg-gray-100 lg:p-5 rounded-md">
+            <div className="w-1/4">
+              <div className="card card-compact bg-base-100 shadow-xl">
                 <figure className="p-4">
                   <label>
                     <input
@@ -511,19 +511,9 @@ export default function Profile({ profile, user, address, provinceData, cityData
                   </p>
                 </div>
               </div>
-              <div className="card card-compact lg:w-96 bg-base-100 shadow-xl mt-5">
-                <div className="card-actions justify-end">
-                  <button
-                    className="btn btn-primary btn-outline rounded-md w-full"
-                    onClick={(e) => resetPassword(e)}
-                  >
-                    Ubah Kata Sandi
-                  </button>
-                </div>
-              </div>
             </div>
 
-            <div className="w-[26rem]">
+            <div className="w-1/2">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -537,12 +527,12 @@ export default function Profile({ profile, user, address, provinceData, cityData
                     Ubah biodata diri
                   </p>
                 </div>
-                <div className="flex gap-5">
-                  <label className="my-auto mr-4 text-sm lg:text-base w-1/3 lg:w-auto">Username</label>
-                  <h5 className="text-sm lg:text-base w-1/3 lg:w-auto">{profile?.username}</h5>
+                <div className="flex">
+                  <label className="text-sm lg:text-base w-1/4">Username</label>
+                  <h5 className="text-sm lg:text-base w-1/3 lg:w-1/2">{profile?.username}</h5>
                   {/* The button to open modal */}
-                  <a href="#my-modal-2" className="text-primary text-sm lg:text-base w-1/3 lg:w-auto">
-                    <HiPencilAlt />
+                  <a href="#my-modal-2" className="text-primary text-sm lg:text-base w-1/3 lg:w-1/4 flex justify-start items-center">
+                    <HiPencil className="w-6 h-6" />
                   </a>
                   <div className="modal z-50" id="my-modal-2">
                     <div className="modal-box">
@@ -612,20 +602,20 @@ export default function Profile({ profile, user, address, provinceData, cityData
                 {/* End Handle Username */}
 
                 {/* Handle Tanggal Lahir */}
-                <div className="flex gap-5">
-                  <label className="my-auto mr-4 text-sm lg:text-base w-1/3 lg:w-auto">Tanggal Lahir</label>
+                <div className="flex">
+                  <label className="text-sm lg:text-base w-1/4">Tanggal Lahir</label>
                   {profile?.birthDate ?
                     <>
-                      <h5 className="text-sm lg:text-base w-1/3 lg:w-auto">{getDate}</h5>
+                      <h5 className="text-sm lg:text-base w-1/3 lg:w-1/2">{getDate}</h5>
                     </>
                     :
                     <>
-                      <h5 className="text-sm lg:text-base w-1/3 lg:w-auto">30 Desember 1995</h5>
+                      <h5 className="text-sm lg:text-base w-1/3 lg:w-1/2">30 Desember 1995</h5>
                     </>
                   }
                   {/* The button to open modal */}
-                  <a href="#modal-birthday" className="text-primary text-sm lg:text-base w-1/3 lg:w-auto">
-                    <HiPencilAlt />
+                  <a href="#modal-birthday" className="text-primary text-sm lg:text-base w-1/3 lg:w-1/4 flex justify-start items-center">
+                    <HiPencil className="w-6 h-6" />
                   </a>
                 </div>
                 <div className="modal" id="modal-birthday">
@@ -652,9 +642,9 @@ export default function Profile({ profile, user, address, provinceData, cityData
                         name="birthday"
                         placeholder="Birthday"
                         value={form?.birthDate}
-                        min='1899-01-01' 
+                        min='1899-01-01'
                         max='2000-01-01'
-                        onKeyDown={(e)=>e.preventDefault()}
+                        onKeyDown={(e) => e.preventDefault()}
                         className="input input-bordered input-primary w-auto rounded-md"
                         onChange={(e) =>
                           setForm({
@@ -677,39 +667,42 @@ export default function Profile({ profile, user, address, provinceData, cityData
                 {/* End Handle Tanggal Lahir */}
 
                 {/* Handle Gender */}
-                <div className="flex gap-5">
-                  <label className="my-auto mr-4 text-sm lg:text-base w-1/3 lg:w-auto">Jenis kelamin</label>
-                  <div>
-                    <FormControl sx={{ m: 1, minWidth: 100 }} size="small">
-                      <InputLabel id="demo-simple-select-autowidth-label">Jenis kelamin</InputLabel>
-                      <Select
-                        labelId="demo-simple-select-autowidth-label"
-                        id="demo-simple-select-autowidth"
-                        value={form.gender}
-                        onChange={handleChange}
-                        autoWidth
-                        label="Gender"
-                      >
-                        <MenuItem value="">
-                          <em>None</em>
-                        </MenuItem>
-                        <MenuItem value={Gender.MAN}>Laki-laki</MenuItem>
-                        <MenuItem value={Gender.WOMAN}>Perempuan</MenuItem>
-                      </Select>
-                    </FormControl>
+                <div className="flex">
+                  <label className="text-sm lg:text-base w-1/4">Jenis kelamin</label>
+                  <div className="text-sm lg:text-base w-1/3 lg:w-1/2">
+                    {/* <Select
+                      labelId="demo-simple-select-autowidth-label"
+                      id="demo-simple-select-autowidth"
+                      value={form.gender}
+                      onChange={handleChange}
+                      autoWidth
+                      label="Gender"
+                    > */}
+                    <Select //I have no idea why when this is selected in the page, there's a line gap on top - Peter D.
+                      value={form.gender}
+                      onChange={handleChange}
+                      label="Gender"
+                      className="w-1/2 h-8"
+                    >
+                      <MenuItem value="">
+                        <em>None</em>
+                      </MenuItem>
+                      <MenuItem value={Gender.MAN}>Laki-laki</MenuItem>
+                      <MenuItem value={Gender.WOMAN}>Perempuan</MenuItem>
+                    </Select>
                   </div>
                   {
                     profile?.gender === form.gender || form.gender === "" ?
                       <>
-                        <div className="textarea-disabled text-sm lg:text-base w-1/3 lg:w-auto my-auto cursor-not-allowed">
-                          save
-                        </div>
+                        <button className="border-solid border-2 border-primary rounded-lg text-primary font-bold hover:bg-primary hover:text-blue-gray-800 transition w-24">
+                          Simpan
+                        </button>
                       </>
                       :
                       <>
-                        <div onClick={() => handleSubmit(form)} className="text-primary text-sm lg:text-base w-1/3 lg:w-auto my-auto cursor-pointer">
-                          save
-                        </div>
+                        <button onClick={() => handleSubmit(form)} className="border-solid border-2 border-primary rounded-lg text-primary font-bold hover:bg-primary hover:text-blue-gray-800 transition w-24">
+                          Simpan
+                        </button>
 
                       </>
                   }
@@ -723,12 +716,12 @@ export default function Profile({ profile, user, address, provinceData, cityData
                   </p>
                 </div>
                 {/* Handle Nomor HP */}
-                <div className="flex gap-5">
-                  <label className="mr-4 text-sm lg:text-base w-1/3 lg:w-auto">Nomor HP</label>
-                  <h5 className="text-sm lg:text-base w-1/3 lg:w-auto">{profile?.phoneNumber}</h5>
+                <div className="flex">
+                  <label className="text-sm lg:text-base w-1/4">Nomor HP</label>
+                  <h5 className="text-sm lg:text-base w-1/3 lg:w-1/2">{profile?.phoneNumber}</h5>
                   {/* The button to open modal */}
-                  <a href="#modal-nomorhp" className="text-primary text-sm lg:text-base w-1/3 lg:w-auto">
-                    <HiPencilAlt />
+                  <a href="#modal-nomorhp" className="text-primary text-sm lg:text-base w-1/3 lg:w-1/4 flex justify-start items-center">
+                    <HiPencil className="w-6 h-6" />
                   </a>
                   {/* <p>{/<em> Put this part before </body> tag </em>/}</p> */}
                   <div className="modal" id="modal-nomorhp">
@@ -762,25 +755,14 @@ export default function Profile({ profile, user, address, provinceData, cityData
                 {/* End Handle Nomor HP */}
 
                 {/* Handle Email */}
-                <div className="flex flex-col">
-                  <div className="grid grid-cols-3">
-                    <div className="col-span-1">
-                      <label className="text-sm lg:text-base">Email</label>
-                    </div>
-                    <div className="flex justify-between w-full">
-                      <h5 className="text-sm lg:text-base">{session?.user?.email}</h5>
-                      {/* The button to open modal */}
-                      <div>
-                        <a href="#modal-email" className="text-primary text-sm lg:text-base">
-                          ubah
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                  {/* The button to open modal */}
-                  <a href="#modal-email" className="text-primary text-sm lg:text-base w-1/3 lg:w-auto">
-                    <HiPencilAlt />
+                <div className="flex">
+                  <label className="text-sm lg:text-base w-1/4">Email</label>
+                  <h5 className="text-sm lg:text-base w-1/3 lg:w-1/2">{session?.user?.email}</h5>
+                  <a href="#modal-email" className="text-primary text-sm lg:text-base w-1/3 lg:w-1/4 flex justify-start items-center">
+                    <HiPencil className="w-6 h-6"/>
                   </a>
+
+                  {/* The button to open modal */}
                   {/* <p>{/<em> Put this part before </body> tag </em>/}</p> */}
                   <div className="modal" id="modal-email">
                     <div className="modal-box">
@@ -834,6 +816,16 @@ export default function Profile({ profile, user, address, provinceData, cityData
 
                 {/* End Handle Ubah Kontak */}
               </form>
+              <div className="card card-compact bg-base-100 mt-5">
+                <div className="card-actions justify-end">
+                  <button
+                    className="btn btn-primary btn-outline rounded-md w-full"
+                    onClick={(e) => resetPassword(e)}
+                  >
+                    Ubah Kata Sandi
+                  </button>
+                </div>
+              </div>
             </div>
           </section>
         </>
